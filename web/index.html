@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 真垃圾 · 从"它啥都能干"到"我知道它啥干不了"</title>
+<link rel="stylesheet" href="../../.agents/skills/html-ppt-full/assets/fonts.css">
+<link rel="stylesheet" href="../../.agents/skills/html-ppt-full/assets/base.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="tpl-ai-trash">
+<div class="deck">
+
+<!-- ====== 1. 封面 ====== -->
+<section class="slide is-active">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">01 / 20</div>
+  <div class="oc-tag">● 技术分享 · AI 落地</div>
+  <h1 class="oc-h1" style="font-size:88px">AI 真<span class="oc-g-orange">垃圾</span></h1>
+  <p class="oc-sub">从「它啥都能干」到「我知道它啥干不了」</p>
+  <div class="oc-speaker">
+    <div class="av"></div>
+    <div><b>CM</b><span>AI 落地分享 · 60 min</span></div>
+  </div>
+  <div style="margin-top:28px">
+    <span class="oc-pill">🧠 猜字系统</span>
+    <span class="oc-pill">🔧 四大工程</span>
+    <span class="oc-pill">📦 4 个落地案例</span>
+  </div>
+  <aside class="notes">
+    <p>大家好，欢迎来到今天的 AI 落地分享会。今天的标题有点挑衅——<strong>"AI 真垃圾"</strong>。</p>
+    <p>先别急着反驳我。我说"垃圾"不是贬低 AI，而是想说一个很多人没意识到的问题：我们对 AI 的期待太高了。我们以为它啥都能干，结果发现它经常犯一些低级错误。</p>
+    <p>今天的副标题才是重点：从"它啥都能干"到"我知道它啥干不了"。今天大概 60 分钟，我会用 4 个真实落地的案例，带大家走完这个认知升级的全程。</p>
+  </aside>
+</section>
+
+<!-- ====== 2. 互动：外星人的语言 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">02 / 20</div>
+  <div class="oc-tag">● 互动游戏 · 热身</div>
+  <h2 class="oc-h2">外星人的<span class="oc-g">语言</span></h2>
+  <div data-anim="arrows" class="oc-arrows">
+    <span class="ar">←</span><span class="ar">↑</span><span class="ar">→</span><span class="ar">↓</span><span class="ar">←</span>
+  </div>
+  <div data-anim="hint" style="font-size:22px;margin:18px 0;color:var(--oc-dim)">
+    猜下一个：<span style="font-family:'JetBrains Mono',monospace;font-size:28px;color:var(--oc-text)">↑ → ？</span>
+  </div>
+  <div data-anim="answer" style="display:flex;flex-direction:column;align-items:center;gap:18px">
+    <div class="oc-answer">↓</div>
+    <p class="oc-sub" style="max-width:600px">规律：左上右下，顺时针转圈。你做的事，就是 LLM 每天做的事——<strong style="color:var(--oc-accent3)">根据上文，预测下一个字。</strong></p>
+  </div>
+  <aside class="notes"><p>来，玩个小游戏。这是外星人发来的一段信号——← ↑ → ↓ ←。大家猜下一个是什么？答案揭晓：↓。规律很简单：左上右下，顺时针转圈。你刚才做的事——看着前面的箭头，猜下一个——这就是 LLM 每天做的事情。这个简单的游戏，就是理解 AI 所有能力的起点。</p></aside>
+</section>
+
+<!-- ====== 3. 反认知：AI 是个猜字系统 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">03 / 20</div>
+  <div class="oc-tag">● COUNTER-INTUITION · 反认知</div>
+  <h2 class="oc-h2">AI 其实是个<span class="oc-g">猜字系统</span></h2>
+  <p class="oc-sub">不管它帮你写代码、出方案、做分析，还是陪你聊天——底层逻辑只有一个，而且一直没变过：</p>
+  <div class="oc-guess mt-m">
+    <div>① 给你一段上文</div>
+    <div>② 计算所有可能的下一个字的概率</div>
+    <div>③ 选概率最高的那个字输出</div>
+    <div>④ 拼上输出的字，回到第 ① 步，继续</div>
+  </div>
+  <div class="oc-hl mt-l">Next Token Prediction —— 一个简单到令人不安的机制，就是所有「智能」的起点。</div>
+  <aside class="notes"><p>这一页是今天最重要的定论——AI 本质上就是一个猜字系统。它的工作机制只有四步：给它一段上文 → 计算所有下一个字的概率 → 选概率最高的输出 → 拼上去继续。无限循环。我打个比喻：AI 就像一个见过几十亿篇文章的人，你给它一个开头，它凭着见过的所有文章模式，接出最可能的下一段话。理解了这一点，后面的四大工程就有了根基。</p></aside>
+</section>
+
+<!-- ====== 4. 训练三阶段 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">04 / 20</div>
+  <div class="oc-tag">● 原理 · 三阶段</div>
+  <h2 class="oc-h2">这个猜字系统，<span class="oc-g">怎么训练出来的？</span></h2>
+  <div class="oc-grid-3">
+    <div class="oc-card">
+      <div class="oc-sn">①</div>
+      <h4 style="margin:14px 0 6px">预训练</h4>
+      <p style="font-size:14px;color:var(--oc-dim);line-height:1.6">海量文本预测下一个词。互联网上几乎所有公开文本——文章、代码、论坛——全部拿来做"完形填空"。</p>
+    </div>
+    <div class="oc-card">
+      <div class="oc-sn oc-sn-green">②</div>
+      <h4 style="margin:14px 0 6px">指令微调</h4>
+      <p style="font-size:14px;color:var(--oc-dim);line-height:1.6">用问答对教会对话格式。让它从"往下接话"变成"回答问题"，学会理解人类指令。</p>
+    </div>
+    <div class="oc-card oc-card-warn">
+      <div class="oc-sn oc-sn-warn">③</div>
+      <h4 style="margin:14px 0 6px">RLHF</h4>
+      <p style="font-size:14px;color:var(--oc-dim);line-height:1.6">人类打分，学会"好回答"的标准。标注人员给 AI 的回答打分，逐渐学会人类觉得什么样的回答好。</p>
+    </div>
+  </div>
+  <aside class="notes"><p>理解了猜字机制之后，自然下一个问题就是：这个系统是怎么训练出来的？分三个阶段。预训练——整个互联网的文本拿去做完形填空。指令微调——让模型从"往下接话"变成"回答问题"。RLHF——人类反馈强化学习，标注人员打分，AI 学会人类标准。但也带来了副作用。</p></aside>
+</section>
+
+<!-- ====== 5. RLHF 评分维度 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">05 / 20</div>
+  <div class="oc-tag">● 机制 · 打分标准</div>
+  <h2 class="oc-h2">RLHF 的 <span class="oc-g">5 个评分维度</span></h2>
+  <div class="oc-grid-5">
+    <div class="oc-card" style="text-align:center"><div class="oc-sn">①</div><h4 style="margin:12px 0 4px">有用性</h4><p style="font-size:12px;color:var(--oc-dim)">解决了问题吗？</p></div>
+    <div class="oc-card oc-card-good" style="text-align:center"><div class="oc-sn oc-sn-green">②</div><h4 style="margin:12px 0 4px">真实性</h4><p style="font-size:12px;color:var(--oc-dim)">信息准确吗？</p></div>
+    <div class="oc-card oc-card-warn" style="text-align:center"><div class="oc-sn oc-sn-warn">③</div><h4 style="margin:12px 0 4px">安全性</h4><p style="font-size:12px;color:var(--oc-dim)">有危险建议吗？</p></div>
+    <div class="oc-card oc-card-blue" style="text-align:center"><div class="oc-sn" style="background:linear-gradient(135deg,var(--oc-blue),var(--oc-accent2))">④</div><h4 style="margin:12px 0 4px">诚实性</h4><p style="font-size:12px;color:var(--oc-dim)">不知道承认了吗？</p></div>
+    <div class="oc-card" style="text-align:center"><div class="oc-sn">⑤</div><h4 style="margin:12px 0 4px">语气态度</h4><p style="font-size:12px;color:var(--oc-dim)">友好礼貌吗？</p></div>
+  </div>
+  <div class="oc-hl oc-hl-warn mt-l">⚠ 副作用：过度优化语气 → 模型变"舔狗"——永远说你想听的，不敢反驳，哪怕你错了。</div>
+  <aside class="notes"><p>RLHF 阶段，标注人员按 5 个维度给 AI 打分。问题出在第五个——语气态度。AI 被训练成"友好、礼貌、乐于助人"，但过了头就变成了永远不反驳你。这就是业界说的"舔狗效应"。后面讲到规训工程的时候，我会讲怎么对抗这个倾向。</p></aside>
+</section>
+
+<!-- ====== 6. 核心能力 & 局限 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">06 / 20</div>
+  <div class="oc-tag">● 客观认知 · 两面看</div>
+  <h2 class="oc-h2">核心能力 <span style="color:var(--oc-dim);font-weight:300">&amp;</span> 本质局限</h2>
+  <div class="oc-grid-2">
+    <div class="oc-card oc-card-blue">
+      <span class="oc-badge oc-bb">✅ 能力</span>
+      <ul style="padding-left:18px;font-size:15px;line-height:2.2;color:var(--oc-dim);margin:0">
+        <li>语言理解与生成</li><li>逻辑推理</li><li>知识召回</li><li>代码生成与调试</li>
+      </ul>
+    </div>
+    <div class="oc-card oc-card-warn">
+      <span class="oc-badge oc-bo">⚠ 局限</span>
+      <ul style="padding-left:18px;font-size:15px;line-height:2.2;color:var(--oc-dim);margin:0">
+        <li>幻觉（一本正经胡说八道）</li><li>知识截止日期</li><li>无真实理解（统计匹配）</li><li>无持续记忆</li>
+      </ul>
+    </div>
+  </div>
+  <aside class="notes"><p>这一页把 AI 的能力和局限做一个诚实的总结。左边这些能力——语言、推理、知识、代码——都不是吹的。但你要知道它们全部来自统计模式匹配，不是真正的理解。右边这四个局限，每一个都是工程层面需要处理的。接下来我们进入四大工程体系，每一个工程本质上都是在解决这些局限。</p></aside>
+</section>
+
+<!-- ====== 7. Token 概念 & 费用 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">07 / 20</div>
+  <div class="oc-tag">● 概念 · 计费单位</div>
+  <h2 class="oc-h2">Token：AI 的<span class="oc-g">"字"</span></h2>
+  <p class="oc-sub">英文 1 Token ≈ 1 词 &nbsp;·&nbsp; 中文 1 Token ≈ 1~2 词</p>
+  <div class="oc-grid-2 mt-m" style="max-width:960px">
+    <div class="oc-card oc-card-blue">
+      <h4 style="color:var(--oc-blue);margin-bottom:8px">核心观点</h4>
+      <p style="font-size:15px;color:var(--oc-dim);line-height:1.7">觉得 Token 贵 → 不一定是用太多，是<strong style="color:var(--oc-text)">没产出对等价值</strong>。AI 帮你节省的人力成本 &gt; Token 费用 → 就不贵。</p>
+    </div>
+    <div class="oc-card">
+      <h4 style="color:var(--oc-accent3);margin-bottom:8px">🔮 未来判断</h4>
+      <p style="font-size:15px;color:var(--oc-dim);line-height:1.7">Token 像手机流量一样被运营商套餐化 → 按量付费 · 月套餐 · 平台专属包。</p>
+    </div>
+  </div>
+  <div class="oc-hl oc-hl-good mt-m">💡 目前只有 API 调用才能明显感受 Token 费用。接下来四大工程体系 → 教你"用对"，让每一分 Token 值回票价。</div>
+  <aside class="notes"><p>讲完原理，必须讲成本。Token 是 AI 计费的基本单位。很多人觉得 Token 贵。但我的核心观点是：不是 Token 贵，是你花的 Token 没产生对等价值。如果你让 AI 帮你省了 30 分钟的工作，花了 1 块钱 Token——这买卖划算到爆。我的判断：Token 最终会像手机流量一样被运营商套餐化。但便宜不等于可以乱用。</p></aside>
+</section>
+
+<!-- ====== 8. 模型对比表 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">08 / 20</div>
+  <div class="oc-tag">● 工具 · 选对模型</div>
+  <h2 class="oc-h2">不同模型<span class="oc-g">擅长什么？</span></h2>
+  <div class="oc-card w-full max-w-900 mt-m" style="padding:4px 12px">
+    <table class="oc-table">
+      <thead><tr><th>模型</th><th>公司</th><th>擅长领域</th></tr></thead>
+      <tbody>
+        <tr><td><b>DeepSeek</b></td><td>深度求索</td><td>推理 / 代码 / 数学</td></tr>
+        <tr><td><b>通义千问 Qwen</b></td><td>阿里巴巴</td><td>中文理解</td></tr>
+        <tr><td><b>Kimi</b></td><td>月之暗面</td><td>超长上下文</td></tr>
+        <tr><td><b>GLM-4</b></td><td>智谱 AI</td><td>多模态 / 工具调用</td></tr>
+        <tr><td><b>豆包</b></td><td>字节跳动</td><td>日常对话</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="oc-sub mt-m">不是哪个更好，是哪个更适合你的场景。</p>
+  <aside class="notes"><p>基础认知的最后一部分——模型怎么选。DeepSeek 是推理之王，通义千问中文最好，Kimi 超长上下文，GLM-4 强在多模态和工具调用。关键不是哪个模型最好——关键是选对了场景。做代码评审用 DeepSeek，做中文文档分析用通义千问，做长文总结用 Kimi。场景匹配比模型性能重要得多。好，基础认知到此结束。从下一页开始，进入四大工程。</p></aside>
+</section>
+
+<!-- ====== 9. 案例对比 · 语音→PPT ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">09 / 20</div>
+  <div class="oc-tag">● Block 01 · 案例对比</div>
+  <h2 class="oc-h2">语音 → PPT：<span class="oc-g">提示词的力量</span></h2>
+  <div class="oc-vs">
+    <div class="oc-card oc-card-warn">
+      <span class="oc-badge oc-bo">❌ 没有提示词工程</span>
+      <div class="oc-chat"><div class="user">你：帮我做一个 PPT</div><div class="ai">AI：好的，这是一个关于企业数字化转型的 PPT……（乱做一通）</div></div>
+    </div>
+    <div class="oc-vs-arrow">→</div>
+    <div class="oc-card oc-card-good">
+      <span class="oc-badge oc-bg">✅ 有了提示词工程</span>
+      <div class="oc-chat"><div class="user">你：结构：封面/大纲/案例/收尾 → 输出 MD → 生成 PPT</div><div class="ai">AI：明白。按四段结构输出，下面是 Markdown……（一次成型）</div></div>
+    </div>
+    <div class="key-var">关键变量：<strong>有没有定义输出结构</strong></div>
+  </div>
+  <aside class="notes"><p>进入四大工程的第一个案例——语音转 PPT。左边是大多数人的用法：对 AI 说"帮我做一个 PPT"。AI 会做，但它完全不知道你要什么。右边是提示词工程的做法：你告诉它结构是什么，然后指定输出格式——先输出 Markdown，再用脚本生成 PPT。效果完全不一样。关键变量就一个：有没有定义输出结构。</p></aside>
+</section>
+
+<!-- ====== 10. 揭晓 · 提示词工程 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">10 / 20</div>
+  <div class="oc-tag">● CHAPTER 01 · PROMPT ENGINEERING</div>
+  <h2 class="oc-h2">提示词<span class="oc-g">工程</span></h2>
+  <p class="oc-sub">派活说不清楚，员工一定干偏。AI 也一样。</p>
+  <div class="oc-grid-2">
+    <div class="oc-card">
+      <h4 style="margin-bottom:12px">📖 语音→PPT</h4>
+      <p style="font-size:13px;color:var(--oc-orange);margin:3px 0">❌ "帮我做一个PPT" → AI 瞎猜</p>
+      <p style="font-size:13px;color:var(--oc-green);margin:3px 0">✅ "结构→MD→PPT" → 一次成型</p>
+      <div class="oc-hl mt-s" style="font-size:14px">💡 提示词工程 = 派活要讲清楚角色、要求和标准</div>
+    </div>
+    <div class="oc-rules">
+      <div class="oc-rule"><span class="rn">01</span><div><b>🎯 定角色</b><p class="dim">先说清楚身份，AI 切换到对应视角</p></div></div>
+      <div class="oc-rule"><span class="rn">02</span><div><b>📋 讲要求</b><p class="dim">明确交付物：表格、数字、格式</p></div></div>
+      <div class="oc-rule"><span class="rn">03</span><div><b>📝 给参考</b><p class="dim">给一个模板，照这个格式写</p></div></div>
+      <div class="oc-rule"><span class="rn">04</span><div><b>🚧 设标准</b><p class="dim">划定范围：异常项标红、敏感不对外</p></div></div>
+    </div>
+  </div>
+  <div style="margin-top:16px">
+    <span class="oc-pill">🛠 CoT 思维链</span>
+    <span class="oc-pill">Few-shot 少样本</span>
+    <span class="oc-pill">ToT 思维树</span>
+  </div>
+  <aside class="notes"><p>这一页正式揭晓第一个工程——提示词工程。四条规则：定角色——告诉 AI 它是谁。讲要求——明确要什么产出。给参考——给个模板避免跑偏。设标准——什么可以做什么不可以。这四条规则看起来简单，但在实际工作中很多人只用了第一条。后面讲上下文工程的时候，你会发现光有提示词还不够。</p></aside>
+</section>
+
+<!-- ====== 11. 案例对比 · 筛选→整理 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">11 / 20</div>
+  <div class="oc-tag">● Block 02 · 案例对比</div>
+  <h2 class="oc-h2">简历筛选 → 数据整理：<span class="oc-g">上下文工程</span></h2>
+  <div class="oc-vs">
+    <div class="oc-card oc-card-warn">
+      <span class="oc-badge oc-bo">❌ 没有上下文工程</span>
+      <div class="oc-chat"><div class="user">你：帮我分析这些简历，筛选合适的候选人</div><div class="ai">AI：好的，以下是我根据简历内容的分析……（标准很模糊）</div></div>
+    </div>
+    <div class="oc-vs-arrow">→</div>
+    <div class="oc-card oc-card-good">
+      <span class="oc-badge oc-bg">✅ 有了上下文工程</span>
+      <div class="oc-chat"><div class="user">你：（附上评分标准.md + 岗位要求）按打分标准逐项评估</div><div class="ai">AI：按标准评分如下：技能匹配 8/10、经验匹配 7/10……</div></div>
+    </div>
+    <div class="key-var">关键变量：<strong>有没有附上评分标准和岗位要求</strong></div>
+  </div>
+  <aside class="notes"><p>第二个案例——简历筛选。没有上下文工程之前，AI 只能凭自己的模糊标准判断。但当你把评分标准、岗位要求这些上下文同时给到它，它就从一个"啥都会一点的人"变成了"懂你们公司标准的 HR 同事"。关键不在于 AI 能不能做，在于你给了 AI 什么参照系来判断。</p></aside>
+</section>
+
+<!-- ====== 12. 揭晓 · 上下文工程 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">12 / 20</div>
+  <div class="oc-tag">● CHAPTER 02 · CONTEXT ENGINEERING</div>
+  <h2 class="oc-h2">上下文<span class="oc-g">工程</span></h2>
+  <p class="oc-sub">AI 知道的只有你告诉它的——上下文就是 AI 的思维边界。</p>
+  <div class="oc-grid-2">
+    <div class="oc-card oc-card-blue">
+      <h4 style="margin-bottom:12px">📊 简历筛选→数据整理</h4>
+      <p style="font-size:13px;color:var(--oc-orange);margin:3px 0">❌ "帮我筛选简历" — 标准模糊</p>
+      <p style="font-size:13px;color:var(--oc-green);margin:3px 0">✅ 附评分标准 + 岗位要求 → 按标准逐项打分</p>
+      <div class="oc-hl mt-s" style="font-size:14px">💡 AI 的参照标准，决定了输出的质量边界。</div>
+    </div>
+    <div class="oc-rules">
+      <div class="oc-rule"><span class="rn">01</span><div><b>📄 提供参考文档</b><p class="dim">评分标准、业务规则、前置知识</p></div></div>
+      <div class="oc-rule"><span class="rn">02</span><div><b>🔢 指明关键字段</b><p class="dim">哪些字段重要、怎么打分、分类标准是什么</p></div></div>
+      <div class="oc-rule"><span class="rn">03</span><div><b>📋 嵌入评分标准</b><p class="dim">把评分规则直接放在 Prompt 里</p></div></div>
+      <div class="oc-rule"><span class="rn">04</span><div><b>🎯 明确约束条件</b><p class="dim">哪些可以判断、哪些必须标注"不确定"</p></div></div>
+    </div>
+  </div>
+  <aside class="notes"><p>第二个工程——上下文工程。这可能是目前企业落地 AI 最容易忽略但收益最大的环节。AI 的思维边界就是你的上下文。你给它什么样的参考文档、什么样的评分标准、什么样的约束条件，它就按那个框架来输出。很多人觉得 AI 不靠谱，不是因为 AI 不行，是因为你没给它足够的上下文来做出靠谱的判断。</p></aside>
+</section>
+
+<!-- ====== 13. 知识库 / RAG ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">13 / 20</div>
+  <div class="oc-tag">● 工具 · 知识库 / RAG</div>
+  <h2 class="oc-h2">知识库：让 AI<span class="oc-g">"记住"</span>你能干什么</h2>
+  <div class="oc-grid-2" style="max-width:1040px">
+    <div class="oc-card oc-card-blue">
+      <h4 style="margin-bottom:10px">知识库 = 上下文工程的"长效版"</h4>
+      <p style="font-size:14px;color:var(--oc-dim);line-height:1.7">每次手动写上下文太重了 → 规则沉淀到知识库 → 下次对话 AI 自己调取 → 形成正向循环</p>
+    </div>
+    <div class="oc-card">
+      <h4 style="margin-bottom:10px">怎么建？</h4>
+      <p style="font-size:14px;color:var(--oc-dim);line-height:1.7">把评分标准.md、项目手册.md、规则文档放入知识库 → MCP 连接 → AI 对话时自动检索相关规则。</p>
+    </div>
+  </div>
+  <div class="oc-grid-4 mt-m" style="max-width:1100px">
+    <div class="oc-card oc-card-blue" style="text-align:center"><div style="font-size:28px">📄</div><h4 style="margin:6px 0">规则文档</h4><p style="font-size:12px;color:var(--oc-dim)">评分标准、约束条件</p></div>
+    <div class="oc-card oc-card-good" style="text-align:center"><div style="font-size:28px">📊</div><h4 style="margin:6px 0">数据字典</h4><p style="font-size:12px;color:var(--oc-dim)">字段定义、表关系</p></div>
+    <div class="oc-card" style="text-align:center"><div style="font-size:28px">📋</div><h4 style="margin:6px 0">业务手册</h4><p style="font-size:12px;color:var(--oc-dim)">流程、术语、话术</p></div>
+    <div class="oc-card oc-card-warn" style="text-align:center"><div style="font-size:28px">🔧</div><h4 style="margin:6px 0">项目规范</h4><p style="font-size:12px;color:var(--oc-dim)">开发规范、部署流程</p></div>
+  </div>
+  <aside class="notes"><p>知识库是上下文工程的升级版——把一次性的上下文变成持久化的知识资产。你每次手动写上下文太累了，怎么办？把评分标准、项目手册、规则文档全部放入知识库，通过 MCP 协议连接，AI 在对话时自动检索相关内容。这就像雇了一个新人——第一天你需要手把手教，但如果公司有完善的知识库，新人自己就能查到该怎么做。</p></aside>
+</section>
+
+<!-- ====== 14. 案例对比 · 运费对账 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">14 / 20</div>
+  <div class="oc-tag">● Block 03 · 案例对比</div>
+  <h2 class="oc-h2">运费对账：<span class="oc-g">规训的力量</span></h2>
+  <div class="oc-vs">
+    <div class="oc-card oc-card-warn">
+      <span class="oc-badge oc-bo">❌ 没有规训工程</span>
+      <div class="oc-chat"><div class="user">你：帮我做一个运费对账脚本</div><div class="ai">AI：好的，这是脚本……（用了英文字段名，跟你数据库对不上）</div></div>
+    </div>
+    <div class="oc-vs-arrow">→</div>
+    <div class="oc-card oc-card-good">
+      <span class="oc-badge oc-bg">✅ 有了规训工程</span>
+      <div class="oc-chat"><div class="user">你：按项目规则.md 开发，表名/字段名/cron 规范严格遵守</div><div class="ai">AI：确认规则后开始开发……（字段名跟你数据库完全一致）</div></div>
+    </div>
+    <div class="key-var">关键变量：<strong>有没有项目规则.md 约束命名和开发规范</strong></div>
+  </div>
+  <aside class="notes"><p>第三个案例——运费对账。这是我自己踩过的坑。让 AI 写脚本很容易，但它会用英文命名字段，跟你数据库里的中文字段名对不上。部署到服务器，路径写死了 Windows 风格的，Linux 跑不了。关键是：如果你没有一套规训体系——命名规范、路径规范、部署规范——AI 写的代码就是一次性的。规训工程要解决的就是这个"能用 vs 能持续用"的鸿沟。</p></aside>
+</section>
+
+<!-- ====== 15. 揭晓 · 规训工程 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">15 / 20</div>
+  <div class="oc-tag">● CHAPTER 03 · DISCIPLINE ENGINEERING</div>
+  <h2 class="oc-h2">规训<span class="oc-g">工程</span></h2>
+  <p class="oc-sub">AI 产出的不是一次性消费品——需要像管工程师一样给 AI 设规范。</p>
+  <div class="oc-grid-2">
+    <div class="oc-card oc-card-warn">
+      <h4 style="margin-bottom:12px">💸 运费对账</h4>
+      <p style="font-size:13px;color:var(--oc-orange);margin:3px 0">❌ AI 自由发挥 → 字段名对不上 → 部署跑不通</p>
+      <p style="font-size:13px;color:var(--oc-green);margin:3px 0">✅ 按项目规则.md 开发 → 一次部署成功</p>
+      <div class="oc-hl mt-s" style="font-size:14px">🧭 项目规则 = AI 的开发规范手册</div>
+    </div>
+    <div class="oc-rules">
+      <div class="oc-rule"><span class="rn">01</span><div><b>📝 编码规范</b><p class="dim">命名约定、文件结构、注释标准</p></div></div>
+      <div class="oc-rule"><span class="rn">02</span><div><b>🗄️ 数据字典</b><p class="dim">表名、字段名、类型、业务含义</p></div></div>
+      <div class="oc-rule"><span class="rn">03</span><div><b>🚀 部署规范</b><p class="dim">服务器路径、cron 规则、备份策略</p></div></div>
+      <div class="oc-rule"><span class="rn">04</span><div><b>📋 版本管理</b><p class="dim">版本号体系、变更记录、回滚机制</p></div></div>
+    </div>
+  </div>
+  <aside class="notes"><p>第三个工程——规训工程。这个词可能有点陌生。我之所以用"规训"而不是"规范"，是因为规范是给人类看的手册，规训是让 AI 在生成时就能自动遵循的约束。编码规范、数据字典、部署规范、版本管理——这四个组件构成了一套完整的规训体系。有了它，AI 产出的代码才是"可直接部署"的，不用你再改半天。</p></aside>
+</section>
+
+<!-- ====== 16. 案例对比 · 生日自动送祝福 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">16 / 20</div>
+  <div class="oc-tag">● Block 04 · 案例对比</div>
+  <h2 class="oc-h2">生日送祝福：<span class="oc-g">循环的力量</span></h2>
+  <div class="oc-vs">
+    <div class="oc-card oc-card-warn">
+      <span class="oc-badge oc-bo">❌ 没有循环工程</span>
+      <div class="oc-chat"><div class="user">你：帮我写一段生日祝福</div><div class="ai">AI：好的，这是祝福语……</div></div>
+      <p style="font-size:12px;color:var(--oc-dim);margin-top:10px">每次都要手动触发，AI 是"手动的"</p>
+    </div>
+    <div class="oc-vs-arrow">→</div>
+    <div class="oc-card oc-card-good">
+      <span class="oc-badge oc-bg">✅ 有了循环工程</span>
+      <div class="oc-flow">
+        <span class="oc-flow-node">📅 cron 每天检查</span>
+        <span class="oc-flow-arrow">→</span>
+        <span class="oc-flow-node hl">🎂 当天有人生日？</span>
+        <span class="oc-flow-arrow">→</span>
+        <span class="oc-flow-node">✉️ 飞书自动发</span>
+      </div>
+    </div>
+    <div class="key-var">关键变量：<strong>有没有建立 触发器→检测→执行 自动闭环</strong></div>
+  </div>
+  <aside class="notes"><p>最后一个案例——生日自动送祝福。左边是你的用法：每次想到谁生日了，找 AI 写祝福。右边是循环工程的做法：cron 定时检查 → 当天有人生日 → 自动生成祝福 → 飞书推送。同样的 AI 能力，左边是"手动的"，右边是"自动的"。这就是四大工程的终极目标：不要每次手动触发 AI，让 AI 在你需要它的时间点，自动出现。</p></aside>
+</section>
+
+<!-- ====== 17. 揭晓 · 循环工程 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">17 / 20</div>
+  <div class="oc-tag">● CHAPTER 04 · LOOP ENGINEERING</div>
+  <h2 class="oc-h2">循环<span class="oc-g">工程</span></h2>
+  <p class="oc-sub">把 AI 从"你用的时候它才干活"变成"它在该出现的时间点自动出现"。</p>
+  <div class="oc-grid-2">
+    <div class="oc-card oc-card-good">
+      <h4 style="margin-bottom:12px">🎂 生日自动送祝福</h4>
+      <div class="oc-flow" style="gap:6px;justify-content:flex-start;flex-wrap:wrap">
+        <span class="oc-flow-node">📅 cron</span><span class="oc-flow-arrow">→</span>
+        <span class="oc-flow-node hl">检测生日</span><span class="oc-flow-arrow">→</span>
+        <span class="oc-flow-node">🤖 AI 生成</span><span class="oc-flow-arrow">→</span>
+        <span class="oc-flow-node">🚀 飞书推送</span>
+      </div>
+      <div class="oc-hl oc-hl-good mt-s" style="font-size:14px">触发器 → 检测 → 执行 → 推送，全自动闭环</div>
+    </div>
+    <div class="oc-rules">
+      <div class="oc-rule"><span class="rn">01</span><div><b>⏰ 触发器</b><p class="dim">cron、飞书消息、API 回调、文件变更</p></div></div>
+      <div class="oc-rule"><span class="rn">02</span><div><b>🔍 检测体</b><p class="dim">数据查询、状态校验、条件匹配</p></div></div>
+      <div class="oc-rule"><span class="rn">03</span><div><b>🧠 执行体</b><p class="dim">AI 推理/生成/决策、规则匹配</p></div></div>
+      <div class="oc-rule"><span class="rn">04</span><div><b>📡 状态同步</b><p class="dim">执行结果回写、进度更新、异常告警</p></div></div>
+    </div>
+  </div>
+  <aside class="notes"><p>循环工程是四大工程中最难但收益最大的。核心思路：给 AI 配一个"心跳"。业务需要的不只是"AI 能回答"——而是"AI 在该干活的时候自己干"。四个组件：触发器、检测体、执行体、状态同步。这四件套配齐了，AI 就从"助手"变成了"系统中的自动节点"。举个例子：不仅是生日祝福，还包括每日数据监控、每周报表生成、异常自动告警——这些场景的核心逻辑都是一样的。</p></aside>
+</section>
+
+<!-- ====== 18. 总体对比 · 四大工程 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">18 / 20</div>
+  <div class="oc-tag">● 总结 · 四大工程总览</div>
+  <h2 class="oc-h2">四大工程 = 把 AI 从<span class="oc-g">"会猜"</span>变成<span class="oc-g">"能用"</span></h2>
+  <div class="oc-grid-4" style="max-width:1160px">
+    <div class="oc-card" style="text-align:center">
+      <div class="oc-sn">P</div><h4 style="margin:12px 0 4px">提示词工程</h4>
+      <p style="font-size:12px;color:var(--oc-dim);line-height:1.5">派活讲清楚<br>角色·要求·标准</p>
+    </div>
+    <div class="oc-card oc-card-blue" style="text-align:center">
+      <div class="oc-sn">C</div><h4 style="margin:12px 0 4px">上下文工程</h4>
+      <p style="font-size:12px;color:var(--oc-dim);line-height:1.5">给够参考系<br>规则·字段·模板</p>
+    </div>
+    <div class="oc-card oc-card-warn" style="text-align:center">
+      <div class="oc-sn oc-sn-warn">D</div><h4 style="margin:12px 0 4px">规训工程</h4>
+      <p style="font-size:12px;color:var(--oc-dim);line-height:1.5">设好规范体系<br>命名·部署·版本</p>
+    </div>
+    <div class="oc-card oc-card-good" style="text-align:center">
+      <div class="oc-sn oc-sn-green">L</div><h4 style="margin:12px 0 4px">循环工程</h4>
+      <p style="font-size:12px;color:var(--oc-dim);line-height:1.5">建立自动闭环<br>触发·检测·执行</p>
+    </div>
+  </div>
+  <div class="oc-hl oc-hl-good mt-l" style="max-width:960px">✅ 递进关系：提示词（能用）→ 上下文（用对）→ 规训（持续用）→ 循环（自动用）</div>
+  <aside class="notes"><p>四大工程总览。P 是写得好问题，C 是给对材料，D 是管好产出，L 是装好发动机。这四者不是并行的——它们是递进的。先用提示词工程让 AI 能出基本的活，再用上下文工程让它出对的活，再用规训工程让它的产出可持续——开发规范、数据字典、部署流程全部标准化，最后用循环工程让一切自动化运行。</p></aside>
+</section>
+
+<!-- ====== 19. 数据隐私红线 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">19 / 20</div>
+  <div class="oc-tag">● ⚠ 红线 · 数据安全</div>
+  <h2 class="oc-h2">数据<span class="oc-g-orange">隐私</span>红线</h2>
+  <div class="oc-grid-2">
+    <div class="oc-card oc-card-warn">
+      <h4 style="color:var(--oc-orange);margin-bottom:10px">🚫 绝对不能做的</h4>
+      <ul style="padding-left:18px;font-size:15px;color:var(--oc-dim);line-height:2.2;margin:0">
+        <li>上传含用户手机号、身份证、地址的文件</li>
+        <li>粘贴含财务数据的表格</li>
+        <li>在第三方平台使用内部敏感信息</li>
+        <li>不脱敏直接把业务数据发给 AI</li>
+      </ul>
+    </div>
+    <div class="oc-card oc-card-good">
+      <h4 style="color:var(--oc-green);margin-bottom:10px">✅ 安全实践</h4>
+      <ul style="padding-left:18px;font-size:15px;color:var(--oc-dim);line-height:2.2;margin:0">
+        <li>数据脱敏后再发给 AI</li>
+        <li>优先用私有化部署方案</li>
+        <li>敏感操作走审批流程</li>
+        <li>定期审计 AI 使用记录</li>
+      </ul>
+    </div>
+  </div>
+  <div class="oc-hl oc-hl-warn mt-m">⚠ 严肃提醒：免费≠安全。你的数据就是 AI 的训练材料。</div>
+  <aside class="notes"><p>数据隐私是必须讲的一页，但我会快速过。底线很简单：不要把含个人隐私或财务数据的内容直接发给外部 AI。如果你不确定数据能不能发 —— 默认不能。敏感数据请先脱敏。你的公司内部数据、客户信息、财务数据 —— 这些没有脱敏之前，绝对不能进 AI。</p></aside>
+</section>
+
+<!-- ====== 20. 结语 · 认知清单 ====== -->
+<section class="slide">
+  <div class="oc-cbg"></div><div class="oc-cgrid"></div>
+  <div class="oc-snum">20 / 20</div>
+  <div class="oc-tag">● CODA · 认知升级清单</div>
+  <h2 class="oc-h2">今天你带走的 <span class="oc-g">6 个认知升级</span></h2>
+  <div class="oc-card w-full max-w-900 mt-m" style="padding:4px 8px">
+    <ol class="oc-checklist">
+      <li><span class="b" style="border-color:var(--oc-accent2);background:rgba(168,85,247,.12)"></span><span class="t">AI 的本质是猜字系统，不是真的有理解</span></li>
+      <li><span class="b" style="border-color:var(--oc-accent2);background:rgba(168,85,247,.12)"></span><span class="t">Token 贵不贵，取决于有没有产出对等价值</span></li>
+      <li><span class="b" style="border-color:var(--oc-accent2);background:rgba(168,85,247,.12)"></span><span class="t">提示词工程：派活要讲清楚角色、要求、标准</span></li>
+      <li><span class="b" style="border-color:var(--oc-accent2);background:rgba(168,85,247,.12)"></span><span class="t">上下文工程：AI 的思维边界 = 你给的信息</span></li>
+      <li><span class="b" style="border-color:var(--oc-accent2);background:rgba(168,85,247,.12)"></span><span class="t">规训工程：给 AI 设规范，产出才能持续可用</span></li>
+      <li><span class="b" style="border-color:var(--oc-accent2);background:rgba(168,85,247,.12)"></span><span class="t">循环工程：把 AI 从"手动的"变成"自动的"</span></li>
+    </ol>
+  </div>
+  <p class="oc-sub mt-l" style="text-align:center">AI 不垃圾，但需要工程化。<br>从"它啥都能干"到"我知道它啥干不了"——你刚刚走完了这段路。</p>
+  <aside class="notes"><p>今天大家带走了 6 个认知升级。第一，AI 本质是猜字系统——这是所有认知的起点。第二，Token 贵不贵取决于价值。第三到第六就是四大工程：提示词、上下文、规训、循环。它们不是理论——每一个都是从真实爬坑中长出来的工程实践。最后留一句话给大家：AI 不垃圾，但需要工程化。它能力很强，但如果不加工程化约束，它也经常让你哭笑不得。把工程体系搭起来，AI 才真正从"会猜"变成"能用"。谢谢大家。</p></aside>
+</section>
+
+</div>
+
+<div style="position:fixed;bottom:12px;left:12px;font-size:11px;color:var(--oc-dimmer);z-index:100;pointer-events:none;opacity:.5">
+  S 演讲者视图 · T 切换主题 · ← → 翻页 · F 全屏 · O 总览 · R 重置计时
+</div>
+<script src="../../.agents/skills/html-ppt-full/assets/runtime.js"></script>
+<script>
+/* 鼠标滚轮翻页：单页切换，800ms 冷却防连跳 */
+(function() {
+  var cool = false;
+  document.addEventListener('wheel', function(e) {
+    if (cool) return;
+    cool = true;
+    setTimeout(function() { cool = false; }, 800);
+    var dir = e.deltaY > 0 ? 'ArrowRight' : 'ArrowLeft';
+    document.dispatchEvent(new KeyboardEvent('keydown', { key: dir, code: dir, bubbles: true, cancelable: true }));
+  }, { passive: true });
+})();
+</script>
+</body></html>
+</html>

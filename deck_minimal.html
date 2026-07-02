@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 真垃圾 · 分享会</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{background:#0d1117;color:#e6edf3;font-family:'Inter','Noto Sans SC',sans-serif}
+.slide{position:absolute;inset:0;padding:clamp(40px,6vw,80px) clamp(32px,5vw,96px);display:flex;flex-direction:column;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s}
+.slide.active{opacity:1;pointer-events:auto}
+.slide::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 90% 10%,rgba(121,192,255,.12),transparent 60%),radial-gradient(50% 50% at 10% 90%,rgba(126,231,135,.08),transparent 60%);pointer-events:none}
+.slide>*{position:relative;z-index:1}
+h1{font-size:clamp(40px,7vw,96px);font-weight:800;letter-spacing:-.03em;color:#fff;line-height:1.05;margin-bottom:12px}
+h2{font-size:clamp(28px,4vw,56px);font-weight:700;color:#fff;margin-bottom:10px}
+h3{font-size:clamp(18px,2.2vw,30px);font-weight:600;color:#f0f6fc;margin-bottom:6px}
+p{font-size:clamp(15px,1.4vw,20px);color:#d4d4d4;line-height:1.6}
+.k{color:#7ee787;font-family:'JetBrains Mono',monospace;font-size:clamp(12px,1vw,15px);margin-bottom:10px}
+.k::before{content:"> "}
+.s{font-size:clamp(14px,1.2vw,17px);color:#8b949e;line-height:1.6;max-width:45ch}
+.nv{position:fixed;bottom:20px;left:50%;transform:translateX(-50%);z-index:20;font-size:13px;color:rgba(255,255,255,.2);padding:6px 16px;background:rgba(0,0,0,.5);border-radius:8px;font-family:'JetBrains Mono',monospace}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;max-width:800px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;max-width:900px}
+.cd{background:rgba(255,255,255,.03);border:1px solid rgba(139,148,158,.12);border-radius:12px;padding:16px}
+.cd .h{font-size:13px;color:#7ee787;font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.cd .b{font-size:clamp(14px,1.1vw,16px);color:#f0f6fc;line-height:1.4}
+.cd.dim{opacity:.3}
+.hide{display:none!important}
+.tag{display:inline-block;padding:3px 10px;border-radius:6px;font-size:12px;background:rgba(139,148,158,.08);color:#8b949e;margin:3px}
+.tag.g{background:rgba(126,231,135,.1);color:#7ee787}
+.tag.b{background:rgba(121,192,255,.1);color:#79c0ff}
+.tag.o{background:rgba(247,118,142,.1);color:#f7768e}
+.tag.p{background:rgba(210,168,255,.1);color:#d2a8ff}
+</style>
+</head>
+<body>
+<div id="stage"></div>
+<div class="nv" id="nv">1/21</div>
+
+<script>
+const S=`
+<section class="slide" data-title="封面">
+<h1>AI 真垃圾<br><span style="background:linear-gradient(120deg,#7ee787,#79c0ff,#d2a8ff);-webkit-background-clip:text;background-clip:text;color:transparent">从用它到懂它</span></h1>
+<p style="font-size:clamp(16px,1.5vw,22px);color:#8b949e;max-width:42ch">四大工程体系 × AI Agent 落地方法论</p>
+<p style="font-size:13px;color:#6e7681;margin-top:4px">CM @ 开想传媒 · 2026-07-07</p>
+<div style="margin-top:20px;display:flex;gap:8px;flex-wrap:wrap"><span class="tag g">提示词工程</span><span class="tag">上下文工程</span><span class="tag">规训工程</span><span class="tag p">循环工程</span></div>
+</section>
+
+<section class="slide" data-title="互动">
+<div style="text-align:center"><p class="k">INTERACTION</p>
+<div style="font-size:clamp(36px,5vw,64px);letter-spacing:16px;margin-bottom:16px;color:#f0f6fc">← ↑ → ↓ ←</div>
+<p class="s" style="font-size:clamp(20px,2.5vw,36px);color:#8b949e">猜下一个：<strong style="color:#f0f6fc">↑ → ？</strong></p>
+<div id="s2a" class="hide" style="margin-top:20px">
+<div style="font-size:clamp(48px,6vw,80px);color:#7ee787">↓</div>
+<p style="color:#8b949e;font-size:16px">左上右下，顺时针转圈</p>
+<p style="color:#f0f6fc;font-size:18px;margin-top:12px"><strong>AI 的核心——就是个猜字系统</strong></p></div></div>
+</section>
+
+<section class="slide" data-title="反认知" style="text-align:center">
+<p class="k">COUNTER-INTUITIVE</p>
+<h1 style="font-size:clamp(44px,8vw,110px);line-height:1.1">AI 的核心<br>就是<span style="background:linear-gradient(120deg,#7ee787,#79c0ff,#d2a8ff);-webkit-background-clip:text;background-clip:text;color:transparent">个猜字系统</span></h1>
+<p class="s" style="margin:16px auto;max-width:36ch">给它一段上文，它算概率，猜下一个最合理的字/词</p>
+</section>
+
+<section class="slide" data-title="模型">
+<p class="k">MODELS</p><h2>模型</h2>
+<p style="font-size:14px;color:#8b949e;margin-bottom:12px">豆包·ChatGPT·Gemini·千问·DeepSeek·Kimi·GLM-4·Claude</p>
+<div class="grid3"><div class="cd" id="m1"><div class="h">① 预训练</div><div class="b" id="d1">喂海量文字资料</div></div>
+<div class="cd dim" id="m2"><div class="h" style="color:#8b949e">② 指令微调</div><div class="b" style="color:#6e7681" id="d2">点击展开</div></div>
+<div class="cd dim" id="m3"><div class="h" style="color:#8b949e">③ RLHF</div><div class="b" style="color:#6e7681" id="d3">点击展开</div></div></div>
+<div id="lb" class="hide" style="margin-top:12px"><div class="cd" style="border-left:3px solid #f7768e"><p style="font-size:13px">⚠ <b>三个局限</b>：幻觉·知识截止·无真实理解</p></div></div>
+</section>
+
+<section class="slide" data-title="转折" style="text-align:center">
+<p class="k">TURNING POINT</p>
+<h1 style="font-size:clamp(32px,5vw,68px);line-height:1.15">让 AI 瞎猜，<span style="color:#7ee787">绝不靠谱</span><br>四大工程，<span style="color:#79c0ff">让 AI 猜准</span></h1>
+<p class="s" style="margin:16px auto;max-width:38ch;font-size:14px">AI真垃圾——猜字·幻觉·知识截止·无真实理解。但学会正确打开方法，就能变生产力。</p>
+<div style="margin-top:16px;display:flex;gap:8px;justify-content:center;flex-wrap:wrap"><span class="tag g">提示词工程</span><span class="tag b">上下文工程</span><span class="tag o">规训工程</span><span class="tag p">循环工程</span></div>
+</section>`.trim();
+document.getElementById('stage').innerHTML=S;
+
+// Simple slide navigation with lock support
+let cu=0,locked=false;
+const slides=document.querySelectorAll('.slide');
+const total=slides.length;
+function go(n){
+  if(locked||n<0||n>=total)return;
+  slides.forEach((s,i)=>s.classList.toggle('active',i===n));
+  document.getElementById('nv').textContent=(n+1)+'/'+total;
+  cu=n;
+}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')go(cu+1);if(e.key==='ArrowLeft')go(cu-1);});
+
+// Poll control + check lock
+setInterval(()=>{
+  fetch('/api/control/current').then(r=>r.json()).then(d=>{
+    if(d.lock!==undefined)locked=d.lock;
+    if(!locked&&d.slide&&d.slide!==cu+1)go(d.slide-1);
+    if(d.slide===2&&d.expand!==undefined){document.getElementById('s2a').className=d.expand?'':'hide';}
+    if(d.slide===4){
+      if(d.card!==undefined){
+        [1,2,3].forEach(i=>{
+          const el=document.getElementById('m'+i);
+          if(!el)return;
+          if(d.card===i){el.className='cd';el.style.opacity='1';el.style.borderColor='rgba(126,231,135,.4)';}
+          else if(d.card===0){el.className='cd';el.style.opacity='1';el.style.borderColor='';}
+          else{el.className='cd dim';el.style.borderColor='';}
+          if(d.card===1)document.getElementById('d1').innerHTML='喂海量文字资料';
+          if(d.card===2)document.getElementById('d2').innerHTML='给问答对，学对话格式';
+          if(d.card===3)document.getElementById('d3').innerHTML='人类打分→AI变"舔狗"';
+          if(d.card===0){document.getElementById('d1').innerHTML='喂海量文字资料';document.getElementById('d2').innerHTML='点击展开';document.getElementById('d3').innerHTML='点击展开';}
+        });
+      }
+      if(d.mode==='limitations'){document.getElementById('lb').className='';}
+      if(d.mode==='normal'){document.getElementById('lb').className='hide';}
+    }
+  }).catch(()=>{});
+},1500);
+</body>
+</html>

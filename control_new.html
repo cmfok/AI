@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>控制台 · AI 真垃圾</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#e6edf3;font-family:'Inter','Noto Sans SC',sans-serif;padding:0;overflow-x:hidden}
+.sticky{position:sticky;top:0;z-index:100;background:#0d1117;padding:12px 12px 0}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#161b22;border:1px solid rgba(139,148,158,.15);border-radius:12px;margin-bottom:8px}
+.top-bar .left{display:flex;align-items:center;gap:8px}
+.top-bar .info{font-size:14px;color:#8b949e}
+.top-bar .info strong{color:#f0f6fc;font-size:20px}
+.top-bar .right{display:flex;align-items:center;gap:6px;font-size:13px;color:#8b949e}
+.top-bar .right .dot{width:8px;height:8px;border-radius:50%;background:#238636;display:inline-block}
+.page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px;margin-bottom:8px}
+.page-dot{padding:8px 0;border-radius:8px;border:1px solid rgba(139,148,158,.12);background:rgba(255,255,255,.02);font-size:13px;color:#8b949e;text-align:center;cursor:pointer}
+.page-dot.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
+.actions{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;min-height:36px}
+.actions .btn{padding:8px 16px;border-radius:8px;border:1px solid rgba(139,148,158,.15);background:rgba(255,255,255,.04);color:#e6edf3;font-size:13px;cursor:pointer}
+.actions .btn:active{background:rgba(255,255,255,.1)}
+.actions .btn.on{border-color:#7ee787;background:rgba(126,231,135,.1);color:#7ee787}
+.scroll{overflow-y:auto;padding:0 12px 90px;max-height:calc(100vh - 180px)}
+.speaker-panel{background:#161b22;border:1px solid rgba(139,148,158,.12);border-radius:12px;padding:16px;margin-bottom:8px}
+.speaker-panel .sl{font-size:11px;color:#8b949e;font-family:'JetBrains Mono',monospace;margin-bottom:8px;letter-spacing:.5px}
+.speaker-panel .sc{font-size:16px;line-height:1.8;color:#d4d4d4;white-space:pre-wrap}
+.speaker-panel .sc strong{color:#f0f6fc}
+.next-prev{background:rgba(255,255,255,.02);border:1px solid rgba(139,148,158,.08);border-radius:10px;padding:12px;margin-bottom:8px;opacity:.7}
+.next-prev .nl{font-size:10px;color:#8b949e;font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.next-prev .nc{font-size:12px;line-height:1.5;color:#8b949e;white-space:pre-wrap}
+.bottom-nav{position:fixed;bottom:16px;left:12px;right:12px;display:flex;gap:8px;z-index:200;max-width:600px;margin:0 auto}
+.bottom-nav .bn{flex:1;padding:14px 0;border-radius:10px;border:none;font-size:15px;font-weight:600;cursor:pointer;text-align:center}
+.bottom-nav .bp{background:#21262d;color:#e6edf3;border:1px solid rgba(139,148,158,.2)}
+.bottom-nav .bnx{background:#238636;color:#fff}
+.bottom-nav .bn:active{transform:scale(.97)}
+</style>
+</head>
+<body>
+<div class="sticky">
+  <div class="top-bar">
+    <div class="left"><div class="info">🎙 <strong id="cp">1</strong> / <span id="tp">20</span></div></div>
+    <div class="right"><span class="dot"></span>已连接</div>
+  </div>
+  <div class="page-grid" id="pg"></div>
+  <div class="actions" id="actBox" style="display:none"></div>
+  <div id="lockRow" style="display:flex;gap:6px;margin-bottom:8px;align-items:center">
+    <button class="btn" id="lockBtn">🔓 翻页已解锁</button>
+    <span style="font-size:11px;color:#8b949e">锁定后展示页不响应翻页</span>
+  </div>
+</div>
+<div class="scroll">
+  <div class="speaker-panel">
+    <div class="sl" id="sl">P1 · 封面</div>
+    <div class="sc" id="sc">加载中...</div>
+  </div>
+  <div class="next-prev">
+    <div class="nl">⏭ 下一页</div>
+    <div class="nc" id="nc">—</div>
+  </div>
+</div>
+<div class="bottom-nav">
+  <button class="bn bp" id="bP">← 上一页</button>
+  <button class="bn bnx" id="bN">下一页 →</button>
+</div>
+<script>
+var TOTAL=21,cur=1;
+var ACT={2:{l:'展开答案',s:'展开答案',h:'收起答案'},4:{l:'展开卡片',s:'展开三阶段',h:'收起卡片'}};
+var CC=0; // card step for slide 4
+var S={
+1:{t:'封面',c:`大家好，今天我的分享主题叫**AI真垃圾**。\n为什么取这个名字？**两个意思**。\n第一个意思——觉得它无所不能，实际用起来**各种不靠谱**。你会觉得：**AI真垃圾！**\n第二个意思——用久了，你知道它垃圾在哪，也就知道怎么**规训**它了。\n我最核心的关切就是：**如何让AI可控地输出我想要的结果。**`},
+2:{t:'外星人语言',c:`先跟大家玩个小游戏。\n**← ↑ → ↓ ←**  猜下一个：**↑ → ？**\n答案是 **↓**。**左上右下，顺时针转圈**。\n你刚才做的这件事，就是**AI每天都在做的事**——根据上文，预测最合理的下一个东西。`},
+3:{t:'AI=猜字系统',c:`**AI的核心——就是个猜字系统**。\n它**没有意识，没有理解**，算概率猜答案。`},
+4:{t:'模型',c:`**豆包·ChatGPT·Gemini·千问·DeepSeek**……都是**模型**。\n**三阶段训练**：①预训练→②指令微调→③RLHF→AI变**"舔狗"**\n**三个局限**：**幻觉**（天气案例）·**知识截止**（父亲节案例）·**无真实理解**（10:10钟表）`},
+5:{t:'四大工程总览',c:`吐槽：**AI真垃圾**——猜字·幻觉·知识截止·无真实理解。\n**但是！**学会**正确的打开方法**，就能变**生产力工具**。\n四大工程：**①提示词工程** **②上下文工程** **③规训工程** **④循环工程**`},
+6:{t:'提示词工程',c:`**左边❌**："帮我做个PPT"→AI瞎猜。**右边✅**：Trae语音→MD→生成PPT（元演示）。\n**四个规则**：**定角色·讲要求·给参考·设标准**\n故事：朋友问AI约会→"喜欢一个女孩该去哪"→AI：看电影吃饭。教他用结构问→方案完整了。\n**过了几天他又来了：又失败了！**AI推荐**烤肉**，那女孩是**素食主义者**！`},
+7:{t:'上下文工程',c:`问题：**结构对了，但AI不了解女孩**。不是改指令，是**把背景资料喂给AI**。\n结果每个环节都贴合她。**三个价值**：**可迁移·可生长·有记忆**`},
+8:{t:'知识库搭建',c:`**🥉青铜**：MD+Trae  **🥈白银**：MD+Trae+Obsidian  **🥇黄金**：+向量模型/插件`},
+9:{t:'招聘简历',c:`**左边❌**——只用模型+提示词→通用分析，不精准。\n**右边✅**——套**规训六件套**：工具·约束·校验·状态·容错·观测`},
+10:{t:'运费对账',c:`**左边❌**——Excel手工算，半天怕错。**右边✅**——脚本自动化：**1秒零误差**`},
+11:{t:'规训工程',c:`**AI真垃圾**——很多时候不是AI的问题，是**没给它手脚**，**没套缰绳**。**规训工程就是手脚和缰绳**。\n**六大组件**：工具调用·约束安全·验证校验·状态管理·错误处理·可观测性`},
+12:{t:'脚本vs工作流',c:`**确定性→脚本(Python)**  **固定工作流(扣子Coze/Dify)**  **开放性→AI工作流(Trae/Qoder)**`},
+13:{t:'生日营销',c:`真实案例：**变现400万+**。用户→小程序→数据库→AI→客服→复购→**闭环**`},
+14:{t:'递进对比',c:`**只有规训**→单次执行  **加循环**→**做→查→修→再输出**`},
+15:{t:'循环工程',c:`**AI为什么垃圾？做一遍就完了**。**循环工程就是逼它再做一遍**。\n四部曲：**自查→复盘→会诊→绩效**  三栏：流程·痛点·未来`},
+16:{t:'个人vs企业AI',c:`**个人**→提示词+上下文，错了Ctrl+Z。**企业**→四大工程全得上，错了就是钱。`},
+17:{t:'数据隐私',c:`①问问题→**用API** ②上传→**用Trae** ③聊机密→**隐私模式** ④复制→**企业版** ⑤多人→**一人一账号**\n**Pro：私有化部署**`},
+18:{t:'Checklist',c:`明确场景→选模型→搭知识库→设计提示词→配置规训→评估隐私→搭建工作流→循环优化\n**三层工具**：API Key→本地工具→知识库`},
+19:{t:'答疑',c:`**结束语**：**AI——当你不会用它的时候，他真的是垃圾。当你学会用它的时候，就能变废为宝。厉害的不是AI，是人类的脑子。**`},
+20:{t:'附录·模型',c:`（备用）**DeepSeek→推理强** **Qwen→中文理解强** **Kimi→超长上下文** **GLM-4→工具调用** **豆包→日常对话**`},
+21:{t:'附录·Token',c:'（备用）Token理解成手机流量，不用太纠结费用。用API调模型默认不用于训练。'},
+};
+
+// Build grid
+var g=document.getElementById('pg');
+for(var i=1;i<=TOTAL;i++){
+  var d=document.createElement('div');
+  d.className='page-dot'+(i===cur?' active':'');
+  d.textContent=i<=20?(i===5?'转':'P'+(i>5?i-1:i)):'附';
+  d.onclick=function(n){return function(){go(n);};}(i);
+  g.appendChild(d);
+}
+document.getElementById('tp').textContent=20;
+
+function go(n){
+  if(n<1||n>TOTAL)return;
+  cur=n;
+  document.querySelectorAll('.page-dot').forEach(function(d,i){d.className='page-dot'+(i+1===n?' active':'');});
+  document.getElementById('cp').textContent=n>20?'附':(n===5?'转':(n>5?n-1:n));
+  upd(n);
+  CC=0;
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:n})}).catch(function(){});
+  // Action buttons
+  var ab=document.getElementById('actBox');
+  if(ACT[n]){
+    ab.style.display='flex';
+    if(n===2){
+      ab.innerHTML='<button class="btn" id="aBtn">▶ '+ACT[n].l+'</button>';
+      document.getElementById('aBtn').onclick=function(){
+        var b=document.getElementById('aBtn');
+        var isOn=b.classList.contains('on');
+        if(isOn){
+          b.classList.remove('on');b.textContent='▶ '+ACT[2].l;
+          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:false})}).catch(function(){});
+        }else{
+          b.classList.add('on');b.textContent=ACT[2].h;
+          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:true})}).catch(function(){});
+        }
+      };
+    }else if(n===4){
+      CC=0;
+      ab.innerHTML='<button class="btn" id="aBtn">▶ 展开卡片1</button>';
+      document.getElementById('aBtn').onclick=function(){
+        CC++;
+        var b=document.getElementById('aBtn');
+        if(CC>3){
+          CC=0;b.classList.remove('on');b.textContent='▶ 展开卡片1';
+          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,card:0})}).catch(function(){});
+        }else{
+          b.textContent='▶ 展开卡片'+(CC+1);
+          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,card:CC})}).catch(function(){});
+        }
+      };
+    }
+  }else{
+    ab.style.display='none';
+  }
+}
+
+function upd(n){
+  var s=S[n];
+  if(!s)return;
+  document.getElementById('sl').textContent=(n>20?'附':(n===5?'转':'P'+(n>5?n-1:n)))+' · '+s.t;
+  document.getElementById('sc').innerHTML=s.c.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  var nx=S[n+1];
+  if(nx){
+    document.getElementById('nc').innerHTML='<strong>'+(n+1>20?'附':(n+1===5?'转':'P'+(n+1>5?n:n+1)))+' · '+nx.t+'</strong><br>'+nx.c.substring(0,100).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'…';
+  }else{
+    document.getElementById('nc').innerHTML='— 结束 —';
+  }
+}
+
+document.getElementById('bP').onclick=function(){go(cur-1);};
+document.getElementById('bN').onclick=function(){go(cur+1);};
+document.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')go(cur-1);if(e.key==='ArrowRight')go(cur+1);});
+
+// Lock toggle
+var locked=false;
+document.getElementById('lockBtn').onclick=function(){
+  locked=!locked;
+  this.textContent=locked?'🔒 翻页已锁定':'🔓 翻页已解锁';
+  this.style.borderColor=locked?'#f7768e':'';
+  this.style.background=locked?'rgba(247,118,142,.1)':'';
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,lock:locked})}).catch(function(){});
+};
+
+upd(1);
+</script>
+</body>
+</html>

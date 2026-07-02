@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 真垃圾 · 分享会</title>
+<link rel="stylesheet" href="../.agents/skills/html-ppt-full/assets/fonts.css">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:'Inter','Noto Sans SC',sans-serif}
+body{background:#0d1117;color:#e6edf3}
+#st{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;transition:opacity .35s}
+#st.fd{opacity:0}
+.sl{position:absolute;inset:0;padding:clamp(44px,7vw,90px) clamp(36px,6vw,110px);display:flex;flex-direction:column;justify-content:center}
+.sl::before{content:"";position:absolute;inset:0;background:radial-gradient(60% 50% at 90% 10%,rgba(121,192,255,.12),transparent 60%),radial-gradient(50% 50% at 10% 90%,rgba(126,231,135,.08),transparent 60%);pointer-events:none;z-index:0}
+.sl>*{position:relative;z-index:1}
+h1{font-size:clamp(64px,9vw,120px);font-weight:800;letter-spacing:-.04em;color:#fff;line-height:1.05;margin-bottom:18px}
+h1 .g{background:linear-gradient(120deg,#7ee787,#79c0ff,#d2a8ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+h2{font-size:clamp(32px,4vw,56px);font-weight:700;color:#fff;margin-bottom:14px}
+.sub{font-size:clamp(20px,2.2vw,30px);color:#8b949e;line-height:1.6;max-width:45ch}
+p{font-size:clamp(18px,1.8vw,26px);color:#d4d4d4;line-height:1.7}
+.k{color:#7ee787;font-family:'JetBrains Mono',monospace;font-size:18px;margin-bottom:14px;letter-spacing:.5px}
+.k::before{content:"> "}
+.nv{bottom:28px;left:50%;transform:translateX(-50%);z-index:20;position:fixed;font-size:15px;color:rgba(255,255,255,.2);font-family:'JetBrains Mono',monospace;padding:8px 20px;background:rgba(0,0,0,.6);border-radius:10px;border:1px solid rgba(255,255,255,.06)}
+.nv .c{color:#f0f6fc;font-weight:600}
+.cd{background:rgba(255,255,255,.03);border:1px solid rgba(139,148,158,.12);border-radius:14px;padding:22px;margin-bottom:12px;transition:all .4s}
+.cd .h{font-size:16px;color:#7ee787;font-family:'JetBrains Mono',monospace;margin-bottom:6px}
+.cd .b{font-size:20px;color:#f0f6fc;line-height:1.5}
+.gr2{display:grid;grid-template-columns:1fr 1fr;gap:18px;max-width:900px}
+.gr3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;max-width:1000px}
+.ct{display:inline-block;padding:5px 14px;border-radius:6px;font-size:14px;background:rgba(139,148,158,.08);color:#8b949e;margin:3px}
+.ct.g{background:rgba(126,231,135,.1);color:#7ee787}
+.ct.b{background:rgba(121,192,255,.1);color:#79c0ff}
+.ct.o{background:rgba(255,107,53,.1);color:#ff6b35}
+.hide{display:none!important}
+</style>
+</head>
+<body>
+<div id="st" class="fd"></div>
+<div class="nv"><span class="c" id="pn">1</span> / <span id="pt">21</span></div>
+<script>
+const S=[
+`<div class="sl"><h1>AI 真垃圾<br><span class="g">从用它到懂它</span></h1><p class="sub" style="margin-top:22px">四大工程体系 × AI Agent 落地方法论</p><p style="margin-top:12px;font-size:20px;color:#6e7681">从迷信到理解，从"AI瞎猜"到"让它猜准"</p><div style="margin-top:32px;display:flex;gap:14px;flex-wrap:wrap"><span class="ct g">#提示词工程</span><span class="ct">#上下文工程</span><span class="ct">#规训工程</span><span class="ct" style="background:rgba(210,168,255,.1);color:#d2a8ff">#循环工程</span></div><p style="margin-top:40px;font-size:18px;color:#6e7681">CM @ 开想传媒 · 2026-07-07</p></div>`,
+`<div class="sl" style="align-items:center;text-align:center"><div class="k" style="margin-bottom:28px">INTERACTION</div><div style="font-size:clamp(52px,7vw,80px);letter-spacing:18px;margin-bottom:34px;color:#f0f6fc">← ↑ → ↓ ←</div><div style="font-size:clamp(32px,4vw,54px);color:#8b949e;margin-bottom:44px">猜下一个：<strong style="color:#f0f6fc">↑ → ？</strong></div><div id="ex2" class="hide"><div style="font-size:clamp(64px,10vw,110px);color:#7ee787;margin-bottom:18px">↓</div><p style="font-size:24px;color:#8b949e">左上右下，顺时针转圈</p><p style="font-size:clamp(22px,2.5vw,34px);color:#f0f6fc;margin-top:24px"><strong>AI 的核心——就是个猜字系统</strong></p></div></div>`,
+`<div class="sl" style="align-items:center;text-align:center"><div class="k">COUNTER-INTUITIVE</div><h1 style="font-size:clamp(60px,10vw,130px)">AI 的核心<br>就是<span class="g">个猜字系统</span></h1><p class="sub" style="margin-top:22px;font-size:clamp(20px,2.2vw,32px)">给它一段上文，它算概率，猜下一个最合理的字/词</p></div>`,
+`<div class="sl"><div class="k">MODELS</div><h1>模型</h1><p style="font-size:clamp(18px,1.8vw,26px);color:#8b949e;margin-bottom:24px">豆包·ChatGPT·Gemini·千问·DeepSeek 都是模型</p><div id="ex4c" class="gr3"><div class="cd" id="c4_1" style="opacity:1"><div class="h">① 预训练</div><div class="b" style="font-size:18px">喂海量文字资料<br>让AI了解人类语言逻辑</div></div><div class="cd" id="c4_2" style="opacity:0.3"><div class="h" style="color:#8b949e">② 指令微调</div><div class="b" style="font-size:18px;color:#6e7681">点击展开</div></div><div class="cd" id="c4_3" style="opacity:0.3"><div class="h" style="color:#8b949e">③ RLHF</div><div class="b" style="font-size:18px;color:#6e7681">点击展开</div></div></div><div id="ex4l" class="hide" style="margin-top:20px"><div class="cd" style="border-color:rgba(255,107,53,.25)"><div class="h" style="color:#ff6b35;font-size:18px">⚠ 三个局限</div><p style="font-size:18px;line-height:2">①<b>幻觉</b>——问天气，AI不调工具直接猜"我觉得今天天气真好啊"<br>②<b>知识截止</b>——问父亲节，AI答"2025年"（训练数据只到2025）<br>③<b>没有真实理解</b>——让AI画钟表，指针永远是10:10</p></div></div></div>`,
+`<div class="sl" style="align-items:center;text-align:center"><div class="k">TURNING POINT</div><h1 style="font-size:clamp(48px,7vw,96px);line-height:1.2">让 AI 瞎猜，<span class="g">绝不靠谱</span><br>四大工程，<span class="g">让 AI 猜准</span></h1><div style="margin-top:32px;display:flex;gap:18px;flex-wrap:wrap;justify-content:center"><span class="ct g">提示词工程</span><span class="ct b">上下文工程</span><span class="ct o">规训工程</span><span class="ct" style="background:rgba(210,168,255,.1);color:#d2a8ff">循环工程</span></div><p style="margin-top:28px;font-size:20px;color:#8b949e;max-width:40em">吐槽：AI真垃圾——猜字·幻觉·知识截止·无真实理解。但学会正确打开方法，就能变生产力。</p></div>`,
+`<div class="sl"><div class="k">PROMPT ENGINEERING</div><h1>提示词工程</h1><div class="gr2" style="max-width:850px;margin-bottom:18px"><div class="cd" style="border-color:rgba(255,107,53,.2)"><div class="h" style="color:#ff6b35;font-size:16px">❌ 没有提示词</div><div class="b" style="font-size:17px">"帮我做个PPT"→AI瞎猜，输出没法用</div></div><div class="cd" style="border-color:rgba(126,231,135,.2)"><div class="h" style="color:#7ee787;font-size:16px">✅ 有提示词</div><div class="b" style="font-size:17px">Trae语音沟通→MD文件→生成PPT（就是这场分享会）</div></div></div><p style="font-size:17px;color:#8b949e;margin-bottom:14px">四个规则：<strong style="color:#f0f6fc">定角色·讲要求·给参考·设标准</strong></p><p style="font-size:16px;color:#8b949e;line-height:1.7">故事：朋友问AI约会→"喜欢一个女孩该去哪"→AI答看电影吃饭。<br>教他用结构问→方案完整。过几天又来了：还是失败了！<br>AI推荐<strong style="color:#ff6b35">烤肉</strong>，那女孩是<strong style="color:#ff6b35">素食主义者</strong>——AI根本不知道。</p></div>`,
+`<div class="sl"><div class="k">CONTEXT ENGINEERING</div><h1>上下文工程</h1><p style="font-size:18px;color:#f0f6fc;margin-bottom:18px">结构对了，但AI不了解女孩</p><p style="font-size:17px;color:#8b949e;margin-bottom:18px;line-height:1.7">不是改指令，是<strong style="color:#f0f6fc">把背景资料喂给AI</strong>——她喜欢什么颜色、吃什么、做什么、爱好什么。结果每个环节都贴合她。</p><div class="gr3" style="max-width:800px"><div class="cd"><div class="h" style="font-size:16px">📁 可迁移</div><div class="b" style="font-size:17px">换模型不用重新喂</div></div><div class="cd"><div class="h" style="font-size:16px">📋 可生长</div><div class="b" style="font-size:17px">不断加内容，AI越来越懂你</div></div><div class="cd"><div class="h" style="font-size:16px">📚 有记忆</div><div class="b" style="font-size:17px">不用每次重新说一遍</div></div></div></div>`,
+`<div class="sl"><div class="k">KNOWLEDGE BASE</div><h1 style="font-size:clamp(40px,5vw,72px)">知识库搭建</h1><div class="gr3" style="max-width:850px;margin-top:24px"><div class="cd" style="border-color:rgba(139,148,158,.15)"><div class="h" style="font-size:22px">🥉 青铜</div><div class="b" style="font-size:18px"><strong>MD + Trae</strong><br>先跑起来最重要</div></div><div class="cd" style="border-color:rgba(139,148,158,.2)"><div class="h" style="font-size:22px">🥈 白银</div><div class="b" style="font-size:18px"><strong>MD + Trae + Obsidian</strong><br>能搜能管</div></div><div class="cd" style="border-color:rgba(210,168,255,.15)"><div class="h" style="font-size:22px">🥇 黄金</div><div class="b" style="font-size:18px"><strong>+ 向量模型/插件</strong><br>语义搜索</div></div></div></div>`,
+`<div class="sl"><div class="k">CASE · RECRUIT</div><h1>招聘简历 · 对比</h1><div class="gr2" style="max-width:850px"><div class="cd" style="border-color:rgba(255,107,53,.2)"><div class="h" style="color:#ff6b35;font-size:16px">❌ 无规训工程</div><div class="b" style="font-size:17px">只用模型+提示词→通用分析，不精准</div></div><div class="cd" style="border-color:rgba(126,231,135,.2)"><div class="h" style="color:#7ee787;font-size:16px">✅ 套规训六件套</div><div class="b" style="font-size:17px">多维度评分+JD匹配+预警推荐</div></div></div><p style="margin-top:18px;font-size:16px;color:#8b949e">现场演示demo_hr.html<br>六大组件：工具调用·约束安全·验证校验·状态管理·错误处理·可观测性</p></div>`,
+`<div class="sl"><div class="k">CASE · FREIGHT</div><h1>运费对账 · 对比</h1><div class="gr2" style="max-width:850px"><div class="cd" style="border-color:rgba(255,107,53,.2)"><div class="h" style="color:#ff6b35;font-size:16px">❌ 人工对账</div><div class="b" style="font-size:17px">Excel手工算，半天还怕错</div></div><div class="cd" style="border-color:rgba(126,231,135,.2)"><div class="h" style="color:#7ee787;font-size:16px">✅ 脚本自动化</div><div class="b" style="font-size:17px">ERP→重量→地址→报价→1秒零误差</div></div></div></div>`,
+`<div class="sl"><div class="k">HARNESS ENGINEERING</div><h1>规训工程</h1><p style="font-size:18px;color:#f0f6fc;margin-bottom:18px">AI真垃圾——很多时候不是AI的问题，是没给它手脚，没给它套缰绳。规训工程就是手脚和缰绳。</p><div class="gr2" style="max-width:850px"><div class="cd"><div class="h" style="font-size:15px">🔧 ①工具调用</div><div class="b" style="font-size:16px">给AI装上手和脚</div></div><div class="cd"><div class="h" style="font-size:15px">🛡 ②约束安全</div><div class="b" style="font-size:16px">设边界不乱来</div></div><div class="cd"><div class="h" style="font-size:15px">✅ ③验证校验</div><div class="b" style="font-size:16px">自己检查自己</div></div><div class="cd"><div class="h" style="font-size:15px">📦 ④状态管理</div><div class="b" style="font-size:16px">关键信息存外部文件</div></div><div class="cd"><div class="h" style="font-size:15px">🔄 ⑤错误处理</div><div class="b" style="font-size:16px">出错不崩</div></div><div class="cd"><div class="h" style="font-size:15px">📊 ⑥可观测性</div><div class="b" style="font-size:16px">每一步可回溯</div></div></div></div>`,
+`<div class="sl"><div class="k">SCRIPT vs WORKFLOW</div><h1 style="font-size:clamp(36px,5vw,64px)">脚本 vs 工作流</h1><div class="gr3" style="max-width:950px;margin-top:20px"><div class="cd" style="border-color:rgba(139,148,158,.15)"><div class="h" style="font-size:16px">🐍 脚本</div><div class="b" style="font-size:17px">确定性结果<br>Python·代码硬写</div></div><div class="cd" style="border-color:rgba(121,192,255,.15)"><div class="h" style="font-size:16px;color:#79c0ff">🔗 固定工作流</div><div class="b" style="font-size:17px">确定结果·拖拽搭建<br>扣子Coze·Dify</div></div><div class="cd" style="border-color:rgba(210,168,255,.15)"><div class="h" style="font-size:16px;color:#d2a8ff">🤖 AI工作流</div><div class="b" style="font-size:17px">开放性需求<br>Trae·Qoder·Claude Code</div></div></div></div>`,
+`<div class="sl"><div class="k">CASE · BIRTHDAY</div><h1>生日营销 · 拆解</h1><p style="font-size:20px;color:#7ee787;margin-bottom:18px">真实案例 · 变现 <strong style="font-size:32px">400万+</strong></p><p style="font-size:18px;color:#8b949e;line-height:2">用户扫码→小程序填生日地址→数据库→<br>AI每天扫描→客服联系→送礼品→复购→<strong style="color:#f0f6fc">闭环</strong></p><p style="font-size:16px;color:#8b949e;margin-top:14px">每个节点对应规训工程组件：工具调用·约束安全·校验·状态·容错·观测</p></div>`,
+`<div class="sl" style="align-items:center;text-align:center"><div class="k">PROGRESSION</div><h1 style="font-size:clamp(40px,6vw,80px)">递进对比</h1><div class="gr2" style="max-width:750px;margin-top:24px"><div class="cd" style="border-color:rgba(255,107,53,.2)"><div class="h" style="color:#ff6b35;font-size:16px">只有规训工程</div><div class="b" style="font-size:20px">单次执行，做完就完了</div></div><div class="cd" style="border-color:rgba(126,231,135,.2)"><div class="h" style="color:#7ee787;font-size:16px">加循环工程</div><div class="b" style="font-size:20px">做→查→修→再输出，直到满意</div></div></div></div>`,
+`<div class="sl"><div class="k">LOOP ENGINEERING</div><h1 style="font-size:clamp(36px,5vw,72px)">循环工程</h1><p style="font-size:18px;color:#f0f6fc;margin-bottom:14px">AI为什么垃圾？做一遍就完了，不会回头看。循环工程就是逼它再做一遍。</p><div class="gr2" style="max-width:750px"><div class="cd"><div class="h" style="font-size:16px">自查→复盘→会诊→绩效</div></div><div class="cd" style="border-color:rgba(255,107,53,.15)"><div class="h" style="color:#ff6b35;font-size:16px">痛点：AI没有眼睛</div><div class="b" style="font-size:16px">只能看代码，视觉审美做不了</div></div></div><p style="font-size:16px;color:#8b949e;margin-top:12px">未来：多Agent并行·实时通讯·冲突协调</p></div>`,
+`<div class="sl"><div class="k">PERSONAL vs ENTERPRISE</div><h1 style="font-size:clamp(36px,5vw,64px)">个人AI vs 企业AI</h1><div class="gr2" style="max-width:750px"><div class="cd" style="border-color:rgba(121,192,255,.15)"><div class="h" style="color:#79c0ff;font-size:16px">👤 个人AI</div><div class="b" style="font-size:18px">提示词+上下文<br>错了Ctrl+Z</div></div><div class="cd" style="border-color:rgba(255,107,53,.15)"><div class="h" style="color:#ff6b35;font-size:16px">🏢 企业AI</div><div class="b" style="font-size:18px">四大工程全得上<br>错了就是钱</div></div></div></div>`,
+`<div class="sl"><div class="k">DATA PRIVACY</div><h1 style="font-size:clamp(32px,4vw,54px)">数据隐私</h1><p style="font-size:17px;color:#8b949e;margin-bottom:14px;line-height:2">①问问题→<strong style="color:#f0f6fc">用API</strong>（默认不训练）  ②上传文件→<strong style="color:#f0f6fc">用Trae</strong>（本地处理）<br>③聊机密→<strong style="color:#f0f6fc">隐私模式</strong>  ④复制数据→<strong style="color:#f0f6fc">企业版</strong>  ⑤多人共用→<strong style="color:#f0f6fc">一人一账号</strong></p><div class="cd" style="border-color:rgba(210,168,255,.15);max-width:550px"><div class="h" style="color:#d2a8ff;font-size:16px">🅿️ Pro升级：私有化部署</div></div></div>`,
+`<div class="sl"><div class="k">CHECKLIST</div><h1 style="font-size:clamp(32px,4vw,54px)">落地 Checklist</h1><div class="gr2" style="max-width:750px"><div class="cd"><div class="b" style="font-size:17px">①明确场景 ②选模型 ③搭知识库<br>④设计提示词 ⑤配置规训 ⑥评估隐私<br>⑦搭建工作流 ⑧循环优化</div></div><div class="cd"><div class="h" style="font-size:16px">三层工具</div><div class="b" style="font-size:17px">API Key→本地工具→知识库</div></div></div></div>`,
+`<div class="sl" style="align-items:center;text-align:center"><div class="k">Q&A</div><h1 style="font-size:clamp(40px,6vw,80px)">谢谢</h1><div class="cd" style="max-width:650px"><p style="font-size:22px;line-height:1.7;color:#f0f6fc"><strong>AI——当你不会用它的时候，他真的是垃圾。当你学会用它的时候，就能变废为宝。<br>厉害的不是AI，是人类的脑子。</strong></p></div><p style="margin-top:24px;font-size:17px;color:#8b949e">附录备用：模型选择指南 / Token费用说明</p></div>`,
+`<div class="sl" style="align-items:center;text-align:center"><div class="k">APPENDIX</div><h1 style="font-size:clamp(36px,5vw,68px)">模型怎么<span class="g">选</span></h1><div class="gr2" style="max-width:750px;margin-top:20px"><div class="cd"><div class="h" style="font-size:16px">🇨🇳 国内稳定</div><div class="b" style="font-size:18px">DeepSeek·Qwen·GLM-4·豆包</div></div><div class="cd"><div class="h" style="font-size:16px">🌍 个人灵活</div><div class="b" style="font-size:18px">ChatGPT·Claude·Gemini</div></div></div><p style="margin-top:18px;font-size:17px;color:#8b949e">不是哪个更好，是哪个更适合你的场景</p></div>`
+];
+let cu=0, tl=S.length;
+document.getElementById('pt').textContent=tl-1;
+function sh(i){
+  if(i<0||i>=tl)return;
+  cu=i;
+  const s=document.getElementById('st');
+  s.classList.add('fd');
+  setTimeout(()=>{
+    s.innerHTML=S[i];
+    s.classList.remove('fd');
+    document.getElementById('pn').textContent=i+1>=tl?'附':i+1;
+    if(window._cardState)ac(window._cardState);
+    if(window._expand2!==undefined){const e=document.getElementById('ex2');if(e)e.className=window._expand2?'':'hide';}
+    if(window._limitMode){const e=document.getElementById('ex4l');if(e)e.className='';}
+  },300);
+}
+function ac(n){
+  for(let i=1;i<=3;i++){
+    const el=document.getElementById('c4_'+i);
+    if(el){
+      el.style.opacity=n===i?'1':'0.3';
+      el.style.borderColor=n===i?'rgba(126,231,135,.4)':'rgba(139,148,158,.12)';
+      const h=el.querySelector('.h');const b=el.querySelector('.b');
+      if(n===i){
+        if(h){h.style.color='#7ee787';h.textContent=['① 预训练','② 指令微调','③ RLHF'][i-1];}
+        if(b){b.style.color='#f0f6fc';b.textContent=['喂海量文字资料·让AI了解人类语言逻辑','给问答对·让AI学会对话格式','人类打分→过度优化语气·AI变"舔狗"'][i-1];}
+      }else{
+        if(h){h.style.color='#8b949e';h.textContent=['① 预训练','② 指令微调','③ RLHF'][i-1];}
+        if(b){b.style.color='#6e7681';b.textContent='点击展开';}
+      }
+    }
+  }
+}
+setInterval(()=>{
+  fetch('/api/control/current').then(r=>r.json()).then(d=>{
+    const t=d.slide-1;
+    if(t>=0&&t<tl&&t!==cu)sh(t);
+    if(d.slide===2&&d.expand!==undefined){window._expand2=d.expand;const e=document.getElementById('ex2');if(e)e.className=d.expand?'':'hide';}
+    if(d.slide===4){
+      if(d.card!==undefined){window._cardState=d.card;ac(d.card);}
+      if(d.mode==='limitations'){window._limitMode=true;const e=document.getElementById('ex4l');if(e)e.className='';}
+      if(d.mode==='normal'){window._limitMode=false;const e=document.getElementById('ex4l');if(e)e.className='hide';}
+    }
+  }).catch(()=>{});
+},1500);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key===' ')sh(cu+1);if(e.key==='ArrowLeft')sh(cu-1);});
+sh(0);
+</script>
+</body>
+</html>

@@ -1,0 +1,751 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<title>AI 真垃圾 · 分享会</title>
+<style>
+/* ═══════════════════ reset & base ═══════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{
+  font-family:-apple-system,"SF Pro Display","Helvetica Neue","Noto Sans SC",sans-serif;
+  background:#000;color:#f5f5f7;
+}
+
+/* ═══════════════════ slide 容器 ═══════════════════ */
+#slideContainer{
+  position:fixed;top:0;left:0;right:0;bottom:0;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;z-index:1;
+  opacity:1;transition:opacity 0.35s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+#slideContainer.fading{opacity:0}
+.slide-inner{
+  position:absolute;top:0;left:0;right:0;bottom:0;
+  padding:60px 48px 80px;
+  display:flex;flex-direction:column;justify-content:center;
+  overflow:hidden;
+}
+.slide-inner.max-w{max-width:1200px;margin:0 auto;left:auto;right:auto;padding:60px 40px 80px}
+
+/* ── 页面指示器 ── */
+#pageIndicator{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:20;
+  font-size:13px;color:rgba(255,255,255,0.3);font-family:monospace;
+  letter-spacing:2px;padding:6px 16px;
+  background:rgba(0,0,0,0.6);border-radius:8px;
+  backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,0.06);
+}
+#pageIndicator .current{color:#f5f5f7;font-weight:600}
+
+/* ── 全黑过渡遮罩 ── */
+#fadeOverlay{
+  position:fixed;top:0;left:0;right:0;bottom:0;z-index:10;
+  background:#000;
+  opacity:0;pointer-events:none;
+  transition:opacity 0.3s ease;
+}
+#fadeOverlay.show{opacity:1;pointer-events:auto}
+
+/* ═══════════════════ Q&A 面板 ═══════════════════ */
+/* ── 桌面端：右侧固定面板 ── */
+#qaPanel{
+  position:fixed;top:0;right:0;bottom:0;z-index:5;
+  width:340px;
+  background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);
+  border-left:1px solid rgba(255,255,255,0.06);
+  display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+#qaPanel.open{transform:translateX(0)}
+#qaPanel .header{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:16px 20px;border-bottom:1px solid rgba(255,255,255,0.06);
+}
+#qaPanel .header h3{font-size:15px;font-weight:600}
+#qaPanel .header h3 span{color:#64b5f6}
+#qaPanel .header .close-btn{
+  background:none;border:none;color:rgba(255,255,255,0.3);
+  font-size:18px;cursor:pointer;padding:4px;
+}
+#qaList{flex:1;overflow-y:auto;padding:12px 16px}
+.qa-item{
+  background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);
+  border-radius:10px;padding:14px;margin-bottom:10px;
+}
+.qa-item .q{font-size:13px;line-height:1.5;color:#d4d4d4;margin-bottom:6px}
+.qa-item .q::before{content:'💬 ';font-size:12px}
+.qa-item .a{
+  font-size:13px;line-height:1.6;color:#64b5f6;
+  padding-left:20px;border-left:2px solid rgba(0,113,227,0.3);
+}
+.qa-item .a::before{content:'AI · ';color:rgba(100,181,246,0.5);font-size:11px}
+.qa-item .tag{
+  display:inline-block;margin-top:6px;padding:2px 8px;border-radius:4px;
+  background:rgba(0,113,227,0.1);color:#64b5f6;font-size:11px;
+}
+
+/* ── Q&A 切换按钮 ── */
+#qaToggle{
+  position:fixed;top:50%;right:0;z-index:6;transform:translateY(-50%);
+  width:36px;height:50px;
+  background:rgba(0,0,0,0.7);backdrop-filter:blur(8px);
+  border:1px solid rgba(255,255,255,0.06);border-right:none;
+  border-radius:8px 0 0 8px;cursor:pointer;
+  color:rgba(255,255,255,0.5);font-size:14px;transition:all 0.3s;
+  display:flex;align-items:center;justify-content:center;
+}
+#qaToggle:hover{color:#64b5f6;width:40px}
+#qaToggle .count{
+  position:absolute;top:-6px;right:-6px;
+  width:18px;height:18px;border-radius:50%;
+  background:#ff6b35;color:#fff;font-size:10px;
+  display:flex;align-items:center;justify-content:center;
+  display:none;
+}
+#qaToggle .count.show{display:flex}
+
+/* ── 手机端：底部半屏抽屉 ── */
+#qaMobile{
+  display:none;position:fixed;bottom:0;left:0;right:0;z-index:15;
+  background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);
+  border-top:1px solid rgba(255,255,255,0.06);
+  border-radius:16px 16px 0 0;
+  transform:translateY(calc(100% - 44px));transition:transform 0.4s cubic-bezier(0.25,0.46,0.45,0.94);
+}
+#qaMobile.open{transform:translateY(0)}
+#qaMobile .handle{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 16px;cursor:pointer;user-select:none;
+}
+#qaMobile .handle .bar{width:32px;height:3px;border-radius:2px;background:rgba(255,255,255,0.2);margin:0 auto}
+#qaMobile .handle .title{font-size:13px;color:#86868b}
+#qaMobile .handle .title span{color:#64b5f6}
+#qaMobile .qa-mobile-content{padding:0 16px 16px;max-height:50vh;overflow-y:auto}
+
+/* ═══════════════════ 自定义滚动条 ═══════════════════ */
+#qaList::-webkit-scrollbar,.qa-mobile-content::-webkit-scrollbar{width:3px}
+#qaList::-webkit-scrollbar-thumb,.qa-mobile-content::-webkit-scrollbar-thumb{background:rgba(255,255,255,0.1);border-radius:2px}
+
+/* ═══════════════════ 响应式 ═══════════════════ */
+@media(max-width:768px){
+  #qaPanel{display:none}
+  #qaToggle{display:none}
+  #qaMobile{display:block}
+  .slide-inner{padding:50px 20px 70px}
+}
+@media(min-width:769px){
+  #qaMobile{display:none}
+  .slide-inner{padding:60px 48px 80px}
+}
+</style>
+</head>
+<body>
+
+<!-- 渐变遮罩 -->
+<div id="fadeOverlay"></div>
+
+<!-- Slide 容器 -->
+<div id="slideContainer"></div>
+
+<!-- 页面指示器 -->
+<div id="pageIndicator"><span class="current" id="pageCurrent">1</span> / 19</div>
+
+<!-- 桌面 Q&A 切换按钮 -->
+<button id="qaToggle" onclick="toggleQa()">
+  💬<span class="count" id="qaBadge">0</span>
+</button>
+
+<!-- 桌面 Q&A 面板 -->
+<div id="qaPanel">
+  <div class="header">
+    <h3>💬 实时问答 <span id="qaPanelCount">0</span></h3>
+    <button class="close-btn" onclick="toggleQa()">✕</button>
+  </div>
+  <div id="qaList"></div>
+</div>
+
+<!-- 手机 Q&A 抽屉 -->
+<div id="qaMobile">
+  <div class="handle" onclick="toggleMobileQa()">
+    <div></div>
+    <div class="title">💬 实时问答 <span id="qaMobileCount">0</span></div>
+    <div class="bar"></div>
+  </div>
+  <div class="qa-mobile-content" id="qaMobileList"></div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+// 幻灯片内容定义
+// ═══════════════════════════════════════════════════════
+const SLIDES = [
+  // Slide 1 - 封面
+  { type:'center',
+    bg:'linear-gradient(135deg,#000 0%,#0a0a1a 50%,#000 100%)',
+    content:`
+      <div style="text-align:center;max-width:800px;margin:0 auto">
+        <div style="margin-bottom:12px">
+          <span style="font-size:13px;color:rgba(255,255,255,0.3);letter-spacing:3px;font-family:monospace">SHARING SESSION</span>
+        </div>
+        <h1 style="font-size:clamp(36px,6vw,72px);font-weight:700;letter-spacing:-2px;line-height:1.1;margin-bottom:16px">
+          AI <span style="color:#4A90D9">真垃圾</span>
+        </h1>
+        <p style="font-size:clamp(16px,2vw,24px);color:#86868b;font-weight:300;line-height:1.5;margin-bottom:32px">
+          从"它啥都能干"到"我知道它啥干不了"
+        </p>
+        <div style="display:flex;justify-content:center;gap:20px;flex-wrap:wrap">
+          <span style="padding:6px 16px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);font-size:13px;color:#86868b">CM · 青骏会</span>
+          <span style="padding:6px 16px;border-radius:8px;background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);font-size:13px;color:#86868b">2026.07</span>
+        </div>
+      </div>
+    `
+  },
+  // Slide 2 - 外星人语言
+  { type:'center',
+    bg:'#0a0a0a',
+    content:`
+      <div style="text-align:center;max-width:700px;margin:0 auto">
+        <h2 style="font-size:24px;font-weight:700;margin-bottom:40px">外星人的语言</h2>
+        <div style="font-size:clamp(32px,5vw,56px);font-weight:300;letter-spacing:8px;margin-bottom:32px">
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:clamp(48px,7vw,72px);height:clamp(48px,7vw,72px);border-radius:50%;background:rgba(74,144,217,0.15);color:#4A90D9;margin:0 4px">←</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:clamp(48px,7vw,72px);height:clamp(48px,7vw,72px);border-radius:50%;background:rgba(74,144,217,0.15);color:#4A90D9;margin:0 4px">↑</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:clamp(48px,7vw,72px);height:clamp(48px,7vw,72px);border-radius:50%;background:rgba(74,144,217,0.15);color:#4A90D9;margin:0 4px">→</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:clamp(48px,7vw,72px);height:clamp(48px,7vw,72px);border-radius:50%;background:rgba(74,144,217,0.15);color:#4A90D9;margin:0 4px">↓</span>
+          <span style="display:inline-flex;align-items:center;justify-content:center;width:clamp(48px,7vw,72px);height:clamp(48px,7vw,72px);border-radius:50%;background:rgba(74,144,217,0.15);color:#4A90D9;margin:0 4px">←</span>
+        </div>
+        <p style="color:#86868b;font-size:18px;margin-bottom:8px">猜下一个：<span style="font-size:clamp(24px,3vw,40px);display:block;margin-top:8px"><span style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:rgba(74,144,217,0.2);color:#4A90D9">↑</span> <span style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:50%;background:rgba(74,144,217,0.2);color:#4A90D9">→</span> <span style="display:inline-flex;align-items:center;justify-content:center;width:56px;height:56px;border-radius:6px;background:rgba(255,107,53,0.15);color:#FF6B35;font-size:16px">？</span></span></p>
+        <div style="margin-top:48px;padding:16px 24px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);text-align:left">
+          <p style="color:#86868b;font-size:14px;line-height:1.7">LLM（大语言模型）本质：<br><span style="color:#f5f5f7;font-weight:500">根据上文，预测下一个字/词</span></p>
+        </div>
+      </div>
+    `
+  },
+  // Slide 3 - 训练三阶段
+  { type:'cards',
+    bg:'#0d0d0d',
+    title:'训练三阶段',
+    cards:[
+      {num:'①',name:'预训练',desc:'海量文本<br>预测下一个词'},
+      {num:'②',name:'指令微调',desc:'问答对学会<br>对话格式'},
+      {num:'③',name:'RLHF',desc:'人类打分<br>学"好回答"标准'},
+    ]
+  },
+  // Slide 4 - RLHF评分维度
+  { type:'cards',
+    bg:'#0d0d0d',
+    title:'RLHF 评分维度',
+    cards:[
+      {num:'',name:'有用性',desc:''},
+      {num:'',name:'真实性',desc:''},
+      {num:'',name:'安全性',desc:''},
+      {num:'',name:'诚实性',desc:''},
+      {num:'',name:'语气态度',desc:''},
+    ],
+    footnote:'⚠ 副作用：过度优化语气 → 模型变 <span style="color:#FF6B35;font-weight:600">"舔狗"</span>'
+  },
+  // Slide 5 - 核心能力&局限
+  { type:'twocol-compare',
+    bg:'#0a0a0a',
+    title:'核心能力 & 局限',
+    leftItems:['语言理解','逻辑推理','知识召回','代码生成'],
+    rightItems:['幻觉','知识截止日期','无真实理解'],
+    leftLabel:'能力',rightLabel:'局限'
+  },
+  // Slide 6 - Token概念
+  { type:'token',
+    bg:'#000',
+    title:'Token 概念 & 费用',
+    content:{
+      concept:'Token：AI 的最小语言单位<br><span style="font-size:14px;color:#86868b">英文 1 Token ≈ 1 词 &nbsp;·&nbsp; 中文 1 Token ≈ 1~2 字</span>',
+      insight:'觉得 Token 贵 → 不一定是用太多，<br>是没产出对等价值<br><span style="color:#4A90D9;font-weight:500">AI 节省的人力成本 > Token 费用 → 就不贵</span>',
+      future:'Token 像手机流量一样被三大运营商套餐化<br><span style="font-size:14px;color:#86868b">→ 按量付费 · 月套餐 · 平台专属包</span>',
+      bridge:'<span style="color:#86868b;font-size:13px">💡 目前只有 API 调用（规训工程层面）才能明显感受 Token 费用<br>接下来四大工程体系 → 教你"用对"，让每一分 Token 值回票价</span>'
+    }
+  },
+  // Slide 7 - 模型对比表
+  { type:'model-table',
+    bg:'#0a0a0a',
+    title:'不同模型擅长什么？',
+    rows:[
+      {model:'DeepSeek',company:'深度求索',goodAt:'推理 / 代码 / 数学'},
+      {model:'通义千问 Qwen',company:'阿里巴巴',goodAt:'中文理解'},
+      {model:'Kimi',company:'月之暗面',goodAt:'超长上下文'},
+      {model:'GLM-4',company:'智谱AI',goodAt:'多模态 / 工具调用'},
+      {model:'豆包',company:'字节跳动',goodAt:'日常对话'},
+    ],
+    footnote:'不是哪个更好，是哪个更适合你的场景'
+  },
+  // Slide 8 - 语音→PPT 对比
+  { type:'twocol-demo',
+    bg:'#0d0d0d',
+    title:'案例对比 · 语音→PPT',
+    left:{label:'❌ 没有提示词工程',content:'「帮我做一个PPT」<br><br><span style="color:#86868b;font-size:14px">→ AI 瞎猜，<br>输出乱七八糟</span>',color:'#ff6b6b'},
+    right:{label:'✅ 有了提示词工程',content:'「结构：封面/大纲/案例/收尾 → 输出MD → 生成PPT」<br><br><span style="color:#86868b;font-size:14px">→ 一次成型</span>',color:'#4A90D9'},
+    keyVar:'关键变量：有没有定义输出结构'
+  },
+  // Slide 9 - 提示词工程 (四部曲)
+  { type:'chapter',
+    bg:'linear-gradient(180deg,#0a0a1a 0%,#111 40%,#0d0d0d 100%)',
+    chapter:'01',en:'Prompt Engineering',
+    name:'提示词工程',
+    story:'「帮我做一个PPT」→ 瞎猜<br>「结构：封面/大纲/案例/收尾 → 输出MD → 生成PPT」→ 一次成型',
+    rules:[
+      {rule:'RULE 01',icon:'🎯',title:'定角色',desc:'先说清楚身份，AI 切换到对应视角'},
+      {rule:'RULE 02',icon:'📋',title:'讲要求',desc:'明确交付物：表格、数字、格式'},
+      {rule:'RULE 03',icon:'📝',title:'给参考',desc:'给一个模板，照这个格式写'},
+      {rule:'RULE 04',icon:'🚧',title:'设标准',desc:'划定范围：异常项标红、敏感不对外'},
+    ],
+    insight:'提示词工程 = 派活要讲清楚角色、要求和标准',
+    tools:'CoT · Few-shot · ToT',
+    desc:'派活说不清楚，员工一定干偏。AI 也一样。'
+  },
+  // Slide 10 - 约会翻车对比
+  { type:'twocol-demo',
+    bg:'#0d0d0d',
+    title:'案例对比 · 约会翻车',
+    left:{label:'❌ 只有提示词',content:'「帮我策划一次约会」<br><br>→ AI 推荐吃烤肉<br><span style="color:#86868b;font-size:13px">（女孩是素食主义者）</span>',color:'#ff6b6b'},
+    right:{label:'✅ 提示词 + 女孩资料',content:'素食餐厅 + 书店 + 文艺礼物<br><br><span style="color:#86868b;font-size:13px">背景决定适配度</span>',color:'#4A90D9'},
+    keyVar:'关键变量：给不给背景信息 / 知识库'
+  },
+  // Slide 11 - 上下文工程 (四部曲)
+  { type:'chapter',
+    bg:'linear-gradient(180deg,#0d0d0d 0%,#0a0a1a 40%,#0d0d0d 100%)',
+    chapter:'02',en:'Context Engineering',
+    name:'上下文工程',
+    story:'提示词决定"怎么说"<br>上下文决定"知道什么"',
+    rules:[
+      {rule:'STEP 01',icon:'📁',title:'给历史数据',desc:'把原始数据喂给 AI'},
+      {rule:'STEP 02',icon:'📋',title:'给参考模板',desc:'照格式风格写'},
+      {rule:'STEP 03',icon:'📚',title:'给业务规则',desc:'分类/成本/异常标准写成文档'},
+    ],
+    insight:'提示词决定"怎么说"，上下文决定"知道什么"',
+    tools:'Trae · Obsidian · OpenRouter · 硅基流动',
+    desc:'派完活还得给资料。不给资料就做 = 闭着眼睛干活。'
+  },
+  // Slide 12 - 知识库搭建
+  { type:'knowledge',
+    bg:'#0d0d0d',
+    title:'🛠 知识库搭建',
+    stages:[
+      {label:'入门 · 零门槛',icon:'📱',items:['只用 Trae 即可','手机+电脑随时聊','AI 整理成 MD 文件','先跑起来最重要！']},
+      {label:'进阶',icon:'⚡',items:['Trae + Obsidian (Vault)','搭向量模型做语义搜索','OpenRouter → Google AI → 硅基流动','知识库慢慢长出来']}
+    ]
+  },
+  // Slide 13 - 运费对账+招聘对比
+  { type:'twocol-demo',
+    bg:'#0d0d0d',
+    title:'案例对比 · 运费对账+招聘',
+    left:{label:'❌ 没有规训工程',content:'人工算半天，还怕算错<br>简历一份份看，凭感觉打分',color:'#ff6b6b'},
+    right:{label:'✅ 有了规训工程',content:'运费对账：<span style="font-size:13px;color:#86868b">ERP→重量→报价→1秒零误差</span><br>招聘：<span style="font-size:13px;color:#86868b">多模态+评分引擎+JD匹配</span>',color:'#4A90D9'},
+    keyVar:'关键变量：有没有工程外壳给它套上'
+  },
+  // Slide 14 - 规训工程 (四部曲)
+  { type:'chapter',
+    bg:'linear-gradient(180deg,#0d0d0d 0%,#111 40%,#0a0a1a 100%)',
+    chapter:'03',en:'Harness Engineering',
+    name:'规训工程',
+    story:'脚本 → 确定性计算（运费对账）<br>工作流 → 灵活探索（招聘筛选）',
+    rules:[
+      {rule:'',icon:'🔧',title:'① 工具调用',desc:'给 AI 装上手和脚'},
+      {rule:'',icon:'🚫',title:'② 约束安全',desc:'设边界：预算上限、安全区域'},
+      {rule:'',icon:'✅',title:'③ 验证校验',desc:'自己检查自己，错了自动改'},
+      {rule:'',icon:'📦',title:'④ 状态管理',desc:'关键信息存外部文件'},
+      {rule:'',icon:'🔄',title:'⑤ 错误处理',desc:'查不到换平台、超时重试'},
+      {rule:'',icon:'👁️',title:'⑥ 可观测性',desc:'每一步决策来源可回溯'},
+    ],
+    insight:'规训工程 = 给 AI 套上"缰绳"',
+    tools:'Python · MCP · OpenClaw · 脚本/工作流',
+    desc:'没有 SOP、没有权限、没有质量检查，再聪明也干不好。'
+  },
+  // Slide 15 - 生日营销对比
+  { type:'twocol-demo',
+    bg:'#0d0d0d',
+    title:'案例对比 · 生日营销',
+    left:{label:'❌ 单次执行',content:'AI 推荐一次就结束<br>不完美就废了，不会自己修正',color:'#ff6b6b'},
+    right:{label:'✅ 循环执行',content:'每日扫描 → 筛选 → 飞书通知<br>客服联系 → 下单 → ERP发货 → 回写',color:'#4A90D9'},
+    keyVar:'关键变量：是一次执行还是循环执行'
+  },
+  // Slide 16 - 循环工程 (四部曲 + 三栏)
+  { type:'chapter-loop',
+    bg:'linear-gradient(180deg,#0a0a1a 0%,#0d0d0d 40%,#000 100%)',
+    chapter:'04',en:'Loop Engineering',
+    name:'循环工程',
+    story:'单次执行 → 不完美就废了<br>循环执行 → 自动检查→修复→再输出',
+    levels:[
+      {level:'LEVEL 01',icon:'🔍',title:'自查',desc:'AI 做完先审一遍'},
+      {level:'LEVEL 02',icon:'💭',title:'复盘',desc:'写出过程和判断标准'},
+      {level:'LEVEL 03',icon:'👥',title:'会诊',desc:'多个 AI 对比取优'},
+      {level:'LEVEL 04',icon:'📊',title:'绩效反馈',desc:'打回改进→AI 记住偏好'},
+    ],
+    insight:'关键变量：一次执行 vs 循环执行',
+    tools:'Loop.md · cron · 飞书',
+    desc:'AI 第一次不可能完美。好管理者会让助理：先做→审核→给反馈→改进。',
+    threeCols:{
+      left:{title:'循环流程',items:['用户设定目标','AI主动引导提问','单Agent循环执行','输出临时文件','回顾检查+自动修复','达成/多方案输出']},
+      mid:{title:'⚠ 现在：痛点',items:['AI 没有眼睛','代码·数据 → 能检查','视觉·审美 → 看不出来','只能在自己看懂的世界里循环','涉及感知判断 · 得人把关']},
+      right:{title:'🔮 未来：方向',items:['多 Agent 并行','同时干活+实时通讯对齐','冲突自动协调','→ 指数级效率提升','核心：Agent间通讯+状态对齐']}
+    }
+  },
+  // Slide 17 - 个人vs企业AI
+  { type:'comparison-table',
+    bg:'#0a0a0a',
+    title:'个人 AI vs 企业 AI',
+    headers:['维度','个人 AI','企业 AI'],
+    rows:[['目的','提升个人效率','生产环境'],['容错','高，错了重来','低，出错是损失'],['核心','效率','可控']],
+    footnote:'企业 AI 必须走循环工程'
+  },
+  // Slide 18 - 数据隐私
+  { type:'twocol-simple',
+    bg:'#000',
+    title:'数据隐私',
+    left:{label:'泄露路径',color:'#ff6b6b',items:['API 调用链路','模型训练吸收','日志留存','第三方插件']},
+    right:{label:'规避方案',color:'#4A90D9',items:['私有化部署','签署不训练协议','加密传输+专线','本地向量化再上传']}
+  },
+  // Slide 19 - Checklist
+  { type:'checklist',
+    bg:'#0d0d0d',
+    title:'落地 Checklist',
+    items:[
+      ['明确业务场景','选择模型'],
+      ['搭建知识库','设计提示词'],
+      ['配置规训策略','评估数据隐私'],
+      ['开发测试','监控迭代']
+    ],
+    footnote:'互动答疑'
+  },
+];
+
+// ═══════════════════════════════════════════════════════
+// 幻灯片渲染
+// ═══════════════════════════════════════════════════════
+let currentSlide = 0;
+let isTransitioning = false;
+
+const container = document.getElementById('slideContainer');
+const fadeOverlay = document.getElementById('fadeOverlay');
+
+function renderSlide(index) {
+  const s = SLIDES[index];
+  if (!s) return;
+  
+  let html = `<div class="slide-inner" style="background:${s.bg || '#000'}">`;
+  
+  switch (s.type) {
+    case 'center':
+      html += s.content;
+      break;
+      
+    case 'cards':
+      html += `<h2 style="font-size:clamp(22px,2.8vw,36px);font-weight:700;margin-bottom:clamp(20px,4vh,48px)">${s.title}</h2>`;
+      html += `<div style="display:grid;grid-template-columns:repeat(${s.cards.length},1fr);gap:16px">`;
+      s.cards.forEach(c => {
+        html += `<div style="background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:20px">
+          ${c.num ? `<div style="font-size:12px;color:rgba(255,255,255,0.3);margin-bottom:6px">${c.num}</div>` : ''}
+          <h3 style="font-size:16px;font-weight:600;margin-bottom:4px;color:#4A90D9">${c.name}</h3>
+          ${c.desc ? `<p style="color:#86868b;font-size:14px;line-height:1.6">${c.desc}</p>` : ''}
+        </div>`;
+      });
+      html += '</div>';
+      if (s.footnote) html += `<div style="margin-top:24px;padding:12px 16px;background:rgba(255,107,53,0.06);border-left:3px solid #FF6B35;border-radius:8px;font-size:14px;color:#d4d4d4">${s.footnote}</div>`;
+      break;
+      
+    case 'twocol-compare':
+      html += `<h2 style="font-size:clamp(22px,2.8vw,36px);font-weight:700;margin-bottom:clamp(16px,3vh,36px)">${s.title}</h2>`;
+      html += '<div style="display:grid;grid-template-columns:1fr 1px 1fr;gap:24px;align-items:start">';
+      html += `<div><h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:#4A90D9">${s.leftLabel}</h3>`;
+      s.leftItems.forEach(item => { html += `<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:15px">${item}</div>`; });
+      html += '</div><div style="background:rgba(255,255,255,0.1);height:100%"></div>';
+      html += `<div><h3 style="font-size:14px;font-weight:600;margin-bottom:12px;color:#FF6B35">${s.rightLabel}</h3>`;
+      s.rightItems.forEach(item => { html += `<div style="padding:8px 0;border-bottom:1px solid rgba(255,255,255,0.04);font-size:15px">${item}</div>`; });
+      html += '</div></div>';
+      break;
+      
+    case 'token':
+      html += `<div style="max-width:900px;margin:0 auto"><h2 style="font-size:clamp(22px,2.8vw,36px);font-weight:700;margin-bottom:clamp(16px,3vh,36px)">${s.title}</h2>`;
+      html += `<div style="padding:16px 20px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:12px"><p style="font-size:16px;line-height:1.6">${s.content.concept}</p></div>`;
+      html += `<div style="padding:16px 20px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:12px"><p style="font-size:16px;line-height:1.6">${s.content.insight}</p></div>`;
+      html += `<div style="padding:16px 20px;background:rgba(255,255,255,0.02);border-radius:10px;margin-bottom:12px"><p style="font-size:16px;line-height:1.6"><span style="color:#4A90D9">🔮 未来判断</span><br>${s.content.future}</p></div>`;
+      html += `<div style="padding:12px 16px;border-top:1px solid rgba(255,255,255,0.06)"><p>${s.content.bridge}</p></div></div>`;
+      break;
+      
+    case 'model-table':
+      html += `<h2 style="font-size:clamp(22px,2.8vw,36px);font-weight:700;margin-bottom:clamp(16px,3vh,36px)">${s.title}</h2>`;
+      html += '<div style="max-width:800px;margin:0 auto"><table style="width:100%;border-collapse:collapse"><thead><tr>';
+      ['模型','公司','擅长'].forEach(h => { html += `<th style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.1);text-align:left;font-size:13px;color:rgba(255,255,255,0.4);font-weight:500">${h}</th>`; });
+      html += '</tr></thead><tbody>';
+      s.rows.forEach((r,i) => {
+        html += `<tr${i < s.rows.length-1 ? ' style="border-bottom:1px solid rgba(255,255,255,0.04)"' : ''}>`;
+        html += `<td style="padding:14px 16px;font-weight:500">● ${r.model}</td>`;
+        html += `<td style="padding:14px 16px;color:#86868b">${r.company}</td>`;
+        html += `<td style="padding:14px 16px;color:#4A90D9">${r.goodAt}</td></tr>`;
+      });
+      html += '</tbody></table>';
+      if (s.footnote) html += `<p style="margin-top:16px;color:#86868b;font-size:14px;text-align:center">${s.footnote}</p>`;
+      html += '</div>';
+      break;
+      
+    case 'twocol-demo':
+      html += `<h2 style="font-size:clamp(20px,2.5vw,32px);font-weight:700;margin-bottom:clamp(12px,2vh,24px)">${s.title}</h2>`;
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:1000px;margin:0 auto">';
+      [s.left,s.right].forEach(col => {
+        html += `<div style="padding:20px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+          <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;color:${col.color}">${col.label}</h3>
+          <div style="font-size:15px;line-height:1.7;color:#d4d4d4">${col.content}</div></div>`;
+      });
+      html += '</div>';
+      html += `<div style="margin-top:20px;padding:12px 16px;background:rgba(74,144,217,0.06);border-left:3px solid #4A90D9;border-radius:8px;font-size:14px;font-weight:500;color:#64b5f6">${s.keyVar}</div>`;
+      break;
+      
+    case 'chapter': {
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px;height:100%;align-content:center">';
+      html += `<div style="padding:24px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:2px;font-family:monospace;margin-bottom:6px">CHAPTER ${s.chapter}</div>
+        <h2 style="font-size:clamp(20px,2.5vw,32px);font-weight:700;margin-bottom:2px">${s.name}</h2>
+        <p style="font-size:13px;color:#64b5f6;margin-bottom:16px;letter-spacing:1px;font-weight:300">${s.en}</p>
+        <p style="color:#86868b;font-size:13px;margin-bottom:16px">${s.desc}</p>
+        <div style="padding:12px 16px;background:rgba(255,255,255,0.02);border-radius:8px;font-size:14px;line-height:1.7">${s.story}</div>
+        <div style="margin-top:12px;padding:10px 14px;background:rgba(0,113,227,0.06);border-left:3px solid #0071e3;border-radius:6px;font-size:13px;color:#64b5f6">💡 ${s.insight}</div>
+        <div style="margin-top:10px;display:flex;gap:6px;flex-wrap:wrap">
+          <span style="font-size:11px;padding:3px 10px;border-radius:6px;background:rgba(0,113,227,0.1);color:#64b5f6">${s.tools}</span></div></div>`;
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;align-content:start">';
+      s.rules.forEach(r => {
+        html += `<div style="padding:14px;border-radius:10px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05)">
+          <div style="font-size:11px;font-weight:600;font-family:monospace;color:rgba(255,255,255,0.25);margin-bottom:4px">${r.rule}</div>
+          <h5 style="font-size:14px;font-weight:600;margin-bottom:4px">${r.icon} ${r.title}</h5>
+          <p style="color:#86868b;font-size:12px;line-height:1.5">${r.desc}</p></div>`;
+      });
+      html += '</div></div>';
+      break;
+    }
+      
+    case 'knowledge':
+      html += `<h2 style="font-size:clamp(20px,2.5vw,32px);font-weight:700;margin-bottom:clamp(12px,2vh,24px)">${s.title}</h2>`;
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:900px;margin:0 auto">';
+      s.stages.forEach(st => {
+        html += `<div style="padding:20px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+          <h3 style="font-size:16px;font-weight:600;margin-bottom:12px">${st.icon} ${st.label}</h3><ul style="list-style:none">`;
+        st.items.forEach(item => { html += `<li style="padding:6px 0;font-size:14px;color:#d4d4d4;border-bottom:1px solid rgba(255,255,255,0.03)">${item}</li>`; });
+        html += '</ul></div>';
+      });
+      html += '</div>';
+      break;
+      
+    case 'chapter-loop': {
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:10px">';
+      html += `<div style="padding:20px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+        <div style="font-size:11px;color:rgba(255,255,255,0.3);letter-spacing:2px;font-family:monospace;margin-bottom:6px">CHAPTER ${s.chapter}</div>
+        <h2 style="font-size:clamp(18px,2.2vw,28px);font-weight:700;margin-bottom:2px">${s.name}</h2>
+        <p style="font-size:12px;color:#64b5f6;margin-bottom:12px;letter-spacing:1px;font-weight:300">${s.en}</p>
+        <p style="color:#86868b;font-size:12px;margin-bottom:12px">${s.desc}</p>
+        <div style="padding:12px;background:rgba(255,255,255,0.02);border-radius:8px;font-size:13px;line-height:1.6">${s.story}</div>
+        <div style="margin-top:10px;padding:8px 12px;background:rgba(0,113,227,0.06);border-left:3px solid #0071e3;border-radius:6px;font-size:12px;color:#64b5f6">💡 ${s.insight}</div></div>`;
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;align-content:start">';
+      s.levels.forEach(l => {
+        html += `<div style="padding:12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05)">
+          <div style="font-size:10px;font-weight:600;font-family:monospace;color:rgba(255,255,255,0.25);margin-bottom:3px">${l.level}</div>
+          <h5 style="font-size:13px;font-weight:600;margin-bottom:2px">${l.icon} ${l.title}</h5>
+          <p style="color:#86868b;font-size:11px;line-height:1.4">${l.desc}</p></div>`;
+      });
+      html += '</div></div>';
+      // Three columns
+      const tc = s.threeCols;
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;border-top:1px solid rgba(255,255,255,0.06);padding-top:10px">';
+      const colors = ['#4A90D9','#FF6B35','#64b5f6'];
+      [tc.left,tc.mid,tc.right].forEach((col,i) => {
+        html += `<div style="padding:10px 12px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.04)">
+          <h4 style="font-size:12px;font-weight:600;margin-bottom:4px;color:${colors[i]}">${col.title}</h4>`;
+        col.items.forEach(item => { html += `<div style="padding:3px 0;font-size:11px;color:#d4d4d4;border-bottom:1px solid rgba(255,255,255,0.03)">${item}</div>`; });
+        html += '</div>';
+      });
+      html += '</div>';
+      break;
+    }
+      
+    case 'comparison-table':
+      html += `<h2 style="font-size:clamp(20px,2.5vw,32px);font-weight:700;margin-bottom:clamp(12px,2vh,24px)">${s.title}</h2>`;
+      html += '<div style="max-width:700px;margin:0 auto"><table style="width:100%;border-collapse:collapse"><thead><tr>';
+      s.headers.forEach((h,i) => {
+        html += `<th style="padding:12px 16px;border-bottom:2px solid rgba(255,255,255,0.1);text-align:left;font-size:13px;font-weight:600;color:${i===1?'#4A90D9':i===2?'#FF6B35':'rgba(255,255,255,0.4)'}">${h}</th>`;
+      });
+      html += '</tr></thead><tbody>';
+      s.rows.forEach(r => {
+        html += `<tr><td style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);font-weight:500">${r[0]}</td>
+          <td style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);color:#4A90D9">${r[1]}</td>
+          <td style="padding:12px 16px;border-bottom:1px solid rgba(255,255,255,0.04);color:#FF6B35">${r[2]}</td></tr>`;
+      });
+      html += '</tbody></table></div>';
+      if (s.footnote) html += `<p style="margin-top:16px;color:#64b5f6;font-weight:500;font-size:14px;text-align:center">${s.footnote}</p>`;
+      break;
+      
+    case 'twocol-simple':
+      html += `<h2 style="font-size:clamp(20px,2.5vw,32px);font-weight:700;margin-bottom:clamp(12px,2vh,24px)">${s.title}</h2>`;
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;max-width:800px;margin:0 auto">';
+      [s.left,s.right].forEach(col => {
+        html += `<div style="padding:20px;border-radius:12px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06)">
+          <h3 style="font-size:15px;font-weight:600;margin-bottom:12px;color:${col.color}">${col.label}</h3>`;
+        col.items.forEach(item => { html += `<div style="padding:8px 0;font-size:14px;color:#d4d4d4;border-bottom:1px solid rgba(255,255,255,0.03)">${item}</div>`; });
+        html += '</div>';
+      });
+      html += '</div>';
+      break;
+      
+    case 'checklist':
+      html += `<h2 style="font-size:clamp(20px,2.5vw,32px);font-weight:700;margin-bottom:clamp(12px,2vh,24px)">${s.title}</h2>`;
+      html += '<div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:600px;margin:0 auto">';
+      s.items.forEach(pair => {
+        pair.forEach(item => {
+          html += `<div style="padding:12px 16px;border-radius:8px;background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);font-size:14px;display:flex;align-items:center;gap:8px">
+            <input type="checkbox" style="width:16px;height:16px;accent-color:#4A90D9;pointer-events:none"> ${item}</div>`;
+        });
+      });
+      html += '</div>';
+      if (s.footnote) html += `<p style="margin-top:24px;color:#86868b;font-size:14px;text-align:center">${s.footnote}</p>`;
+      break;
+  }
+  
+  html += '</div>';
+  container.innerHTML = html;
+  document.getElementById('pageCurrent').textContent = index + 1;
+}
+
+// ═══════════════════════════════════════════════════════
+// 渐变过渡：渐隐到全黑 → 切换 → 渐亮
+// ═══════════════════════════════════════════════════════
+function goToSlide(index) {
+  if (isTransitioning || index === currentSlide) return;
+  if (index < 0 || index >= SLIDES.length) return;
+  
+  isTransitioning = true;
+  currentSlide = index;
+  
+  fadeOverlay.classList.add('show');   // → 350ms 渐隐到全黑
+  
+  setTimeout(() => {
+    renderSlide(index);
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        fadeOverlay.classList.remove('show');  // → 300ms 渐亮
+        isTransitioning = false;
+      });
+    });
+  }, 350);
+}
+
+// ═══════════════════════════════════════════════════════
+// 轮询控制台
+// ═══════════════════════════════════════════════════════
+async function pollControl() {
+  try {
+    const r = await fetch('/api/control/current');
+    const d = await r.json();
+    const target = d.slide - 1;
+    if (target >= 0 && target < SLIDES.length && target !== currentSlide) {
+      goToSlide(target);
+    }
+  } catch(e) {}
+}
+
+// ═══════════════════════════════════════════════════════
+// Q&A 问答
+// ═══════════════════════════════════════════════════════
+let qaItems = [];
+
+async function pollQa() {
+  try {
+    const r = await fetch('/api/control/qa-overlay');
+    const d = await r.json();
+    if (d.question && d.answer && d.slide) {
+      const exists = qaItems.some(item => item.question === d.question);
+      if (!exists) {
+        qaItems.push({ question: d.question, answer: d.answer, slide: d.slide });
+        updateQaDisplay();
+      }
+    }
+  } catch(e) {}
+}
+
+async function pollQuestions() {
+  try {
+    const r = await fetch('/api/questions');
+    const allQ = await r.json();
+    if (Array.isArray(allQ)) {
+      for (const q of allQ) {
+        if (q.answer && q.answer.trim() && q.refined) {
+          const exists = qaItems.some(item => item.question === (q.refined || q.question));
+          if (!exists) {
+            qaItems.push({
+              question: q.refined || q.question,
+              answer: q.answer,
+              slide: q.page || '?',
+              tag: q.type === 'share' ? '场景分享' : '提问'
+            });
+          }
+        }
+      }
+      updateQaDisplay();
+    }
+  } catch(e) {}
+}
+
+function updateQaDisplay() {
+  const count = qaItems.length;
+  document.getElementById('qaPanelCount').textContent = count;
+  document.getElementById('qaMobileCount').textContent = count;
+  const badge = document.getElementById('qaBadge');
+  badge.textContent = count;
+  badge.classList.toggle('show', count > 0);
+  
+  const renderItem = item => `
+    <div class="qa-item">
+      <div class="q">${item.question}</div>
+      <div class="a">${item.answer}</div>
+      ${item.tag ? `<div class="tag">${item.tag}</div>` : ''}
+    </div>`;
+  
+  document.getElementById('qaList').innerHTML = qaItems.map(renderItem).join('');
+  document.getElementById('qaMobileList').innerHTML = qaItems.map(renderItem).join('');
+}
+
+function toggleQa() {
+  document.getElementById('qaPanel').classList.toggle('open');
+}
+
+function toggleMobileQa() {
+  document.getElementById('qaMobile').classList.toggle('open');
+}
+
+// ═══════════════════════════════════════════════════════
+// 键盘控制
+// ═══════════════════════════════════════════════════════
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' ') {
+    e.preventDefault();
+    goToSlide(currentSlide + 1);
+  }
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
+    e.preventDefault();
+    goToSlide(currentSlide - 1);
+  }
+});
+
+// ═══════════════════════════════════════════════════════
+// URL 参数跳转 & 初始化
+// ═══════════════════════════════════════════════════════
+const urlParams = new URLSearchParams(window.location.search);
+const startSlide = parseInt(urlParams.get('go')) || 1;
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderSlide(startSlide - 1);
+  currentSlide = startSlide - 1;
+  setInterval(pollControl, 1000);
+  setInterval(pollQa, 2000);
+  setInterval(pollQuestions, 5000);
+});
+</script>
+</body>
+</html>
+</script>
+</body>
+</html>
