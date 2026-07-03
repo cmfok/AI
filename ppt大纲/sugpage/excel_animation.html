@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>人工对账 · Excel 模拟</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;font-family:"Segoe UI","Helvetica Neue",sans-serif;overflow:hidden;padding:20px;gap:14px}
+.wrap{position:relative;display:inline-block}
+.pain-tags{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:30}
+.pain{
+  position:absolute;padding:4px 10px;border-radius:6px;
+  font-size:12px;font-weight:600;letter-spacing:.5px;
+  opacity:0;transition:all .6s cubic-bezier(.25,.46,.45,.94);
+  white-space:nowrap;
+}
+.pain.show{opacity:1}
+.pain.orange{background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.3);color:#ff6b35}
+.pain.red{background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b}
+.pain.amber{background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.3);color:#ffc107}
+.p1{top:2%;left:-150px}.p2{top:16%;left:-150px}.p3{top:30%;left:-150px}
+.p4{top:44%;left:-150px}.p5{top:58%;left:-150px}.p6{top:72%;left:-150px}
+.p7{right:-150px;top:8%}.p8{right:-150px;top:22%}
+.p9{right:-150px;top:36%}.p10{right:-150px;top:50%}.p11{right:-150px;top:64%}
+
+.excel-window{width:540px;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);position:relative;z-index:1}
+.title-bar{background:#f0f0f0;padding:6px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #d0d0d0}
+.title-bar .dots{display:flex;gap:5px}
+.title-bar .dot{width:10px;height:10px;border-radius:50%}
+.dot.red{background:#ff5f56}.dot.yellow{background:#ffbd2e}.dot.green{background:#27c93f}
+.title-bar .name{font-size:12px;color:#555;font-weight:500}
+.toolbar{background:#f8f8f8;padding:3px 8px;display:flex;gap:10px;font-size:11px;color:#666;border-bottom:1px solid #e0e0e0;flex-wrap:wrap}
+.toolbar span{background:#fff;padding:2px 8px;border-radius:3px;border:1px solid #ddd;font-size:11px}
+.formula-bar{background:#fff;padding:3px 8px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #e0e0e0;font-size:12px}
+.formula-bar .cell-ref{background:#f0f0f0;padding:2px 8px;border-radius:3px;font-weight:600;min-width:40px;text-align:center;color:#333;font-size:11px}
+.formula-bar .formula{color:#333;flex:1;font-family:"Consolas","Courier New",monospace;min-height:20px;display:flex;align-items:center;font-size:12px}
+.formula-bar .formula .cursor-blink{display:inline-block;width:2px;height:16px;background:#333;animation:blink 1s step-end infinite;margin-left:1px}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0}}
+.col-headers{display:flex;background:#f8f8f8;border-bottom:1px solid #e0e0e0;position:sticky;top:0;z-index:5}
+.col-headers .corner{width:40px;min-width:40px;border-right:1px solid #e0e0e0;height:20px}
+.col-headers .col{flex:1;text-align:center;font-size:10px;color:#666;padding:2px 0;border-right:1px solid #e0e0e0;font-weight:500}
+.grid{background:#fff;position:relative;height:440px;overflow:hidden}
+.row{display:flex;border-bottom:1px solid #f0f0f0}
+.row .rn{width:40px;min-width:40px;background:#f8f8f8;border-right:1px solid #e0e0e0;text-align:center;font-size:10px;color:#888;padding:4px 0}
+.row .cell{flex:1;border-right:1px solid #f0f0f0;padding:3px 6px;font-size:11px;color:#333;font-family:"Consolas","Courier New",monospace;min-height:28px;display:flex;align-items:center}
+.row .cell.highlight{background:#fff3cd}
+.row .cell.filled{background:#e8f5e9}
+.row .cell.error{background:#f8d7da;color:#dc3545}
+.cursor{position:absolute;width:88px;height:20px;border:2px solid #28a745;border-radius:2px;pointer-events:none;transition:all .5s cubic-bezier(.25,.46,.45,.94);z-index:10}
+.cursor::after{content:"🖱";position:absolute;left:-16px;top:-8px;font-size:14px;opacity:.8}
+
+/* 计时框 —— 跟右边 pipeline 同款，橙/红色调，单位「天」 */
+.timer-result{
+  display:inline-flex;align-items:center;gap:16px;
+  background:rgba(255,107,53,.04);border:1px solid rgba(255,107,53,.12);
+  border-radius:12px;padding:12px 20px 12px 24px;
+  flex-shrink:0;
+}
+.timer-result .timer{
+  font-family:"JetBrains Mono","Consolas",monospace;
+  text-align:right;padding-right:16px;
+  border-right:1px solid rgba(255,107,53,.1);
+}
+.timer-result .timer .num{font-size:50px;font-weight:800;color:#ff6b35;letter-spacing:-.03em}
+.timer-result .timer .unit{font-size:22px;font-weight:700;color:#ff6b35;margin-left:2px}
+.timer-result .result-text{text-align:left}
+.timer-result .result-text .big{font-size:20px;font-weight:700;color:#ff6b35}
+.timer-result .result-text .sub{font-size:12px;color:rgba(255,255,255,.25);transition:color .4s}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="pain-tags">
+    <div class="pain red p1">⚠ 漏算风险高</div>
+    <div class="pain red p2">⚠ 容易算错</div>
+    <div class="pain orange p3">⚠ 公式易出错</div>
+    <div class="pain red p4">⚠ 数据量大卡顿</div>
+    <div class="pain amber p5">⚠ 眼睛看花</div>
+    <div class="pain red p6">⚠ 核对耗时</div>
+    <div class="pain red p7">⚠ 前后不一致</div>
+    <div class="pain orange p8">⚠ 重复劳动</div>
+    <div class="pain red p9">⚠ 容易漏行</div>
+    <div class="pain amber p10">⚠ 加班核对</div>
+    <div class="pain red p11">⚠ 电脑死机</div>
+  </div>
+  <div class="excel-window" id="excel">
+    <div class="title-bar">
+      <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+      <span class="name">📊 运费对账表 - Excel</span>
+    </div>
+    <div class="toolbar"><span>文件</span><span>开始</span><span>插入</span><span>公式</span><span>数据</span><span>审阅</span><span>视图</span></div>
+    <div class="formula-bar">
+      <span class="cell-ref" id="cellRef">E5</span>
+      <span class="formula">=<span id="formulaText"></span><span class="cursor-blink"></span></span>
+    </div>
+    <div class="col-headers">
+      <div class="corner"></div>
+      <div class="col">A<br>单号</div>
+      <div class="col">B<br>重量kg</div>
+      <div class="col">C<br>首重</div>
+      <div class="col">D<br>续重</div>
+      <div class="col">E<br>运费</div>
+      <div class="col">F<br>核对</div>
+    </div>
+    <div class="grid" id="grid">
+    </div>
+  </div>
+</div>
+
+<div class="timer-result" id="timerResult">
+  <div class="timer">⏱ <span class="num" id="timerNum">0</span><span class="unit"> 天</span></div>
+  <div class="result-text">
+    <div class="big" id="resultBig">⏳ 核对中...</div>
+    <div class="sub" id="resultSub">人工逐行比对</div>
+  </div>
+</div>
+
+<script>
+const grid = document.getElementById('grid');
+const cellRef = document.getElementById('cellRef');
+const formulaText = document.getElementById('formulaText');
+const timerNum = document.getElementById('timerNum');
+const resultBig = document.getElementById('resultBig');
+const resultSub = document.getElementById('resultSub');
+
+let timerInterval = null;
+
+const data = [
+  ['SF001', '3.2', '12', '5', '', ''],
+  ['SF002', '5.8', '12', '5', '', ''],
+  ['SF003', '1.5', '12', '5', '', ''],
+  ['SF004', '8.0', '12', '5', '', ''],
+  ['SF005', '2.1', '12', '5', '', ''],
+  ['SF006', '6.5', '12', '5', '', ''],
+  ['SF007', '4.0', '12', '5', '', ''],
+  ['SF008', '9.5', '12', '5', '', ''],
+  ['SF009', '3.0', '12', '5', '', ''],
+  ['SF010', '7.2', '12', '5', '', ''],
+];
+
+function renderGrid() {
+  data.forEach((row, i) => {
+    const div = document.createElement('div');
+    div.className = 'row';
+    const rn = document.createElement('div');
+    rn.className = 'rn';
+    rn.textContent = i + 1;
+    div.appendChild(rn);
+    row.forEach((cell, j) => {
+      const c = document.createElement('div');
+      c.className = 'cell';
+      c.dataset.row = i;
+      c.dataset.col = j;
+      c.id = `cell_${i}_${j}`;
+      c.textContent = cell;
+      div.appendChild(c);
+    });
+    grid.appendChild(div);
+  });
+}
+renderGrid();
+
+let cursorEl = null;
+
+function createCursor() {
+  const c = document.createElement('div');
+  c.className = 'cursor';
+  grid.appendChild(c);
+  return c;
+}
+
+function getCellPos(row, col) {
+  const el = document.getElementById(`cell_${row}_${col}`);
+  if (!el) return {x:0,y:0,w:0,h:0};
+  const rect = el.getBoundingClientRect();
+  const gridRect = grid.getBoundingClientRect();
+  return {x: rect.left-gridRect.left, y: rect.top-gridRect.top, w:rect.width, h:rect.height};
+}
+
+function typeFormula(text, cb) {
+  let idx = 0;
+  formulaText.textContent = '';
+  const interval = setInterval(() => {
+    if (idx < text.length) { formulaText.textContent += text[idx]; idx++; }
+    else { clearInterval(interval); if (cb) setTimeout(cb, 300); }
+  }, 50);
+}
+
+function setCell(row, col, val, cls) {
+  const el = document.getElementById(`cell_${row}_${col}`);
+  if (el) { el.textContent = val; if(cls) el.className = 'cell ' + cls; }
+}
+
+function clearHighlight() {
+  document.querySelectorAll('.cell.highlight,.cell.filled,.cell.error').forEach(c => {
+    c.classList.remove('highlight','filled','error');
+  });
+}
+
+function moveCursorTo(row, col, cb) {
+  const pos = getCellPos(row, col);
+  if (!cursorEl) cursorEl = createCursor();
+  cursorEl.style.left = (pos.x+2) + 'px';
+  cursorEl.style.top = (pos.y+3) + 'px';
+  cursorEl.style.width = (pos.w-4) + 'px';
+  cursorEl.style.height = (pos.h-4) + 'px';
+  clearHighlight();
+  const el = document.getElementById(`cell_${row}_${col}`);
+  if (el) el.classList.add('highlight');
+  cellRef.textContent = String.fromCharCode(69+col) + (row+1);
+  if (cb) setTimeout(cb, 200);
+}
+
+// 计时器：模拟 3~15 天，加速展示
+function startTimer() {
+  let elapsed = 0;
+  timerInterval = setInterval(() => {
+    elapsed += 0.08; // 每次 +0.08 天，约 12.5 tick/天
+    timerNum.textContent = elapsed.toFixed(1);
+  }, 80);
+}
+
+// Animation
+setTimeout(() => {
+  startTimer();
+  moveCursorTo(2, 4, () => {
+    typeFormula('=C3+D3*ROUNDUP(B3-1,0)', () => {
+      setCell(2, 4, '22', 'filled');
+      setTimeout(() => {
+        moveCursorTo(4, 4, () => {
+          typeFormula('=C5+D5*ROUNDUP(B5-1,0)', () => {
+            setCell(4, 4, '47', 'filled');
+            setTimeout(() => {
+              moveCursorTo(5, 4, () => {
+                typeFormula('=C6+D6*ROUNDUP(B6-1,0)', () => {
+                  setCell(5, 4, '32', 'filled');
+                  setTimeout(() => {
+                    moveCursorTo(7, 5);
+                    setCell(7, 5, '❌ 不符', 'error');
+                    setTimeout(() => {
+                      moveCursorTo(1, 4, () => {
+                        typeFormula('=C2+D2*ROUNDUP(B2-1,0)', () => {
+                          setCell(1, 4, '27', 'filled');
+                          clearInterval(timerInterval);
+                          timerNum.textContent = '15.0';
+                          resultBig.textContent = '⚠️ 效率低 · 易出错';
+                          resultBig.style.color = '#ff6b6b';
+                          resultSub.textContent = '手工核对 · 周期 3~15 天';
+                          resultSub.style.color = '#ff6b35';
+                        });
+                      });
+                    }, 1000);
+                  }, 800);
+                });
+              });
+            }, 800);
+          });
+        });
+      }, 1000);
+    });
+  });
+}, 500);
+
+const pains = document.querySelectorAll('.pain');
+pains.forEach((p, i) => { setTimeout(() => p.classList.add('show'), 800 + i * 350); });
+</script>
+</body>
+</html>

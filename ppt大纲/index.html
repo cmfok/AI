@@ -1,0 +1,634 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-themes="minimal-white,editorial-serif,swiss-grid,japanese-minimal,pitch-deck-vc">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>AI 真垃圾 · 分享会</title>
+<link rel="stylesheet" href="assets/fonts.css">
+<link rel="stylesheet" href="assets/base.css">
+<link rel="stylesheet" href="assets/animations/animations.css">
+<link rel="stylesheet" href="assets/themes/minimal-white.css" id="theme-link">
+<style>
+:root{--font-display:'Space Grotesk','Inter','Noto Sans SC',sans-serif;--anim-dur:.7s}
+.slide{justify-content:flex-start;padding:clamp(48px,4vw,88px) clamp(48px,5vw,100px)}
+.slide.v-center{justify-content:center}
+body .h1{font-size:clamp(80px,12vw,200px)!important}
+body .h2{font-size:clamp(56px,8vw,130px)!important}
+body .lede{font-size:clamp(32px,5vw,52px)!important}
+.dim{color:var(--text-3);font-size:clamp(24px,3vw,38px);line-height:1.6}
+.accent{color:var(--accent)}.accent-red{color:var(--accent-3,#e03e3e)}
+
+/* tags */
+.tag{display:inline-block;padding:5px 16px;border-radius:var(--radius-sm);font-size:18px;font-weight:500;margin:2px}
+.tag-g{background:color-mix(in srgb,var(--good) 10%,transparent);color:var(--good)}
+.tag-r{background:color-mix(in srgb,var(--bad) 10%,transparent);color:var(--bad)}
+.tag-b{background:color-mix(in srgb,var(--text-1) 6%,transparent);color:var(--text-1)}
+.tag-y{background:color-mix(in srgb,var(--warn) 10%,transparent);color:var(--warn)}
+
+/* expandable card */
+.ca-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 20px;cursor:pointer;transition:all .25s;margin-bottom:6px}
+.ca-card:hover{background:var(--bg-soft)}
+.ca-card .ch{display:flex;justify-content:space-between;align-items:center;font-size:22px;font-weight:600}
+.ca-card .ch .ic{transition:transform .25s;font-size:16px}
+.ca-card.open .ch .ic{transform:rotate(180deg)}
+.ca-card .cb{max-height:0;overflow:hidden;transition:max-height .4s,opacity .25s;opacity:0}
+.ca-card.open .cb{max-height:800px;opacity:1;margin-top:10px}
+.ca-card .cb-inner{padding-top:10px;border-top:1px solid var(--border);font-size:20px;line-height:1.7;color:var(--text-2)}
+
+/* grid helpers */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(14px,2.5vw,24px)}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(12px,2vw,18px)}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(10px,1.5vw,16px)}
+.stack>*+*{margin-top:8px}.mt-s{margin-top:10px}.mt-m{margin-top:20px}.mt-l{margin-top:36px}.tc{text-align:center}
+
+/* compare */
+.comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.comp-card{padding:18px 24px;border-radius:var(--radius);font-size:22px;line-height:1.6}
+.comp-bad{background:color-mix(in srgb,var(--bad) 4%,transparent);border:1px solid color-mix(in srgb,var(--bad) 12%,transparent)}
+.comp-good{background:color-mix(in srgb,var(--good) 4%,transparent);border:1px solid color-mix(in srgb,var(--good) 12%,transparent)}
+.comp-bad .ct{color:var(--bad);font-weight:700;font-size:24px;margin-bottom:6px}
+.comp-good .ct{color:var(--good);font-weight:700;font-size:24px;margin-bottom:6px}
+
+/* step box */
+.step-box{border-left:3px solid var(--accent);padding:16px 22px;margin:8px 0;background:var(--bg-soft);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:20px;line-height:1.6}
+
+/* six pack */
+.six-pack{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.six-pack .item{background:var(--surface-2);border-radius:var(--radius-sm);padding:14px 20px;font-size:18px;line-height:1.5;border:1px solid var(--border)}
+.six-pack .item .in{font-weight:600;color:var(--accent)}
+
+/* ladder */
+.ladder-step{padding:20px 26px;border-radius:var(--radius);margin:10px 0;display:flex;align-items:center;gap:20px;border:1px solid var(--border);font-size:20px}
+.ls-1{border-left:4px solid #cd7f32}
+.ls-2{border-left:4px solid #c0c0c0}
+.ls-3{border-left:4px solid #ffd700}
+
+/* flow */
+.chart-flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin:16px 0}
+.chart-flow .node{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 18px;font-size:18px;text-align:center}
+.chart-flow .arrow-node{color:var(--text-3);font-size:18px}
+
+/* checklist */
+.check-item{display:flex;align-items:center;gap:14px;padding:14px 20px;border-radius:var(--radius-sm);background:var(--bg-soft);margin:6px 0;font-size:20px;border:1px solid var(--border)}
+
+/* tool layer */
+.tool-layer{padding:18px 22px;margin:8px 0;border-left:3px solid;background:var(--bg-soft);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:18px}
+.tool-layer h4{margin:0 0 6px;font-size:22px}
+.tl-1{border-color:var(--bad)}.tl-2{border-color:var(--warn)}.tl-3{border-color:var(--good)}
+
+/* table */
+.compare-table{width:100%;border-collapse:collapse;font-size:clamp(18px,2.2vw,26px)}
+.compare-table th{background:var(--bg-soft);font-weight:600;padding:14px 18px;text-align:left;border-bottom:2px solid var(--accent)}
+.compare-table td{padding:14px 18px;border-bottom:1px solid var(--border);line-height:1.5}
+
+/* big num */
+.big-num{font-size:clamp(60px,10vw,140px);font-weight:800;line-height:1;text-align:center}
+.big-num .unit{font-size:.3em;color:var(--text-3);font-weight:400}
+
+/* eco bar */
+.eco-bar{position:absolute;bottom:20px;left:clamp(48px,4vw,88px);right:clamp(48px,5vw,100px);display:flex;flex-direction:column;gap:8px;z-index:1}
+.eco-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.eco-row .layer-tag{font-size:10px;color:var(--text-3);opacity:.5;margin-right:4px;white-space:nowrap}
+.eco-bar .pill{font-size:clamp(18px,2vw,28px);opacity:.85;padding:5px 16px;border-radius:8px;border:2px solid var(--border);white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.eco-bar .pill .ic{display:inline-block;width:clamp(18px,2vw,28px);height:clamp(18px,2vw,28px);flex-shrink:0;border-radius:6px}
+.eco-bar .pill img{width:clamp(18px,2vw,28px);height:clamp(18px,2vw,28px);flex-shrink:0;border-radius:6px;object-fit:contain}
+.eco-bar .pill img.err{display:none}
+.eco-bar .pill img.err+.dot{display:inline-block;width:clamp(16px,1.8vw,24px);height:clamp(16px,1.8vw,24px);border-radius:6px;flex-shrink:0}
+.eco-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+
+/* limit cards */
+.lim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}
+.lim-card{background:var(--bg-soft);border:1px solid var(--border);border-radius:var(--radius-sm);padding:18px 22px;font-size:18px;line-height:1.5}
+.lim-card strong{color:var(--bad)}
+
+/* ctrl hint */
+.ctrl-hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);z-index:30;font-size:12px;color:var(--text-3);text-align:center;pointer-events:none;background:rgba(255,255,255,.85);padding:4px 16px;border-radius:999px;backdrop-filter:blur(4px)}
+
+/* 封面问号动效 */
+.cover-q{position:absolute;right:-1em;top:50%;transform:translateY(-50%);font-size:1em;font-weight:900;line-height:1;opacity:0;pointer-events:none;transition:opacity .3s}
+.cover-q.show{opacity:1;animation:q-pop 1s cubic-bezier(.34,1.56,.64,1) forwards}
+@keyframes q-pop{0%{opacity:0;transform:translateY(-50%) translateX(60px) scale(0) rotate(-20deg);color:#fff}60%{opacity:1;transform:translateY(-50%) translateX(-5px) scale(1.15) rotate(5deg)}100%{opacity:1;transform:translateY(-50%) translateX(0) scale(1) rotate(0deg);color:#e03e3e}}
+.cover-sub{opacity:0;transition:opacity .8s ease .8s}
+.cover-sub.show{opacity:1}
+
+@media(max-width:768px){
+  .slide{padding:clamp(24px,4vw,40px) clamp(18px,4vw,32px)}
+  .g2,.g3,.g4,.comp-grid,.six-pack{grid-template-columns:1fr}
+  .chart-flow .arrow-node{display:none}.chart-flow{gap:4px}
+}
+</style>
+<script src="assets/runtime.js" defer></script>
+</head>
+<body>
+<div class="deck">
+<div class="deck-header">
+  <span>AI 真垃圾 · 分享会</span>
+  <span>CM · 2026-07-07</span>
+</div>
+
+<!-- ====== 1. COVER ====== -->
+<section class="slide center tc v-center" data-title="封面">
+  <div data-anim="rise-in">
+    <p class="kicker" style="font-size:16px;letter-spacing:.2em;margin-bottom:28px">CM · 2026-07-07</p>
+    <div style="position:relative;display:inline-block">
+      <h1 class="h1" style="font-size:clamp(56px,10vw,140px);line-height:1;font-weight:900;margin:0">
+        AI 真<span style="color:var(--accent)">垃圾</span>
+      </h1>
+      <span id="coverQ" class="cover-q" style="font-size:clamp(112px,20vw,280px)">？</span>
+    </div>
+	    <p id="coverSub" class="lede cover-sub" style="font-size:clamp(20px,2.6vw,38px);max-width:100%;margin-top:28px">当你不会用它的时候，它真的是垃圾。<br>当你学会用它的时候，就能变废为宝。</p>
+    <p style="margin-top:36px;color:var(--text-2);font-size:18px">个人及企业AI Agent落地分享</p>
+  </div>
+  <div class="notes"><b>AI 真垃圾</b>——两个意思。第一个：觉得它无所不能，用起来各种不靠谱，你会觉得 AI 真垃圾。第二个：用久了知道它垃圾在哪，也就知道怎么<b>规训</b>它。我核心的关切：<b>如何让 AI 可控地输出我想要的结果。</b></div>
+</section>
+
+<!-- ====== 2. ALIEN LANGUAGE ====== -->
+<section class="slide" data-title="外星人的语言">
+  <p class="kicker">Interaction</p>
+  <h2 class="h2">外星人的语言</h2>
+  <div style="font-size:clamp(44px,8vw,100px);letter-spacing:.25em;margin:32px 0 16px;font-weight:700;color:var(--text-1)">← ↑ → ↓ ←</div>
+  <p style="font-size:clamp(24px,4vw,48px);color:var(--text-3);margin-bottom:32px">猜题区：<span style="color:var(--text-1);font-weight:700">↑ → ？</span></p>
+  <div class="ca-card open" onclick="this.classList.toggle('open')" style="max-width:520px">
+    <div class="ch">💡 点击展开答案 <span class="ic">▼</span></div>
+    <div class="cb"><div class="cb-inner">
+      <p style="font-size:clamp(20px,3vw,32px);font-weight:700;color:var(--accent-3)">答案是：↓</p>
+      <p style="margin-top:10px"><strong>规律</strong>：左上右下，顺时针转圈。</p>
+      <p style="margin-top:10px">你刚才做的这件事，就是 <strong>AI 每天都在做的事</strong>——根据上文，预测最合理的下一个东西。</p>
+    </div></div>
+  </div>
+  <div class="notes">看这组规律：← ↑ → ↓ ←。猜下一个：↑ → ？答案是 <b>↓</b>。左上右下，顺时针转圈。你刚才做的这件事，就是 <b>AI 每天都在做的事</b>——根据上文，预测最合理的下一个东西。</div>
+</section>
+
+<!-- ====== 3. ANTI-COGNITION ====== -->
+<section class="slide center tc v-center" data-title="反认知">
+  <div>
+    <p class="kicker">Counter‑Intuition</p>
+    <h1 class="h1" style="font-size:clamp(44px,7vw,104px);max-width:100%" data-anim="fade-up">
+	      AI 的核心<br>就是<span style="color:#3b6cff">猜字系统</span>
+    </h1>
+    <p class="lede" style="max-width:100%;margin-top:24px">给它一段上文，算概率，猜最合理的字/词</p>
+    <p class="dim mt-m">它没有意识，没有理解——它只是在<b>猜</b>。</p>
+  </div>
+  <div class="notes"><b>AI 的核心——就是个猜字系统。</b>给它一段上文，它<b>算概率</b>，猜下一个最合理的字或词。它<b>没有意识，没有理解</b>——只是在猜。</div>
+</section>
+
+<!-- ====== 4. MODELS ====== -->
+<section class="slide" data-title="模型">
+  <div class="g2" style="flex:1;align-items:start">
+    <div>
+      <h1 class="h1" style="margin-bottom:4px;font-size:clamp(36px,5vw,72px)">大语言模型</h1>
+      <p class="kicker" style="margin-bottom:24px">MODEL · LLM / LMM</p>
+      <div class="g2" style="gap:8px">
+	        <div class="tag tag-g" style="font-size:14px;text-align:center;padding:16px 8px">豆包</div><div class="tag tag-b" style="font-size:14px;text-align:center;padding:16px 8px">千问</div>
+	        <div class="tag tag-r" style="font-size:14px;text-align:center;padding:16px 8px">Kimi</div><div class="tag tag-y" style="font-size:14px;text-align:center;padding:16px 8px">DeepSeek</div>
+	        <div class="tag tag-b" style="font-size:14px;text-align:center;padding:16px 8px">GLM-4</div><div class="tag tag-g" style="font-size:14px;text-align:center;padding:16px 8px">ChatGPT</div>
+	        <div class="tag tag-r" style="font-size:14px;text-align:center;padding:16px 8px">Gemini</div><div class="tag tag-y" style="font-size:14px;text-align:center;padding:16px 8px">Claude</div>
+      </div>
+    </div>
+    <div style="padding-top:clamp(150px,20vw,230px)">
+      <p style="font-size:14px;color:var(--accent-3);margin-bottom:8px">三阶段训练（点击展开）</p>
+      <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--good)"><div class="ch">① 预训练 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">喂海量文字资料 → 让 AI 了解人类语言逻辑。任务很简单：给你上文，猜下一个词。</div></div></div>
+      <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--accent)"><div class="ch">② 指令微调 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">给大量"问题→答案"问答对 → 让 AI 学会什么是问题、应该怎么回答。</div></div></div>
+      <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--bad)"><div class="ch">③ RLHF <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">人类打分（有用性/真实性/安全性/诚实性/语气态度）→ AI 为拿高分过度优化语气 → 变成<b>"舔狗"</b>。</div></div></div>
+      <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--warn)"><div class="ch">⚠️ 三个局限 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">
+        <div class="lim-grid">
+          <div class="lim-card"><strong>幻觉</strong><br>不调工具直接猜天气——它没有真实世界感知</div>
+          <div class="lim-card"><strong>知识截止</strong><br>训练数据停在2025——不知道今年是哪一年</div>
+          <div class="lim-card"><strong>无真实理解</strong><br>所有手表画成10:10——只是复现最常见的模式</div>
+        </div>
+      </div></div></div>
+    </div>
+  </div>
+  <div class="eco-bar"><div class="eco-row">
+    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
+    <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>千问</span>
+    <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
+    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+  </div></div>
+  <div class="notes">豆包·ChatGPT·Gemini·千问·DeepSeek……<b>这些都是模型</b>。三阶段训练：预训练→指令微调→RLHF→AI变舔狗。三个局限：幻觉、知识截止、无真实理解。</div>
+</section>
+
+<!-- ====== 5. FOUR ENGINEERING ====== -->
+<section class="slide v-center" data-title="四大工程总览">
+  <h2 class="h2 tc">让 AI 瞎猜，绝不靠谱<br>让 AI 猜准，<span style="color:#3b6cff">四大工程</span></h2>
+  <div class="g4 mt-l" data-anim="fade-up">
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #3b6cff;background:linear-gradient(135deg,rgba(59,108,255,.08),var(--bg))">
+      <div style="font-size:56px;font-weight:800;color:#3b6cff;margin-bottom:8px">01</div>
+      <h4 style="font-size:34px;margin:0 0 6px">提示词工程</h4>
+      <p style="font-size:28px;color:var(--text-2);margin:0">教你怎么跟 AI 说话</p>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #7a5cff;background:linear-gradient(135deg,rgba(122,92,255,.08),var(--bg))">
+      <div style="font-size:56px;font-weight:800;color:#7a5cff;margin-bottom:8px">02</div>
+      <h4 style="font-size:34px;margin:0 0 6px">上下文工程</h4>
+      <p style="font-size:28px;color:var(--text-2);margin:0">让 AI 知道它在跟谁打交道</p>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #ff5c8a;background:linear-gradient(135deg,rgba(255,92,138,.08),var(--bg))">
+      <div style="font-size:56px;font-weight:800;color:#ff5c8a;margin-bottom:8px">03</div>
+      <h4 style="font-size:34px;margin:0 0 6px">规训工程</h4>
+      <p style="font-size:28px;color:var(--text-2);margin:0">给 AI 套上缰绳，让它能干活</p>
+    </div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #1aaf6c;background:linear-gradient(135deg,rgba(26,175,108,.08),var(--bg))">
+      <div style="font-size:56px;font-weight:800;color:#1aaf6c;margin-bottom:8px">04</div>
+      <h4 style="font-size:34px;margin:0 0 6px">循环工程</h4>
+      <p style="font-size:28px;color:var(--text-2);margin:0">做→查→修→再输出，直到满意</p>
+    </div>
+  </div>
+  <p class="lede mt-l" style="text-align:center;max-width:100%">从「它能猜」到「它能猜准」——中间缺的就是<b>工程</b></p>
+  <div class="notes">让 AI 瞎猜，绝不靠谱。<b>四大工程，让 AI 猜准。</b>提示词工程——教你怎么跟 AI 说话。上下文工程——让 AI 知道它在跟谁打交道。规训工程——给 AI 套上缰绳。循环工程——做→查→修→再输出。</div>
+</section>
+
+<!-- ====== 6. PROMPT ENGINEERING ====== -->
+<section class="slide" data-title="提示词工程">
+  <p class="kicker">CHAPTER 01 · PROMPT ENGINEERING</p>
+  <h2 class="h2">提示词工程</h2>
+  <p class="lede">不是改怎么问，是教你怎么跟 AI 说话</p>
+  <div class="comp-grid mt-l">
+    <div class="comp-card comp-bad"><div class="ct">❌ 传统做法</div><p>"帮我做个PPT"→ AI 乱出一通，根本没法用</p></div>
+    <div class="comp-card comp-good"><div class="ct">✅ 正确做法</div><p>Trae 语音沟通 → 生成结构化 MD → 一键生成 PPT<br><b>本场分享会 PPT 就是这样做的！（元演示）</b></p></div>
+  </div>
+  <div class="g2 mt-m">
+    <div class="stack">
+      <div class="step-box"><strong>① 定角色</strong> · 告诉 AI 它是谁——"你是一个资深PPT设计师"</div>
+      <div class="step-box"><strong>② 讲要求</strong> · 明确输出格式、风格、禁忌</div>
+      <div class="step-box"><strong>③ 给参考</strong> · 提供范例，让 AI 知道你要的感觉</div>
+      <div class="step-box"><strong>④ 设标准</strong> · 告诉 AI 怎么判断做得好不好</div>
+    </div>
+    <div>
+      <div class="ca-card open" onclick="this.classList.toggle('open')"><div class="ch">🌱 种子故事 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">朋友问 AI 约会→太笼统→教他用结构问→方案完整。但过了几天又失败了——AI 推荐<b>烤肉</b>，那女孩是<b>素食主义者</b>。引出上下文工程。</div></div></div>
+    </div>
+  </div>
+  <div class="eco-bar"><div class="eco-row">
+    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+    <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
+    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
+    <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>通义千问</span>
+    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+  </div></div>
+  <div class="notes">左边❌：帮我做个PPT，AI 瞎猜。右边✅：Trae 语音→MD→生成PPT。<b>本场分享会 PPT 就是这样做的。</b>四个规则：定角色·讲要求·给参考·设标准。种子故事：朋友问AI约会→教他用结构问→方案完整。但AI推荐烤肉，女孩是素食主义者。引出上下文工程。</div>
+</section>
+
+<!-- ====== 7. CONTEXT COMPARE ====== -->
+<section class="slide" data-title="上下文工程对比">
+  <p class="kicker">Seed Story Continues</p>
+  <h2 class="h2">上下文工程</h2>
+  <p class="lede">不是改怎么问，是让 AI 知道它在跟谁打交道</p>
+  <div class="g3 mt-l">
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px"><h4 style="margin:0 0 8px;font-size:16px">① 普通提问</h4><p style="font-size:14px;color:var(--text-2);margin:0">「帮我规划云南5天4夜」→ 通用模板，AB方案千篇一律</p></div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;border-left:3px solid var(--accent)"><h4 style="margin:0 0 8px;font-size:16px">② 提示词工程</h4><p style="font-size:14px;color:var(--text-2);margin:0">按行程/住宿/费用输出→结构清晰但内容通用，不知道你是谁</p></div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;border-left:3px solid var(--good)"><h4 style="margin:0 0 8px;font-size:16px">③ 上下文工程</h4><p style="font-size:14px;color:var(--text-2);margin:0">喂入背景文件→一家三口、儿子3岁半不能高海拔、预算2万→<b>量身定制</b>：推荐抚仙湖避开丽江、三种自驾方案、预算19700</p></div>
+  </div>
+  <div class="notes">三级别对比。普通提问→通用模板。提示词工程→结构清晰但不知道你是谁。上下文工程→喂入背景文件，<b>量身定制</b>：推荐抚仙湖避开丽江、三种自驾方案、预算19700。</div>
+</section>
+
+<!-- ====== 8. CONTEXT REVEAL ====== -->
+<section class="slide" data-title="上下文工程揭晓">
+  <p class="kicker">CHAPTER 02 · CONTEXT ENGINEERING</p>
+  <h2 class="h2">上下文工程</h2>
+  <div class="g2 mt-l">
+    <div class="stack">
+      <div class="comp-card comp-bad"><div class="ct">❌ 普通提问</div><p>通用模板，写给所有人</p></div>
+      <div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-size:15px"><strong>✅ 提示词工程</strong><br>结构清晰但内容通用</div>
+      <div class="comp-card comp-good"><div class="ct">✅ 上下文工程</div><p>量身定制 + 自驾方案对比 + 预算 19,700</p></div>
+    </div>
+    <div class="stack">
+      <div class="step-box"><strong>📁 可迁移</strong> · 换模型不用重新喂——MD 文件通吃所有模型</div>
+      <div class="step-box"><strong>📋 可生长</strong> · 不断加内容，AI 越来越懂你</div>
+      <div class="step-box"><strong>📚 有记忆</strong> · 不用每次重新说——背景资料写一次，永久复用</div>
+    </div>
+  </div>
+  <div style="margin-top:24px;padding:18px 24px;background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:var(--radius);text-align:center">
+    <p style="font-size:18px;color:var(--accent);margin:0"><strong>💡 上下文工程最重要的是——知识库</strong></p>
+  </div>
+  <div class="eco-bar">
+    <div class="eco-row">
+      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+      <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
+      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
+      <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>通义千问</span>
+      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+      <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+    </div>
+    <div class="eco-row">
+      <span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img src="icon/markdown.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3B82F6"></span>MD文件</span>
+      <span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img src="icon/image.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#F59E0B"></span>图片</span>
+      <span class="pill" style="border-color:#185ABD;background:rgba(24,90,189,.08)"><img src="icon/microsoftword.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#185ABD"></span>Word</span>
+      <span class="pill" style="border-color:#1D6F42;background:rgba(29,111,66,.08)"><img src="icon/microsoftexcel.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1D6F42"></span>Excel</span>
+      <span class="pill" style="border-color:#E53E3E;background:rgba(229,62,62,.08)"><img src="icon/adobeacrobatreader.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#E53E3E"></span>PDF</span>
+    </div>
+  </div>
+  <div class="notes">不是改怎么问，是<b>让 AI 知道它在跟谁打交道</b>。三个价值：可迁移、可生长、有记忆。上下文工程最重要的是<b>知识库</b>。</div>
+</section>
+
+<!-- ====== 9. KNOWLEDGE BASE ====== -->
+<section class="slide" data-title="知识库搭建">
+  <p class="kicker">Implementation</p>
+  <h2 class="h2">知识库搭建</h2>
+  <p class="lede">从入门到进阶，你的专属 AI 背景资料库</p>
+  <div class="mt-l">
+    <div class="ladder-step ls-1"><span style="font-size:56px">🥉</span><div><strong style="font-size:34px">青铜：MD + Trae</strong><br><span style="font-size:28px;color:var(--text-2)">写 MD 背景文件，Trae 里直接引用。最简单，立竿见影。</span></div></div>
+    <div class="ladder-step ls-2"><span style="font-size:56px">🥈</span><div><strong style="font-size:34px">白银：MD + Trae + Obsidian</strong><br><span style="font-size:28px;color:var(--text-2)">Obsidian 管理知识库，双向链接、图谱视图、快速检索。</span></div></div>
+    <div class="ladder-step ls-3"><span style="font-size:56px">🥇</span><div><strong style="font-size:34px">黄金：MD + Trae + Obsidian + 向量模型</strong><br><span style="font-size:28px;color:var(--text-2)">接入向量模型/插件，语义搜索、智能推荐。</span></div></div>
+  </div>
+  <p class="dim mt-m tc">不急，<b>先跑起来最重要</b>。</p>
+  <div class="eco-bar"><div class="eco-row">
+    <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+    <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书文档</span>
+    <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img src="icon/trae.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#32F08C"></span>Trae</span>
+    <span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img src="icon/dify.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1F4CCF"></span>Dify</span>
+  </div></div>
+  <div class="notes">知识库搭建三个级别。青铜：MD+Trae，写背景文件，零门槛。白银：加上Obsidian，双向链接。黄金：加上向量模型，语义搜索。不急，<b>先跑起来最重要</b>。</div>
+</section>
+
+<!-- ====== 10. RESUME COMPARE ====== -->
+<section class="slide" data-title="招聘简历">
+  <p class="kicker">Harness · Case Study</p>
+  <h2 class="h2">案例对比 · 招聘简历</h2>
+  <div class="comp-grid mt-l">
+    <div class="comp-card comp-bad"><div class="ct">❌ 只用模型 + 提示词</div><p>通用分析，不精准。AI 能聊，但分析维度单一，缺少结构化评估。</p></div>
+    <div class="comp-card comp-good"><div class="ct">✅ 套上规训工程六件套</div><p>多维度评分 + JD 匹配 + 预警推荐。AI 不仅分析，还能给出量化评分和录用建议。</p></div>
+  </div>
+  <p class="lede mt-l tc">关键变量：<b>有没有规训工程给 AI 套上缰绳</b></p>
+  <div class="notes">左边❌：只用模型+提示词→通用分析。右边✅：套规训六件套→多维度评分+JD匹配+预警推荐。关键变量：有没有规训工程给 AI 套上缰绳。</div>
+</section>
+
+<!-- ====== 11. FREIGHT COMPARE ====== -->
+<section class="slide" data-title="运费对账">
+  <p class="kicker">Harness · Case Study</p>
+  <h2 class="h2">案例对比 · 运费对账</h2>
+  <div class="comp-grid mt-l">
+    <div class="comp-card comp-bad"><div class="ct">❌ 手动 Excel 操作</div><p>鼠标移动 → 敲公式 → 算错标红<br><span class="tag tag-r" style="font-size:13px;margin-top:8px">漏算</span><span class="tag tag-r" style="font-size:13px">算错</span><span class="tag tag-r" style="font-size:13px">卡顿</span><span class="tag tag-r" style="font-size:13px">死机</span></p></div>
+    <div class="comp-card comp-good"><div class="ct">✅ AI 脚本自动对账</div><p>8 个节点逐个校验 → 数字滚到目标值 → 零误差</p><div class="big-num mt-s">3.4<span class="unit">秒</span></div></div>
+  </div>
+  <p class="lede mt-l tc">关键变量：<b>有没有自动化脚本</b></p>
+  <div class="notes">左边❌：Excel手工算——半天怕错。右边✅：脚本自动化——8个节点逐个校验，<b>3.4秒零误差</b>。关键变量：有没有自动化脚本。</div>
+</section>
+
+<!-- ====== 12. DISCIPLINE REVEAL ====== -->
+<section class="slide" data-title="规训工程揭晓">
+  <p class="kicker">CHAPTER 03 · HARNESS ENGINEERING</p>
+  <h2 class="h2">规训工程</h2>
+  <p class="lede">给 AI 套上缰绳，让它能落地执行</p>
+  <div class="g2 mt-l">
+    <div class="stack">
+      <div class="comp-card comp-bad"><div class="ct">❌ 没有规训工程</div><p>只有上下文，AI 能说会道但干不了活——像一匹野马，跑得快但不受控</p></div>
+      <div class="comp-card comp-good"><div class="ct">✅ 有规训工程</div><p>套上缰绳，能落地执行——该调工具调工具，该校验校验，该报错报错</p></div>
+    </div>
+    <div class="six-pack">
+      <div class="item"><span class="in">① 工具调用</span><br>AI 能调用外部工具和 API</div>
+      <div class="item"><span class="in">② 约束安全</span><br>设定规则边界，不能越界</div>
+      <div class="item"><span class="in">③ 验证校验</span><br>输出前自检，确保正确</div>
+      <div class="item"><span class="in">④ 状态管理</span><br>记住上下文和执行状态</div>
+      <div class="item"><span class="in">⑤ 错误处理</span><br>出错了能自己发现修正</div>
+      <div class="item"><span class="in">⑥ 可观测性</span><br>每一步可追踪可回溯</div>
+    </div>
+  </div>
+  <div style="margin-top:20px;padding:18px 24px;background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:var(--radius);text-align:center">
+    <p style="font-size:18px;color:var(--accent);margin:0"><strong>💡 规训工程最重要的是——脚本和工作流</strong></p>
+  </div>
+  <div class="eco-bar">
+    <div class="eco-row">
+      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+    </div>
+    <div class="eco-row">
+      <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+      <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书</span>
+    </div>
+    <div class="eco-row">
+      <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img src="icon/trae.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#32F08C"></span>Trae</span>
+      <span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img src="icon/qoder.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
+      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude Code</span>
+      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/codex.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>Codex</span>
+    </div>
+  </div>
+  <div class="notes"><b>规训工程 = 给 AI 装上手脚、套上缰绳。</b>六大组件：工具调用、约束安全、验证校验、状态管理、错误处理、可观测性。规训工程最重要的是脚本和工作流。</div>
+</section>
+
+<!-- ====== 13. SCRIPT VS WORKFLOW ====== -->
+<section class="slide" data-title="脚本vs工作流">
+  <p class="kicker">Implementation · Decision</p>
+  <h2 class="h2">脚本还是工作流？</h2>
+  <div class="g2 mt-l">
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;border-left:3px solid var(--accent)"><h4>确定性结果</h4><p>错了就不行——运费对账，金额必须精确到分，错了就是钱。</p></div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px"><h4>开放性流程</h4><p>没有标准答案——旅游规划，只要合理就行。</p></div>
+  </div>
+  <div class="g3 mt-m">
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:center;border-top:3px solid var(--accent)"><h4>🐍 脚本 (Python)</h4><p style="font-size:14px;color:var(--text-2)">确定性需求 · 一定技术门槛 · AI 可帮你写</p></div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:center;border-top:3px solid var(--accent)"><h4>🔗 固定工作流</h4><p style="font-size:14px;color:var(--text-2)">扣子 Coze · Dify · 拖拽编排，门槛低</p></div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:center;border-top:3px solid var(--accent)"><h4>🤖 AI 工作流</h4><p style="font-size:14px;color:var(--text-2)">Trae · Qoder · Claude Code · 跟 AI 聊就能完成</p></div>
+  </div>
+  <div class="notes">确定性结果→脚本或固定工作流。开放性流程→AI 工作流。三种方式<b>没有高低之分，看场景选</b>。</div>
+</section>
+
+<!-- ====== 14. BIRTHDAY MARKETING ====== -->
+<section class="slide" data-title="生日营销">
+  <p class="kicker">Harness · Real Case</p>
+  <h2 class="h2">拆解 · 生日营销</h2>
+  <p class="lede">一个闭环数据流，累计变现 <span style="color:var(--accent);font-weight:700">400 万+</span></p>
+  <div class="chart-flow mt-l">
+    <div class="node">👤 用户</div><span class="arrow-node">→</span>
+    <div class="node">📱 小程序</div><span class="arrow-node">→</span>
+    <div class="node">🗄 数据库</div><span class="arrow-node">→</span>
+    <div class="node">🤖 AI处理</div><span class="arrow-node">→</span>
+    <div class="node">🎯 分析匹配</div>
+  </div>
+  <div class="chart-flow">
+    <div class="node">📞 客服</div><span class="arrow-node">→</span>
+    <div class="node">🎁 礼品</div><span class="arrow-node">→</span>
+    <div class="node">🔄 复购</div><span class="arrow-node">→</span>
+    <div class="node" style="border-color:var(--good)">💰 进公司口袋</div>
+  </div>
+  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;justify-content:center">
+    <span class="tag tag-g">🔧 工具调用</span><span class="tag tag-b">🛡 约束安全</span><span class="tag tag-y">✅ 验证校验</span><span class="tag tag-g">📦 状态管理</span><span class="tag tag-r">🔄 容错</span><span class="tag tag-b">📊 可观测性</span>
+  </div>
+  <div class="big-num mt-l">400<span class="unit">万+</span></div>
+  <div class="notes">真实案例：<b>变现400万+</b>。用户→小程序→数据库→AI处理→分析匹配→客服→礼品→复购→进公司口袋。每个节点标注规训组件，每天自动循环。全流程自动化。</div>
+</section>
+
+<!-- ====== 15. PROGRESSIVE ====== -->
+<section class="slide" data-title="递进对比">
+  <p class="kicker">Progression</p>
+  <h2 class="h2">规训 → 循环</h2>
+  <div class="comp-grid mt-l">
+    <div class="comp-card comp-bad"><div class="ct">❌ 只有规训工程</div><p>单次执行，做完就完了——AI 输出结果，不管好不好，交差了事。</p></div>
+    <div class="comp-card comp-good"><div class="ct">✅ 加上循环工程</div><p><b>做 → 查 → 修 → 再输出</b>，直到满意——AI 自己检查、修正、优化。</p></div>
+  </div>
+  <p class="lede mt-l tc">从「能干」到「能干好」的质变</p>
+  <div class="notes">只有规训→单次执行。加上循环→<b>做→查→修→再输出</b>，直到满意。从"能干"到"能干好"的质变。</div>
+</section>
+
+<!-- ====== 16. LOOP REVEAL ====== -->
+<section class="slide" data-title="循环工程揭晓">
+  <p class="kicker">CHAPTER 04 · LOOP ENGINEERING</p>
+  <h2 class="h2">循环工程</h2>
+  <p class="lede">做 → 查 → 修 → 再输出，直到满意</p>
+  <div class="g2 mt-l">
+    <div class="stack">
+      <div class="comp-card comp-bad"><div class="ct">❌ 只有规训</div><p>单次执行，有没有问题它不管</p></div>
+      <div class="comp-card comp-good"><div class="ct">✅ 加上循环</div><p>做 → 查 → 修 → 再输出——AI 自己检查修正直到符合标准</p></div>
+    </div>
+    <div class="stack">
+      <div class="step-box"><strong>L1 自查</strong> · AI 输出后自己检查一遍</div>
+      <div class="step-box"><strong>L2 复盘</strong> · 多轮执行后总结规律</div>
+      <div class="step-box"><strong>L3 会诊</strong> · 多个 AI Agent 交叉检查</div>
+      <div class="step-box"><strong>L4 绩效</strong> · 量化评估 + 持续优化</div>
+    </div>
+  </div>
+  <div class="g3 mt-l">
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center"><h4>🔄 循环流程</h4><p style="font-size:14px;color:var(--text-2)">输入→处理→输出→检查→发现→修正→交付</p></div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;border-left:3px solid var(--bad)"><h4>⚠️ 现在痛点</h4><p style="font-size:14px;color:var(--text-2)">AI 没有眼睛——看不到运行结果，不知道对错</p></div>
+    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;border-left:3px solid var(--accent)"><h4>🚀 未来方向</h4><p style="font-size:14px;color:var(--text-2)">多 Agent 并行——写代码、Review、测试同时</p></div>
+  </div>
+  <div class="eco-bar">
+    <div class="eco-row">
+      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+    </div>
+    <div class="eco-row">
+      <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+      <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书</span>
+    </div>
+    <div class="eco-row">
+      <span class="pill" style="border-color:#3776AB;background:rgba(55,118,171,.08)"><img src="icon/python.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3776AB"></span>Python</span>
+      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="icon/coze.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>Coze</span>
+      <span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img src="icon/dify.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1F4CCF"></span>Dify</span>
+    </div>
+    <div class="eco-row">
+      <span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img src="icon/cron.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3B82F6"></span>Cron</span>
+      <span class="pill" style="border-color:#8B5CF6;background:rgba(139,92,246,.08)"><img src="icon/agent.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8B5CF6"></span>Agent</span>
+      <span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img src="icon/log.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#F59E0B"></span>日志</span>
+    </div>
+  </div>
+  <div class="notes">AI 为什么垃圾？做一遍就完了。<b>循环工程就是逼它再做一遍。</b>四级别：L1自查→L2复盘→L3会诊→L4绩效。三栏：循环流程/AI没有眼睛/多Agent并行。</div>
+</section>
+
+<!-- ====== 17. PERSONAL VS ENTERPRISE ====== -->
+<section class="slide" data-title="个人vs企业AI">
+  <p class="kicker">Comparison</p>
+  <h2 class="h2">个人 AI vs 企业 AI</h2>
+  <p class="lede">差的不是模型，是<b>工程</b></p>
+  <table class="compare-table mt-l">
+    <thead><tr><th>维度</th><th>个人 AI</th><th>企业 AI</th></tr></thead>
+    <tbody>
+      <tr><td>应用场景</td><td>做PPT、写文案、查资料、旅游规划</td><td>对账、简历筛选、生日营销、数据同步</td></tr>
+      <tr><td>工程需求</td><td>提示词 + 上下文</td><td style="color:var(--accent);font-weight:600">四大工程全得上（规训+循环是核心）</td></tr>
+      <tr><td>容错</td><td>错了 Ctrl+Z</td><td>错了就是钱</td></tr>
+      <tr><td>核心</td><td>提效</td><td style="color:var(--accent);font-weight:600">可控 + 变现</td></tr>
+    </tbody>
+  </table>
+  <div class="notes">差的不是模型，是<b>工程</b>。个人：提示词+上下文就够了，错了Ctrl+Z。企业：<b>四大工程全得上</b>，规训+循环是核心，错了就是钱。</div>
+</section>
+
+<!-- ====== 18. DATA PRIVACY ====== -->
+<section class="slide" data-title="数据隐私">
+  <p class="kicker" style="color:#e03e3e">Warning</p>
+  <h2 class="h2">数据隐私</h2>
+  <p class="lede">AI 很好用，但你的数据去了哪里？</p>
+  <div class="g2 mt-l" style="grid-template-columns:2fr 1fr;align-items:stretch">
+    <table class="compare-table">
+      <thead><tr><th>日常场景</th><th>风险</th><th>解法</th></tr></thead>
+      <tbody>
+        <tr><td>在豆包网页上问问题</td><td style="color:#e03e3e">⚠️ 数据可能被训练</td><td style="color:#1aaf6c;font-weight:600">✅ 用 API</td></tr>
+        <tr><td>上传文件让 AI 分析</td><td style="color:#e03e3e">⚠️ 文件被留存</td><td style="color:#1aaf6c;font-weight:600">✅ 用 Trae</td></tr>
+        <tr><td>在 App 上聊工作机密</td><td style="color:#e03e3e">⚠️ 对话被记录</td><td style="color:#1aaf6c;font-weight:600">✅ 隐私模式</td></tr>
+        <tr><td>复制粘贴公司数据</td><td style="color:#e03e3e">⚠️ 数据外传</td><td style="color:#1aaf6c;font-weight:600">✅ 企业版</td></tr>
+        <tr><td>公司多人共用账号</td><td style="color:#e03e3e">⚠️ 权限混乱</td><td style="color:#1aaf6c;font-weight:600">✅ 一人一账号</td></tr>
+      </tbody>
+    </table>
+    <div style="border:2px solid #1aaf6c;border-radius:12px;padding:clamp(24px,4vh,40px);text-align:center;background:linear-gradient(135deg,rgba(26,175,108,.08),rgba(26,175,108,.02));display:flex;flex-direction:column;justify-content:center">
+      <div style="font-size:clamp(40px,5vw,64px);margin-bottom:12px">🅿️</div>
+      <h4 style="font-size:clamp(24px,2.5vw,34px);color:#1aaf6c;margin:0 0 12px">Pro 升级方案</h4>
+      <p style="font-size:clamp(18px,2vw,26px);color:var(--text-2);margin:0;line-height:1.5"><strong>私有化部署</strong><br>数据完全不离开<br>一劳永逸解决所有风险</p>
+    </div>
+  </div>
+  <div class="notes">你的数据去了哪里？网页提问→用API。上传文件→用Trae。聊机密→隐私模式。多人共用→一人一账号。Pro：私有化部署。</div>
+</section>
+
+<!-- ====== 19. CHECKLIST ====== -->
+<section class="slide" data-title="落地Checklist">
+  <p class="kicker">Action</p>
+  <h2 class="h2">落地 Checklist</h2>
+  <p class="lede">从 0 到 1，一步步把 AI 用到业务里</p>
+  <div class="g2 mt-l">
+    <div>
+      <div class="check-item">☐ 明确业务场景</div>
+      <div class="check-item">☐ 选择模型 <span style="color:var(--text-3);font-size:12px">🎯 模型</span></div>
+      <div class="check-item">☐ 搭建知识库 <span style="color:var(--text-3);font-size:12px">📚 上下文工程</span></div>
+      <div class="check-item">☐ 设计提示词 <span style="color:var(--text-3);font-size:12px">💬 提示词工程</span></div>
+      <div class="check-item">☐ 配置规训策略 <span style="color:var(--text-3);font-size:12px">🔧 规训工程</span></div>
+      <div class="check-item">☐ 评估数据隐私</div>
+      <div class="check-item">☐ 搭建工作流 <span style="color:var(--text-3);font-size:12px">🔄 循环工程</span></div>
+      <div class="check-item">☐ 循环优化 <span style="color:var(--text-3);font-size:12px">🔄 循环工程</span></div>
+    </div>
+    <div>
+      <div class="tool-layer tl-1"><h4>第一层：API Key</h4><p style="font-size:14px;color:var(--text-2);margin:0">DeepSeek · 通义千问 · SiliconFlow · OpenRouter</p></div>
+      <div class="tool-layer tl-2"><h4>第二层：本地工具</h4><p style="font-size:14px;color:var(--text-2);margin:0">Trae · Qoder · Claude Code · Codex</p></div>
+      <div class="tool-layer tl-3"><h4>第三层：知识库</h4><p style="font-size:14px;color:var(--text-2);margin:0">Obsidian · 飞书文档 · Dify</p></div>
+    </div>
+  </div>
+  <div class="notes">落地Checklist：明确场景→选模型→搭知识库→设计提示词→配置规训→评估隐私→搭建工作流→循环优化。三层工具包：API Key→本地工具→知识库。</div>
+</section>
+
+<!-- ====== 20. Q&A ====== -->
+<section class="slide center tc v-center" data-title="互动答疑">
+  <div>
+    <p class="kicker">Q&A</p>
+    <h2 class="h2">互动答疑</h2>
+    <div style="margin-top:36px;padding:clamp(28px,5vh,48px) clamp(24px,4vw,40px);background:color-mix(in srgb,var(--accent) 5%,transparent);border:1px solid color-mix(in srgb,var(--accent) 12%,transparent);border-radius:var(--radius);max-width:700px;margin-left:auto;margin-right:auto">
+      <p style="font-size:clamp(20px,2.4vw,30px);line-height:1.5">
+        AI —— 当你不会用它的时候，它真的是垃圾。<br>当你学会用它的时候，就能<b>变废为宝</b>。
+      </p>
+      <p class="dim mt-m">厉害的不是 AI，是<b>人类的脑子</b>。</p>
+    </div>
+    <p class="lede mt-l">预留 10 分钟自由提问</p>
+  </div>
+  <div class="notes"><b>AI——当你不会用它的时候，它真的是垃圾。当你学会用它的时候，就能变废为宝。厉害的不是 AI，是人类的脑子。</b>预留十分钟自由提问。谢谢大家。</div>
+</section>
+
+</div>
+
+<div class="slide-number ctrl-hint" data-current="1" data-total="20"></div>
+
+<script>
+// card toggle helper
+function toggleCard(el){el.classList.toggle('open')}
+
+// 控制台联动
+try{
+  var bc=new BroadcastChannel('ppt-ctrl');
+  bc.onmessage=function(e){
+    var d=e.data;if(!d)return;
+    // 封面问号
+    if(d.type==='toggle-cover-q'){
+      var q=document.getElementById('coverQ');
+      var s=document.getElementById('coverSub');
+      if(d.show){
+        if(q)q.classList.add('show');
+        if(s)s.classList.add('show');
+      }else{
+        if(q)q.classList.remove('show');
+        if(s)s.classList.remove('show');
+      }
+    }
+    // 翻页控制
+    if(d.type==='goto'||d.slide){
+      var n=(typeof d.slide==='number')?d.slide:parseInt(d.slide);
+      if(n&&n>=1&&n<=20){
+        var slides=document.querySelectorAll('.slide');
+        var cur=document.querySelector('.slide.is-active');
+        if(cur)cur.classList.remove('is-active');
+        if(slides[n-1])slides[n-1].classList.add('is-active');
+      }
+    }
+  };
+}catch(e){}
+</script>
+</body>
+</html>

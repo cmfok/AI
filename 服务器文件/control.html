@@ -1,0 +1,601 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>控制台 · AI 真垃圾</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#e6edf3;font-family:'Inter','Noto Sans SC',sans-serif;padding:0;overflow-x:hidden}
+.sticky{position:sticky;top:0;z-index:100;background:#0d1117;padding:12px 12px 0}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:#161b22;border:1px solid rgba(139,148,158,.15);border-radius:12px;margin-bottom:8px}
+.top-bar .left{display:flex;align-items:center;gap:8px}
+.top-bar .info{font-size:14px;color:#8b949e}
+.top-bar .info strong{color:#f0f6fc;font-size:20px}
+.top-bar .right{display:flex;align-items:center;gap:6px;font-size:13px;color:#8b949e}
+.top-bar .right .dot{width:8px;height:8px;border-radius:50%;background:#238636;display:inline-block}
+.page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px;margin-bottom:8px}
+.page-dot{padding:8px 0;border-radius:8px;border:1px solid rgba(139,148,158,.12);background:rgba(255,255,255,.02);font-size:13px;color:#8b949e;text-align:center;cursor:pointer}
+.page-dot.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
+.actions{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;min-height:36px}
+
+/* ── 通用按钮（修复：原来只有 .actions .btn，lockBtn 不在 .actions 内所以无样式）── */
+.btn{padding:8px 16px;border-radius:8px;border:1px solid rgba(139,148,158,.15);background:rgba(255,255,255,.04);color:#e6edf3;font-size:13px;cursor:pointer;font-family:inherit}
+.btn:active{background:rgba(255,255,255,.1)}
+.btn.on{border-color:#7ee787;background:rgba(126,231,135,.1);color:#7ee787}
+.btn.danger{border-color:rgba(229,62,62,.3);color:#e53e3e}
+.btn.danger:active{background:rgba(229,62,62,.08)}
+.btn.small{font-size:11px;padding:4px 10px}
+
+.scroll{overflow-y:auto;padding:0 12px 90px;max-height:calc(100vh - 180px)}
+.speaker-panel{background:#161b22;border:1px solid rgba(139,148,158,.12);border-radius:12px;padding:16px;margin-bottom:8px}
+.speaker-panel .sl{font-size:11px;color:#8b949e;font-family:'JetBrains Mono',monospace;margin-bottom:8px;letter-spacing:.5px}
+.speaker-panel .sc{font-size:16px;line-height:1.8;color:#d4d4d4;white-space:pre-wrap}
+.speaker-panel .sc strong{color:#f0f6fc}
+.next-prev{background:rgba(255,255,255,.02);border:1px solid rgba(139,148,158,.08);border-radius:10px;padding:12px;margin-bottom:8px;opacity:.7}
+.next-prev .nl{font-size:10px;color:#8b949e;font-family:'JetBrains Mono',monospace;margin-bottom:4px}
+.next-prev .nc{font-size:12px;line-height:1.5;color:#8b949e;white-space:pre-wrap}
+.bottom-nav{position:fixed;bottom:16px;left:12px;right:12px;display:flex;gap:8px;z-index:200;max-width:600px;margin:0 auto}
+.bottom-nav .bn{flex:1;padding:14px 0;border-radius:10px;border:none;font-size:15px;font-weight:600;cursor:pointer;text-align:center}
+.bottom-nav .bp{background:#21262d;color:#e6edf3;border:1px solid rgba(139,148,158,.2)}
+.bottom-nav .bnx{background:#238636;color:#fff}
+.bottom-nav .bn:active{transform:scale(.97)}
+
+/* ── Tab 切换 ── */
+.tab-bar{display:flex;gap:4px;margin-bottom:8px}
+.tab-btn{flex:1;padding:7px 0;border-radius:8px;border:1px solid rgba(139,148,158,.12);background:rgba(255,255,255,.02);color:#8b949e;font-size:12px;font-weight:500;cursor:pointer;text-align:center;transition:all .2s;font-family:inherit}
+.tab-btn.active{background:rgba(0,113,227,.12);border-color:rgba(0,113,227,.3);color:#58a6ff}
+.tab-btn:active{transform:scale(.97)}
+.tab-content{display:none}
+.tab-content.active{display:block}
+
+/* ── 问题卡片按钮行 ── */
+.q-actions{display:flex;gap:4px;flex-wrap:wrap;margin-top:2px}
+
+/* ── 移动页面选择器 ── */
+.move-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:300;display:flex;align-items:center;justify-content:center;padding:20px}
+.move-card{background:#161b22;border:1px solid rgba(139,148,158,.2);border-radius:12px;padding:20px;width:100%;max-width:380px}
+.move-card h4{font-size:15px;margin-bottom:8px;color:#f0f6fc}
+.move-card .sub{font-size:12px;color:#8b949e;margin-bottom:14px}
+.move-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:6px;margin-bottom:14px}
+.move-dot{padding:10px 0;border-radius:8px;border:1px solid rgba(139,148,158,.15);background:rgba(255,255,255,.03);color:#8b949e;font-size:13px;text-align:center;cursor:pointer}
+.move-dot:active{background:rgba(31,111,235,.15);border-color:#1f6feb;color:#58a6ff}
+.move-dot.cur{background:#1f6feb;border-color:#1f6feb;color:#fff}
+.move-actions{display:flex;gap:8px;margin-top:12px}
+.move-actions .btn{flex:1;text-align:center}
+
+/* ── 当前页提问提示 ── */
+.q-hint{display:none;padding:10px 14px;margin-bottom:8px;background:rgba(0,113,227,.08);border:1px solid rgba(0,113,227,.2);border-radius:10px;font-size:13px;color:#58a6ff;cursor:pointer;text-align:center}
+.q-hint:active{background:rgba(0,113,227,.15)}
+.q-hint .badge{display:inline-block;background:#1f6feb;color:#fff;font-size:11px;padding:1px 8px;border-radius:10px;margin:0 4px;font-weight:600}
+</style>
+</head>
+<body>
+<div class="sticky">
+  <div class="top-bar">
+    <div class="left"><div class="info">🎙 <strong id="cp">1</strong> / <span id="tp">20</span></div></div>
+    <div class="right"><span class="dot"></span>已连接</div>
+  </div>
+  <div class="page-grid" id="pg"></div>
+  <div class="actions" id="actBox" style="display:none"></div>
+  <div id="lockRow" style="display:flex;gap:4px;margin-bottom:6px;align-items:stretch">
+    <button class="btn" id="lockBtn" style="flex-shrink:0;white-space:nowrap;font-size:12px;padding:6px 10px">🔓 翻页已解锁</button>
+    <button class="tab-btn active" data-tab="script" style="font-size:12px">📝 演讲稿</button>
+    <button class="tab-btn" data-tab="questions" style="font-size:12px">💬 观众问题</button>
+  </div>
+</div>
+<div class="scroll">
+  <div class="tab-content active" id="tabScript">
+    <div class="speaker-panel">
+      <div class="sl" id="sl">P1 · 封面</div>
+      <div class="sc" id="sc">加载中...</div>
+    </div>
+    <div class="q-hint" id="qHint" onclick="switchToQuestions()"></div>
+    <div class="next-prev">
+      <div class="nl">⏭ 下一页</div>
+      <div class="nc" id="nc">—</div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tabQuestions">
+    <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px">
+      <span style="font-size:13px;color:#8b949e;font-weight:600">💬 观众问题</span>
+      <span style="font-size:10px;color:#484f58;padding:2px 8px;background:rgba(139,148,158,.08);border-radius:8px" id="qCount">0</span>
+      <button class="btn small" id="filterBtn" onclick="toggleFilter()" style="margin-left:auto;font-size:11px">📄 当前页</button>
+      <button class="btn small" onclick="resetDeleted()" style="font-size:11px" title="恢复所有已删除问题">🔄 重置</button>
+    </div>
+    <div id="qlist" style="min-height:0"></div>
+  </div>
+</div>
+
+<!-- 移动选择器（默认隐藏） -->
+<div class="move-overlay" id="moveOverlay" style="display:none">
+  <div class="move-card">
+    <h4>📌 移动到哪一页？</h4>
+    <div class="sub" id="moveSub">当前问题关联 P?</div>
+    <div class="move-grid" id="moveGrid"></div>
+    <div class="move-actions">
+      <button class="btn" onclick="closeMovePicker()">取消</button>
+      <button class="btn" id="moveConfirm" style="background:#1f6feb;border-color:#1f6feb;color:#fff;font-weight:600">✅ 确认移动</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── 全局状态 ──
+var _qdata = {};
+var _moveTargetId = null;
+var _moveTargetPage = null;
+var _offlineMode = false;  // true=本地 JSON 模式，不调写 API
+var _filterPage = false;   // true=仅显示当前页问题
+var _deletedIds = {};      // 已删除的问题 ID，防止轮询复活
+
+// 从 localStorage 恢复已删除 ID 列表
+try {
+  var saved = localStorage.getItem('ppt_deleted_ids');
+  if(saved) _deletedIds = JSON.parse(saved);
+} catch(e) { _deletedIds = {}; }
+
+// ── 翻页 ──
+function goToSlide(n){
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:n})}).catch(function(){});
+}
+
+// ── AI 回答（发送问题给 LLM，答案展示在 PPT 上，下弹出方式）──
+function aiAnswer(id){
+  var qi = _qdata[id];
+  if(!qi) return;
+  qi.loading = true;
+  qi.answer = '';
+  qi.error = '';
+  renderQuestions();
+  fetch('/api/questions/ai-answer', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({id:id, question:qi.q})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.ok){
+      qi.answer = d.answer;
+      qi.loading = false;
+      renderQuestions();
+      // 发送给 PPT 展示页：下弹出方式显示答案
+      fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:qi.p, answer:d.answer, answer_question:qi.q, answer_slide:qi.p, answer_mode:'bottom-popup'})}).catch(function(){});
+      try{ new BroadcastChannel('ppt-ctrl').postMessage({type:'voice-answer',question:qi.q,answer:d.answer,slide:qi.p,mode:'bottom-popup'}); }catch(e){}
+      try{ new BroadcastChannel('ai3-control').postMessage({type:'voice-answer',question:qi.q,answer:d.answer,slide:qi.p,mode:'bottom-popup'}); }catch(e){}
+    } else {
+      qi.error = d.error || '回答失败';
+      qi.loading = false;
+      renderQuestions();
+    }
+  }).catch(function(){
+    qi.error = '网络错误';
+    qi.loading = false;
+    renderQuestions();
+  });
+}
+
+// ── 删除问题 ──
+function deleteQuestion(id){
+  if(!confirm('确定删除这条问题吗？')) return;
+  var sid = String(id);
+  _deletedIds[sid] = true;
+  try { localStorage.setItem('ppt_deleted_ids', JSON.stringify(_deletedIds)); } catch(e) {}
+  delete _qdata[sid];
+  renderQuestions();
+  // 离线模式不调 API，仅本地删除
+  if(_offlineMode) return;
+  fetch('/api/questions/delete',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({id:id})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(!d.ok){ console.warn('服务端删除失败，重新拉取'); loadQuestions(); }
+  }).catch(function(e){
+    // 网络错误：忽略，等待下次轮询时服务端同步
+    console.warn('delete API 不可用，仅本地删除');
+  });
+}
+
+// ── 移动问题到其他 P ──
+function showMovePicker(id){
+  _moveTargetId = id;
+  var qi = _qdata[id];
+  if(!qi) return;
+  _moveTargetPage = qi.p || 1;
+  document.getElementById('moveSub').textContent = '当前问题关联 P' + (qi.p||'?') + ' · 「' + (qi.q||'').substring(0,30) + '…」';
+  // 构建页码网格
+  var g = document.getElementById('moveGrid');
+  g.innerHTML = '';
+  for(var i=1;i<=20;i++){
+    var d = document.createElement('div');
+    d.className = 'move-dot' + (i===_moveTargetPage?' cur':'');
+    d.textContent = 'P'+i;
+    d.onclick = (function(p){return function(){
+      _moveTargetPage = p;
+      document.querySelectorAll('.move-dot').forEach(function(dd){dd.className='move-dot';});
+      this.className = 'move-dot cur';
+    };})(i);
+    g.appendChild(d);
+  }
+  document.getElementById('moveOverlay').style.display = 'flex';
+}
+
+function closeMovePicker(){
+  document.getElementById('moveOverlay').style.display = 'none';
+  _moveTargetId = null;
+}
+
+function confirmMove(){
+  if(!_moveTargetId || !_moveTargetPage) return;
+  var qi = _qdata[_moveTargetId];
+  if(!qi) return;
+  var oldPage = qi.p;
+  qi.p = _moveTargetPage;
+  renderQuestions();
+  closeMovePicker();
+  // 离线模式不调 API，仅本地移动
+  if(_offlineMode) return;
+  fetch('/api/questions/move',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({id:_moveTargetId, page:_moveTargetPage})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(!d.ok){
+      qi.p = oldPage;
+      renderQuestions();
+      alert('移动失败: ' + (d.error||'未知错误'));
+    }
+  }).catch(function(e){
+    qi.p = oldPage;
+    renderQuestions();
+    alert('移动失败: 网络错误');
+  });
+}
+
+document.getElementById('moveConfirm').onclick = confirmMove;
+
+// 点击遮罩关闭
+document.getElementById('moveOverlay').addEventListener('click', function(e){
+  if(e.target === this) closeMovePicker();
+});
+
+// ── 加载问题列表 ──
+function applyQuestionsData(d){
+  var bp = d.by_page || {};
+  for(var k in bp){
+    var qs = bp[k];
+    for(var i=0;i<qs.length;i++){
+      var q = qs[i];
+      var sid = String(q.id);
+      if(_deletedIds[sid]) continue;
+      if(!_qdata[sid]){ _qdata[sid] = {q:q.question, p:q.page||1, answer:'', loading:false, error:'', n:q.name||'匿名'}; }
+      else {
+        _qdata[sid].q = q.question;
+        _qdata[sid].p = q.page||1;
+        _qdata[sid].n = q.name||'匿名';
+      }
+    }
+  }
+  renderQuestions();
+}
+
+function loadQuestions(){
+  fetch('/api/questions').then(function(r){
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return r.json();
+  }).then(function(d){
+    _offlineMode = false;
+    applyQuestionsData(d);
+    // 在线模式：同步 localStorage 中已删除的 ID 到服务器
+    syncDeletedToServer();
+  }).catch(function(e){
+    console.warn('API /api/questions 不可用，尝试加载本地 questions.json ...');
+    fetch('questions.json').then(function(r){
+      if(!r.ok) throw new Error('HTTP '+r.status);
+      return r.json();
+    }).then(function(d){
+      _offlineMode = true;
+      applyQuestionsData(d);
+      var hint = document.getElementById('qHint');
+      if(hint) hint.textContent = '📡 离线模式 · 问题数据来自本地缓存';
+    }).catch(function(e2){
+      console.error('Q&A error:', e2);
+      var l = document.getElementById('qlist');
+      if(l) l.innerHTML = '<div style="text-align:center;padding:30px;color:#e53e3e">❌ 加载失败（API 和本地缓存均不可用）</div>';
+    });
+  });
+}
+
+// ── 切换到问题 Tab ──
+function switchToQuestions(){
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.className='tab-btn';});
+  var qBtn = document.querySelector('[data-tab="questions"]');
+  if(qBtn) qBtn.className='tab-btn active';
+  document.querySelectorAll('.tab-content').forEach(function(tc){tc.className='tab-content';});
+  var qTab = document.getElementById('tabQuestions');
+  if(qTab) qTab.className='tab-content active';
+}
+
+// ── 更新当前页提问提示 ──
+function updateQuestionHint(){
+  var hint = document.getElementById('qHint');
+  if(!hint) return;
+  var ids = Object.keys(_qdata);
+  var pageQuestions = [];
+  for(var i=0;i<ids.length;i++){
+    var qi = _qdata[ids[i]];
+    if(qi.p === cur) pageQuestions.push(qi);
+  }
+  if(pageQuestions.length > 0){
+    hint.style.display = 'block';
+    hint.innerHTML = '💬 当前页有 <span class="badge">' + pageQuestions.length + '</span> 个提问，点击跳转查看';
+  } else {
+    hint.style.display = 'none';
+  }
+}
+
+// ── 筛选切换 ──
+function toggleFilter(){
+  _filterPage = !_filterPage;
+  var btn = document.getElementById('filterBtn');
+  if(_filterPage){
+    btn.className = 'btn small on';
+    btn.textContent = '📌 仅 P' + (cur>20?'附':(cur===5?'转':(cur>5?cur-1:cur)));
+  } else {
+    btn.className = 'btn small';
+    btn.textContent = '📄 当前页';
+  }
+  renderQuestions();
+}
+
+// ── 重置已删除 ──
+function resetDeleted(){
+  if(!confirm('确定恢复所有已删除的问题吗？')) return;
+  _deletedIds = {};
+  try { localStorage.removeItem('ppt_deleted_ids'); } catch(e) {}
+  loadQuestions();
+}
+
+// ── 同步离线删除到服务器 ──
+function syncDeletedToServer(){
+  var ids = Object.keys(_deletedIds);
+  if(ids.length === 0) return;
+  var pending = ids.length;
+  ids.forEach(function(sid){
+    fetch('/api/questions/delete',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id: parseInt(sid)})
+    }).then(function(r){return r.json();}).then(function(d){
+      pending--;
+      if(d.ok){
+        delete _deletedIds[sid];
+        try { localStorage.setItem('ppt_deleted_ids', JSON.stringify(_deletedIds)); } catch(e) {}
+      }
+      if(pending === 0 && Object.keys(_deletedIds).length === 0){
+        try { localStorage.removeItem('ppt_deleted_ids'); } catch(e) {}
+        console.log('✅ 已同步所有删除到服务器');
+      }
+    }).catch(function(){
+      pending--;
+    });
+  });
+}
+
+// ── 渲染问题列表 ──
+function renderQuestions(){
+  var list = document.getElementById('qlist');
+  if(!list) return;
+  var ids = Object.keys(_qdata);
+  // 按页码排序
+  ids.sort(function(a,b){ return (_qdata[a].p||0) - (_qdata[b].p||0); });
+  // 筛选
+  if(_filterPage){
+    ids = ids.filter(function(id){ return _qdata[id].p === cur; });
+  }
+  var total = ids.length;
+  // 总数显示（始终显示全部问题数）
+  var cnt = document.getElementById('qCount');
+  var allTotal = Object.keys(_qdata).length;
+  if(cnt) cnt.textContent = _filterPage ? (total + ' / ' + allTotal) : allTotal;
+  if(total === 0){
+    list.innerHTML = '<div style="text-align:center;padding:30px;color:#484f58;font-size:13px">💬 暂无问题</div>';
+    return;
+  }
+  var h = '';
+  for(var i=0;i<ids.length;i++){
+    var id = ids[i];
+    var qi = _qdata[id];
+    h += '<div style="background:rgba(255,255,255,.03);border:1px solid rgba(139,148,158,.1);border-radius:8px;padding:10px 12px;margin-bottom:6px">';
+    // 头部：用户 + 页码
+    h += '<div style="display:flex;gap:6px;margin-bottom:4px;align-items:center">';
+    h += '<span style="color:#8b949e;font-size:12px">👤 ' + (qi.n||'匿名') + '</span>';
+    h += '<span style="color:#58a6ff;font-size:10px;background:rgba(0,113,227,.1);padding:1px 6px;border-radius:4px;font-weight:500">P' + (qi.p||'?') + '</span>';
+    h += '</div>';
+    // 问题正文
+    h += '<div style="color:#e6edf3;line-height:1.6;margin-bottom:6px;font-size:13px">' + qi.q + '</div>';
+    // AI 回答结果
+    if(qi.answer){
+      h += '<div style="font-size:12px;color:#7ee787;padding:8px;background:rgba(0,0,0,.15);border-radius:6px;margin-bottom:6px">🤖 ' + qi.answer + '</div>';
+    } else if(qi.loading){
+      h += '<div style="font-size:12px;color:#8b949e;padding:8px;text-align:center">🤔 AI思考中...</div>';
+    } else if(qi.error){
+      h += '<div style="font-size:12px;color:#e53e3e;padding:8px">❌ ' + qi.error + '</div>';
+    }
+    // 按钮行：跳转 | 回答 | 移动 | 删除
+    h += '<div class="q-actions">';
+    h += '<button class="btn small" onclick="goToSlide(' + (qi.p||1) + ')">🔙 跳转</button>';
+    if(!qi.answer && !qi.loading){
+      h += '<button class="btn small on" onclick="aiAnswer(' + id + ')">🤖 回答</button>';
+    }
+    h += '<button class="btn small" onclick="showMovePicker(' + id + ')">📌 移动</button>';
+    h += '<button class="btn small danger" onclick="deleteQuestion(' + id + ')">🗑 删除</button>';
+    h += '</div>';
+    h += '</div>';
+  }
+  list.innerHTML = h;
+  updateQuestionHint();
+}
+loadQuestions();
+setInterval(function(){
+  // 离线模式不轮询（JSON 静态，轮询会复活已删除问题）
+  if(!_offlineMode) loadQuestions();
+}, 10000);
+</script>
+
+<div class="bottom-nav">
+  <button class="bn bp" id="bP">← 上一页</button>
+  <button class="bn bnx" id="bN">下一页 →</button>
+</div>
+
+<script>
+var TOTAL=21,cur=1;
+var ACT={1:{l:'显示问号',s:'显示问号',h:'隐藏问号'},2:{l:'展开答案',s:'展开答案',h:'收起答案'},4:{l:'展开卡片',s:'展开三阶段',h:'收起卡片'}};
+var CC=0;
+var S={
+1:{t:'封面',c:'**AI 真垃圾**——两个意思。\n**第一个意思**：觉得它无所不能，实际用起来各种不靠谱，你会觉得：**AI 真垃圾！**\n**第二个意思**：用久了知道它垃圾在哪，也就知道怎么**规训**它了。\n我最核心的关切：**如何让 AI 可控地输出我想要的结果。**'},
+2:{t:'外星人的语言',c:'看这组规律：← ↑ → ↓ ←。猜下一个：↑ → ？\n答案是 **↓**。规律：**左上右下，顺时针转圈**。\n你刚才做的这件事，就是 **AI 每天都在做的事**——根据上文，预测最合理的下一个东西。'},
+3:{t:'AI=猜字系统',c:'**AI 的核心——就是个猜字系统。**\n给它一段上文，它**算概率**，猜下一个最合理的字/词。\n它**没有意识，没有理解**——它只是在**猜**。'},
+4:{t:'模型',c:'豆包·ChatGPT·Gemini·千问·DeepSeek……**这些都是模型**。\n**三阶段训练**：①预训练→喂海量文字 ②指令微调→学问答格式 ③RLHF→人类打分→AI 变**"舔狗"**。\n**三个局限**：**幻觉**（不调工具直接猜天气）、**知识截止**（数据停在2025）、**无真实理解**（所有手表画成10:10）。'},
+5:{t:'四大工程总览',c:'让 AI 瞎猜，绝不靠谱。**让 AI 猜准，四大工程：**\n**①提示词工程**——教你怎么跟 AI 说话\n**②上下文工程**——让 AI 知道它在跟谁打交道\n**③规训工程**——给 AI 套上缰绳，让它能干活\n**④循环工程**——做→查→修→再输出，直到满意'},
+6:{t:'提示词工程',c:'**左边❌**："帮我做个PPT"→AI 瞎猜，没法用。\n**右边✅**：Trae 语音沟通→生成 MD 文件→一键生成 PPT。**本场分享会 PPT 就是这样做的！**\n**四个规则**：**定角色·讲要求·给参考·设标准**\n种子故事：朋友问 AI 约会→太笼统→结构化重写→方案完整。但过了几天又失败了——AI 推荐**烤肉**，那女孩是**素食主义者**。引出上下文工程。'},
+7:{t:'上下文工程·三级别对比',c:'**①普通提问**："帮我规划云南5天4夜"→通用模板，写给所有人。\n**②提示词工程**：按行程/住宿/费用输出→结构清晰，但不知道你是谁。\n**③上下文工程**：喂入背景文件——一家三口、儿子3岁半不能高海拔、预算2万→**量身定制**：推荐抚仙湖避开丽江、三种自驾方案、预算19700。'},
+8:{t:'上下文工程·揭晓',c:'不是改怎么问，是**让 AI 知道它在跟谁打交道**。\n**三个价值**：**可迁移**（换模型不用重喂）·**可生长**（不断加内容）·**有记忆**（不用每次重复）。\n**💡 上下文工程最重要的是——知识库。**'},
+9:{t:'知识库搭建',c:'**🥉青铜**：MD + Trae——写背景文件，零门槛。\n**🥈白银**：MD + Trae + Obsidian——双向链接、图谱检索。\n**🥇黄金**：+ 向量模型/插件——语义搜索、智能推荐。\n不急，**先跑起来最重要**。'},
+10:{t:'案例对比·招聘简历',c:'**左边❌**：只用模型+提示词→通用分析，维度单一。\n**右边✅**：套规训六件套→多维度评分 + JD 匹配 + 预警推荐。\n关键变量：**有没有规训工程给 AI 套上缰绳**。'},
+11:{t:'案例对比·运费对账',c:'**左边❌**：Excel 手工算——鼠标移动、敲公式、算错标红。半天怕错。\n**右边✅**：脚本自动化——8个节点逐个校验，数字滚到目标值，**3.4秒零误差**。\n关键变量：**有没有自动化脚本**。'},
+12:{t:'揭晓·规训工程',c:'**规训工程 = 给 AI 装上手脚、套上缰绳。**\n**六大组件**：①工具调用 ②约束安全 ③验证校验 ④状态管理 ⑤错误处理 ⑥可观测性。\n**💡 规训工程最重要的是——脚本和工作流。**'},
+13:{t:'脚本还是工作流？',c:'**确定性结果**（错了就是钱）→ 脚本(Python) 或 固定工作流(Coze/Dify)\n**开放性流程**（无标准答案）→ AI 工作流(Trae/Qoder/Claude Code)\n三种方式**没有高低之分，看场景选**。'},
+14:{t:'拆解·生日营销',c:'真实案例：**变现 400 万+**。\n用户→小程序→数据库→AI处理→分析匹配→客服→收到礼品→复购下单→发货→进公司口袋。\n每个节点标注规训组件，底部"**每天自动循环**"。全流程自动化。'},
+15:{t:'递进对比：规训→循环',c:'**只有规训**→单次执行，做完就完了。\n**加上循环**→做→查→修→再输出，直到满意。\n从"能干"到"能干好"的质变。'},
+16:{t:'揭晓·循环工程',c:'**AI 为什么垃圾？做一遍就完了，不会自己回头看。**\n**四级别**：L1自查 → L2复盘 → L3会诊 → L4绩效。\n**三栏**：循环流程 / AI没有眼睛 / 多Agent并行。\n**循环工程就是逼它再做一遍。**'},
+17:{t:'个人 AI vs 企业 AI',c:'差的不是模型，是**工程**。\n个人：提示词+上下文就够了，错了 Ctrl+Z。\n企业：**四大工程全得上**，规训+循环是核心，错了就是钱。\n个人追求**提效**，企业追求**可控+变现**。'},
+18:{t:'数据隐私',c:'**你的数据去了哪里？**\n网页提问→用 **API**（默认不训练） / 上传文件→用 **Trae**（本地处理）\n聊机密→选**隐私模式** / 复制数据→用**企业版** / 多人共用→**一人一账号**\n🅿️ Pro方案：**私有化部署**——数据完全不离开你的网络。'},
+19:{t:'落地 Checklist',c:'明确场景→选模型→搭知识库→设计提示词→配置规训→评估隐私→搭建工作流→循环优化\n**三层工具包**：API Key → 本地工具(Trae/Qoder/Claude Code) → 知识库(Obsidian/飞书/Dify)'},
+20:{t:'互动答疑',c:'**AI——当你不会用它的时候，它真的是垃圾。当你学会用它的时候，就能变废为宝。**\n**厉害的不是 AI，是人类的脑子。**\n预留 10 分钟自由提问。'},
+21:{t:'附录',c:'（备用）**模型对比表**：DeepSeek→推理强 / Qwen→中文强 / Kimi→长上下文 / GLM-4→工具调用 / 豆包→日常对话\n（备用·占位）**Token 费用**：先不做。'},
+};
+
+// 构建页码网格
+var g=document.getElementById('pg');
+for(var i=1;i<=TOTAL;i++){
+  var d=document.createElement('div');
+  d.className='page-dot'+(i===cur?' active':'');
+  d.textContent=i<=20?(i===5?'转':'P'+(i>5?i-1:i)):'附';
+  d.onclick=function(n){return function(){go(n);};}(i);
+  g.appendChild(d);
+}
+document.getElementById('tp').textContent=20;
+
+function go(n){
+  if(n<1||n>TOTAL)return;
+  cur=n;
+  document.querySelectorAll('.page-dot').forEach(function(d,i){d.className='page-dot'+(i+1===n?' active':'');});
+  document.getElementById('cp').textContent=n>20?'附':(n===5?'转':(n>5?n-1:n));
+  upd(n);
+  CC=0;
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:n})}).catch(function(e){console.error("go error:",e)});
+  // 同时广播到本地 PPT
+  try{new BroadcastChannel('ppt-ctrl').postMessage({type:'goto',slide:n})}catch(e){}
+  // 操作按钮
+  var ab=document.getElementById('actBox');
+  if(ACT[n]){
+    ab.style.display='flex';
+	    if(n===1){
+	      ab.innerHTML='<button class="btn" id="aBtn">▶ '+ACT[n].l+'</button>';
+	      document.getElementById('aBtn').onclick=function(){
+	        var b=document.getElementById('aBtn');
+	        var isOn=b.classList.contains('on');
+	        if(isOn){
+	          b.classList.remove('on');b.textContent='▶ '+ACT[1].l;
+	          try{new BroadcastChannel('ppt-ctrl').postMessage({type:'toggle-cover-q',show:false})}catch(e){}
+	        }else{
+	          b.classList.add('on');b.textContent=ACT[1].h;
+	          try{new BroadcastChannel('ppt-ctrl').postMessage({type:'toggle-cover-q',show:true})}catch(e){}
+	        }
+	      };
+	    }else if(n===2){
+      ab.innerHTML='<button class="btn" id="aBtn">▶ '+ACT[n].l+'</button>';
+      document.getElementById('aBtn').onclick=function(){
+        var b=document.getElementById('aBtn');
+        var isOn=b.classList.contains('on');
+        if(isOn){
+          b.classList.remove('on');b.textContent='▶ '+ACT[2].l;
+          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:false})}).catch(function(){});
+        }else{
+          b.classList.add('on');b.textContent=ACT[2].h;
+          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:true})}).catch(function(){});
+        }
+      };
+    }else if(n===4){
+      CC=0;
+      ab.innerHTML='<button class="btn" id="aBtn">▶ 展开卡片1</button>';
+      document.getElementById('aBtn').onclick=function(){
+        CC++;
+        var b=document.getElementById('aBtn');
+        if(CC>3){
+          CC=0;b.classList.remove('on');b.textContent='▶ 展开卡片1';
+          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,card:0})}).catch(function(){});
+        }else{
+          b.textContent='▶ 展开卡片'+(CC+1);
+          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,card:CC})}).catch(function(){});
+        }
+      };
+    }
+  }else{
+    ab.style.display='none';
+  }
+}
+
+function upd(n){
+  var s=S[n];
+  if(!s)return;
+  document.getElementById('sl').textContent=(n>20?'附':(n===5?'转':'P'+(n>5?n-1:n)))+' · '+s.t;
+  document.getElementById('sc').innerHTML=s.c.replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+  var nx=S[n+1];
+  if(nx){
+    document.getElementById('nc').innerHTML='<strong>'+(n+1>20?'附':(n+1===5?'转':'P'+(n+1>5?n:n+1)))+' · '+nx.t+'</strong><br>'+nx.c.substring(0,100).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'…';
+  }else{
+    document.getElementById('nc').innerHTML='— 结束 —';
+  }
+  updateQuestionHint();
+}
+
+document.getElementById('bP').onclick=function(){go(cur-1);};
+document.getElementById('bN').onclick=function(){go(cur+1);};
+document.addEventListener('keydown',function(e){if(e.key==='ArrowLeft')go(cur-1);if(e.key==='ArrowRight')go(cur+1);});
+
+// ── Tab 切换 ──
+document.querySelectorAll('.tab-btn').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    document.querySelectorAll('.tab-btn').forEach(function(b){b.className='tab-btn';});
+    this.className='tab-btn active';
+    document.querySelectorAll('.tab-content').forEach(function(tc){tc.className='tab-content';});
+    var tab = this.dataset.tab;
+    var target = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+    if(target) target.className='tab-content active';
+  });
+});
+
+// ── 翻页锁定（修复：显式重置样式，避免字体不可见）──
+var locked=false;
+document.getElementById('lockBtn').onclick=function(){
+  locked=!locked;
+  if(locked){
+    this.textContent='🔒 翻页已锁定';
+    this.style.borderColor='#f7768e';
+    this.style.background='rgba(247,118,142,.1)';
+    this.style.color='#f7768e';
+  } else {
+    this.textContent='🔓 翻页已解锁';
+    this.style.removeProperty('border-color');
+    this.style.removeProperty('background');
+    this.style.removeProperty('color');
+  }
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,lock:locked})}).catch(function(e){console.error("lock error:",e)});
+};
+
+go(1);
+</script>
+</body>
+</html>

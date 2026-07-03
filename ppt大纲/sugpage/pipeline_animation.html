@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 自动对账 · 流水线</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d0d0d;display:flex;justify-content:center;align-items:center;min-height:100vh;font-family:"Inter","Helvetica Neue","Noto Sans SC",sans-serif;overflow:hidden;padding:20px}
+.pipeline-wrap{width:100%;max-width:640px;position:relative;height:100%;display:flex;flex-direction:column}
+/* 计时+结果 —— 常驻显示 */
+.bottom-section{margin-top:auto;padding-top:12px;text-align:center;position:relative}
+.timer-result{
+  display:inline-flex;align-items:center;gap:16px;
+  background:rgba(76,175,80,.04);border:1px solid rgba(76,175,80,.12);
+  border-radius:12px;padding:12px 20px 12px 24px;
+}
+.timer-result .timer{
+  font-family:"JetBrains Mono","Consolas",monospace;
+  text-align:right;padding-right:16px;
+  border-right:1px solid rgba(255,255,255,.06);
+}
+.timer-result .timer .num{font-size:50px;font-weight:800;color:#4caf50;letter-spacing:-.03em}
+.timer-result .timer .unit{font-size:22px;font-weight:700;color:#4caf50;margin-left:2px}
+.timer-result .result-text{text-align:left}
+.timer-result .result-text .big{font-size:20px;font-weight:700;color:#4caf50}
+.timer-result .result-text .sub{font-size:12px;color:rgba(255,255,255,.25);transition:color .4s}
+.timer-result .result-text .sub.done{color:#4caf50}
+
+.pipeline{display:flex;flex-direction:column;gap:8px;position:relative;z-index:1;margin-bottom:8px}
+.step{
+  display:flex;align-items:center;gap:12px;
+  background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);
+  border-radius:8px;padding:15px 14px;
+  opacity:0;transform:translateX(-20px);
+  transition:all .4s cubic-bezier(.25,.46,.45,.94);
+}
+.step.visible{opacity:1;transform:translateX(0)}
+.step.active{border-color:#4A90D9;background:rgba(74,144,217,.08)}
+.step.done{border-color:rgba(76,175,80,.2);background:rgba(76,175,80,.04)}
+.step .order{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,.3);font-weight:600;flex-shrink:0}
+.step.active .order{background:#4A90D9;color:#fff}
+.step.done .order{background:#4caf50;color:#fff}
+.step .icon{font-size:20px;flex-shrink:0}
+.step .info{flex:1;min-width:0}
+.step .label{font-size:9px;color:rgba(255,255,255,.2);letter-spacing:.5px;text-transform:uppercase}
+.step .title{font-size:16px;font-weight:600;color:#f5f5f7}
+.step .title .dim{font-size:13px;font-weight:400;color:rgba(255,255,255,.35);margin-left:6px}
+.step .desc{font-size:12px;color:rgba(255,255,255,.35)}
+.step .status-icon{font-size:16px;opacity:0;transition:opacity .3s;flex-shrink:0}
+.step.done .status-icon{opacity:1}
+.step .counter{
+  font-family:"JetBrains Mono","Consolas",monospace;
+  font-size:18px;font-weight:700;color:#4A90D9;min-width:90px;text-align:right;
+  transition:color .3s;
+}
+.step.done .counter{color:#4caf50}
+.counter .unit-sm{font-size:11px;font-weight:400;color:rgba(255,255,255,.2);margin-left:2px}
+</style>
+</head>
+<body>
+<div class="pipeline-wrap">
+  <div class="pipeline" id="pipeline"></div>
+  <div class="bottom-section">
+    <div class="timer-result" id="timerResult">
+      <div class="timer">⏱ <span class="num" id="timerNum">0.0</span><span class="unit"> 秒</span></div>
+      <div class="result-text">
+        <div class="big" id="resultBig">⏳ 执行中...</div>
+        <div class="sub" id="resultSub">全自动运行中</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+const steps = [
+  {icon:'📦', label:'STEP 01', title:'读取ERP发货数据', dim:'全部发货单', target:21530, suffix:'条'},
+  {icon:'📋', label:'STEP 02', title:'包装方案核对', dim:'匹配产品→冰袋→箱子规格', target:21530, suffix:'条已匹配'},
+  {icon:'⚖️', label:'STEP 03', title:'计算产品重量', dim:'产品+冰袋+箱子总重', target:21530, suffix:'条已处理'},
+  {icon:'🧊', label:'STEP 04', title:'冰袋/箱子配置', dim:'按温区匹配保温方案', target:3, suffix:'温区全部匹配'},
+  {icon:'📍', label:'STEP 05', title:'地址城市等级映射', dim:'362城市已分级', target:362, suffix:'城市'},
+  {icon:'💰', label:'STEP 06', title:'首重续重计算', dim:'12档计费规则', target:12, suffix:'档全部计算'},
+  {icon:'📊', label:'STEP 07', title:'出库费核算', dim:'出库+打包', target:21530, suffix:'条已核算'},
+  {icon:'🚚', label:'STEP 08', title:'总运费汇总', dim:'最终金额', target:827381.50, suffix:'', isMoney:true},
+];
+
+const pipeline = document.getElementById('pipeline');
+const timerNum = document.getElementById('timerNum');
+const resultBig = document.getElementById('resultBig');
+const resultSub = document.getElementById('resultSub');
+let startTime = null;
+let timerInterval = null;
+
+steps.forEach((s, i) => {
+  const div = document.createElement('div');
+  div.className = 'step';
+  div.id = 'step_'+i;
+  const displayTarget = s.isMoney ? ('¥ ' + s.target.toLocaleString()) : s.target.toLocaleString() + ' ' + s.suffix;
+  div.innerHTML = `
+    <div class="order">${i+1}</div>
+    <div class="icon">${s.icon}</div>
+    <div class="info">
+      <div class="label">${s.label}</div>
+      <div class="title">${s.title}<span class="dim">${s.dim}</span></div>
+    </div>
+    <div class="counter" id="counter_${i}">0 ${s.suffix}</div>
+    <div class="status-icon">✅</div>
+  `;
+  pipeline.appendChild(div);
+});
+
+function animateCounter(index, target, isMoney, suffix, duration, cb) {
+  const el = document.getElementById('counter_'+index);
+  const start = performance.now();
+  function update(now) {
+    const elapsed = now - start;
+    const progress = Math.min(elapsed / duration, 1);
+    const eased = 1 - Math.pow(1 - progress, 2);
+    const current = Math.round(target * eased);
+    if (isMoney) { el.textContent = '¥ ' + current.toLocaleString(); }
+    else { el.textContent = current.toLocaleString() + ' ' + suffix; }
+    if (progress < 1) { requestAnimationFrame(update); }
+    else {
+      if (isMoney) { el.textContent = '¥ ' + target.toLocaleString(); }
+      else { el.textContent = target.toLocaleString() + ' ' + suffix; }
+      if (cb) setTimeout(cb, 100);
+    }
+  }
+  requestAnimationFrame(update);
+}
+
+function showStep(i) {
+  if (i >= steps.length) {
+    clearInterval(timerInterval);
+    resultBig.textContent = '✅ 零误差';
+    resultBig.style.color = '#4caf50';
+    resultSub.textContent = '全自动完成 · 无需人工核对';
+    resultSub.classList.add('done');
+    return;
+  }
+  const el = document.getElementById('step_'+i);
+  el.classList.add('visible','active');
+  const s = steps[i];
+  animateCounter(i, s.target, s.isMoney, s.suffix, 350);
+  if (i > 0) {
+    document.getElementById('step_'+(i-1)).classList.remove('active');
+    document.getElementById('step_'+(i-1)).classList.add('done');
+  }
+  setTimeout(() => showStep(i + 1), 480);
+}
+
+function startTimer() {
+  startTime = Date.now();
+  timerInterval = setInterval(() => {
+    const elapsed = (Date.now() - startTime) / 1000;
+    timerNum.textContent = elapsed.toFixed(1);
+  }, 50);
+}
+
+setTimeout(() => { startTimer(); showStep(0); }, 300);
+</script>
+</body>
+</html>

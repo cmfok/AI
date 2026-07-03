@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-themes="sharp-mono,swiss-grid,minimal-white,corporate-clean,dracula">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AI 真垃圾 · 分享会</title>
+<link rel="stylesheet" href="../../html%20ppt/assets/fonts.css">
+<link rel="stylesheet" href="../../html%20ppt/assets/base.css">
+<link rel="stylesheet" id="theme-link" href="../../html%20ppt/assets/themes/sharp-mono.css">
+<link rel="stylesheet" href="../../html%20ppt/assets/animations/animations.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body class="tpl-ai-trash-talk">
+<div class="deck">
+
+<!-- ============ 1. COVER ============ -->
+<section class="slide" data-title="封面">
+  <p class="kicker">CM @ 开想传媒 · 2026-07-07</p>
+  <h1 class="h1 anim-fade-up" data-anim="fade-up">AI 真<span class="accent-red">垃圾</span></h1>
+  <p class="lede mt-m" data-anim="fade-up" data-anim-delay="200">从「它啥都能干」到「我知道它啥干不了」</p>
+  <div class="pill-row mt-l" data-anim="fade-up" data-anim-delay="400">
+    <span class="pill">提示词工程</span>
+    <span class="pill pill-dark">上下文工程</span>
+    <span class="pill">规训工程</span>
+    <span class="pill pill-dark">循环工程</span>
+  </div>
+  <p class="sub-lede mt-m" data-anim="fade-up" data-anim-delay="600">四大工程体系 × AI Agent 落地方法论</p>
+  <div class="deck-footer">
+    <span>#AI真垃圾 #四大工程 #AI落地</span>
+    <span class="slide-number" data-current="1" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>大家好，今天我的分享主题叫<strong>AI 真垃圾</strong>。</p>
+    <p>为什么取这个名字？<strong>两个意思</strong>。第一个意思——你觉得它无所不能，实际用起来各种不靠谱。你会觉得：AI 真垃圾！第二个意思——用久了，你知道它垃圾在哪，也就知道怎么规训它了。</p>
+    <p>我最核心的关切就是：<strong>如何让 AI 可控地输出我想要的结果</strong>。今天我会讲四大工程——提示词工程、上下文工程、规训工程、循环工程——这是一套完整的方法论，从"它能猜"到"它能猜准"。</p>
+    <p>整个分享大概 40 分钟，中间有互动环节和现场演示。好，我们现在开始。</p>
+  </aside>
+</section>
+
+<!-- ============ 2. 外星人的语言 ============ -->
+<section class="slide" data-title="外星人的语言">
+  <p class="kicker">互动环节</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">外星人的语言</h2>
+  <div class="arrow-game mt-l" data-anim="fade-up" data-anim-delay="200">
+    <div class="arrow-row">
+      <span class="arrow">←</span>
+      <span class="arrow">↑</span>
+      <span class="arrow">→</span>
+      <span class="arrow">↓</span>
+      <span class="arrow">←</span>
+    </div>
+    <div class="guess-row mt-m">
+      <span class="arrow arrow-ghost">↑</span>
+      <span class="arrow arrow-ghost">→</span>
+      <span class="arrow arrow-q">？</span>
+    </div>
+  </div>
+  <div class="answer-reveal mt-l" data-anim="fade-up" data-anim-delay="600">
+    <p class="big-answer">答案：<span class="accent-red">↓</span></p>
+    <p class="dim">规律：左上右下，顺时针转圈</p>
+    <div class="insight-box mt-m">
+      <p><strong>💡 你刚才做的这件事，就是 AI 每天都在做的事</strong>——根据上文，预测最合理的下一个东西。</p>
+    </div>
+  </div>
+  <div class="deck-footer">
+    <span>#互动 #猜字系统</span>
+    <span class="slide-number" data-current="2" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>先跟大家玩个小游戏。屏幕上有一串箭头——← ↑ → ↓ ←。好，下一个是什么？↑ → ？</p>
+    <p>答案是<strong>↓</strong>。规律很简单：左上右下，顺时针转圈。</p>
+    <p>你刚才做的这件事——看前面的序列，猜下一个最合理的是什么——<strong>就是 AI 每天都在做的事</strong>。AI 不是什么神秘智能，它的核心就是：给它一段上文，它算概率，猜下一个最合理的字或词。</p>
+    <p>这个认知很重要，因为它决定了我们对 AI 的预期管理。如果你以为它有意识、能理解、会推理，你一定会觉得它垃圾。但如果你知道它就是在猜——你就知道怎么让它猜准。</p>
+  </aside>
+</section>
+
+<!-- ============ 3. 反认知 ============ -->
+<section class="slide" data-title="反认知">
+  <p class="kicker">反认知事实</p>
+  <h2 class="h2 mega anim-fade-up" data-anim="fade-up">AI 的核心<br>就是个<span class="accent-red">猜字系统</span></h2>
+  <p class="lede mt-l tc" data-anim="fade-up" data-anim-delay="300">给它一段上文，它算概率、猜下一个最合理的字/词。</p>
+  <p class="lede mt-m tc dim" data-anim="fade-up" data-anim-delay="500">它没有意识，没有理解——它只是在<strong>猜</strong>。</p>
+  <div class="deck-footer">
+    <span>#反认知 #猜字系统</span>
+    <span class="slide-number" data-current="3" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>这一页是今天分享第一个反认知——<strong>AI 的核心就是个猜字系统</strong>。</p>
+    <p>很多人觉得 AI 很神秘，能写文章、能画画、能写代码。但其实它的底层逻辑非常简单：给它一段上文，它算概率，猜下一个最合理的字或者词。它<strong>没有意识，没有真正的理解</strong>。</p>
+    <p>这个认知一旦建立，后面所有东西都好理解了——为什么 AI 会胡说八道？因为它在猜，猜错了不负责。为什么 AI 有时候精准有时候离谱？因为猜的准确率取决于它见过的数据。它不是神，是个超级猜谜机。</p>
+  </aside>
+</section>
+
+<!-- ============ 4. 模型 ============ -->
+<section class="slide" data-title="模型">
+  <p class="kicker">LLM & LMM</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">模&emsp;&emsp;型</h2>
+  <div class="grid g2 mt-l">
+    <!-- 左栏：模型阵列 -->
+    <div data-anim="fade-up" data-anim-delay="200">
+      <div class="model-grid">
+        <span class="model-tag">豆包</span><span class="model-tag">千问</span><span class="model-tag">Kimi</span>
+        <span class="model-tag">DeepSeek</span><span class="model-tag">GLM-4</span>
+        <span class="model-tag">ChatGPT</span><span class="model-tag">Gemini</span><span class="model-tag">Claude</span>
+      </div>
+      <p class="dim mt-s tc">这些都是模型</p>
+    </div>
+    <!-- 右栏：三阶段卡片 -->
+    <div data-anim="fade-up" data-anim-delay="400">
+      <div class="stack">
+        <div class="card card-accent"><h4>① 预训练</h4><p class="dim">喂海量文字资料 → 让 AI 了解人类语言逻辑</p></div>
+        <div class="card card-accent"><h4>② 指令微调</h4><p class="dim">给问答对 → 让 AI 学会什么是问题、应该怎么回答</p></div>
+        <div class="card card-accent"><h4>③ RLHF</h4><p class="dim">人类打分 → AI 为了拿高分过度优化语气 → 变成"舔狗"</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="card card-warn mt-m" data-anim="fade-up" data-anim-delay="600">
+    <h4>⚠️ 三个局限</h4>
+    <p class="dim"><strong>幻觉</strong>：不调工具直接猜天气 · <strong>知识截止</strong>：训练数据只到2025 · <strong>无真实理解</strong>：所有手表画成10:10</p>
+  </div>
+  <div class="deck-footer">
+    <span>#模型 #LLM #三阶段训练</span>
+    <span class="slide-number" data-current="4" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>好，既然 AI 是个猜字系统，那这些猜字系统长什么样？我们日常生活中接触的豆包、ChatGPT、Gemini、千问——<strong>这些都是模型</strong>。</p>
+    <p>左边是现在主流的模型。不需要记住全部，知道它们都是"模型"就行。右边是模型的<strong>三阶段训练过程</strong>。第一阶段预训练，喂海量资料让它懂语言。第二阶段指令微调，让它学会问答。第三阶段 RLHF——人类打分，AI 为了拿高分过度优化，就变成了我们说的"舔狗"。</p>
+    <p>模型还有三个先天局限。幻觉——该调工具的时候它猜，就胡说。知识截止——训练数据停在某个时间点。没有真实理解——所有手表它都画成 10:10，因为训练数据里手表广告都是 10:10。它不懂时间，只是复现模式。</p>
+  </aside>
+</section>
+
+<!-- ============ 5. 转折 · 四大工程总览 ============ -->
+<section class="slide" data-title="四大工程总览">
+  <p class="kicker">转折</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">让 AI 瞎猜，绝不靠谱<br><span class="accent-red">四大工程</span>，让 AI 猜准</h2>
+  <div class="grid g4 mt-l" data-anim="fade-up" data-anim-delay="300">
+    <div class="card card-accent tc" data-fx="magnetic-field">
+      <div class="eng-num">01</div>
+      <h4>提示词工程</h4>
+      <p class="dim">教你怎么跟 AI 说话</p>
+    </div>
+    <div class="card card-accent tc">
+      <div class="eng-num">02</div>
+      <h4>上下文工程</h4>
+      <p class="dim">让 AI 知道它在跟谁打交道</p>
+    </div>
+    <div class="card card-accent tc">
+      <div class="eng-num">03</div>
+      <h4>规训工程</h4>
+      <p class="dim">给 AI 套上缰绳，让它能干活</p>
+    </div>
+    <div class="card card-accent tc">
+      <div class="eng-num">04</div>
+      <h4>循环工程</h4>
+      <p class="dim">做→查→修→再输出，直到满意</p>
+    </div>
+  </div>
+  <p class="lede mt-m tc" data-anim="fade-up" data-anim-delay="600">从「它能猜」到「它能猜准」——中间缺的就是<strong>工程</strong></p>
+  <div class="deck-footer">
+    <span>#四大工程 #转折</span>
+    <span class="slide-number" data-current="5" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>吐槽完 AI 的各种问题——猜字、幻觉、知识截止、没有真实理解——你可能会想：这玩意儿还能用吗？</p>
+    <p><strong>答案是：能。但需要工程。</strong></p>
+    <p>我总结了<strong>四大工程</strong>来解决这些问题。提示词工程——教你跟 AI 说话的技巧。上下文工程——把背景资料喂给 AI，让它知道你是谁。规训工程——给 AI 装上手脚、套上缰绳，让它真的能干活。循环工程——让 AI 做完了自己检查、自己修正。</p>
+    <p>这四个工程是一个递进关系。大多数人的 AI 使用停留在第一层——写提示词。今天我会带你们一层一层往上走。好，从提示词工程开始。</p>
+  </aside>
+</section>
+
+<!-- ============ 6. 提示词工程 ============ -->
+<section class="slide" data-title="提示词工程">
+  <p class="kicker">CHAPTER 01 · PROMPT ENGINEERING</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">提示词工程</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">不是改怎么问，是教你怎么跟 AI 说话</p>
+  <div class="grid g2 mt-l">
+    <div data-anim="fade-up" data-anim-delay="300">
+      <div class="card card-bad"><h4>❌ 传统做法</h4><p class="dim">「帮我做个PPT」→ AI 乱出一通，根本没法用</p></div>
+      <div class="card card-good mt-s"><h4>✅ 正确做法</h4><p class="dim">先在 Trae 中沟通明确需求 → 生成结构化 MD 文件 → MD 一键生成 PPT</p><p class="dim mt-s"><strong>本场分享会的 PPT 就是这样做的！（元演示）</strong></p></div>
+    </div>
+    <div data-anim="fade-up" data-anim-delay="500">
+      <div class="stack">
+        <div class="rule-row"><span class="num">①</span><div><b>定角色</b><p class="dim">告诉 AI 它是谁——"你是一个资深PPT设计师"</p></div></div>
+        <div class="rule-row"><span class="num">②</span><div><b>讲要求</b><p class="dim">明确输出格式、风格、禁忌</p></div></div>
+        <div class="rule-row"><span class="num">③</span><div><b>给参考</b><p class="dim">提供范例，让 AI 知道你要的感觉</p></div></div>
+        <div class="rule-row"><span class="num">④</span><div><b>设标准</b><p class="dim">告诉 AI 怎么判断做得好不好</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-m" data-anim="fade-up" data-anim-delay="700">
+    <h4>🌱 种子故事</h4>
+    <p class="dim">朋友问 AI 帮他规划约会 → 问题太笼统 → 教他用结构化方式重写 → AI 给出完整方案，连餐厅都按女孩口味推荐。但……过了几天他又失败了——AI 推荐烤肉，那女孩是素食主义者。</p>
+  </div>
+  <div class="deck-footer">
+    <span>#提示词工程 #Prompt</span>
+    <span class="slide-number" data-current="6" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>提示词工程——CHAPTER 01。四个字总结：<strong>定角色、讲要求、给参考、设标准</strong>。</p>
+    <p>左边是一个很典型的对比。你说"帮我做个PPT"，AI 瞎猜，出来一堆垃圾。但如果你先在 Trae 里跟它沟通清楚需求，让它生成结构化的 MD 文件，然后用 MD 一键生成 PPT——出来的就是今天你们看到的这个效果。我自己这场分享会的 PPT 就是这样做的，<strong>元演示</strong>——用 AI 做的 PPT 来演示怎么做 AI PPT。</p>
+    <p>右边是四个规则。定角色——告诉它"你是个设计师"。讲要求——明确格式。给参考——给范例让它学。设标准——告诉它怎么做才算好。这四个规则适用于几乎所有跟 AI 交互的场景。</p>
+    <p>有个朋友问我怎么用 AI 约女孩。一开始他问得太笼统，AI 给的建议很敷衍。教他用结构化方式重写之后——方案完整了。但过几天他又失败了，因为 AI 推荐了烤肉，那女孩是素食主义者。这个失败引出了我们下一个工程——<strong>上下文工程</strong>。</p>
+  </aside>
+</section>
+
+<!-- ============ 7. 上下文工程 · 三级别对比 ============ -->
+<section class="slide" data-title="上下文工程对比">
+  <p class="kicker">种子延续</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">上下文工程</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">不是改怎么问，是让 AI 知道它在跟谁打交道</p>
+  <div class="grid g3 mt-l" data-anim="fade-up" data-anim-delay="300">
+    <div class="card"><h4>① 普通提问</h4><p class="dim">「帮我规划云南5天4夜」<br>→ AI 给通用模板，AB方案千篇一律</p></div>
+    <div class="card card-accent"><h4>② 提示词工程</h4><p class="dim">「按每日行程/住宿/费用/注意事项输出」<br>→ 结构清晰但内容通用，不知道你是谁</p></div>
+    <div class="card card-good"><h4>③ 上下文工程</h4><p class="dim">打开背景资料 MD 文件喂给 AI：一家三口、儿子3岁半不能去高海拔、慢节奏、预算2万、双床房、考虑自驾<br>→ <strong>量身定制：推荐抚仙湖避开丽江、三种自驾方案、预算19,700</strong></p></div>
+  </div>
+  <div class="deck-footer">
+    <span>#上下文工程 #三级别对比</span>
+    <span class="slide-number" data-current="7" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>刚才那个故事——AI 不知道女孩是素食主义者——问题出在哪？不是提示词有问题，是<strong>AI 根本不了解这个女孩</strong>。</p>
+    <p>我们来看三级别对比。第一级，普通提问——帮我想云南旅游。AI 给通用模板，写给所有人的。第二级，提示词工程——按住宿、费用、行程输出来。结构清晰了，但内容还是通用的。</p>
+    <p>第三级，上下文工程——我们写了一个背景文件：一家三口、儿子 3 岁半不能去高海拔、慢节奏、预算 2 万、双床房、考虑自驾。喂给 AI 之后，它直接推荐抚仙湖避开了丽江，给了三种自驾方案对比，预算精确到 19,700。</p>
+    <p>从千篇一律到量身定制，差别就是<strong>有没有把背景资料喂给 AI</strong>。上下文工程不是在改怎么问，而是让 AI 知道它在跟谁打交道。</p>
+  </aside>
+</section>
+
+<!-- ============ 8. 上下文工程 · 揭晓 ============ -->
+<section class="slide" data-title="上下文工程揭晓">
+  <p class="kicker">CHAPTER 02 · CONTEXT ENGINEERING</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">上下文工程</h2>
+  <div class="grid g2 mt-l">
+    <div data-anim="fade-up" data-anim-delay="200">
+      <div class="card card-bad"><h4>❌ 普通提问</h4><p class="dim">通用模板，写给所有人</p></div>
+      <div class="card mt-s"><h4>✅ 提示词工程</h4><p class="dim">结构清晰但内容通用</p></div>
+      <div class="card card-good mt-s"><h4>✅ 上下文工程</h4><p class="dim">量身定制 + 自驾方案对比 + 预算19,700</p></div>
+    </div>
+    <div data-anim="fade-up" data-anim-delay="400">
+      <div class="stack">
+        <div class="rule-row"><span class="num">①</span><div><b>📁 可迁移</b><p class="dim">换模型不用重新喂资料——MD 文件通吃所有模型</p></div></div>
+        <div class="rule-row"><span class="num">②</span><div><b>📋 可生长</b><p class="dim">不断加内容，AI 越来越懂你——今天是旅游，明天是工作汇报</p></div></div>
+        <div class="rule-row"><span class="num">③</span><div><b>📚 有记忆</b><p class="dim">不用每次重新说一遍——背景资料写一次，永久复用</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="insight-box mt-l tc" data-anim="fade-up" data-anim-delay="600">
+    <p><strong>💡 上下文工程最重要的是——知识库</strong></p>
+  </div>
+  <div class="deck-footer">
+    <span>#上下文工程 #可迁移 #可生长 #有记忆</span>
+    <span class="slide-number" data-current="8" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>上下文工程有三个核心价值：<strong>可迁移、可生长、有记忆</strong>。</p>
+    <p>可迁移——你用 MD 文件写的背景资料，换任何模型都能用，不用重新喂。可生长——今天是旅游规划，明天是工作汇报，后天是客户分析，知识库不断长。有记忆——不用每次重新说一遍你是谁、你的偏好是什么。</p>
+    <p>上下文工程最重要的是<strong>知识库</strong>。下一页我会讲怎么从零开始搭建你的知识库。从青铜到黄金，循序渐进。</p>
+  </aside>
+</section>
+
+<!-- ============ 9. 知识库搭建 ============ -->
+<section class="slide" data-title="知识库搭建">
+  <p class="kicker">落地</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">知识库搭建</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">从入门到进阶，你的专属 AI 背景资料库</p>
+  <div class="ladder mt-l" data-anim="fade-up" data-anim-delay="300">
+    <div class="card card-accent ladder-step" style="border-left:6px solid #cd7f32">
+      <h4>🥉 青铜：MD + Trae</h4>
+      <p class="dim">用 MD 文件写背景资料，Trae 里直接引用。最简单，立竿见影。</p>
+    </div>
+    <div class="card card-accent ladder-step mt-s" style="border-left:6px solid #c0c0c0">
+      <h4>🥈 白银：MD + Trae + Obsidian</h4>
+      <p class="dim">用 Obsidian 管理知识库，双向链接、图谱视图、快速检索。</p>
+    </div>
+    <div class="card card-accent ladder-step mt-s" style="border-left:6px solid #ffd700">
+      <h4>🥇 黄金：MD + Trae + Obsidian + 向量模型/插件</h4>
+      <p class="dim">接入向量模型或插件，实现语义搜索、自动关联、智能推荐。</p>
+    </div>
+  </div>
+  <div class="deck-footer">
+    <span>#知识库 #Obsidian #Trae</span>
+    <span class="slide-number" data-current="9" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>知识库搭建，我分了三个级别。青铜最简单——用 Markdown 文件写背景资料，在 Trae 里引用。这是门槛最低的方式，今天就能做。</p>
+    <p>白银——加上 Obsidian。Obsidian 是一个笔记工具，支持双向链接和图谱视图。你的知识库不再是一堆零散文件，而是一个可以互相连接的知识网络。</p>
+    <p>黄金——加上向量模型或插件。实现语义搜索，不靠关键词而是靠意思来找资料。你自己搭建的越多，AI 就越懂你。这个投入是累积的——今天写的每一份背景资料，以后都能复用。</p>
+  </aside>
+</section>
+
+<!-- ============ 10. 案例对比 · 招聘简历 ============ -->
+<section class="slide" data-title="招聘简历">
+  <p class="kicker">规训工程 · 案例对比</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">案例对比 · 招聘简历</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">有没有规训工程给 AI 套上缰绳——差别有多大？</p>
+  <div class="grid g2 mt-l">
+    <div class="card card-bad" data-anim="fade-up" data-anim-delay="300">
+      <h4>❌ 只用模型 + 提示词</h4>
+      <p class="dim">通用分析，不精准。AI 能聊，但分析维度单一，缺少结构化评估。</p>
+    </div>
+    <div class="card card-good" data-anim="fade-up" data-anim-delay="500">
+      <h4>✅ 套上规训工程六件套</h4>
+      <p class="dim">多维度评分 + JD 匹配 + 预警推荐。AI 不仅分析，还能给出量化评分和录用建议。</p>
+      <div class="spec-grid mt-s">
+        <span>👤 基本信息</span><span>📌 最佳匹配</span><span>📊 综合评分/100</span>
+        <span>📄 JD逐项匹配</span><span>💼 工作经历分析</span><span>⚠️ 预警+面试问题</span>
+      </div>
+    </div>
+  </div>
+  <div class="card mt-m tc" data-anim="fade-up" data-anim-delay="700">
+    <h4>🔑 关键变量</h4>
+    <p class="dim"><strong>有没有规训工程给 AI 套上缰绳</strong></p>
+  </div>
+  <div class="deck-footer">
+    <span>#规训工程 #简历分析 #Demo</span>
+    <span class="slide-number" data-current="10" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>现在进入规训工程。提示词工程和上下文工程让 AI 能聊——但能聊不等于能干。规训工程就是让 AI <strong>从能说到能干</strong>。</p>
+    <p>我们来看第一个案例——招聘简历分析。左边是只用模型加提示词：AI 能分析，但维度单一，不够精准。右边是套上规训工程六件套之后：多维度评分——学历匹配多少分、经验匹配多少分、核心能力多少分；JD 逐项匹配；加上预警和面试问题。</p>
+    <p>关键变量就是<strong>有没有规训工程</strong>。规训工程就是给 AI 套上缰绳——该调工具调工具，该校验校验，该报错报错。等一下我会详细讲规训工程的六大组件。</p>
+  </aside>
+</section>
+
+<!-- ============ 11. 案例对比 · 运费对账 ============ -->
+<section class="slide" data-title="运费对账">
+  <p class="kicker">规训工程 · 案例对比</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">案例对比 · 运费对账</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">有没有规训工程给 AI 套上自动化脚本——差别有多大？</p>
+  <div class="grid g2 mt-l">
+    <div class="card card-bad" data-anim="fade-up" data-anim-delay="300">
+      <h4>❌ 手动 Excel 操作</h4>
+      <p class="dim">鼠标移动 → 敲公式 → 算错标红</p>
+      <div class="pain-tags mt-s">
+        <span>漏算</span><span>算错</span><span>卡顿</span><span>死机</span>
+      </div>
+    </div>
+    <div class="card card-good" data-anim="fade-up" data-anim-delay="500">
+      <h4>✅ AI 脚本自动对账</h4>
+      <p class="dim">8 个节点逐个亮起 → 数字从 0 滚到目标值 → 读秒器 ~3.4 秒</p>
+      <div class="big-num mt-s" data-anim="counter">3.4<span class="unit">秒</span></div>
+    </div>
+  </div>
+  <div class="deck-footer">
+    <span>#规训工程 #自动化 #运费对账</span>
+    <span class="slide-number" data-current="11" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>第二个案例——运费对账。这是一个真实的场景。左边是传统做法——打开 Excel、移动鼠标、敲公式、算错标红、系统卡顿、甚至死机。半天时间就耗在一张表上。</p>
+    <p>右边是套上规训工程之后——脚本自动化执行，8 个校验节点逐个通过，数字从 0 直接滚到正确结果。多长时间？<strong>3.4 秒</strong>。</p>
+    <p>从半天到 3.4 秒，差别就是有没有给 AI 套上自动化脚本。这就是规训工程的核心——给 AI 装上手脚，让它不仅能说，更能干。</p>
+  </aside>
+</section>
+
+<!-- ============ 12. 揭晓 · 规训工程 ============ -->
+<section class="slide" data-title="规训工程揭晓">
+  <p class="kicker">CHAPTER 03 · DISCIPLINE ENGINEERING</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">规训工程</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">给 AI 套上缰绳，让它能落地执行</p>
+  <div class="grid g2 mt-l">
+    <div data-anim="fade-up" data-anim-delay="300">
+      <div class="card card-bad"><h4>❌ 没有规训工程</h4><p class="dim">只有上下文，AI 能说会道但干不了活——像一匹野马，跑得快但不受控</p></div>
+      <div class="card card-good mt-s"><h4>✅ 有规训工程</h4><p class="dim">套上缰绳，能落地执行——该调工具调工具，该校验校验，该报错报错</p></div>
+    </div>
+    <div data-anim="fade-up" data-anim-delay="500">
+      <div class="stack">
+        <div class="rule-row"><span class="num">①</span><div><b>工具调用</b><p class="dim">AI 能调用外部工具和 API</p></div></div>
+        <div class="rule-row"><span class="num">②</span><div><b>约束安全</b><p class="dim">设定规则边界，不能越界操作</p></div></div>
+        <div class="rule-row"><span class="num">③</span><div><b>验证校验</b><p class="dim">输出前自检，确保结果正确</p></div></div>
+        <div class="rule-row"><span class="num">④</span><div><b>状态管理</b><p class="dim">记住上下文和执行状态</p></div></div>
+        <div class="rule-row"><span class="num">⑤</span><div><b>错误处理</b><p class="dim">出错了能自己发现并修正</p></div></div>
+        <div class="rule-row"><span class="num">⑥</span><div><b>可观测性</b><p class="dim">每一步可追踪、可回溯</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="insight-box mt-l tc" data-anim="fade-up" data-anim-delay="700">
+    <p><strong>💡 规训工程最重要的是——脚本和工作流</strong></p>
+  </div>
+  <div class="deck-footer">
+    <span>#规训工程 #六大组件</span>
+    <span class="slide-number" data-current="12" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>揭晓规训工程的六大组件。<strong>规训工程就是给 AI 装上手脚、套上缰绳</strong>。</p>
+    <p>第一，工具调用——AI 不只能说话，还能调用 API、读写文件、发邮件。第二，约束安全——给它划定边界，不能越界。第三，验证校验——输出之前自检一下对不对。第四，状态管理——记住执行到哪一步了。第五，错误处理——出错了自己发现自己修。第六，可观测性——每一步都能追踪。</p>
+    <p>这六个组件环环相扣。规训工程最重要的落地方式是<strong>脚本和工作流</strong>。下一张我来讲——脚本还是工作流，怎么选。</p>
+  </aside>
+</section>
+
+<!-- ============ 13. 脚本还是工作流 ============ -->
+<section class="slide" data-title="脚本vs工作流">
+  <p class="kicker">落地 · 选择</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">脚本还是工作流？</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">不同场景，选不同的落地方式</p>
+  <div class="grid g2 mt-l">
+    <div class="card card-accent" data-anim="fade-up" data-anim-delay="300">
+      <h4>确定性结果</h4>
+      <p class="dim">错了就不行——运费对账，金额必须精确到分，错了就是钱。</p>
+    </div>
+    <div class="card" data-anim="fade-up" data-anim-delay="400">
+      <h4>开放性流程</h4>
+      <p class="dim">没有标准答案——旅游规划，只要合理就行。</p>
+    </div>
+  </div>
+  <div class="grid g3 mt-l" data-anim="fade-up" data-anim-delay="500">
+    <div class="card card-accent tc">
+      <h4>🐍 脚本 (Python)</h4>
+      <p class="dim">确定性需求 · 一定技术门槛 · AI 可以帮你写</p>
+    </div>
+    <div class="card card-accent tc">
+      <h4>🔗 固定工作流</h4>
+      <p class="dim">扣子 Coze · Dify · 简单拖拽完成</p>
+    </div>
+    <div class="card card-accent tc">
+      <h4>🤖 AI 工作流</h4>
+      <p class="dim">Trae · Qoder · Claude Code · 跟 AI 聊就能完成</p>
+    </div>
+  </div>
+  <div class="deck-footer">
+    <span>#脚本 #工作流 #Coze #Dify</span>
+    <span class="slide-number" data-current="13" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>好，有了规训工程六大组件，具体怎么落地？我总结了三种方式，对应两个维度。</p>
+    <p>上半部分——先判断你的需求是确定性还是开放性。确定性比如运费对账，错了就是钱，必须精确。开放性比如旅游规划，没有标准答案。下半部分——根据这个判断选工具。确定性需求且你有技术能力，直接用 Python 脚本。确定性需求但不写代码，用扣子 Coze 或者 Dify——拖拽编排。开放性需求，直接用 AI 工作流工具——Trae、Claude Code——跟 AI 聊着做。</p>
+    <p>三种方式没有谁高级谁低级，看场景选。下一页我用一个真实案例来演示整个闭环。</p>
+  </aside>
+</section>
+
+<!-- ============ 14. 拆解 · 生日营销 ============ -->
+<section class="slide" data-title="生日营销">
+  <p class="kicker">规训工程 · 真实案例</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">拆解 · 生日营销</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">一个闭环数据流，累计变现 <span class="accent-red">400 万+</span></p>
+  <div class="flow-diagram mt-l" data-anim="fade-up" data-anim-delay="300">
+    <div class="flow-nodes">
+      <span class="flow-node">👤 用户</span><span class="flow-arrow">→</span>
+      <span class="flow-node">📱 小程序</span><span class="flow-arrow">→</span>
+      <span class="flow-node">🗄 数据库</span><span class="flow-arrow">→</span>
+      <span class="flow-node">🤖 AI处理</span><span class="flow-arrow">→</span>
+      <span class="flow-node">🎯 分析匹配</span>
+    </div>
+    <div class="flow-nodes mt-s">
+      <span class="flow-arrow" style="visibility:hidden">→</span>
+      <span class="flow-node">📞 客服</span><span class="flow-arrow">→</span>
+      <span class="flow-node">🎁 收到礼品</span><span class="flow-arrow">→</span>
+      <span class="flow-node">🔄 复购下单</span><span class="flow-arrow">→</span>
+      <span class="flow-node">📦 发货</span><span class="flow-arrow">→</span>
+      <span class="flow-node">💰 进公司口袋</span>
+    </div>
+  </div>
+  <div class="flow-annotations mt-m" data-anim="fade-up" data-anim-delay="500">
+    <span class="flow-tag">🔧 工具调用</span>
+    <span class="flow-tag">🛡 约束安全</span>
+    <span class="flow-tag">✅ 验证校验</span>
+    <span class="flow-tag">📦 状态管理</span>
+    <span class="flow-tag">🔄 容错</span>
+    <span class="flow-tag">📊 可观测性</span>
+  </div>
+  <p class="lede mt-l tc" data-anim="fade-up" data-anim-delay="700">
+    每个节点标注对应规训组件 · 底部有「每天自动循环」返回箭头
+  </p>
+  <div class="big-num mt-m" data-anim="counter">400<span class="unit">万+</span></div>
+  <div class="deck-footer">
+    <span>#生日营销 #闭环 #400万</span>
+    <span class="slide-number" data-current="14" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>这是一个真实案例——生日营销闭环。变现累计超过<strong>400 万</strong>。</p>
+    <p>流程是这样的：用户进入小程序，数据存入数据库。AI 自动处理——分析用户画像、匹配最佳优惠方案。然后客服跟进、用户收到礼品。用户满意了复购下单，发货完成，钱进公司口袋。第二天系统自动循环——新的生日用户、新的匹配。</p>
+    <p>注意看每个节点——我都标注了对应的规训组件。数据库那里是约束安全——数据权限控制。AI 处理那里是工具调用和验证校验。分析匹配涉及状态管理和容错。客服节点需要可观测性。整个流程跑起来，规训工程六大组件各司其职。</p>
+  </aside>
+</section>
+
+<!-- ============ 15. 递进对比 ============ -->
+<section class="slide" data-title="递进对比">
+  <p class="kicker">递进</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">规训 → 循环</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">做完了就完了 vs 做完了还要检查</p>
+  <div class="grid g2 mt-l">
+    <div class="card card-bad" data-anim="fade-up" data-anim-delay="300">
+      <h4>❌ 只有规训工程</h4>
+      <p class="dim">单次执行，做完就完了——AI 输出结果，不管好不好，交差了事。</p>
+    </div>
+    <div class="card card-good" data-anim="fade-up" data-anim-delay="500">
+      <h4>✅ 加上循环工程</h4>
+      <p class="dim"><strong>做 → 查 → 修 → 再输出</strong>，直到满意——AI 自己检查、自己修正、自己优化。</p>
+    </div>
+  </div>
+  <div class="deck-footer">
+    <span>#循环工程 #递进对比</span>
+    <span class="slide-number" data-current="15" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>规训工程让 AI 能干——但干完就完了。循环工程让 AI <strong>干完了还要检查</strong>。</p>
+    <p>只有规训工程的话，AI 单次执行，做完交差——质量好不好它不管。加上循环工程之后，做、查、修、再输出——一个完整的 PDCA 循环。AI 自己检查自己有没有问题，自己修正，直到符合标准。</p>
+    <p>这就是从"能干"到"能干好"的质变。</p>
+  </aside>
+</section>
+
+<!-- ============ 16. 揭晓 · 循环工程 ============ -->
+<section class="slide" data-title="循环工程揭晓">
+  <p class="kicker">CHAPTER 04 · LOOP ENGINEERING</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">循环工程</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">做 → 查 → 修 → 再输出，直到满意</p>
+  <div class="grid g2 mt-l">
+    <div data-anim="fade-up" data-anim-delay="300">
+      <div class="card card-bad"><h4>❌ 只有规训</h4><p class="dim">单次执行，有没有问题它不管</p></div>
+      <div class="card card-good mt-s"><h4>✅ 加上循环</h4><p class="dim">做 → 查 → 修 → 再输出——AI 自己检查、修正，直到符合标准</p></div>
+    </div>
+    <div data-anim="fade-up" data-anim-delay="500">
+      <div class="stack">
+        <div class="rule-row"><span class="num">L1</span><div><b>自查</b><p class="dim">AI 输出后自己检查一遍</p></div></div>
+        <div class="rule-row"><span class="num">L2</span><div><b>复盘</b><p class="dim">多轮执行后总结规律</p></div></div>
+        <div class="rule-row"><span class="num">L3</span><div><b>会诊</b><p class="dim">多个 AI Agent 交叉检查</p></div></div>
+        <div class="rule-row"><span class="num">L4</span><div><b>绩效</b><p class="dim">量化评估 + 持续优化</p></div></div>
+      </div>
+    </div>
+  </div>
+  <div class="grid g3 mt-l" data-anim="fade-up" data-anim-delay="700">
+    <div class="card tc"><h4>🔄 循环流程</h4><p class="dim">输入→处理→输出→检查→发现问题→修正→再输出→交付</p></div>
+    <div class="card card-bad tc"><h4>⚠️ 现在痛点</h4><p class="dim">AI 没有眼睛——看不到实际运行结果，不知道自己做对还是做错</p></div>
+    <div class="card card-accent tc"><h4>🚀 未来方向</h4><p class="dim">多 Agent 并行——一个写代码、一个 Code Review、一个跑测试</p></div>
+  </div>
+  <div class="deck-footer">
+    <span>#循环工程 #自查 #复盘 #会诊 #绩效</span>
+    <span class="slide-number" data-current="16" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>循环工程四个级别——从 L1 到 L4，由浅入深。</p>
+    <p><strong>L1 自查</strong>——AI 输出前自己检查一遍。最简单的循环，但对质量提升巨大。<strong>L2 复盘</strong>——多轮执行后总结规律，下次做得更好。<strong>L3 会诊</strong>——多个 AI Agent 交叉检查，一个干活、一个挑刺。<strong>L4 绩效</strong>——量化评估加持续优化，形成一个完整的 improve loop。</p>
+    <p>底部三栏分别是流程、痛点、未来。目前最大痛点是 AI 没有眼睛——看不到自己跑出来的结果。所以循环工程就是给它装上眼睛。未来方向是多 Agent 并行——一个写代码、一个做 Code Review、一个跑测试，整个流程自动化。</p>
+  </aside>
+</section>
+
+<!-- ============ 17. 个人 AI vs 企业 AI ============ -->
+<section class="slide" data-title="个人vs企业AI">
+  <p class="kicker">对比</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">个人 AI vs 企业 AI</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">差的不是模型，是<strong>工程</strong></p>
+  <div class="compare-table mt-l" data-anim="fade-up" data-anim-delay="300">
+    <div class="compare-row compare-hd">
+      <span>维度</span><span>个人 AI</span><span>企业 AI</span>
+    </div>
+    <div class="compare-row">
+      <span>应用场景</span><span>做PPT、写文案、查资料、旅游规划</span><span>对账、简历筛选、生日营销、数据同步</span>
+    </div>
+    <div class="compare-row">
+      <span>工程需求</span><span>提示词 + 上下文（搭个人知识库）</span><span class="accent-red">四大工程全得上（规训+循环是核心）</span>
+    </div>
+    <div class="compare-row">
+      <span>容错</span><span>错了 Ctrl+Z</span><span>错了就是钱</span>
+    </div>
+    <div class="compare-row">
+      <span>核心</span><span>提效</span><span class="accent-red">可控 + 变现</span>
+    </div>
+  </div>
+  <div class="deck-footer">
+    <span>#个人AI #企业AI #对比</span>
+    <span class="slide-number" data-current="17" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>有人问我——个人用 AI 和企业用 AI，差别到底在哪？我总结了四个维度。</p>
+    <p>应用场景不同——个人是做 PPT、写文案、查资料；企业是对账、简历筛选、生日营销。工程需求不同——个人只要提示词和上下文就够了；企业四大工程全得上，规训和循环是核心。容错不同——个人错了 Ctrl+Z 撤销；企业错了就是钱，是真金白银的损失。</p>
+    <p>核心不同——个人追求提效；企业追求<strong>可控加变现</strong>。差的不在于用哪个模型——GPT、Claude、DeepSeek 都能用——差在有没有工程体系的支撑。</p>
+  </aside>
+</section>
+
+<!-- ============ 18. 数据隐私 ============ -->
+<section class="slide" data-title="数据隐私">
+  <p class="kicker">安全</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">数据隐私</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">AI 很好用，但你的数据去了哪里？</p>
+  <div class="privacy-table mt-l" data-anim="fade-up" data-anim-delay="300">
+    <div class="compare-row compare-hd">
+      <span>日常场景</span><span>风险</span><span>解法</span>
+    </div>
+    <div class="compare-row"><span>在豆包网页上问问题</span><span>数据可能被训练</span><span class="accent-red">用 API（默认不用于训练）</span></div>
+    <div class="compare-row"><span>上传文件让 AI 分析</span><span>文件被留存</span><span class="accent-red">用 Trae（本地处理）</span></div>
+    <div class="compare-row"><span>在 App 上聊工作机密</span><span>对话被记录</span><span class="accent-red">选隐私模式</span></div>
+    <div class="compare-row"><span>复制粘贴公司数据</span><span>数据外传</span><span class="accent-red">用 API 或企业版</span></div>
+    <div class="compare-row"><span>公司多人共用账号</span><span>查不到谁问了啥</span><span class="accent-red">一人一账号+权限管理</span></div>
+  </div>
+  <div class="insight-box mt-l tc" data-anim="fade-up" data-anim-delay="600">
+    <p><strong>🅿️ Pro 升级方案：私有化部署</strong> — 数据完全不离开你的网络</p>
+  </div>
+  <div class="deck-footer">
+    <span>#数据隐私 #安全 #API #私有化部署</span>
+    <span class="slide-number" data-current="18" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>数据隐私。很多人用 AI 的时候根本没想过数据去哪了。我列了五个最常见的场景和对应解法。</p>
+    <p>在网页上问问题——数据可能被拿去训练模型。解决办法：用 API，API 默认不用于训练。上传文件让 AI 分析——文件可能被留存。用 Trae，本地处理。在 App 上聊工作机密——对话可能被记录，选隐私模式。复制粘贴公司数据——数据可能外传，用 API 或者企业版。多人共用账号——查不到谁问了什么，一人一账号加权限管理。</p>
+    <p>Pro 升级方案：私有化部署。数据完全不离开你的网络。这是最安全的方式，适合对数据安全要求极高的企业。</p>
+  </aside>
+</section>
+
+<!-- ============ 19. 落地 Checklist ============ -->
+<section class="slide" data-title="落地Checklist">
+  <p class="kicker">行动</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">落地 Checklist</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">从 0 到 1，一步步把 AI 用到业务里</p>
+  <div class="grid g2 mt-l">
+    <div data-anim="fade-up" data-anim-delay="300">
+      <div class="checklist">
+        <div class="check-item">☐ 明确业务场景</div>
+        <div class="check-item">☐ 选择模型 <span class="dim-sm">🎯 模型</span></div>
+        <div class="check-item">☐ 搭建知识库 <span class="dim-sm">📚 上下文工程</span></div>
+        <div class="check-item">☐ 设计提示词 <span class="dim-sm">💬 提示词工程</span></div>
+        <div class="check-item">☐ 配置规训策略 <span class="dim-sm">🔧 规训工程</span></div>
+        <div class="check-item">☐ 评估数据隐私</div>
+        <div class="check-item">☐ 搭建工作流 <span class="dim-sm">🔄 循环工程</span></div>
+        <div class="check-item">☐ 循环优化 <span class="dim-sm">🔄 循环工程</span></div>
+      </div>
+    </div>
+    <div data-anim="fade-up" data-anim-delay="500">
+      <div class="stack">
+        <div class="card card-accent"><h4>第一层：API Key</h4><p class="dim">DeepSeek · 通义千问 · SiliconFlow · OpenRouter</p></div>
+        <div class="card card-accent mt-s"><h4>第二层：本地工具</h4><p class="dim">Trae · Qoder · Claude Code · Codex</p></div>
+        <div class="card card-accent mt-s"><h4>第三层：知识库</h4><p class="dim">Obsidian · 飞书文档 · Dify</p></div>
+      </div>
+    </div>
+  </div>
+  <div class="deck-footer">
+    <span>#Checklist #工具包 #落地</span>
+    <span class="slide-number" data-current="19" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>最后一页正式内容——落地 Checklist。从零到一，八步走。</p>
+    <p>第一步明确业务场景——你想用 AI 解决什么问题。然后选模型、搭知识库、设计提示词、配置规训策略、评估数据隐私、搭建工作流、循环优化。这八步对应了今天讲的四大工程体系。</p>
+    <p>右边是配套工具包，分三层。第一层 API Key——这是基础设施，没有 API 什么都跑不起来。第二层本地工具——Trae、Claude Code、Codex。第三层知识库——Obsidian、飞书文档、Dify。</p>
+    <p>好，这就是今天所有的内容。下面进入答疑环节。</p>
+  </aside>
+</section>
+
+<!-- ============ 20. 互动答疑 ============ -->
+<section class="slide" data-title="互动答疑">
+  <p class="kicker">Q&A</p>
+  <h2 class="h2 anim-fade-up" data-anim="fade-up">互动答疑</h2>
+  <p class="lede" data-anim="fade-up" data-anim-delay="200">预留 10 分钟自由提问</p>
+  <div class="card mt-l tc" data-anim="fade-up" data-anim-delay="300" style="padding:48px">
+    <p class="big-answer">AI —— 当你不会用它的时候，它真的是垃圾。<br>当你学会用它的时候，就能<span class="accent-red">变废为宝</span>。</p>
+    <p class="lede mt-l">厉害的不是 AI，是<strong>人类的脑子</strong>。</p>
+  </div>
+  <div class="deck-footer">
+    <span>#Q&A #谢谢 #变废为宝</span>
+    <span class="slide-number" data-current="20" data-total="20"></span>
+  </div>
+  <aside class="notes">
+    <p>好，我今天分享的全部内容到此结束。最后一句话送给大家——<strong>AI，当你不会用它的时候，它真的是垃圾。当你学会用它的时候，就能变废为宝。厉害的不是 AI，是人类的脑子。</strong></p>
+    <p>现在进入自由提问环节，大概十分钟。有任何问题——不管是关于今天讲的四大工程，还是你在用 AI 过程中遇到的具体问题——都可以提。</p>
+    <p>如果涉及模型选择——我有模型对比表可以参考。涉及费用——有 Token 费用的说明。好，请大家提问。</p>
+  </aside>
+</section>
+
+</div><!-- .deck -->
+
+<div style="position:fixed;bottom:12px;left:12px;font-size:11px;color:#00000033;z-index:100;pointer-events:none">
+  S 演讲者视图 · T 切换主题 · ← → 翻页 · F 全屏 · O 总览
+</div>
+
+<script src="../../html%20ppt/assets/animations/fx-runtime.js"></script>
+<script src="../../html%20ppt/assets/runtime.js"></script>
+</body>
+</html>

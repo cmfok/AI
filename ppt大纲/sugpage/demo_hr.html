@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>现场演示 · 简历分析</title>
+<style>
+:root{
+  --paper:#fafaf8;--ink:#0a0a0a;--grey-1:#f0f0ee;--grey-2:#d4d4d2;--grey-3:#737373;
+  --accent:#002FA7;--accent-rgb:0,47,167;--accent-on:#ffffff;
+  --text-primary:#0a0a0a;--text-secondary:#525252;--text-helper:#737373;
+  --sans:"Inter","Helvetica Neue","Helvetica","Arial","Segoe UI",system-ui,sans-serif;
+  --sans-zh:"PingFang SC","Noto Sans SC","Microsoft YaHei","微软雅黑",sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;font-family:var(--sans),var(--sans-zh);background:var(--paper);color:var(--ink)}
+body{display:flex;flex-direction:column;padding:2vh 3vw}
+.header{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1vh;padding-bottom:1.5vh;border-bottom:1px solid var(--grey-2);flex-shrink:0}
+.header h1{font-weight:200;font-size:min(4vw,5vh);line-height:1.1}
+.header-actions{display:flex;align-items:center;gap:1vw;flex-wrap:wrap}
+.header-actions a{font-size:max(13px,.8vw);color:var(--accent);font-weight:500;text-decoration:none}
+.file-upload{display:inline-flex;align-items:center;gap:.4vw;padding:.5vh 1vw;background:var(--accent);color:#fff;border-radius:6px;font-size:max(12px,.65vw);cursor:pointer;font-weight:500}
+.file-upload input{display:none}
+.main{flex:1;display:grid;grid-template-columns:1fr 1fr;gap:1vw;min-height:0;padding-top:1.5vh}
+.panel{display:flex;flex-direction:column;gap:.4vh;min-height:0}
+.panel-title{font-size:max(12px,.7vw);font-weight:600;color:var(--text-helper);padding:0 .4vw;flex-shrink:0;display:flex;justify-content:space-between;align-items:center}
+.chat-area{flex:1;background:var(--grey-1);border-radius:8px;padding:1vh;overflow-y:auto;min-height:0}
+.msg-box{background:var(--paper);border-radius:6px;padding:.6vh .8vw;font-size:max(11px,.62vw);line-height:1.5;border-left:3px solid transparent;margin-bottom:.4vh}
+.msg-user{border-left-color:var(--grey-2)}
+.msg-ai{border-left-color:var(--accent)}
+.msg-thinking{background:transparent;border-left:3px dashed var(--grey-2);color:var(--text-helper);font-style:italic}
+.msg-error{border-left-color:#d32f2f;color:#d32f2f;background:rgba(211,47,47,.04)}
+.status{font-size:max(10px,.56vw);color:var(--text-helper);flex-shrink:0;padding:0 .4vw}
+
+.ent-card{margin-top:.4vh;background:var(--paper);border-radius:6px;border:1px solid var(--grey-2)}
+.ent-card-hd{padding:.5vh .8vw;background:var(--grey-1);font-weight:600;font-size:max(11px,.62vw)}
+.ent-card-bd{padding:.6vh .8vw;font-size:max(10px,.58vw);line-height:1.5}
+.ent-tbl{width:100%;border-collapse:collapse;margin-top:.3vh}
+.ent-tbl td{padding:.2vh .4vw;font-size:max(10px,.56vw);border-bottom:1px solid var(--grey-2)}
+.ent-tbl tr:last-child td{border-bottom:none}
+
+.retry-btn{margin-top:.3vh;padding:.4vh 1vw;background:var(--accent);color:#fff;border-radius:4px;cursor:pointer;display:inline-block;font-size:max(11px,.6vw);border:none}
+
+@media(max-width:768px){
+  .main{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
+  .header h1{font-size:min(6vw,4vh)}
+}
+</style>
+</head>
+<body>
+<div class="header">
+  <div>
+    <div style="font-size:max(11px,.65vw);color:var(--accent);letter-spacing:.12em;margin-bottom:.3vh">LIVE DEMO · MiMo 多模态 vs G5 企业级 Pipeline</div>
+    <h1>上传简历，AI实时分析</h1>
+    <div style="font-size:max(10px,.56vw);color:var(--text-helper);margin-top:.2vh">本次测试使用模型均为 MiMo V2.5</div>
+  </div>
+  <div class="header-actions">
+    <span id="fileStatus" style="font-size:max(11px,.65vw);color:var(--text-helper)">未选文件</span>
+    <label class="file-upload">📎 选择简历文件<input type="file" id="resumeFile" accept=".pdf"></label>
+	    <a href="http://106.53.168.220:8008/?slide=11">← 返回PPT</a>
+  </div>
+</div>
+<div class="main">
+  <div class="panel">
+    <div class="panel-title">🤖 MiMo 多模态（通用AI）</div>
+    <div class="chat-area" id="chatLeft">
+      <div class="msg-box msg-ai" style="border-left-color:var(--grey-2);color:var(--text-helper)">上传 PDF 简历后自动分析</div>
+    </div>
+    <div class="status" id="statusLeft"></div>
+  </div>
+  <div class="panel">
+    <div class="panel-title">
+      <span>🏭 G5 Pipeline（企业AI）</span>
+      <a href="#" onclick="showScoring(event)" style="font-size:max(10px,.56vw);color:var(--accent);font-weight:400;text-decoration:none">📋 查看评分标准</a>
+    </div>
+    <div class="chat-area" id="chatRight">
+      <div class="msg-box msg-ai" style="border-left-color:var(--grey-2);color:var(--text-helper)">上传 PDF 简历后自动分析</div>
+    </div>
+    <div class="status" id="statusRight"></div>
+  </div>
+</div>
+
+<script>
+let resumePdfBase64='', resumePdfFilename='', resumeFileBlobUrl='', lastScoring=null, pollTimer=null, taskId=null;
+
+document.getElementById('resumeFile').addEventListener('change',async function(e){
+  const file=e.target.files[0];if(!file)return;
+  if(resumeFileBlobUrl)URL.revokeObjectURL(resumeFileBlobUrl);
+  resumeFileBlobUrl=URL.createObjectURL(file);
+  document.getElementById('fileStatus').innerHTML='📄 <a href="'+resumeFileBlobUrl+'" target="_blank" style="color:var(--accent);text-decoration:underline">'+file.name+'</a>';
+  try{
+    const b64=await new Promise((resolve,reject)=>{
+      const r=new FileReader();
+      r.onload=()=>resolve(r.result.split(',')[1]);
+      r.onerror=()=>reject(new Error('读取失败'));
+      r.readAsDataURL(file);
+    });
+    resumePdfBase64=b64;resumePdfFilename=file.name;
+    analyzeBoth();
+  }catch(err){alert('文件读取失败: '+err.message);}
+});
+
+function renderMarkdown(md){
+  if(!md)return'';
+  return md
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/^### (.+)$/gm,'<h4 style="margin:1vh 0 .4vh;font-weight:600">$1</h4>')
+    .replace(/^## (.+)$/gm,'<h3 style="margin:1.2vh 0 .6vh;font-weight:600;font-size:max(13px,.75vw)">$1</h3>')
+    .replace(/\*\*(.+?)\*\*/g,'<strong>$1</strong>')
+    .replace(/^- (.+)$/gm,'<li style="margin-left:1.2em">$1</li>')
+    .replace(/^(\d+)\. (.+)$/gm,'<li style="margin-left:1.2em">$2</li>')
+    .replace(/\n\n/g,'<br/><br/>')
+    .replace(/\n/g,'<br/>');
+}
+
+function formatDetails(arr){
+  if(!arr||!arr.length)return'';
+  return arr.map(d=>{
+    if(typeof d==='string')return d;
+    const item=d.item||d.name||'';
+    const req=d.requirement||d.req||'';
+    const actual=d.actual||'';
+    const pass=d.pass!==false?'✅':'❌';
+    return pass+' <strong>'+item+'</strong>'+(req?'（要求:'+req+'）':'')+(actual?' → 实际:'+actual:'');
+  }).join('<br/>');
+}
+
+function renderEnterpriseResult(d){
+  const r=d.result||{},bi=r.basic_info||{},sc=r.scores||{},jc=r.jd_check||{};
+  const warns=r.warnings||[],hl=r.highlights||[],wea=r.work_experience_analysis||[];
+  const ivq=r.interview_questions||[],preq=r.preliminary_questions||[],rec=r.recommendation||'';
+  const pos=r._matched_position||'',posReason=r._position_reason||'',posCount=r._positions_count||0;
+  let h='';
+
+  // 基本信息（完整显示脚本返回的所有字段）
+  if(bi.name||bi.education){
+    h+='<div class="msg-box msg-ai"><strong>👤 '+bi.name+'</strong>';
+    const tags=[];
+    if(bi.gender)tags.push(bi.gender);
+    if(bi.age)tags.push(bi.age+'岁');
+    if(bi.education)tags.push(bi.education);
+    if(bi.is_full_time)tags.push(bi.is_full_time);
+    if(bi.school)tags.push(bi.school);
+    if(bi.major)tags.push(bi.major);
+    if(bi.relevant_experience_years)tags.push(bi.relevant_experience_years+'年相关经验');
+    if(bi.contact)tags.push(bi.contact);
+    if(tags.length)h+='<div style="font-size:max(10px,.56vw);color:var(--text-helper);margin-top:.3vh">'+tags.join(' · ')+'</div>';
+    h+='</div>';
+  }
+
+  // 匹配岗位 + 原因
+  if(pos){
+    h+='<div class="msg-box msg-ai" style="background:rgba(0,47,167,.04)"><strong style="color:var(--accent)">📌 最佳匹配：'+pos+'</strong>';
+    if(posCount)h+=' <span style="font-size:max(9px,.5vw);color:var(--text-helper)">（共'+posCount+'个在招岗位）</span>';
+    if(posReason)h+='<div style="font-size:max(10px,.56vw);color:var(--text-helper);margin-top:.2vh">'+posReason+'</div>';
+    h+='</div>';
+  }
+
+  if(sc.total!==undefined){
+    h+='<div class="msg-box msg-ai"><strong>📊 综合评分</strong><br/><table class="ent-tbl">';
+    if(sc.education!==undefined)h+='<tr><td>学历匹配</td><td>'+sc.education+'/10</td></tr>';
+    if(sc.experience!==undefined)h+='<tr><td>经验匹配</td><td>'+sc.experience+'/20</td></tr>';
+    if(sc.core_competence!==undefined)h+='<tr><td>核心能力</td><td>'+sc.core_competence+'/30</td></tr>';
+    if(sc.detail_check!==undefined)h+='<tr><td>细节审查</td><td>'+sc.detail_check+'/20</td></tr>';
+    if(sc.expression!==undefined)h+='<tr><td>表达沟通</td><td>'+sc.expression+'/20</td></tr>';
+    if(sc.bonus)h+='<tr><td>加分项</td><td style="color:#0a0">+'+sc.bonus+'</td></tr>';
+    if(sc.deduction)h+='<tr><td>预警扣分</td><td style="color:#d32f2f">-'+sc.deduction+'</td></tr>';
+    h+='<tr><td><strong>综合评分</strong></td><td><strong style="font-size:max(14px,.8vw)">'+sc.total+'/100</strong></td></tr></table></div>';
+  }
+
+  if(rec)h+='<div class="msg-box msg-ai"><strong>💡 建议：</strong>'+rec+'</div>';
+
+  if(hl.length){
+    h+='<div class="ent-card"><div class="ent-card-hd">🌟 候选人亮点 ('+hl.length+')</div><div class="ent-card-bd">';
+    hl.forEach(x=>h+='<div style="margin:.2vh 0">· '+x+'</div>');
+    h+='</div></div>';
+  }
+
+  if(wea.length){
+    h+='<div class="ent-card"><div class="ent-card-hd">💼 工作经历分析 ('+wea.length+'段)</div><div class="ent-card-bd">';
+    wea.forEach(w=>{
+      h+='<div style="margin:.4vh 0;padding:.3vh .4vw;background:var(--grey-1);border-radius:4px">';
+      h+='<strong>'+(w.period||'')+' · '+(w.company||'')+'</strong> '+(w.position||'');
+      if(w.summary)h+='<div style="font-size:max(9px,.52vw);color:var(--text-secondary)">'+w.summary+'</div>';
+      if(w.interpretations&&w.interpretations.length){
+        w.interpretations.forEach(it=>{
+          h+='<div style="font-size:max(9px,.52vw);margin-top:.2vh">💬 "'+(it.quote||'')+'" → '+(it.interpretation||'')+'</div>';
+        });
+      }
+      h+='</div>';
+    });
+    h+='</div></div>';
+  }
+
+  if(jc&&(jc.education_requirement||jc.skills_details)){
+    h+='<div class="ent-card"><div class="ent-card-hd">📄 JD匹配详情</div><div class="ent-card-bd">';
+    if(jc.education_requirement)h+='<div>学历要求：'+jc.education_requirement+' → 实际：'+(jc.education_actual||'-')+' '+(jc.education_pass?'✅':'❌')+'</div>';
+    if(jc.experience_requirement)h+='<div>经验要求：'+jc.experience_requirement+' → 实际：'+(jc.experience_actual||'-')+' '+(jc.experience_pass?'✅':'❌')+'</div>';
+    if(jc.skills_details)h+='<div style="margin-top:.3vh"><strong>技能匹配：</strong><br/>'+formatDetails(jc.skills_details)+'</div>';
+    if(jc.bonus_details)h+='<div style="margin-top:.3vh"><strong>加分项：</strong><br/>'+formatDetails(jc.bonus_details)+'</div>';
+    h+='</div></div>';
+  }
+
+  if(warns.length){
+    h+='<div class="ent-card"><div class="ent-card-hd" style="background:rgba(245,166,35,.08)">⚠️ 预警 ('+warns.length+')</div><div class="ent-card-bd">';
+    warns.forEach(w=>h+='<div style="margin:.2vh 0;color:#c86f00">· '+w+'</div>');
+    h+='</div></div>';
+  }
+
+  if(ivq.length||preq.length){
+    h+='<div class="ent-card"><div class="ent-card-hd">🎤 面试问题</div><div class="ent-card-bd">';
+    if(preq.length){h+='<strong>初筛问题：</strong><br/>';preq.forEach((q,i)=>h+=(i+1)+'. '+q+'<br/>');}
+    if(ivq.length){h+='<strong>深度问题：</strong><br/>';ivq.forEach((q,i)=>h+=(i+1)+'. '+q+'<br/>');}
+    h+='</div></div>';
+  }
+  return h;
+}
+
+async function analyzeBoth(){
+  const cl=document.getElementById('chatLeft'),cr=document.getElementById('chatRight');
+  const sl=document.getElementById('statusLeft'),sr=document.getElementById('statusRight');
+  const userPrompt='请作为一名拥有10年经验的资深HR招聘专家，分析这份简历：给出各维度评分（学历/经验/能力/细节/表达）、总评分、是否推荐面试及理由。';
+
+  cl.innerHTML='<div class="msg-box msg-user"><strong>👤 你的提示词</strong><br/>'+userPrompt+'</div><div class="msg-box msg-thinking" id="thinkL">🤖 MiMo 多模态分析中...</div>';
+  sl.textContent='分析中...';
+  cr.innerHTML='<div class="msg-box msg-user"><strong>👤 上传简历</strong><br/>简历已发送至企业AI引擎</div><div class="msg-box msg-thinking" id="thinkR">🏭 正在调用企业AI引擎进行多维度分析...</div>';
+  sr.textContent='分析中...';
+
+  const body={file_base64:resumePdfBase64,filename:resumePdfFilename||'resume.pdf'};
+
+  // 通用AI + 企业AI 并行发起
+  fetch('/r/resume/analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json()).then(d1=>{
+    document.getElementById('thinkL')?.remove();
+    if(d1.ok){cl.innerHTML+='<div class="msg-box msg-ai">'+renderMarkdown(d1.result||'')+'</div>';sl.textContent='完成 ✓';}
+    else{cl.innerHTML+='<div class="msg-box msg-error"><strong>⚠️</strong><br/>'+(d1.error||'分析失败')+'</div>';sl.textContent='失败';}
+    cl.scrollTop=cl.scrollHeight;
+  }).catch(e=>{document.getElementById('thinkL')?.remove();cl.innerHTML+='<div class="msg-box msg-error"><strong>⚠️</strong><br/>'+e.message+'</div>';sl.textContent='失败';});
+
+  // 企业AI 异步（与通用AI并行发起）
+  fetch('/r/resume/enterprise-analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json()).then(d2=>{
+    if(!d2.ok||!d2.task_id){document.getElementById('thinkR')?.remove();cr.innerHTML+='<div class="msg-box msg-error"><strong>⚠️</strong><br/>'+(d2.error||'任务创建失败')+'</div><br/><button class="retry-btn" onclick="retryEnterprise()">🔄 重试</button>';sr.textContent='失败';}
+    else{
+      taskId=d2.task_id;
+      if(pollTimer)clearInterval(pollTimer);
+      startPolling(taskId, cr, sr);
+    }
+  }).catch(e=>{document.getElementById('thinkR')?.remove();cr.innerHTML+='<div class="msg-box msg-error"><strong>⚠️ 请求失败</strong><br/>'+e.message+'</div><br/><button class="retry-btn" onclick="retryEnterprise()">🔄 重试</button>';sr.textContent='失败';});
+}
+
+function startPolling(tid, cr, sr){
+  let step=0;
+  pollTimer=setInterval(async()=>{
+    try{
+      const pr=await fetch('/r/resume/task/'+tid);
+      const pd=await pr.json();
+      if(pd.status==='positions_loaded'&&step<1){
+        step=1;
+        document.getElementById('thinkR')?.remove();
+        cr.innerHTML+='<div class="msg-box msg-ai" style="background:rgba(0,47,167,.04)"><strong style="color:var(--accent)">📋 已读取HRM在招岗位（'+pd.count+'个）</strong><br/><span style="font-size:max(10px,.56vw);color:var(--text-helper)">'+(pd.positions||[]).join('、')+'</span></div><div class="msg-box msg-thinking">🏭 正在匹配最佳岗位...</div>';
+        cr.scrollTop=cr.scrollHeight;
+      }
+      else if(pd.status==='matched'&&step<2){
+        step=2;
+        document.getElementById('thinkR')?.remove();
+        cr.innerHTML+='<div class="msg-box msg-ai" style="background:rgba(0,47,167,.08)"><strong style="color:var(--accent)">🎯 匹配岗位：'+pd.position+'</strong>'+(pd.reason?'<div style="font-size:max(10px,.56vw);color:var(--text-helper);margin-top:.2vh">'+pd.reason+'</div>':'')+'</div><div class="msg-box msg-thinking">📊 正在生成分析报告...</div>';
+        cr.scrollTop=cr.scrollHeight;
+      }
+      else if(pd.ok){
+        clearInterval(pollTimer);
+        document.getElementById('thinkR')?.remove();
+        lastScoring=pd.scoring||null;
+        cr.innerHTML+=renderEnterpriseResult(pd);
+        sr.textContent='完成 ✓';
+        cr.scrollTop=cr.scrollHeight;
+      }
+      else if(pd.status==='error'){
+        clearInterval(pollTimer);
+        document.getElementById('thinkR')?.remove();
+        cr.innerHTML+='<div class="msg-box msg-error"><strong>⚠️ 分析失败</strong><br/>'+(pd.error||'未知错误')+'</div><br/><button class="retry-btn" onclick="retryEnterprise()">🔄 重试</button>';
+        sr.textContent='失败';
+      }
+    }catch(e){}
+  },2000);
+}
+
+function retryEnterprise(){
+  if(!resumePdfBase64){alert('请先上传简历');return;}
+  if(pollTimer)clearInterval(pollTimer);
+  const cr=document.getElementById('chatRight'),sr=document.getElementById('statusRight');
+  cr.innerHTML='<div class="msg-box msg-user"><strong>👤 上传简历</strong><br/>简历已发送至企业AI引擎</div><div class="msg-box msg-thinking" id="thinkR">🏭 正在调用企业AI引擎进行多维度分析...</div>';
+  sr.textContent='分析中...';
+  const body={file_base64:resumePdfBase64,filename:resumePdfFilename||'resume.pdf'};
+  fetch('/r/resume/enterprise-analyze',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)}).then(r=>r.json()).then(d=>{
+    if(d.ok&&d.task_id){taskId=d.task_id;startPolling(taskId,cr,sr);}
+    else{cr.innerHTML+='<div class="msg-box msg-error"><strong>⚠️</strong><br/>'+(d.error||'任务创建失败')+'</div><br/><button class="retry-btn" onclick="retryEnterprise()">🔄 重试</button>';}
+  }).catch(e=>{cr.innerHTML+='<div class="msg-box msg-error"><strong>⚠️</strong><br/>'+e.message+'</div><br/><button class="retry-btn" onclick="retryEnterprise()">🔄 重试</button>';});
+}
+
+function showScoring(e){
+  e.preventDefault();
+  if(!lastScoring){alert('请先完成一次简历分析');return;}
+  const w=window.open('','_blank','width=700,height=800');
+  const g=lastScoring.global_rules||'';
+  const j=lastScoring.position_jd||'';
+  const n=lastScoring.position_name||'';
+  w.document.write('<!DOCTYPE html><html><head><meta charset="UTF-8"><title>评分标准 · '+(n||'G5 Pipeline')+'</title><style>body{font-family:system-ui,sans-serif;max-width:720px;margin:2rem auto;padding:0 1rem;line-height:1.7;color:#222}h1{font-weight:300;border-bottom:2px solid #002FA7;padding-bottom:.5rem}h2{font-weight:500;margin-top:2rem;color:#002FA7}strong{color:#002FA7}li{margin:.3em 0}</style></head><body><h1>📋 本次分析使用的评分标准</h1>'+(n?'<p><strong>匹配岗位：</strong>'+n+'</p>':'')+(j?'<h2>岗位 JD & 评分标准</h2>'+renderMarkdown(j):'')+(g?'<h2>全局评分标准</h2>'+renderMarkdown(g):'')+'</body></html>');
+}
+</script>
+</body>
+</html>

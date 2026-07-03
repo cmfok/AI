@@ -1,0 +1,225 @@
+/* tpl-ai-trash-talk — 「AI 真垃圾」分享会 PPT
+ * Theme: sharp-mono (黑白高对比) + clean-restraint 克制风格
+ */
+
+/* ── Slide padding ── */
+.tpl-ai-trash-talk .slide { padding: 64px 88px; }
+
+/* ── Kicker ── */
+.tpl-ai-trash-talk .kicker {
+  font-family: var(--font-mono, 'JetBrains Mono', monospace);
+  font-size: 12px;
+  color: var(--text-3);
+  letter-spacing: .16em;
+  text-transform: uppercase;
+  margin: 0 0 14px 0;
+}
+
+/* ── Titles ── */
+.tpl-ai-trash-talk .h1 {
+  font-size: clamp(48px, 6vw, 88px);
+  line-height: 1.08;
+  letter-spacing: -.03em;
+  margin: 0 0 20px 0;
+}
+.tpl-ai-trash-talk .h2 {
+  font-size: clamp(34px, 4vw, 56px);
+  line-height: 1.15;
+  letter-spacing: -.02em;
+  margin: 0 0 22px 0;
+}
+.tpl-ai-trash-talk .h2.mega {
+  font-size: clamp(52px, 7vw, 108px);
+  line-height: 1.06;
+  letter-spacing: -.04em;
+}
+
+/* ── Lede ── */
+.tpl-ai-trash-talk .lede {
+  font-size: clamp(18px, 2vw, 24px);
+  line-height: 1.5;
+  color: var(--text-2);
+}
+.tpl-ai-trash-talk .sub-lede {
+  font-size: 16px;
+  color: var(--text-3);
+}
+
+/* ── Accent red ── */
+.tpl-ai-trash-talk .accent-red {
+  color: #ff2200;
+  font-weight: 800;
+}
+
+/* ── Cards ── */
+.tpl-ai-trash-talk .card {
+  background: var(--surface, #fff);
+  border: 2px solid #000;
+  border-radius: 0;
+  padding: 18px 22px;
+}
+.tpl-ai-trash-talk .card-accent { border-left: 6px solid #000; }
+.tpl-ai-trash-talk .card-good { border-left: 6px solid #008800; background: rgba(0,136,0,.03); }
+.tpl-ai-trash-talk .card-bad { border-left: 6px solid #ff0000; background: rgba(255,0,0,.03); }
+.tpl-ai-trash-talk .card-warn { border-left: 6px solid #ff9900; background: rgba(255,153,0,.04); }
+.tpl-ai-trash-talk .card h4 { margin: 0 0 8px 0; font-size: 18px; color: var(--text-1); }
+.tpl-ai-trash-talk .card .dim { color: var(--text-2); font-size: 15px; line-height: 1.6; margin: 0; }
+
+/* ── Pill row ── */
+.tpl-ai-trash-talk .pill-row { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+.tpl-ai-trash-talk .pill {
+  display: inline-block;
+  padding: 6px 20px;
+  border: 2px solid #000;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.tpl-ai-trash-talk .pill-dark { background: #000; color: #fff; }
+
+/* ── Arrow game ── */
+.tpl-ai-trash-talk .arrow-row, .tpl-ai-trash-talk .guess-row {
+  display: flex; gap: 24px; justify-content: center;
+}
+.tpl-ai-trash-talk .arrow {
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 900;
+  font-family: var(--font-mono, monospace);
+  line-height: 1;
+}
+.tpl-ai-trash-talk .arrow-ghost { color: var(--text-3); }
+.tpl-ai-trash-talk .arrow-q {
+  color: #ff2200;
+  animation: pulse-q 1.2s ease-in-out infinite;
+}
+@keyframes pulse-q {
+  0%, 100% { transform: scale(1); opacity: .6; }
+  50% { transform: scale(1.25); opacity: 1; }
+}
+
+/* ── Big answer ── */
+.tpl-ai-trash-talk .big-answer {
+  font-size: clamp(32px, 4vw, 56px);
+  font-weight: 900;
+  text-align: center;
+  margin: 0;
+}
+.tpl-ai-trash-talk .insight-box {
+  padding: 20px 28px;
+  border: 2px solid #000;
+  background: #000;
+  color: #fff;
+  text-align: center;
+  font-size: clamp(16px, 1.8vw, 22px);
+  line-height: 1.5;
+}
+.tpl-ai-trash-talk .insight-box strong { color: #fff; }
+
+/* ── Model grid ── */
+.tpl-ai-trash-talk .model-grid {
+  display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+}
+.tpl-ai-trash-talk .model-tag {
+  padding: 8px 18px;
+  border: 2px solid #000;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: .01em;
+}
+
+/* ── Engineering numbers ── */
+.tpl-ai-trash-talk .eng-num {
+  font-family: var(--font-mono, monospace);
+  font-size: 36px;
+  font-weight: 900;
+  color: #000;
+  margin-bottom: 8px;
+}
+
+/* ── Rule rows ── */
+.tpl-ai-trash-talk .rule-row {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 16px;
+  align-items: start;
+  padding: 14px 18px;
+  border: 2px solid #000;
+  margin-bottom: 8px;
+}
+.tpl-ai-trash-talk .rule-row .num {
+  font-size: 24px;
+  font-weight: 900;
+  font-family: var(--font-mono, monospace);
+  line-height: 1;
+}
+.tpl-ai-trash-talk .rule-row b {
+  display: block;
+  font-size: 16px;
+  margin-bottom: 4px;
+  color: var(--text-1);
+}
+.tpl-ai-trash-talk .rule-row .dim {
+  font-size: 14px;
+  color: var(--text-2);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* ── Pain tags ── */
+.tpl-ai-trash-talk .pain-tags {
+  display: flex; gap: 8px; flex-wrap: wrap;
+}
+.tpl-ai-trash-talk .pain-tags span {
+  padding: 4px 14px;
+  border: 2px solid #ff0000;
+  color: #ff0000;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+/* ── Big number ── */
+.tpl-ai-trash-talk .big-num {
+  font-size: clamp(48px, 6vw, 88px);
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+}
+.tpl-ai-trash-talk .big-num .unit {
+  font-size: .4em;
+  font-weight: 700;
+  color: var(--text-3);
+}
+
+/* ── Ladder steps ── */
+.tpl-ai-trash-talk .ladder-step {
+  border-left-width: 6px !important;
+  border-left-style: solid !important;
+}
+
+/* ── Spec grid ── */
+.tpl-ai-trash-talk .spec-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-2);
+}
+
+/* ── Grid helpers ── */
+.tpl-ai-trash-talk .grid { display: grid; gap: 20px; }
+.tpl-ai-trash-talk .grid.g2 { grid-template-columns: 1fr 1fr; }
+.tpl-ai-trash-talk .grid.g3 { grid-template-columns: repeat(3, 1fr); }
+.tpl-ai-trash-talk .grid.g4 { grid-template-columns: repeat(4, 1fr); }
+.tpl-ai-trash-talk .stack > * + * { margin-top: 0; }
+.tpl-ai-trash-talk .mt-s { margin-top: 10px; }
+.tpl-ai-trash-talk .mt-m { margin-top: 20px; }
+.tpl-ai-trash-talk .mt-l { margin-top: 32px; }
+.tpl-ai-trash-talk .tc { text-align: center; }
+
+/* ── Responsive ── */
+@media (max-width: 768px) {
+  .tpl-ai-trash-talk .slide { padding: 40px 28px; }
+  .tpl-ai-trash-talk .grid.g2,
+  .tpl-ai-trash-talk .grid.g3,
+  .tpl-ai-trash-talk .grid.g4 { grid-template-columns: 1fr; }
+}
