@@ -11,17 +11,16 @@
 :root{--font-display:'Space Grotesk','Inter','Noto Sans SC',sans-serif;--anim-dur:.7s}
 body{line-height:1.35!important}
 .slide p{margin-bottom:6px}
-.slide .lede{margin-bottom:10px}
-.slide .h2,.slide h2{margin-bottom:8px}
-.slide .kicker{margin-bottom:8px}
-.slide{justify-content:flex-start;padding:clamp(28px,3vw,56px) clamp(48px,5vw,100px)}
+.slide{justify-content:flex-start;padding:clamp(32px,3vw,56px) clamp(48px,5vw,100px)}
 .slide.v-center{justify-content:center}
-body .h1{font-size:clamp(80px,12vw,200px)!important;margin-bottom:4px!important}
-body .h2{font-size:clamp(56px,8vw,130px)!important;margin-bottom:4px!important}
+body .h1{font-size:clamp(80px,12vw,200px)!important}
+body .h2{font-size:clamp(56px,8vw,130px)!important}
 .slide h1,.slide h2,.slide h3,.slide h4{margin-bottom:4px}
 .slide .lede,.slide .kicker{margin-bottom:4px}
 body .lede{font-size:clamp(32px,5vw,52px)!important}
 .dim{color:var(--text-3);font-size:clamp(24px,3vw,38px);line-height:1.6}
+.mt-l{margin-top:16px!important}
+.mt-m{margin-top:10px!important}
 .accent{color:var(--accent)}.accent-red{color:var(--accent-3,#e03e3e)}
 
 /* tags */
@@ -92,7 +91,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .big-num .unit{font-size:.3em;color:var(--text-3);font-weight:400}
 
 /* eco bar */
-.eco-bar{position:absolute;bottom:20px;left:clamp(48px,4vw,88px);right:clamp(48px,5vw,100px);display:flex;flex-direction:column;gap:8px;z-index:1}
+.eco-bar{position:absolute;bottom:40px;left:clamp(48px,4vw,88px);right:clamp(48px,5vw,100px);display:flex;flex-direction:column;gap:8px;z-index:1}
 .eco-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .eco-row .layer-tag{font-size:10px;color:var(--text-3);opacity:.5;margin-right:4px;white-space:nowrap}
 .eco-bar .pill{font-size:clamp(14px,1.6vw,22px);opacity:.85;padding:4px 12px;border-radius:8px;border:2px solid var(--border);white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
@@ -120,7 +119,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cover-delay{transition-delay:2s}
 
 @media(max-width:768px){
-  .slide{padding:clamp(16px,3vw,32px) clamp(14px,3vw,28px)}
+  .slide{padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px)}
   .g2,.g3,.g4,.comp-grid,.six-pack{grid-template-columns:1fr}
   .chart-flow .arrow-node{display:none}.chart-flow{gap:4px}
 }
@@ -259,10 +258,10 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- ====== 6. PROMPT ENGINEERING ====== -->
 <section class="slide" data-title="提示词工程">
-  <p class="kicker">CHAPTER 01 · PROMPT ENGINEERING</p>
-  <h2 class="h2">提示词工程</h2>
-  <p class="lede">不是改怎么问，是教你怎么跟 AI 说话</p>
-  <div class="comp-grid mt-l">
+  <p class="kicker" style="margin-bottom:2px">CHAPTER 01 · PROMPT ENGINEERING</p>
+  <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
+  <p class="lede" style="margin-top:-20px!important;margin-bottom:8px">不是改怎么问，是教你怎么跟 AI 说话</p>
+  <div class="comp-grid mt-l" style="margin-top:8px">
     <div class="comp-card comp-bad"><div class="ct">❌ 传统做法</div><p>"帮我做个PPT"→ AI 乱出一通，根本没法用</p></div>
     <div class="comp-card comp-good"><div class="ct">✅ 正确做法</div><p>Trae 语音沟通 → 生成结构化 MD → 一键生成 PPT<br><b>本场分享会 PPT 就是这样做的！（元演示）</b></p></div>
   </div>
