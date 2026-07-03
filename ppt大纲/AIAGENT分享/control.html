@@ -17,7 +17,8 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
 .page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px;margin-bottom:8px}
 .page-dot{padding:8px 0;border-radius:8px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.02);font-size:13px;color:#777;text-align:center;cursor:pointer}
 .page-dot.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
-.actions{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;min-height:36px}
+.actions{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;min-height:36px}
+.actions .btn{min-width:120px;text-align:center;flex-shrink:0}
 
 /* ── 通用按钮（修复：原来只有 .actions .btn，lockBtn 不在 .actions 内所以无样式）── */
 .btn{padding:8px 16px;border-radius:8px;border:1px solid rgba(0,0,0,.1);background:rgba(0,0,0,.04);color:#222;font-size:13px;cursor:pointer;font-family:inherit}
@@ -90,6 +91,7 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
 </div>
 <div class="scroll">
   <div class="tab-content active" id="tabScript">
+    <div class="actions" id="actBox" style="display:none;margin-bottom:8px"></div>
     <div class="speaker-panel">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px">
         <div class="sl" id="sl" style="margin-bottom:0">P1 · 封面</div>
@@ -536,7 +538,6 @@ function togglePollOverlay(){
 }
 </script>
 
-<div class="actions" id="actBox" style="display:none;position:fixed;bottom:62px;left:12px;right:12px;z-index:199;max-width:600px;margin:0 auto;background:#f5f5f5;padding:8px 10px;border-radius:10px"></div>
 <div class="bottom-nav">
   <button class="bn bp" id="bP">← 上一页</button>
   <button class="bn bnx" id="bN">下一页 →</button>
@@ -553,6 +554,14 @@ fetch('/api/slides/total').then(function(r){return r.json();}).then(function(d){
 }).catch(function(){});
 
 var ACT={1:{l:'显示问号',s:'显示问号',h:'隐藏问号'},2:{l:'展开答案',s:'展开答案',h:'收起答案'},4:{l:'展开卡片',s:'展开三阶段',h:'收起卡片'}};
+// ── 动效按钮栏配置（按页码添加按钮，注释好哪一页显示什么）──
+// 格式：ACTIONS[页码] = ['<button ...>', '<button ...>']
+var ACTIONS = {
+  1: ['<button class="btn" id="aBtn">▶ '+ACT[1].l+'</button>'],                                        // P1：封面问号
+  2: ['<button class="btn" id="aBtn">▶ '+ACT[2].l+'</button>'],                                        // P2：展开答案
+  4: ['<button class="btn" id="aBtn">▶ 展开卡片1</button>'],                                           // P4：三阶段卡片
+  6: ['<button class="btn" onclick="toggleFilePopup()">📄 大纲</button><button class="btn" onclick="scrollPopup(-400)" style="font-size:16px">⬆</button><button class="btn" onclick="scrollPopup(400)" style="font-size:16px">⬇</button>'],                             // P6：显示大纲
+};
 var CC=0;
 var _speechData = {};  // 从 speech.md 动态加载
 
@@ -675,55 +684,52 @@ function go(n){
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:n})}).catch(function(e){console.error("go error:",e)});
   // 同时广播到本地 PPT
   try{new BroadcastChannel('ppt-ctrl').postMessage({type:'goto',slide:n})}catch(e){}
-  // 操作按钮
+  // ── 动效按钮栏（统一管理：在 ACTIONS 里加 {page: N, html: '...'} 即可）──
   var ab=document.getElementById('actBox');
-  if(ACT[n]){
-    ab.style.display='flex';
-	    if(n===1){
-	      ab.innerHTML='<button class="btn" id="aBtn">▶ '+ACT[n].l+'</button>';
-	      document.getElementById('aBtn').onclick=function(){
-	        var b=document.getElementById('aBtn');
-	        var isOn=b.classList.contains('on');
-	        if(isOn){
-	          b.classList.remove('on');b.textContent='▶ '+ACT[1].l;
-				try{new BroadcastChannel('ppt-ctrl').postMessage({type:'toggle-cover-q',show:false})}catch(e){}; fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverQ:false})}).catch(function(){});
+  // 获取当前页的按钮配置
+  var btns = (ACTIONS[n] || []).slice();
+  if(btns.length > 0){
+    ab.style.display = 'flex';
+    ab.innerHTML = btns.join('');
+    // 重新绑定事件（因为 innerHTML 会清除旧事件）
+    bindActionEvents(n);
+  } else {
+    ab.style.display = 'none';
+  }
 
-	        }else{
-	          b.classList.add('on');b.textContent=ACT[1].h;
-				try{new BroadcastChannel('ppt-ctrl').postMessage({type:'toggle-cover-q',show:true})}catch(e){}; fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverQ:true})}).catch(function(){});
-
-	        }
-	      };
-	    }else if(n===2){
-      ab.innerHTML='<button class="btn" id="aBtn">▶ '+ACT[n].l+'</button>';
-      document.getElementById('aBtn').onclick=function(){
-        var b=document.getElementById('aBtn');
-        var isOn=b.classList.contains('on');
-        if(isOn){
-          b.classList.remove('on');b.textContent='▶ '+ACT[2].l;
-          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:false})}).catch(function(){});
-        }else{
-          b.classList.add('on');b.textContent=ACT[2].h;
-          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:true})}).catch(function(){});
-        }
-      };
-    }else if(n===4){
-      CC=0;
-      ab.innerHTML='<button class="btn" id="aBtn">▶ 展开卡片1</button>';
-      document.getElementById('aBtn').onclick=function(){
-        CC++;
-        var b=document.getElementById('aBtn');
-        if(CC>3){
-          CC=0;b.classList.remove('on');b.textContent='▶ 展开卡片1';
-          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,card:0})}).catch(function(){});
-        }else{
-          b.textContent='▶ 展开卡片'+(CC+1);
-          fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,card:CC})}).catch(function(){});
-        }
+  // ── 按钮动作配置（按页码）──
+  // 格式：{ page: N, html: '<button...>', action: function }
+  // 或直接用 onclick 在 html 里写死简单动作
+  // 复杂动作（如 toggle）在 bindActionEvents 里处理
+  function bindActionEvents(n){
+    if(n===1){  // P1：封面问号
+      var b = document.getElementById('aBtn');
+      if(b) b.onclick = function(){
+        var isOn = b.classList.contains('on');
+        if(isOn){ b.classList.remove('on'); b.textContent='▶ '+ACT[1].l; }
+        else { b.classList.add('on'); b.textContent=ACT[1].h; }
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverQ:!isOn})}).catch(function(){});
+        try{new BroadcastChannel('ppt-ctrl').postMessage({type:'toggle-cover-q',show:!isOn})}catch(e){}
       };
     }
-  }else{
-    ab.style.display='none';
+    if(n===2){  // P2：展开答案
+      var b = document.getElementById('aBtn');
+      if(b) b.onclick = function(){
+        var isOn = b.classList.contains('on');
+        if(isOn){ b.classList.remove('on'); b.textContent='▶ '+ACT[2].l; }
+        else { b.classList.add('on'); b.textContent=ACT[2].h; }
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:!isOn})}).catch(function(){});
+      };
+    }
+    if(n===4){  // P4：展开三阶段卡片
+      var b = document.getElementById('aBtn');
+      if(b) b.onclick = function(){
+        CC++;
+        if(CC>3){ CC=0; b.classList.remove('on'); b.textContent='▶ 展开卡片1'; }
+        else { b.textContent='▶ 展开卡片'+(CC+1); }
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,card:CC})}).catch(function(){});
+      };
+    }
   }
 }
 
@@ -783,6 +789,16 @@ function showOverview(){
 // ── 换肤（触发投屏 T 键）──
 function cycleTheme(){
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,themeKey:Date.now()})}).catch(function(){});
+}
+// ── 投屏大纲 ──
+var _filePopupOn = false;
+function toggleFilePopup(){
+  _filePopupOn = !_filePopupOn;
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,filePopup:_filePopupOn?Date.now():0})}).catch(function(){});
+}
+function scrollPopup(dir){
+  // dir: 1=下翻, -1=上翻。用大数区分方向
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,popupScroll:dir>0?Date.now():-Date.now()})}).catch(function(){});
 }
 
 </script>

@@ -8,7 +8,7 @@
 <link rel="stylesheet" href="assets/animations/animations.css">
 <link rel="stylesheet" href="assets/themes/minimal-white.css" id="theme-link">
 <style>
-:root{--font-display:'Space Grotesk','Inter','Noto Sans SC',sans-serif;--anim-dur:.7s}
+:root{--font-display:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;--anim-dur:.7s;--font-sans:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif}
 body{line-height:1.35!important}
 .slide p{margin-bottom:6px}
 .slide{justify-content:flex-start;padding:clamp(32px,3vw,56px) clamp(48px,5vw,100px)}
@@ -125,6 +125,14 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 }
 </style>
 <script src="assets/runtime.js" defer></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<style>
+#mdPopupContent table { border-collapse: collapse; width: 100%; margin: 8px 0; }
+#mdPopupContent th, #mdPopupContent td { border: 1px solid #ddd; padding: 8px 12px; text-align: left; }
+#mdPopupContent th { background: #f5f5f5; font-weight: 600; }
+#mdPopupContent h1,#mdPopupContent h2,#mdPopupContent h3 { color: #111; }
+#mdPopupContent strong { color: #1a1a1a; }
+</style>
 </head>
 <body>
 <div class="deck">
@@ -258,27 +266,38 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- ====== 6. PROMPT ENGINEERING ====== -->
 <section class="slide" data-title="提示词工程 · 案例">
-  <p class="kicker" style="margin-bottom:2px">CHAPTER 01 · PROMPT ENGINEERING</p>
-  <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
-  <p class="lede" style="margin-top:-20px!important;margin-bottom:8px">不是改怎么问，是教你怎么跟 AI 说话</p>
-  <div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:8px;min-width:0">
+  <p class="kicker" style="margin-bottom:2px">CASE 01</p>
+  <h2 class="h2" style="margin-bottom:2px!important">让 AI 写 PPT</h2>
+  <p class="lede" style="margin-top:-20px!important;margin-bottom:8px">同一个需求，两种结果</p>
+  <div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:8px;min-width:0;align-items:stretch">
     <!-- 左边：传统做法 -->
     <div style="flex:1;min-width:0;border:1px solid rgba(229,62,62,.2);border-radius:14px;overflow:hidden">
       <div style="background:rgba(229,62,62,.1);padding:10px 16px;font-weight:700;color:#e53e3e;font-size:clamp(14px,1.4vw,18px);text-align:center">❌ 直接问 AI</div>
       <div style="padding:14px;background:rgba(229,62,62,.02)">
-      <!-- 用户消息 -->
+      <!-- 1. 用户消息 -->
       <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
-        <div style="background:#e53e3e;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我做个PPT</div>
+        <div style="background:#e53e3e;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我生成一份PPT</div>
         <div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
       </div>
-      <!-- AI回复 -->
+      <!-- 2. DeepSeek原始回复 -->
       <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px">
         <img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px">
-        <div style="background:rgba(255,255,255,.05);padding:8px 14px;border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2)">
-          好的！我可以帮你做PPT。请告诉我：<br>1. 主题是什么？2. 需要多少页？<br>3. 有没有风格偏好？<br><br>如果你不确定，我也可以给你一个通用模板。
+        <div style="background:rgba(229,62,62,.06);padding:8px 14px;border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2)">
+          好的！我可以帮你做一份PPT。请告诉我以下信息：<br>1. PPT的主题是什么？<br>2. 需要多少页？<br>3. 有没有特定的风格或模板偏好？
         </div>
       </div>
-      <div style="text-align:center;font-size:11px;color:var(--text-3);margin-top:4px">↑ 啥也没干，先问回来一堆</div>
+      <!-- 3. 多轮沟通后 -->
+      <div style="text-align:center;padding:8px 0;font-size:clamp(15px,1.6vw,20px);color:var(--text-3);font-weight:600;letter-spacing:.1em">· · · 多轮沟通后 · · ·</div>
+      <!-- 4. DeepSeek输出PPT -->
+      <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px">
+        <img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px">
+        <div style="background:rgba(229,62,62,.06);padding:8px;border-radius:12px 12px 12px 0;max-width:82%">
+          <div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 10页</div>
+          <img src="/ai/deepseek-ppt.jpg" style="width:100%;max-height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="DeepSeek生成的PPT">
+        </div>
+      </div>
+      <div style="text-align:center;font-size:clamp(15px,1.6vw,18px);font-weight:700;color:#e53e3e;margin-top:8px;padding:8px 12px;background:rgba(229,62,62,.08);border-radius:6px">多轮沟通生成一份通用模版PPT</div>
+    </div>
     </div>
     <!-- 右边：正确做法 -->
     <div style="flex:1;min-width:0;border:1px solid rgba(59,111,255,.2);border-radius:14px;overflow:hidden">
@@ -290,7 +309,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
         <div style="background:rgba(59,111,255,.08);padding:10px 14px;border-radius:12px 12px 12px 0;max-width:82%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">
           <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px"><span>🎙️</span> <span style="font-weight:600;color:var(--text-1)">语音沟通完成</span></div>
           <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(255,255,255,.06);border-radius:6px">
-            <span>📄</span> <span style="color:#58a6ff">AI分享会.md</span>
+            <span>📄</span> <span style="color:#58a6ff;cursor:pointer;text-decoration:underline" onclick="showMdPopup()">AI分享会.md</span>
           </div>
         </div>
       </div>
@@ -303,15 +322,11 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <div style="display:flex;align-items:flex-start;gap:6px">
         <img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px">
         <div style="background:rgba(59,111,255,.08);padding:8px;border-radius:12px 12px 12px 0;max-width:82%">
-          <div style="border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;background:var(--bg)">
-            <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);padding:clamp(12px,1.5vw,20px);text-align:center">
-              <div style="font-size:clamp(18px,3vw,32px);font-weight:800;color:#fff">📊 PPT</div>
-              <div style="font-size:11px;color:#888;margin-top:2px">已生成 · 21页</div>
-            </div>
-          </div>
+          <div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 21页</div>
+            <img src="/ai/trae-ppt.jpg" style="width:100%;max-height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="Trae生成的PPT">
         </div>
       </div>
-      <div style="text-align:center;font-size:11px;color:var(--text-3);margin-top:4px">↑ 拿到MD直接生成PPT，本场分享会就是这样做的</div>
+      <div style="text-align:center;font-size:clamp(15px,1.6vw,18px);font-weight:700;color:#3b6fff;margin-top:8px;padding:8px 12px;background:rgba(59,111,255,.08);border-radius:6px;line-height:1.5">10分钟语音沟通生成专属PPT<br>本场分享会 PPT 就是这样做的！</div>
     </div>
   </div>
   </div>
@@ -672,7 +687,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   <button onclick="hidePollOverlay()" style="position:fixed;top:2vh;right:2vw;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:clamp(18px,2vw,28px);width:clamp(40px,4vw,56px);height:clamp(40px,4vw,56px);border-radius:50%;cursor:pointer;z-index:10000">✕</button>
   <div style="text-align:center;margin-bottom:clamp(16px,2vh,36px);flex-shrink:0">
     <div style="color:#fff;font-size:clamp(24px,3.5vw,64px);font-weight:800;letter-spacing:-0.02em;line-height:1.1">📊 现场投票结果</div>
-    <div style="color:#555;font-size:clamp(12px,1.2vw,18px);margin-top:4px">实时数据 · 每15秒刷新</div>
+    <div style="color:#999;font-size:clamp(12px,1.2vw,18px);margin-top:4px">实时数据 · 每15秒刷新</div>
   </div>
   <div id="pollOverlayBars" style="display:flex;gap:clamp(20px,3vw,60px);width:100%;max-width:1300px;align-items:flex-start;justify-content:center;flex-wrap:wrap"></div>
 </div>
@@ -685,7 +700,8 @@ function toggleCard(el){el.classList.toggle('open')}
 (function(){
   var slides=document.querySelectorAll('.slide');
   var total=slides.length;
-  var lastSlide=1, lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, _lkO=false, _lkT=false, _firstPoll=true;
+  var _lkScr=0;
+  var lastSlide=1, lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, _lkO=false, _lkT=false, _lkF=false, _firstPoll=true;
 
   function goSlide(n){
     if(!n||n<1||n>total) return;
@@ -700,7 +716,7 @@ function toggleCard(el){el.classList.toggle('open')}
   function applyServerState(d){
     if(!d) return;
     // 首次轮询：只同步状态，不触发动作
-    if(_firstPoll){ _lkO=d.overviewKey||0; _lkT=d.themeKey||0; lastCoverQ=d.coverQ||false; _firstPoll=false; }
+    if(_firstPoll){ _lkO=d.overviewKey||0; _lkT=d.themeKey||0; _lkF=d.filePopup||0; lastCoverQ=d.coverQ||false; _firstPoll=false; }
     var changed=false;
     // 翻页
     if(d.slide && d.slide!==lastSlide){ goSlide(d.slide); changed=true; }
@@ -750,8 +766,21 @@ function toggleCard(el){el.classList.toggle('open')}
     // 总览：触发 O 键，复用 runtime.js 的 toggleOverview()
     if(d.overviewKey && d.overviewKey!==_lkO){
       _lkO=d.overviewKey;
-      document.dispatchEvent(new KeyboardEvent('keydown',{key:'o',bubbles:true}));
+      document.dispatchEvent(new KeyboardEvent("keydown",{key:"o",bubbles:true}));
     }
+    // 大纲弹窗
+    if(d.filePopup!==_lkF){
+      _lkF=d.filePopup;
+      if(d.filePopup){ showMdPopup(); var p=document.getElementById("mdPopup"); if(p) p.scrollTop=0; }
+      else { var p=document.getElementById("mdPopup"); if(p) p.style.display="none"; }
+    }
+    // 弹窗滚动
+    if(d.popupScroll && d.popupScroll!==_lkScr){ _lkScr=d.popupScroll; var dir=d.popupScroll>0?400:-400;
+      var p=document.getElementById("mdPopup");
+      if(p) p.scrollBy({top: dir, behavior: "smooth"});
+    }
+
+
   }
 
   function poll(){
@@ -764,7 +793,7 @@ function toggleCard(el){el.classList.toggle('open')}
   }
 
   // 每1秒轮询
-  setInterval(poll, 1000);
+  setInterval(poll, 500);
   poll();
 
   // ── 投票浮层 ──
@@ -793,7 +822,7 @@ function toggleCard(el){el.classList.toggle('open')}
       function getDepth(opt){ var idx = depthOrder.indexOf(opt); return idx >= 0 ? idx : 999; }
       var h = '';
       var keys = Object.keys(d);
-      if(keys.length === 0){ container.innerHTML = '<p style="color:#555;text-align:center;width:100%;font-size:clamp(14px,1.8vw,28px)">暂无投票数据</p>'; return; }
+      if(keys.length === 0){ container.innerHTML = '<p style="color:#999;text-align:center;width:100%;font-size:clamp(14px,1.8vw,28px)">暂无投票数据</p>'; return; }
       for(var i=0;i<keys.length;i++){
         var id = keys[i], data = d[id];
         var total = 0, opts = Object.keys(data);
@@ -802,7 +831,7 @@ function toggleCard(el){el.classList.toggle('open')}
         else { opts.sort(function(a,b){ return getDepth(a) - getDepth(b); }); }
         h += '<div style="flex:1;min-width:220px;max-width:580px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:clamp(12px,2vw,32px) clamp(12px,2vw,28px)">';
         h += '<div style="font-size:clamp(15px,2vw,28px);font-weight:700;color:#fff;margin-bottom:2px">' + (labels[id]||id) + '</div>';
-        h += '<div style="font-size:clamp(10px,1vw,14px);color:#555;margin-bottom:clamp(10px,1.5vh,20px)">共 ' + total + ' 票</div>';
+        h += '<div style="font-size:clamp(10px,1vw,14px);color:#999;margin-bottom:clamp(10px,1.5vh,20px)">共 ' + total + ' 票</div>';
         for(var k=0;k<opts.length;k++){
           var opt = opts[k], cnt = data[opt];
           var pct = total > 0 ? Math.round(cnt/total*100) : 0;
@@ -812,7 +841,7 @@ function toggleCard(el){el.classList.toggle('open')}
           h += '<span style="font-size:clamp(13px,1.5vw,20px);color:#ddd;font-weight:400">' + opt + '</span>';
           h += '<span style="font-size:clamp(13px,1.6vw,22px);font-weight:600;color:#fff;white-space:nowrap">' + cnt + '<span style="font-size:60%;color:#888;font-weight:400">票</span> <span style="color:#58a6ff">' + pct + '%</span></span>';
           h += '</div>';
-          h += '<div style="height:clamp(8px,1.2vh,18px);background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:4px;transition:width .6s;min-width:2px"></div></div>';
+          h += '<div style="height:clamp(8px,1.2vh,18px);background:rgba(229,62,62,.06);border-radius:4px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:4px;transition:width .6s;min-width:2px"></div></div>';
           h += '</div>';
         }
         h += '</div>';
@@ -842,5 +871,31 @@ function toggleCard(el){el.classList.toggle('open')}
   }catch(e){}
 })();
 </script>
+
+<div id="mdPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.92);z-index:99999;overflow-y:auto;padding:20px">
+  <div style="max-width:860px;margin:clamp(30px,5vh,60px) auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+    <div style="display:flex;align-items:center;justify-content:space-between;background:#f0f0f0;padding:12px 18px;border-bottom:1px solid #e0e0e0">
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:20px">📄</span>
+        <span style="color:#222;font-weight:600;font-size:15px">AI分享会.md</span>
+      </div>
+      <button onclick="document.getElementById('mdPopup').style.display='none'" style="background:rgba(255,255,255,.08);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:8px;cursor:pointer">✕</button>
+    </div>
+    <div style="display:flex">
+      <div id="mdPopupContent" style="flex:1;padding:clamp(14px,2vw,24px) clamp(16px,2vw,28px);color:#222;font-family:SF Mono,Menlo,Consolas,monospace;font-size:clamp(14px,1.4vw,17px);line-height:1.7;white-space:pre-wrap;overflow-x:auto">加载中...</div>
+    </div>
+  </div>
+<script>
+function showMdPopup(){
+  var popup = document.getElementById('mdPopup');
+  if(!popup) return;
+  popup.style.display = 'block';
+  document.getElementById('mdPopupContent').innerHTML = '加载中...';
+  fetch('/ai/确认版大纲.md').then(function(r){return r.text();}).then(function(t){
+    document.getElementById('mdPopupContent').innerHTML = marked.parse(t);
+  }).catch(function(e){
+    document.getElementById('mdPopupContent').innerHTML = '加载失败: ' + e.message;
+  });
+}
+</script>
 </body>
-</html>
