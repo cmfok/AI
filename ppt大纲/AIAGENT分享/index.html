@@ -1,18 +1,25 @@
 <!DOCTYPE html>
 <html lang="zh-CN" data-themes="minimal-white,editorial-serif,swiss-grid,japanese-minimal,pitch-deck-vc">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
-<title>AI 真垃圾 · 分享会</title>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>从AI不行到AI真香 · 分享会</title>
 <link rel="stylesheet" href="assets/fonts.css">
 <link rel="stylesheet" href="assets/base.css">
 <link rel="stylesheet" href="assets/animations/animations.css">
 <link rel="stylesheet" href="assets/themes/minimal-white.css" id="theme-link">
 <style>
 :root{--font-display:'Space Grotesk','Inter','Noto Sans SC',sans-serif;--anim-dur:.7s}
-.slide{justify-content:flex-start;padding:clamp(48px,4vw,88px) clamp(48px,5vw,100px)}
+body{line-height:1.35!important}
+.slide p{margin-bottom:6px}
+.slide .lede{margin-bottom:10px}
+.slide .h2,.slide h2{margin-bottom:8px}
+.slide .kicker{margin-bottom:8px}
+.slide{justify-content:flex-start;padding:clamp(28px,3vw,56px) clamp(48px,5vw,100px)}
 .slide.v-center{justify-content:center}
-body .h1{font-size:clamp(80px,12vw,200px)!important}
-body .h2{font-size:clamp(56px,8vw,130px)!important}
+body .h1{font-size:clamp(80px,12vw,200px)!important;margin-bottom:4px!important}
+body .h2{font-size:clamp(56px,8vw,130px)!important;margin-bottom:4px!important}
+.slide h1,.slide h2,.slide h3,.slide h4{margin-bottom:4px}
+.slide .lede,.slide .kicker{margin-bottom:4px}
 body .lede{font-size:clamp(32px,5vw,52px)!important}
 .dim{color:var(--text-3);font-size:clamp(24px,3vw,38px);line-height:1.6}
 .accent{color:var(--accent)}.accent-red{color:var(--accent-3,#e03e3e)}
@@ -88,11 +95,10 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .eco-bar{position:absolute;bottom:20px;left:clamp(48px,4vw,88px);right:clamp(48px,5vw,100px);display:flex;flex-direction:column;gap:8px;z-index:1}
 .eco-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
 .eco-row .layer-tag{font-size:10px;color:var(--text-3);opacity:.5;margin-right:4px;white-space:nowrap}
-.eco-bar .pill{font-size:clamp(18px,2vw,28px);opacity:.85;padding:5px 16px;border-radius:8px;border:2px solid var(--border);white-space:nowrap;display:inline-flex;align-items:center;gap:6px}
+.eco-bar .pill{font-size:clamp(14px,1.6vw,22px);opacity:.85;padding:4px 12px;border-radius:8px;border:2px solid var(--border);white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
 .eco-bar .pill .ic{display:inline-block;width:clamp(18px,2vw,28px);height:clamp(18px,2vw,28px);flex-shrink:0;border-radius:6px}
-.eco-bar .pill img{width:clamp(18px,2vw,28px);height:clamp(18px,2vw,28px);flex-shrink:0;border-radius:6px;object-fit:contain}
-.eco-bar .pill img.err{display:none}
-.eco-bar .pill img.err+.dot{display:inline-block;width:clamp(16px,1.8vw,24px);height:clamp(16px,1.8vw,24px);border-radius:6px;flex-shrink:0}
+.eco-bar .pill img{width:clamp(14px,1.6vw,22px);height:clamp(14px,1.6vw,22px);flex-shrink:0;border-radius:6px;object-fit:contain}
+.eco-bar .pill img.err+.dot{display:inline-block;width:clamp(12px,1.4vw,18px);height:clamp(12px,1.4vw,18px);border-radius:6px;flex-shrink:0}
 .eco-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 
 /* limit cards */
@@ -109,9 +115,12 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 @keyframes q-pop{0%{opacity:0;transform:translateY(-50%) translateX(60px) scale(0) rotate(-20deg);color:#fff}60%{opacity:1;transform:translateY(-50%) translateX(-5px) scale(1.15) rotate(5deg)}100%{opacity:1;transform:translateY(-50%) translateX(0) scale(1) rotate(0deg);color:#e03e3e}}
 .cover-sub{opacity:0;transition:opacity .8s ease .8s}
 .cover-sub.show{opacity:1}
+.cover-reveal{opacity:0;transition:opacity 1.5s ease}
+.cover-reveal.show{opacity:1}
+.cover-delay{transition-delay:2s}
 
 @media(max-width:768px){
-  .slide{padding:clamp(24px,4vw,40px) clamp(18px,4vw,32px)}
+  .slide{padding:clamp(16px,3vw,32px) clamp(14px,3vw,28px)}
   .g2,.g3,.g4,.comp-grid,.six-pack{grid-template-columns:1fr}
   .chart-flow .arrow-node{display:none}.chart-flow{gap:4px}
 }
@@ -130,53 +139,62 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   <div data-anim="rise-in">
     <p class="kicker" style="font-size:16px;letter-spacing:.2em;margin-bottom:28px">CM · 2026-07-07</p>
     <div style="position:relative;display:inline-block">
-      <h1 class="h1" style="font-size:clamp(56px,10vw,140px);line-height:1;font-weight:900;margin:0">
-        AI 真<span style="color:var(--accent)">垃圾</span>
+      <span class="cover-reveal cover-delay" style="font-size:clamp(18px,2vw,30px);color:var(--text-3);font-weight:400;vertical-align:middle">从 </span>
+      <h1 class="h1" style="display:inline;font-size:clamp(56px,10vw,140px);line-height:1;font-weight:900;margin:0">
+        AI<span style="color:var(--accent)">不行</span>
       </h1>
-      <span id="coverQ" class="cover-q" style="font-size:clamp(112px,20vw,280px)">？</span>
+      <span id="coverQ" class="cover-q cover-reveal" style="font-size:clamp(90px,16vw,220px);color:#e53e3e;vertical-align:middle">？</span>
     </div>
-	    <p id="coverSub" class="lede cover-sub" style="font-size:clamp(20px,2.6vw,38px);max-width:100%;margin-top:28px">当你不会用它的时候，它真的是垃圾。<br>当你学会用它的时候，就能变废为宝。</p>
-    <p style="margin-top:36px;color:var(--text-2);font-size:18px">个人及企业AI Agent落地分享</p>
+    <div class="cover-reveal cover-delay" style="margin-top:8px;line-height:1.2">
+      <span style="font-size:clamp(18px,2vw,30px);color:var(--text-3);font-weight:400;vertical-align:middle">到 </span>
+      <h1 class="h1" style="display:inline;font-size:clamp(56px,10vw,140px);line-height:1;font-weight:900;margin:0;color:var(--accent)">AI真香</h1>
+    </div>
+    <p id="coverSub" class="lede cover-sub cover-reveal" style="text-align:center;font-size:clamp(20px,2.6vw,38px);max-width:100%;margin-top:28px;transition-delay:4s">—— 重塑 AI 认知，教你落地用好 AI</p>
+    <p style="margin-top:36px;color:var(--text-2);font-size:18px">搭建 AI Agent ，实现提效增收实战分享</p>
   </div>
-  <div class="notes"><b>AI 真垃圾</b>——两个意思。第一个：觉得它无所不能，用起来各种不靠谱，你会觉得 AI 真垃圾。第二个：用久了知道它垃圾在哪，也就知道怎么<b>规训</b>它。我核心的关切：<b>如何让 AI 可控地输出我想要的结果。</b></div>
+  <div class="notes"><b>从"AI不行"到"AI真香"</b>——我的真实心路历程。第一阶段：刚用觉得无所不能，实际各种不靠谱，觉得<b>AI真垃圾</b>。第二阶段：用久了摸透脾气，知道怎么<b>规训</b>它，让它可控地输出想要的结果——<b>AI真香！</b>我核心的关切：<b>如何让 AI 可控地输出我想要的结果。</b></div>
 </section>
 
 <!-- ====== 2. ALIEN LANGUAGE ====== -->
-<section class="slide" data-title="外星人的语言">
-  <p class="kicker">Interaction</p>
-  <h2 class="h2">外星人的语言</h2>
-  <div style="font-size:clamp(44px,8vw,100px);letter-spacing:.25em;margin:32px 0 16px;font-weight:700;color:var(--text-1)">← ↑ → ↓ ←</div>
-  <p style="font-size:clamp(24px,4vw,48px);color:var(--text-3);margin-bottom:32px">猜题区：<span style="color:var(--text-1);font-weight:700">↑ → ？</span></p>
-  <div class="ca-card open" onclick="this.classList.toggle('open')" style="max-width:520px">
-    <div class="ch">💡 点击展开答案 <span class="ic">▼</span></div>
-    <div class="cb"><div class="cb-inner">
-      <p style="font-size:clamp(20px,3vw,32px);font-weight:700;color:var(--accent-3)">答案是：↓</p>
-      <p style="margin-top:10px"><strong>规律</strong>：左上右下，顺时针转圈。</p>
-      <p style="margin-top:10px">你刚才做的这件事，就是 <strong>AI 每天都在做的事</strong>——根据上文，预测最合理的下一个东西。</p>
+<section class="slide center tc" data-title="外星人的语言">
+  <p class="kicker">TRY TO GUESS</p>
+  <p style="font-size:clamp(48px,5.5vw,72px);color:#000;font-weight:500;margin:0 0 4px">外星人的语言</p>
+  <div style="font-size:clamp(36px,6vw,80px);letter-spacing:.25em;margin:20px 0 8px;font-weight:700;color:var(--text-1)">← ↑ → ↓ ←</div>
+  <p style="font-size:clamp(20px,3.5vw,40px);color:var(--text-3);margin-bottom:16px">Guess：<span style="color:var(--text-1);font-weight:700">↑ → ？</span></p>
+  <div class="ca-card" id="slide2Card" style="max-width:520px;margin:0 auto;line-height:1.3">
+    <div class="ch" style="visibility:hidden;height:0;padding:0;margin:0">▼</div>
+    <div class="cb"><div class="cb-inner" style="font-size:16px;line-height:1.4">
+      <p style="font-size:clamp(18px,2.5vw,28px);font-weight:700;color:var(--accent-3);margin-bottom:6px">答案是：↓</p>
+      <p style="margin-top:6px"><strong>规律</strong>：左上右下，顺时针转圈。</p>
+      <p style="margin-top:6px">你刚才做的这件事，就是 <strong>AI 每天都在做的事</strong><br>——根据上文，预测最合理的下一个<strong>"字"</strong>。</p>
     </div></div>
   </div>
-  <div class="notes">看这组规律：← ↑ → ↓ ←。猜下一个：↑ → ？答案是 <b>↓</b>。左上右下，顺时针转圈。你刚才做的这件事，就是 <b>AI 每天都在做的事</b>——根据上文，预测最合理的下一个东西。</div>
+  <div class="notes">前几天我认识了个外星人，因为语言不通我专门学了一下他们的语言。这是他们的语言：← ↑ → ↓ ←。猜下一个：↑ → ？答案是 <b>↓</b>。规律：<b>左上右下，顺时针转圈</b>。大家可能会问，这跟 AI 有什么关系——其实你刚才做的这件事，就是 <b>AI 每天都在做的事</b>：根据上文，预测最合理的下一个字。</div>
 </section>
 
 <!-- ====== 3. ANTI-COGNITION ====== -->
 <section class="slide center tc v-center" data-title="反认知">
   <div>
-    <p class="kicker">Counter‑Intuition</p>
-    <h1 class="h1" style="font-size:clamp(44px,7vw,104px);max-width:100%" data-anim="fade-up">
-	      AI 的核心<br>就是<span style="color:#3b6cff">猜字系统</span>
-    </h1>
-    <p class="lede" style="max-width:100%;margin-top:24px">给它一段上文，算概率，猜最合理的字/词</p>
-    <p class="dim mt-m">它没有意识，没有理解——它只是在<b>猜</b>。</p>
+    <p class="kicker" style="font-size:11px">Counter‑Intuition</p>
+	    <p style="font-size:clamp(48px,5.5vw,72px);color:#000;font-weight:500;margin:0 0 4px;max-width:100%" data-anim="fade-up">
+      AI 的底层逻辑就是
+</p>
+<h1 class="h1" style="max-width:100%" data-anim="fade-up">
+  <span style="color:#3b6cff">猜字系统</span>
+</h1>
+<p class="dim mt-m">它没有意识，没有理解——它只是在<b>猜</b>。</p>
   </div>
-  <div class="notes"><b>AI 的核心——就是个猜字系统。</b>给它一段上文，它<b>算概率</b>，猜下一个最合理的字或词。它<b>没有意识，没有理解</b>——只是在猜。</div>
+  <div class="notes"><b>AI 的底层逻辑——就是个猜字系统。</b>这是不是颠覆了大家对 AI 的认知？它<b>没有意识，没有理解</b>——它只是在<b>猜</b>。给它一段上文，它<b>算概率</b>，猜下一个最合理的字/词。</div>
 </section>
 
 <!-- ====== 4. MODELS ====== -->
 <section class="slide" data-title="模型">
-  <div class="g2" style="flex:1;align-items:start">
-    <div>
+    <div style="width:100%">
       <h1 class="h1" style="margin-bottom:4px;font-size:clamp(36px,5vw,72px)">大语言模型</h1>
       <p class="kicker" style="margin-bottom:24px">MODEL · LLM / LMM</p>
+    </div>
+  <div class="g2" style="flex:1;align-items:start">
+    <div>
       <div class="g2" style="gap:8px">
 	        <div class="tag tag-g" style="font-size:14px;text-align:center;padding:16px 8px">豆包</div><div class="tag tag-b" style="font-size:14px;text-align:center;padding:16px 8px">千问</div>
 	        <div class="tag tag-r" style="font-size:14px;text-align:center;padding:16px 8px">Kimi</div><div class="tag tag-y" style="font-size:14px;text-align:center;padding:16px 8px">DeepSeek</div>
@@ -184,7 +202,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	        <div class="tag tag-r" style="font-size:14px;text-align:center;padding:16px 8px">Gemini</div><div class="tag tag-y" style="font-size:14px;text-align:center;padding:16px 8px">Claude</div>
       </div>
     </div>
-    <div style="padding-top:clamp(150px,20vw,230px)">
+    <div style="padding-top:0">
       <p style="font-size:14px;color:var(--accent-3);margin-bottom:8px">三阶段训练（点击展开）</p>
       <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--good)"><div class="ch">① 预训练 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">喂海量文字资料 → 让 AI 了解人类语言逻辑。任务很简单：给你上文，猜下一个词。</div></div></div>
       <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--accent)"><div class="ch">② 指令微调 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">给大量"问题→答案"问答对 → 让 AI 学会什么是问题、应该怎么回答。</div></div></div>
@@ -199,15 +217,15 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     </div>
   </div>
   <div class="eco-bar"><div class="eco-row">
-    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
-    <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>千问</span>
-    <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
-    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
-    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
+    <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="/ai/icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>千问</span>
+    <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="/ai/icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
+    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
   </div></div>
-  <div class="notes">豆包·ChatGPT·Gemini·千问·DeepSeek……<b>这些都是模型</b>。三阶段训练：预训练→指令微调→RLHF→AI变舔狗。三个局限：幻觉、知识截止、无真实理解。</div>
+  <div class="notes">豆包·ChatGPT·Gemini·千问·DeepSeek……<b>这些都是模型</b>。<b>三阶段训练</b>：①预训练→喂海量文字 ②指令微调→学问答格式 ③RLHF→人类打分→AI 变<b>"舔狗"</b>。<b>三个局限</b>：<b>幻觉</b>（不调工具直接猜天气）、<b>知识截止</b>（训练数据停在2025）、<b>无真实理解</b>（所有手表画成10:10）。</div>
 </section>
 
 <!-- ====== 5. FOUR ENGINEERING ====== -->
@@ -260,13 +278,13 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     </div>
   </div>
   <div class="eco-bar"><div class="eco-row">
-    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-    <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
-    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
-    <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>通义千问</span>
-    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
-    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+    <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="/ai/icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
+    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
+    <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="/ai/icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>通义千问</span>
+    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
   </div></div>
   <div class="notes">左边❌：帮我做个PPT，AI 瞎猜。右边✅：Trae 语音→MD→生成PPT。<b>本场分享会 PPT 就是这样做的。</b>四个规则：定角色·讲要求·给参考·设标准。种子故事：朋友问AI约会→教他用结构问→方案完整。但AI推荐烤肉，女孩是素食主义者。引出上下文工程。</div>
 </section>
@@ -305,20 +323,20 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   </div>
   <div class="eco-bar">
     <div class="eco-row">
-      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-      <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
-      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
-      <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>通义千问</span>
-      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
-      <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+      <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="/ai/icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
+      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
+      <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="/ai/icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>通义千问</span>
+      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+      <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
     </div>
     <div class="eco-row">
-      <span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img src="icon/markdown.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3B82F6"></span>MD文件</span>
-      <span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img src="icon/image.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#F59E0B"></span>图片</span>
-      <span class="pill" style="border-color:#185ABD;background:rgba(24,90,189,.08)"><img src="icon/microsoftword.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#185ABD"></span>Word</span>
-      <span class="pill" style="border-color:#1D6F42;background:rgba(29,111,66,.08)"><img src="icon/microsoftexcel.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1D6F42"></span>Excel</span>
-      <span class="pill" style="border-color:#E53E3E;background:rgba(229,62,62,.08)"><img src="icon/adobeacrobatreader.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#E53E3E"></span>PDF</span>
+      <span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img src="/ai/icon/markdown.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3B82F6"></span>MD文件</span>
+      <span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img src="/ai/icon/image.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#F59E0B"></span>图片</span>
+      <span class="pill" style="border-color:#185ABD;background:rgba(24,90,189,.08)"><img src="/ai/icon/microsoftword.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#185ABD"></span>Word</span>
+      <span class="pill" style="border-color:#1D6F42;background:rgba(29,111,66,.08)"><img src="/ai/icon/microsoftexcel.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1D6F42"></span>Excel</span>
+      <span class="pill" style="border-color:#E53E3E;background:rgba(229,62,62,.08)"><img src="/ai/icon/adobeacrobatreader.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#E53E3E"></span>PDF</span>
     </div>
   </div>
   <div class="notes">不是改怎么问，是<b>让 AI 知道它在跟谁打交道</b>。三个价值：可迁移、可生长、有记忆。上下文工程最重要的是<b>知识库</b>。</div>
@@ -336,10 +354,10 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   </div>
   <p class="dim mt-m tc">不急，<b>先跑起来最重要</b>。</p>
   <div class="eco-bar"><div class="eco-row">
-    <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
-    <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书文档</span>
-    <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img src="icon/trae.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#32F08C"></span>Trae</span>
-    <span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img src="icon/dify.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1F4CCF"></span>Dify</span>
+    <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="/ai/icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+    <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="/ai/icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书文档</span>
+    <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img src="/ai/icon/trae.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#32F08C"></span>Trae</span>
+    <span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img src="/ai/icon/dify.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1F4CCF"></span>Dify</span>
   </div></div>
   <div class="notes">知识库搭建三个级别。青铜：MD+Trae，写背景文件，零门槛。白银：加上Obsidian，双向链接。黄金：加上向量模型，语义搜索。不急，<b>先跑起来最重要</b>。</div>
 </section>
@@ -392,19 +410,19 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   </div>
   <div class="eco-bar">
     <div class="eco-row">
-      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
     </div>
     <div class="eco-row">
-      <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
-      <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书</span>
+      <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="/ai/icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+      <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="/ai/icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书</span>
     </div>
     <div class="eco-row">
-      <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img src="icon/trae.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#32F08C"></span>Trae</span>
-      <span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img src="icon/qoder.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
-      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude Code</span>
-      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/codex.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>Codex</span>
+      <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img src="/ai/icon/trae.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#32F08C"></span>Trae</span>
+      <span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img src="/ai/icon/qoder.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
+      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude Code</span>
+      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/codex.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>Codex</span>
     </div>
   </div>
   <div class="notes"><b>规训工程 = 给 AI 装上手脚、套上缰绳。</b>六大组件：工具调用、约束安全、验证校验、状态管理、错误处理、可观测性。规训工程最重要的是脚本和工作流。</div>
@@ -487,23 +505,23 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   </div>
   <div class="eco-bar">
     <div class="eco-row">
-      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
     </div>
     <div class="eco-row">
-      <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
-      <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书</span>
+      <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="/ai/icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+      <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="/ai/icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书</span>
     </div>
     <div class="eco-row">
-      <span class="pill" style="border-color:#3776AB;background:rgba(55,118,171,.08)"><img src="icon/python.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3776AB"></span>Python</span>
-      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="icon/coze.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>Coze</span>
-      <span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img src="icon/dify.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1F4CCF"></span>Dify</span>
+      <span class="pill" style="border-color:#3776AB;background:rgba(55,118,171,.08)"><img src="/ai/icon/python.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3776AB"></span>Python</span>
+      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/coze.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>Coze</span>
+      <span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img src="/ai/icon/dify.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1F4CCF"></span>Dify</span>
     </div>
     <div class="eco-row">
-      <span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img src="icon/cron.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3B82F6"></span>Cron</span>
-      <span class="pill" style="border-color:#8B5CF6;background:rgba(139,92,246,.08)"><img src="icon/agent.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8B5CF6"></span>Agent</span>
-      <span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img src="icon/log.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#F59E0B"></span>日志</span>
+      <span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img src="/ai/icon/cron.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3B82F6"></span>Cron</span>
+      <span class="pill" style="border-color:#8B5CF6;background:rgba(139,92,246,.08)"><img src="/ai/icon/agent.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8B5CF6"></span>Agent</span>
+      <span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img src="/ai/icon/log.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#F59E0B"></span>日志</span>
     </div>
   </div>
   <div class="notes">AI 为什么垃圾？做一遍就完了。<b>循环工程就是逼它再做一遍。</b>四级别：L1自查→L2复盘→L3会诊→L4绩效。三栏：循环流程/AI没有眼睛/多Agent并行。</div>
@@ -543,7 +561,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       </tbody>
     </table>
     <div style="border:2px solid #1aaf6c;border-radius:12px;padding:clamp(24px,4vh,40px);text-align:center;background:linear-gradient(135deg,rgba(26,175,108,.08),rgba(26,175,108,.02));display:flex;flex-direction:column;justify-content:center">
-      <img src="icon/qoder.svg" style="width:clamp(40px,5vw,64px);height:clamp(40px,5vw,64px);margin-bottom:12px;display:inline-block">
+      <img src="/ai/icon/qoder.svg" style="width:clamp(40px,5vw,64px);height:clamp(40px,5vw,64px);margin-bottom:12px;display:inline-block">
       <h4 style="font-size:clamp(24px,2.5vw,34px);color:#1aaf6c;margin:0 0 12px">Pro 升级方案</h4>
       <p style="font-size:clamp(18px,2vw,26px);color:var(--text-2);margin:0;line-height:1.5"><strong>私有化部署</strong><br>数据完全不离开<br>一劳永逸解决所有风险</p>
     </div>
@@ -596,39 +614,182 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <div class="slide-number ctrl-hint" data-current="1" data-total="20"></div>
 
+<!-- 投票浮层（投影优化版） -->
+<div id="pollOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:9999;display:none;flex-direction:column;justify-content:center;align-items:center;padding:clamp(16px,3vh,40px) clamp(12px,3vw,60px);overflow-y:auto;-webkit-overflow-scrolling:touch">
+
+
+  <button onclick="hidePollOverlay()" style="position:fixed;top:2vh;right:2vw;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:clamp(18px,2vw,28px);width:clamp(40px,4vw,56px);height:clamp(40px,4vw,56px);border-radius:50%;cursor:pointer;z-index:10000">✕</button>
+  <div style="text-align:center;margin-bottom:clamp(16px,2vh,36px);flex-shrink:0">
+    <div style="color:#fff;font-size:clamp(24px,3.5vw,64px);font-weight:800;letter-spacing:-0.02em;line-height:1.1">📊 现场投票结果</div>
+    <div style="color:#555;font-size:clamp(12px,1.2vw,18px);margin-top:4px">实时数据 · 每15秒刷新</div>
+  </div>
+  <div id="pollOverlayBars" style="display:flex;gap:clamp(20px,3vw,60px);width:100%;max-width:1300px;align-items:flex-start;justify-content:center;flex-wrap:wrap"></div>
+</div>
+
 <script>
 // card toggle helper
 function toggleCard(el){el.classList.toggle('open')}
 
-// 控制台联动
-try{
-  var bc=new BroadcastChannel('ppt-ctrl');
-  bc.onmessage=function(e){
-    var d=e.data;if(!d)return;
+// ── 服务器轮询（跨设备翻页+动效同步）──
+(function(){
+  var slides=document.querySelectorAll('.slide');
+  var total=slides.length;
+  var lastSlide=1, lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, _lkO=false, _lkT=false, _firstPoll=true;
+
+  function goSlide(n){
+    if(!n||n<1||n>total) return;
+    var cur=document.querySelector('.slide.is-active');
+    if(cur) cur.classList.remove('is-active');
+    if(slides[n-1]) slides[n-1].classList.add('is-active');
+    var sn=document.querySelector('.slide-number');
+    if(sn) sn.setAttribute('data-current', n);
+    lastSlide=n;
+  }
+
+  function applyServerState(d){
+    if(!d) return;
+    // 首次轮询：只同步状态，不触发动作
+    if(_firstPoll){ _lkO=d.overviewKey||0; _lkT=d.themeKey||0; lastCoverQ=d.coverQ||false; _firstPoll=false; }
+    var changed=false;
+    // 翻页
+    if(d.slide && d.slide!==lastSlide){ goSlide(d.slide); changed=true; }
     // 封面问号
-    if(d.type==='toggle-cover-q'){
-      var q=document.getElementById('coverQ');
-      var s=document.getElementById('coverSub');
-      if(d.show){
-        if(q)q.classList.add('show');
-        if(s)s.classList.add('show');
-      }else{
-        if(q)q.classList.remove('show');
-        if(s)s.classList.remove('show');
+    if(d.coverQ!==undefined && d.coverQ!==lastCoverQ){
+      lastCoverQ=d.coverQ;
+      var els = document.querySelectorAll('.cover-reveal');
+      for(var i=0;i<els.length;i++){
+        if(d.coverQ) els[i].classList.add('show');
+        else els[i].classList.remove('show');
+      }
+      changed=true;
+    }
+    // 展开/卡片动效（slide 2 expand, slide 4 card）
+    if(d.expand!==undefined && d.expand!==lastExpand){
+      lastExpand=d.expand;
+      var card = document.getElementById('slide2Card');
+      if(card){
+        if(d.expand){ card.classList.add('open'); }
+        else { card.classList.remove('open'); }
       }
     }
-    // 翻页控制
-    if(d.type==='goto'||d.slide){
-      var n=(typeof d.slide==='number')?d.slide:parseInt(d.slide);
-      if(n&&n>=1&&n<=20){
-        var slides=document.querySelectorAll('.slide');
-        var cur=document.querySelector('.slide.is-active');
-        if(cur)cur.classList.remove('is-active');
-        if(slides[n-1])slides[n-1].classList.add('is-active');
+    if(d.card!==undefined && d.card!==lastCard){
+      lastCard=d.card;
+      // 由 runtime.js 或自定义逻辑处理
+    }
+    // 投票浮层
+    if(d.pollOverlay!==undefined && d.pollOverlay!==lastPollOverlay){
+      lastPollOverlay=d.pollOverlay;
+      if(d.pollOverlay){ showPollOverlay(); }
+      else { hidePollOverlay(); }
+    }
+    // 换肤：直接切主题 CSS
+    if(d.themeKey && d.themeKey!==_lkT){
+      _lkT=d.themeKey;
+      var themes = (document.documentElement.getAttribute('data-themes')||'').split(',').map(function(s){return s.trim();}).filter(Boolean);
+      if(themes.length){
+        var link = document.getElementById('theme-link');
+        if(link){
+          var cur = link.href.split('/').pop().replace('.css','');
+          var idx = themes.indexOf(cur);
+          var next = themes[(idx+1)%themes.length];
+          link.href = 'assets/themes/' + next + '.css';
+        }
       }
     }
-  };
-}catch(e){}
+    // 总览：触发 O 键，复用 runtime.js 的 toggleOverview()
+    if(d.overviewKey && d.overviewKey!==_lkO){
+      _lkO=d.overviewKey;
+      document.dispatchEvent(new KeyboardEvent('keydown',{key:'o',bubbles:true}));
+    }
+  }
+
+  function poll(){
+    fetch('/api/control/current').then(function(r){
+      if(!r.ok) return;
+      return r.json();
+    }).then(function(d){
+      applyServerState(d);
+    }).catch(function(){});
+  }
+
+  // 每1秒轮询
+  setInterval(poll, 1000);
+  poll();
+
+  // ── 投票浮层 ──
+  var _pollTimer = null;
+  function showPollOverlay(){
+    var el = document.getElementById('pollOverlay');
+    if(el) el.style.display = 'flex';
+    refreshPollOverlay();
+    _pollTimer = setInterval(refreshPollOverlay, 15000);
+  }
+  function hidePollOverlay(){
+    var el = document.getElementById('pollOverlay');
+    if(el) el.style.display = 'none';
+    if(_pollTimer){ clearInterval(_pollTimer); _pollTimer = null; }
+  }
+      function refreshPollOverlay(){
+    fetch('/api/extra-poll').then(function(r){
+      if(!r.ok) return;
+      return r.json();
+    }).then(function(d){
+      var container = document.getElementById('pollOverlayBars');
+      if(!container) return;
+      var labels = {'ai_tool':'🤖 最常用的AI','usage':'💻 使用方式'};
+      var colors = ['#4A90D9','#5BA0E8','#3fb950','#d29922','#f78166','#a371f7','#db6d28'];
+      var depthOrder = ['基本没用过','没用过','网页版','手机App','集成到业务系统','AI Agent(API接入)','Vibe coding(API接入)'];
+      function getDepth(opt){ var idx = depthOrder.indexOf(opt); return idx >= 0 ? idx : 999; }
+      var h = '';
+      var keys = Object.keys(d);
+      if(keys.length === 0){ container.innerHTML = '<p style="color:#555;text-align:center;width:100%;font-size:clamp(14px,1.8vw,28px)">暂无投票数据</p>'; return; }
+      for(var i=0;i<keys.length;i++){
+        var id = keys[i], data = d[id];
+        var total = 0, opts = Object.keys(data);
+        for(var j=0;j<opts.length;j++) total += data[opts[j]];
+        if(id === 'ai_tool'){ opts.sort(function(a,b){ return data[b] - data[a]; }); }
+        else { opts.sort(function(a,b){ return getDepth(a) - getDepth(b); }); }
+        h += '<div style="flex:1;min-width:220px;max-width:580px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:clamp(12px,2vw,32px) clamp(12px,2vw,28px)">';
+        h += '<div style="font-size:clamp(15px,2vw,28px);font-weight:700;color:#fff;margin-bottom:2px">' + (labels[id]||id) + '</div>';
+        h += '<div style="font-size:clamp(10px,1vw,14px);color:#555;margin-bottom:clamp(10px,1.5vh,20px)">共 ' + total + ' 票</div>';
+        for(var k=0;k<opts.length;k++){
+          var opt = opts[k], cnt = data[opt];
+          var pct = total > 0 ? Math.round(cnt/total*100) : 0;
+          var col = colors[k % colors.length];
+          h += '<div style="margin-bottom:clamp(8px,1.5vh,16px)">';
+          h += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:clamp(2px,0.4vh,6px);flex-wrap:wrap;gap:4px">';
+          h += '<span style="font-size:clamp(13px,1.5vw,20px);color:#ddd;font-weight:400">' + opt + '</span>';
+          h += '<span style="font-size:clamp(13px,1.6vw,22px);font-weight:600;color:#fff;white-space:nowrap">' + cnt + '<span style="font-size:60%;color:#888;font-weight:400">票</span> <span style="color:#58a6ff">' + pct + '%</span></span>';
+          h += '</div>';
+          h += '<div style="height:clamp(8px,1.2vh,18px);background:rgba(255,255,255,.05);border-radius:4px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:4px;transition:width .6s;min-width:2px"></div></div>';
+          h += '</div>';
+        }
+        h += '</div>';
+      }
+      container.innerHTML = h;
+    }).catch(function(){});
+  }
+
+  // ── BroadcastChannel（同设备备用）──
+  try{
+    var bc=new BroadcastChannel('ppt-ctrl');
+    bc.onmessage=function(e){
+      var d=e.data; if(!d) return;
+      if(d.type==='toggle-cover-q'){
+        var els = document.querySelectorAll('.cover-reveal');
+        for(var i=0;i<els.length;i++){
+          if(d.show) els[i].classList.add('show');
+          else els[i].classList.remove('show');
+        }
+        lastCoverQ=d.show;
+      }
+      if(d.type==='goto'||d.slide){
+        var n=(typeof d.slide==='number')?d.slide:parseInt(d.slide);
+        goSlide(n);
+      }
+    };
+  }catch(e){}
+})();
 </script>
 </body>
 </html>

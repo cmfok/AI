@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>投票结果 · 演讲者看板</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans SC",sans-serif;background:#f5f5f4;padding:20px;color:#0a0a0a}
+.card{background:#fff;border-radius:12px;padding:24px;margin-bottom:16px;box-shadow:0 1px 8px rgba(0,0,0,.06)}
+h1{font-size:18px;font-weight:700;margin-bottom:16px}
+h2{font-size:15px;font-weight:600;margin-bottom:10px}
+.bar-wrap{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.bar-label{width:140px;font-size:13px;text-align:right;flex-shrink:0}
+.bar-track{flex:1;height:20px;background:#eee;border-radius:4px;overflow:hidden}
+.bar-fill{height:100%;background:#002FA7;border-radius:4px;transition:width .3s}
+.bar-num{width:40px;font-size:13px;font-weight:600;flex-shrink:0}
+.refresh{text-align:right;font-size:12px;color:#737373;margin-bottom:12px}
+.btn{display:inline-block;padding:6px 16px;background:#002FA7;color:#fff;border-radius:6px;text-decoration:none;font-size:13px;margin-top:8px}
+</style></head>
+<body>
+<div class="card" style="text-align:center"><h1>📊 现场投票结果</h1><p style="font-size:14px;color:#737373">演讲者专用 · 实时刷新查看</p></div>
+<div id="results"></div>
+<div class="card" style="text-align:center"><a href="/Y" class="btn">← 返回演讲稿</a></div>
+<script>
+async function loadResults(){
+  try{
+    const r=await fetch('/api/extra-poll');
+    const d=await r.json();
+    let html='';
+    const labels={'ai_tool':'🤖 你平时使用最多的AI是哪一个？','usage':'💻 主要是通过什么方式使用？'};
+    for(const [id,data] of Object.entries(d)){
+      html+='<div class="card"><h2>'+labels[id]+'</h2>';
+      const total=Object.values(data).reduce((a,b)=>a+b,0);
+      html+='<div class="refresh">共 '+total+' 票</div>';
+      for(const [opt,count] of Object.entries(data)){
+        const pct=total?Math.round(count/total*100):0;
+        html+='<div class="bar-wrap"><div class="bar-label">'+opt+'</div><div class="bar-track"><div class="bar-fill" style="width:'+pct+'%"></div></div><div class="bar-num">'+count+'</div></div>';
+      }
+      html+='</div>';
+    }
+    document.getElementById('results').innerHTML=html;
+  }catch(e){}
+}
+loadResults();
+setInterval(loadResults,5000);
+</script>
+</body></html>

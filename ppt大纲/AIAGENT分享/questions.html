@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>听众问题 - 分享会</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{--accent:#002FA7;--accent-light:#eef3ff;--ink:#0a0a0a;--ink-2:#525252;--ink-3:#737373;--grey-1:#f0f0ee;--radius:10px}
+  body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,"Noto Sans SC",sans-serif;background:#f5f5f4;color:var(--ink);-webkit-font-smoothing:antialiased;padding:20px}
+  .container{max-width:800px;margin:0 auto}
+  h1{font-size:22px;margin-bottom:4px}
+  .sub{font-size:14px;color:var(--ink-3);margin-bottom:20px}
+  .stats{display:flex;gap:16px;margin-bottom:20px}
+  .stat-box{background:#fff;border-radius:var(--radius);padding:14px 18px;flex:1;text-align:center;box-shadow:0 1px 6px rgba(0,0,0,.06)}
+  .stat-box .num{font-size:28px;font-weight:700;color:var(--accent)}
+  .stat-box .lbl{font-size:13px;color:var(--ink-3);margin-top:2px}
+  .slide-group{background:#fff;border-radius:var(--radius);box-shadow:0 1px 6px rgba(0,0,0,.06);margin-bottom:14px;overflow:hidden}
+  .slide-header{padding:12px 16px;background:var(--accent-light);font-weight:600;font-size:15px;border-bottom:1px solid #e0e0de;cursor:pointer;display:flex;justify-content:space-between;align-items:center;transition:background .15s}
+  .slide-header:hover{background:#dde6ff}
+  .slide-header .count{font-size:13px;font-weight:400;color:var(--ink-3)}
+  .q-list{list-style:none;padding:0}
+  .q-item{padding:12px 16px;border-bottom:1px solid #f0f0ee}
+  .q-item:last-child{border-bottom:none}
+  .q-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;flex-wrap:wrap;gap:6px}
+  .q-name{font-size:14px;font-weight:600}
+  .q-actions{display:flex;gap:6px;align-items:center}
+  .page-select{font-size:13px;padding:4px 8px;border:1px solid #d4d4d2;border-radius:6px;background:#fff;cursor:pointer;max-width:160px}
+  .page-select:focus{outline:none;border-color:var(--accent)}
+  .save-btn{font-size:12px;padding:4px 10px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer}
+  .save-btn:hover{background:#001f7a}
+  .del-btn{font-size:12px;padding:4px 10px;background:#d32f2f;color:#fff;border:none;border-radius:6px;cursor:pointer;opacity:.7}
+  .del-btn:hover{opacity:1}
+  .q-text{font-size:14px;color:var(--ink-2);line-height:1.5;margin-bottom:4px}
+  .q-refined{font-size:13px;color:var(--accent);background:var(--accent-light);padding:4px 10px;border-radius:6px;display:inline-block;margin-top:4px}
+  .q-deeper{font-size:13px;color:#6a1b9a;background:#f3e5f5;padding:4px 10px;border-radius:6px;display:inline-block;margin-top:4px;margin-left:4px}
+  .empty{padding:30px;text-align:center;font-size:15px;color:var(--ink-3)}
+  .toggle-btn{background:none;border:1px solid #d4d4d2;border-radius:6px;padding:6px 14px;font-size:13px;cursor:pointer;margin-bottom:14px;color:var(--ink-3)}
+  .toggle-btn:hover{background:var(--grey-1)}
+  @media(max-width:600px){.stats{flex-direction:column;gap:8px}}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>📋 听众问题</h1>
+  <p class="sub">已提交的问题，按分享会页面归类展示</p>
+  <div class="stats" id="stats">
+    <div class="stat-box"><div class="num" id="totalCount">0</div><div class="lbl">共提交</div></div>
+    <div class="stat-box"><div class="num" id="classifiedCount">0</div><div class="lbl">已归类</div></div>
+  </div>
+  <button class="toggle-btn" onclick="showAll=!showAll;render()">🔽 切换显示模式</button>
+  <div id="questionsArea"></div>
+</div>
+<script>
+let questions = [];
+let slides = [];
+let showAll = true;
+	var hidePages = [1,2,4,6,11];
+		var pageTypes = [0,
+		  '','',  /* 1-3 */
+		  '',        /* 4 · 反认知事实 - 过渡 */
+		  'AI幻觉、大模型原理相关问题',    /* 5 */
+		  '',        /* 6 · 靠猜≠不能用 - 过渡 */
+		  '提示词编写相关问题',             /* 7 */
+		  '给AI喂数据、知识库相关问题',      /* 8 */
+		  'AI工具接入、API、脚本相关问题',   /* 9 */
+		  'AI循环反馈、迭代相关问题',        /* 10 */
+		  '',        /* 11 · 三个通用场景 - 概述 */
+		  '数据比对、对账相关需求',          /* 12 */
+		  '流程监控、审批自动化相关需求',     /* 13 */
+		  '内容生成、智能问答相关需求',       /* 14 */
+		  '是否适合用AI的判断问题',           /* 15 */
+		  'AI落地过程中的避坑问题',           /* 16 */
+		  '行动步骤、从哪入手的问题',         /* 17 */
+		  '评估AI方案、供应商选型的问题',     /* 18 */
+		  '其他未分类的开放问题',             /* 19 · 听众自由提问 */
+		];
+
+async function load(){
+  try{
+    const r = await fetch('/api/questions');
+    if(!r.ok){ throw new Error('HTTP '+r.status); }
+    const d = await r.json();
+    questions = d;
+    slides = d.slides || [];
+    render();
+  }catch(e){
+    document.getElementById('questionsArea').innerHTML='<div class="empty">\u2776 加载失败: '+e.message+'\u3002\u8bf7\u5237\u65b0\u91cd\u8bd5</div>';
+  }
+}
+
+function render(){
+  document.getElementById('totalCount').textContent = questions.total || 0;
+  document.getElementById('classifiedCount').textContent = questions.classified || 0;
+  const byPage = questions.by_page || {};
+  const html = [];
+  const pageOrder = showAll ? [] : Object.keys(byPage).filter(k => byPage[k].length > 0).map(Number).sort((a,b)=>a-b);
+  
+  if(showAll){
+	    for(let p=1; p<=19; p++){
+      if(hidePages.includes(p)) continue;
+      const items = byPage[p] || [];
+      const slide = (slides.find(s=>s.page===p)||{title:'未知页面'});
+      html.push(buildGroup(p, slide.title, items));
+    }
+  } else {
+    for(const p of pageOrder){
+      if(hidePages.includes(p)) continue;
+      const items = byPage[p] || [];
+      const slide = (slides.find(s=>s.page===p)||{title:'未知页面'});
+      html.push(buildGroup(p, slide.title, items));
+    }
+  }
+  document.getElementById('questionsArea').innerHTML = html.join('');
+}
+
+function buildGroup(page, title, items){
+  if(items.length === 0 && showAll === false) return '';
+  const typeDesc = pageTypes[page] ? '<div style="font-size:13px;color:var(--ink-3);margin-top:2px">\U0001f4cc '+pageTypes[page]+'</div>' : '';
+  return '<div class="slide-group"><div class="slide-header">第'+page+'页 · '+title+' <span class="count">'+items.length+' 个问题</span></div>'+
+    typeDesc+
+    (items.length ? '<ul class="q-list">'+items.map(q => buildItem(q)).join('')+'</ul>' : '<div class="empty">暂无问题</div>')+
+    '</div>';
+}
+
+function buildItem(q){
+  let extra = '';
+  const typeLabel = q.type === 'share' ? '💡 分享' : q.type === 'question' ? '❓ 提问' : '';
+  const typeTag = typeLabel ? '<span style="font-size:12px;padding:2px 8px;border-radius:4px;background:#f0f0ee;margin-left:6px">'+typeLabel+'</span>' : '';
+  if(q.refined) extra += '<div class="q-refined">AI精炼: '+esc(q.refined)+'</div>';
+  if(q.deeper) extra += '<div class="q-deeper">追问: '+esc(q.deeper)+'</div>';
+  return '<li class="q-item"><div class="q-header"><div class="q-name">'+esc(q.name)+typeTag+'</div>'+
+    '<div class="q-actions"><select class="page-select" data-id="'+q.id+'" onchange="updatePage('+q.id+',this)">'+
+    pageOptions(q.page)+
+    '</select><button class="save-btn" onclick="updatePage('+q.id+',null)" style="display:none">保存</button>'+
+    '<button class="del-btn" onclick="deleteQuestion('+q.id+')">✕ 删除</button></div></div>'+
+    '<div class="q-text">'+esc(q.question)+'</div>'+extra+'</li>';
+}
+
+function pageOptions(selected){
+  let opts = '<option value="">未归类</option>';
+	  for(let p=1;p<=19;p++){
+    const sel = p==selected?' selected':'';
+    const t = (slides.find(s=>s.page==p)||{title:''}).title;
+    opts += '<option value="'+p+'"'+sel+'>第'+p+'页 · '+t+'</option>';
+  }
+  return opts;
+}
+
+async function updatePage(qid, sel){
+  const page = sel ? parseInt(sel.value) : parseInt(event.target.previousElementSibling.value);
+  if(!page) return;
+  try{
+    const r = await fetch('/api/questions/update', {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id:qid, page:page})
+    });
+    const d = await r.json();
+    if(d.ok){
+      // 重新加载
+      await load();
+    } else {
+      alert('保存失败: '+d.message);
+    }
+  }catch(e){
+    alert('保存失败');
+  }
+}
+
+function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')}
+
+async function deleteQuestion(id){
+  if(!confirm('确定删除该问题？')) return;
+  try{
+    const r=await fetch('/api/questions/delete',{method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({id})});
+    const d=await r.json();
+    if(d.ok){ load(); }
+    else alert(d.message||'删除失败');
+  }catch(e){alert('网络错误')}
+}
+
+load();
+</script>
+</body>
+</html>
