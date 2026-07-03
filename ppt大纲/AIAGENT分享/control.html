@@ -543,7 +543,15 @@ function togglePollOverlay(){
 </div>
 
 <script>
-var TOTAL=21,cur=1;
+var TOTAL=20,cur=1;
+// 动态获取 PPT 实际页数
+fetch('/api/slides/total').then(function(r){return r.json();}).then(function(d){
+  TOTAL = d.total || 20;
+  document.getElementById('tp').textContent = TOTAL;
+  buildPageGrid();
+  go(1);
+}).catch(function(){});
+
 var ACT={1:{l:'显示问号',s:'显示问号',h:'隐藏问号'},2:{l:'展开答案',s:'展开答案',h:'收起答案'},4:{l:'展开卡片',s:'展开三阶段',h:'收起卡片'}};
 var CC=0;
 var _speechData = {};  // 从 speech.md 动态加载
@@ -644,21 +652,24 @@ function saveSpeech(){
 
 
 // 构建页码网格
-var g=document.getElementById('pg');
-for(var i=1;i<=TOTAL;i++){
-  var d=document.createElement('div');
-  d.className='page-dot'+(i===cur?' active':'');
-  d.textContent=i<=20?(i===5?'转':'P'+(i>5?i-1:i)):'附';
-  d.onclick=function(n){return function(){go(n);};}(i);
-  g.appendChild(d);
+function buildPageGrid(){
+  var g=document.getElementById('pg');
+  g.innerHTML='';
+  for(var i=1;i<=TOTAL;i++){
+    var d=document.createElement('div');
+    d.className='page-dot'+(i===cur?' active':'');
+    d.textContent='P'+i;
+    d.onclick=function(n){return function(){go(n);};}(i);
+    g.appendChild(d);
+  }
+  document.getElementById('tp').textContent=TOTAL;
 }
-document.getElementById('tp').textContent=20;
 
 function go(n){
   if(n<1||n>TOTAL)return;
   cur=n;
   document.querySelectorAll('.page-dot').forEach(function(d,i){d.className='page-dot'+(i+1===n?' active':'');});
-  document.getElementById('cp').textContent=n>20?'附':(n===5?'转':(n>5?n-1:n));
+  document.getElementById('cp').textContent='P'+n;
   upd(n);
   CC=0;
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:n})}).catch(function(e){console.error("go error:",e)});
@@ -719,7 +730,7 @@ function go(n){
 function upd(n){
   var s=_speechData[n];
   if(!s)return;
-  document.getElementById('sl').textContent=(n>20?'附':(n===5?'转':'P'+(n>5?n-1:n)))+' · '+s.t;
+  document.getElementById('sl').textContent='P'+n+' · '+s.t;
   document.getElementById('sc').innerHTML = s.c;
   var nx=_speechData[n+1];
   if(nx){
@@ -774,7 +785,6 @@ function cycleTheme(){
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,themeKey:Date.now()})}).catch(function(){});
 }
 
-go(1);
 </script>
 </body>
 </html>

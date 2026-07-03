@@ -15,8 +15,8 @@ body{line-height:1.35!important}
 .slide.v-center{justify-content:center}
 body .h1{font-size:clamp(80px,12vw,200px)!important}
 body .h2{font-size:clamp(56px,8vw,130px)!important}
-.slide h1,.slide h2,.slide h3,.slide h4{margin-bottom:4px}
-.slide .lede,.slide .kicker{margin-bottom:4px}
+body .h1{font-size:clamp(80px,12vw,200px)!important}
+body .h2{font-size:clamp(56px,8vw,130px)!important}
 body .lede{font-size:clamp(32px,5vw,52px)!important}
 .dim{color:var(--text-3);font-size:clamp(24px,3vw,38px);line-height:1.6}
 .mt-l{margin-top:16px!important}
@@ -129,7 +129,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <body>
 <div class="deck">
 <div class="deck-header">
-  <span>AI 真垃圾 · 分享会</span>
+  <span>重塑 AI 认知，教你落地用好 AI</span>
   <span>CM · 2026-07-07</span>
 </div>
 
@@ -257,13 +257,74 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 </section>
 
 <!-- ====== 6. PROMPT ENGINEERING ====== -->
-<section class="slide" data-title="提示词工程">
+<section class="slide" data-title="提示词工程 · 案例">
   <p class="kicker" style="margin-bottom:2px">CHAPTER 01 · PROMPT ENGINEERING</p>
   <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
   <p class="lede" style="margin-top:-20px!important;margin-bottom:8px">不是改怎么问，是教你怎么跟 AI 说话</p>
-  <div class="comp-grid mt-l" style="margin-top:8px">
-    <div class="comp-card comp-bad"><div class="ct">❌ 传统做法</div><p>"帮我做个PPT"→ AI 乱出一通，根本没法用</p></div>
-    <div class="comp-card comp-good"><div class="ct">✅ 正确做法</div><p>Trae 语音沟通 → 生成结构化 MD → 一键生成 PPT<br><b>本场分享会 PPT 就是这样做的！（元演示）</b></p></div>
+  <div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:8px;min-width:0">
+    <!-- 左边：传统做法 -->
+    <div style="flex:1;min-width:0;border:1px solid rgba(229,62,62,.2);border-radius:14px;overflow:hidden">
+      <div style="background:rgba(229,62,62,.1);padding:10px 16px;font-weight:700;color:#e53e3e;font-size:clamp(14px,1.4vw,18px);text-align:center">❌ 直接问 AI</div>
+      <div style="padding:14px;background:rgba(229,62,62,.02)">
+      <!-- 用户消息 -->
+      <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
+        <div style="background:#e53e3e;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我做个PPT</div>
+        <div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
+      </div>
+      <!-- AI回复 -->
+      <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px">
+        <img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px">
+        <div style="background:rgba(255,255,255,.05);padding:8px 14px;border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2)">
+          好的！我可以帮你做PPT。请告诉我：<br>1. 主题是什么？2. 需要多少页？<br>3. 有没有风格偏好？<br><br>如果你不确定，我也可以给你一个通用模板。
+        </div>
+      </div>
+      <div style="text-align:center;font-size:11px;color:var(--text-3);margin-top:4px">↑ 啥也没干，先问回来一堆</div>
+    </div>
+    <!-- 右边：正确做法 -->
+    <div style="flex:1;min-width:0;border:1px solid rgba(59,111,255,.2);border-radius:14px;overflow:hidden">
+      <div style="background:rgba(59,111,255,.1);padding:10px 16px;font-weight:700;color:#3b6fff;font-size:clamp(14px,1.4vw,18px);text-align:center">✅ Trae 语音沟通</div>
+      <div style="padding:14px 14px 14px 18px;background:rgba(59,111,255,.02)">
+      <!-- Trae语音消息 -->
+      <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:8px">
+        <img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px">
+        <div style="background:rgba(59,111,255,.08);padding:10px 14px;border-radius:12px 12px 12px 0;max-width:82%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">
+          <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px"><span>🎙️</span> <span style="font-weight:600;color:var(--text-1)">语音沟通完成</span></div>
+          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(255,255,255,.06);border-radius:6px">
+            <span>📄</span> <span style="color:#58a6ff">AI分享会.md</span>
+          </div>
+        </div>
+      </div>
+      <!-- 用户消息 -->
+      <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
+        <div style="background:#3b6fff;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我生成一个PPT</div>
+        <div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
+      </div>
+      <!-- Trae回复PPT -->
+      <div style="display:flex;align-items:flex-start;gap:6px">
+        <img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px">
+        <div style="background:rgba(59,111,255,.08);padding:8px;border-radius:12px 12px 12px 0;max-width:82%">
+          <div style="border:1px solid rgba(255,255,255,.1);border-radius:8px;overflow:hidden;background:var(--bg)">
+            <div style="background:linear-gradient(135deg,#1a1a2e,#16213e);padding:clamp(12px,1.5vw,20px);text-align:center">
+              <div style="font-size:clamp(18px,3vw,32px);font-weight:800;color:#fff">📊 PPT</div>
+              <div style="font-size:11px;color:#888;margin-top:2px">已生成 · 21页</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="text-align:center;font-size:11px;color:var(--text-3);margin-top:4px">↑ 拿到MD直接生成PPT，本场分享会就是这样做的</div>
+    </div>
+  </div>
+  </div>
+  <div class="notes">左边❌：帮我做个PPT，AI 瞎猜。右边✅：Trae 语音→MD→生成PPT。<b>本场分享会 PPT 就是这样做的。</b></div>
+</section>
+
+<!-- ====== 7. PROMPT RULES ====== -->
+<section class="slide" data-title="提示词工程 · 四规则">
+  <p class="kicker" style="margin-bottom:2px">四大工程 · CHAPTER 01</p>
+  <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
+  <p class="lede" style="margin-top:-20px!important;margin-bottom:8px">PROMPT ENGINEERING</p>
+  <div style="margin-bottom:12px;background:rgba(229,62,62,.08);border-left:3px solid #e53e3e;border-radius:0 8px 8px 0;padding:12px 18px;font-size:clamp(18px,2.2vw,28px);color:var(--text-1);font-weight:600">
+    💡 <strong style="color:#e53e3e">核心假设</strong>：相同的模型，通过不同的提问方式，可以获得质量差异巨大的结果
   </div>
   <div class="g2 mt-m">
     <div class="stack">
@@ -276,16 +337,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <div class="ca-card open" onclick="this.classList.toggle('open')"><div class="ch">🌱 种子故事 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">朋友问 AI 约会→太笼统→教他用结构问→方案完整。但过了几天又失败了——AI 推荐<b>烤肉</b>，那女孩是<b>素食主义者</b>。引出上下文工程。</div></div></div>
     </div>
   </div>
-  <div class="eco-bar"><div class="eco-row">
-    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-    <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="/ai/icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
-    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
-    <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="/ai/icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>通义千问</span>
-    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
-    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
-  </div></div>
-  <div class="notes">左边❌：帮我做个PPT，AI 瞎猜。右边✅：Trae 语音→MD→生成PPT。<b>本场分享会 PPT 就是这样做的。</b>四个规则：定角色·讲要求·给参考·设标准。种子故事：朋友问AI约会→教他用结构问→方案完整。但AI推荐烤肉，女孩是素食主义者。引出上下文工程。</div>
+  <div class="notes">四个规则：定角色·讲要求·给参考·设标准。种子故事：朋友问AI约会→教他用结构问→方案完整。但AI推荐烤肉，女孩是素食主义者。引出上下文工程。</div>
 </section>
 
 <!-- ====== 7. CONTEXT COMPARE ====== -->
