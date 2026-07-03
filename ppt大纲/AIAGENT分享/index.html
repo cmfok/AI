@@ -927,17 +927,17 @@ function toggleCard(el){el.classList.toggle('open')}
 })();
 </script>
 
-<div id="mdPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.92);z-index:99999;overflow-y:auto;padding:20px">
+<div id="mdPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.92);z-index:99999;padding:20px">
   <div style="max-width:860px;margin:clamp(30px,5vh,60px) auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
     <div style="display:flex;align-items:center;justify-content:space-between;background:#f0f0f0;padding:12px 18px;border-bottom:1px solid #e0e0e0">
       <div style="display:flex;align-items:center;gap:8px">
         <span style="font-size:20px">📄</span>
         <span style="color:#222;font-weight:600;font-size:15px">AI分享会.md</span>
       </div>
-      <button onclick="document.getElementById('mdPopup').style.display='none'" style="background:rgba(255,255,255,.08);border:none;color:#fff;font-size:18px;width:36px;height:36px;border-radius:8px;cursor:pointer">✕</button>
+      <button onclick="document.getElementById('mdPopup').style.display='none'" style="background:rgba(255,255,255,.08);border:none;color:#999;font-size:18px;width:36px;height:36px;border-radius:8px;cursor:pointer">✕</button>
     </div>
     <div style="display:flex">
-      <div id="mdPopupContent" style="flex:1;padding:clamp(14px,2vw,24px) clamp(16px,2vw,28px);color:#222;font-family:SF Mono,Menlo,Consolas,monospace;font-size:clamp(14px,1.4vw,17px);line-height:1.7;white-space:pre-wrap;overflow-x:auto">加载中...</div>
+      <div id="mdPopupContent" style="flex:1;padding:clamp(14px,2vw,24px) clamp(16px,2vw,28px);color:#222;font-family:SF Mono,Menlo,Consolas,monospace;font-size:clamp(14px,1.4vw,17px);line-height:1.7;white-space:pre-wrap;overflow-y:auto;overflow-x:auto;max-height:80vh">加载中...</div>
     </div>
   </div>
 <script>
