@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>提问 · AI 真垃圾</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif;background:#0d1117;color:#e6edf3}
+.app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto}
+.header{padding:14px 16px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.header h1{font-size:18px;font-weight:700;flex:1}
+.header .badge{background:rgba(255,45,85,.15);color:#ff2d55;font-size:11px;padding:2px 10px;border-radius:10px}
+.form-area{padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.form-area textarea{width:100%;padding:12px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.04);color:#e6edf3;font-size:14px;font-family:inherit;resize:none;min-height:80px;outline:none;transition:border-color .2s}
+.form-area textarea:focus{border-color:var(--accent,#ff2d55)}
+.form-area .row{display:flex;gap:8px;margin-top:8px}
+.form-area .row select{flex:1;padding:8px 12px;border:1px solid rgba(255,255,255,.1);border-radius:8px;background:rgba(255,255,255,.04);color:#e6edf3;font-size:13px;font-family:inherit;outline:none}
+.form-area .row select:focus{border-color:var(--accent-3,#00d4aa)}
+.form-area .row button{padding:8px 20px;border:none;border-radius:8px;background:var(--accent,#ff2d55);color:#fff;font-size:14px;font-weight:600;cursor:pointer;font-family:inherit;white-space:nowrap;transition:opacity .15s}
+.form-area .row button:active{opacity:.8}
+.categories{display:flex;gap:4px;padding:8px 16px;flex-wrap:wrap;border-bottom:1px solid rgba(255,255,255,.06)}
+.cat-btn{padding:4px 12px;border:1px solid rgba(255,255,255,.1);border-radius:12px;background:transparent;color:#8b949e;font-size:12px;cursor:pointer;transition:all .2s;font-family:inherit}
+.cat-btn.active{background:rgba(255,45,85,.15);color:#ff2d55;border-color:#ff2d55}
+.cat-btn:hover{border-color:rgba(255,255,255,.2)}
+.qa-list{flex:1;overflow-y:auto;padding:12px 16px}
+.qa-item{padding:12px 14px;border-radius:10px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);margin-bottom:8px}
+.qa-item .q{font-size:14px;line-height:1.5;margin-bottom:6px}
+.qa-item .meta{display:flex;gap:8px;font-size:11px;color:#6e7681;align-items:center}
+.qa-item .meta .cat-tag{padding:2px 8px;border-radius:8px;background:rgba(255,255,255,.06)}
+.qa-item .meta .time{color:#484f58}
+.qa-item .a{font-size:13px;color:#8b949e;margin-top:6px;padding-top:6px;border-top:1px solid rgba(255,255,255,.06);line-height:1.5}
+.empty-state{text-align:center;padding:60px 20px;color:#484f58}
+.empty-state .big{font-size:48px;margin-bottom:12px}
+.footer{padding:8px 16px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:8px;font-size:11px;color:#484f58}
+.footer a{color:#8b949e;text-decoration:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="header">
+    <h1>💬 提问</h1>
+    <span class="badge" id="q-count">0 个问题</span>
+  </div>
+
+  <div class="form-area">
+    <textarea id="q-input" placeholder="输入你的问题…\n例如：DeepSeek和GPT哪个更适合做数据清洗？" rows="3"></textarea>
+    <div class="row">
+      <select id="q-category">
+        <option value="模型">🎯 模型选择</option>
+        <option value="提示词">💬 提示词工程</option>
+        <option value="上下文">📚 上下文/知识库</option>
+        <option value="规训">🔧 规训工程</option>
+        <option value="循环">🔄 循环工程</option>
+        <option value="数据">🔒 数据隐私</option>
+        <option value="其他">📌 其他</option>
+      </select>
+      <button onclick="submitQuestion()">发送 →</button>
+    </div>
+  </div>
+
+  <div class="categories" id="cat-filter">
+    <button class="cat-btn active" data-cat="all" onclick="filterQA('all')">全部</button>
+    <button class="cat-btn" data-cat="模型" onclick="filterQA('模型')">🎯 模型</button>
+    <button class="cat-btn" data-cat="提示词" onclick="filterQA('提示词')">💬 提示词</button>
+    <button class="cat-btn" data-cat="上下文" onclick="filterQA('上下文')">📚 上下文</button>
+    <button class="cat-btn" data-cat="规训" onclick="filterQA('规训')">🔧 规训</button>
+    <button class="cat-btn" data-cat="循环" onclick="filterQA('循环')">🔄 循环</button>
+    <button class="cat-btn" data-cat="数据" onclick="filterQA('数据')">🔒 数据</button>
+  </div>
+
+  <div class="qa-list" id="qa-list">
+    <div class="empty-state">
+      <div class="big">💬</div>
+      <p>还没有问题</p>
+      <p style="font-size:12px;margin-top:8px">扫码或打开本页面提交问题</p>
+    </div>
+  </div>
+
+  <div class="footer">
+    <a href="index.html" target="_blank">📺 主屏幕</a>
+    <span>·</span>
+    <a href="control.html">🎮 控制台</a>
+    <span>·</span>
+    <a href="listen.html">🎤 监听</a>
+  </div>
+</div>
+
+<script>
+let questions = [];
+let currentFilter = 'all';
+
+/* 提交问题 */
+function submitQuestion(){
+  const input = document.getElementById('q-input');
+  const cat = document.getElementById('q-category').value;
+  const text = input.value.trim();
+  if(!text) return;
+  
+  const q = {
+    id: Date.now(),
+    text: text,
+    category: cat,
+    time: new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}),
+    answer: getAutoAnswer(text, cat)
+  };
+  
+  questions.unshift(q);
+  input.value = '';
+  renderQA();
+  
+  // 通过BroadcastChannel通知主屏幕
+  try{
+    const bc = new BroadcastChannel('ppt-ctrl');
+    bc.postMessage({type:'question',q:text,cat:cat});
+  }catch(e){}
+}
+
+/* 自动匹配预回答 */
+function getAutoAnswer(text, cat){
+  const t = text.toLowerCase();
+  
+  if(t.includes('deepseek')||t.includes('gpt')||t.includes('claude')||t.includes('kimi')||t.includes('模型')||t.includes('选择')){
+    return '参考 Slide 5 模型对比表：DeepSeek 擅长推理/代码，GPT-4o 全能多模态，Claude 长文/安全，Kimi 超长上下文，豆包日常办公。选择取决于场景需求。';
+  }
+  if(t.includes('提示词')||t.includes('prompt')||t.includes('怎么问')){
+    return '参考 Slide 7：提示词工程四部曲——定角色、讲要求、给参考、设标准。这是让AI输出质量提升最快速的方法。';
+  }
+  if(t.includes('知识库')||t.includes('搭建')||t.includes('obsidian')){
+    return '参考 Slide 9：从青铜(MD+Trae)→白银(+Obsidian)→黄金(+向量模型)，逐步升级。';
+  }
+  if(t.includes('规训')||t.includes('工具')||t.includes('脚本')){
+    return '参考 Slide 12-13：规训工程六大组件（工具调用/约束/校验/状态/容错/观测）。脚本给确定性，工作流给灵活性。';
+  }
+  if(t.includes('循环')||t.includes('迭代')||t.includes('loop')||t.includes('优化')){
+    return '参考 Slide 15-16：循环工程 = 做→查→修→再输出。Level 1 自查 → Level 2 复盘 → Level 3 会诊 → Level 4 绩效。';
+  }
+  if(t.includes('隐私')||t.includes('安全')||t.includes('数据')||t.includes('api')){
+    return '参考 Slide 18：不同场景不同解法——用API防训练、用Trae本地处理、选隐私模式、私有化部署。';
+  }
+  if(t.includes('对账')||t.includes('运费')||t.includes('财务')){
+    return '参考 Slide 11：Excel手动对账8小时→AI自动化3.4秒。关键变量：规训工程的自动化脚本。';
+  }
+  if(t.includes('简历')||t.includes('招聘')||t.includes('面试')){
+    return '参考 Slide 10：只用模型+提示词=通用分析；套规训工程六件套=精准匹配+多维度评分。';
+  }
+  if(t.includes('成本')||t.includes('费用')||t.includes('token')||t.includes('多少钱')){
+    return '参考 Slide 20 附录：DeepSeek 0.5/2，GPT-4o 2.5/10，Claude 4 3/15（每百万Token，输入/输出）。实际成本取决于你的使用量。';
+  }
+  return '好问题！建议参考分享中对应章节的内容。你也可以扫码加入交流群深入讨论。';
+}
+
+/* 渲染问题列表 */
+function renderQA(){
+  const list = document.getElementById('qa-list');
+  const filtered = currentFilter === 'all' ? questions : questions.filter(q => q.category === currentFilter);
+  
+  document.getElementById('q-count').textContent = questions.length + ' 个问题';
+  
+  if(filtered.length === 0){
+    list.innerHTML = `<div class="empty-state"><div class="big">💬</div><p>暂无 ${
+      currentFilter === 'all' ? '' : '此类'
+    }问题</p></div>`;
+    return;
+  }
+  
+  list.innerHTML = filtered.map(q => `
+    <div class="qa-item">
+      <div class="q">${escapeHtml(q.text)}</div>
+      <div class="meta">
+        <span class="cat-tag">${q.category}</span>
+        <span class="time">${q.time}</span>
+      </div>
+      <div class="a">💡 ${escapeHtml(q.answer)}</div>
+    </div>
+  `).join('');
+}
+
+function escapeHtml(str){
+  const d=document.createElement('div');d.textContent=str;return d.innerHTML;
+}
+
+/* 按分类筛选 */
+function filterQA(cat){
+  currentFilter = cat;
+  document.querySelectorAll('.cat-btn').forEach(b=>{
+    b.classList.toggle('active', b.dataset.cat === cat);
+  });
+  renderQA();
+}
+
+/* 示例问题 */
+setTimeout(() => {
+  if(questions.length === 0){
+    questions.push({
+      id: 1, text: 'DeepSeek和GPT-4o哪个更好？', category: '模型',
+      time: new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}),
+      answer: '参考 Slide 5 模型对比表：DeepSeek擅长推理/代码，GPT-4o多模态全能。选择取决于你的使用场景。'
+    });
+    questions.push({
+      id: 2, text: 'AI能完全取代人工对账吗？', category: '规训',
+      time: new Date().toLocaleTimeString('zh-CN',{hour:'2-digit',minute:'2-digit'}),
+      answer: '参考 Slide 11：AI对账从8小时缩短到3.4秒，但需要规训工程六件套保障准确性。人工复核仍是必要的。'
+    });
+    renderQA();
+  }
+}, 500);
+
+console.log('💬 提问页已就绪');
+</script>
+</body>
+</html>

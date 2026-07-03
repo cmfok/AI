@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+<title>控制台 · AI 真垃圾</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Noto Sans SC",sans-serif;background:#0d1117;color:#e6edf3}
+.ctrl-app{display:flex;flex-direction:column;height:100%;max-width:480px;margin:0 auto}
+.ctrl-header{padding:14px 16px 8px;display:flex;align-items:center;gap:10px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ctrl-header h1{font-size:18px;font-weight:700;flex:1}
+.ctrl-status{font-size:11px;color:#8b949e;display:flex;gap:6px;align-items:center}
+.ctrl-status .dot{width:8px;height:8px;border-radius:50%;display:inline-block}
+.dot-green{background:#3fb950}.dot-gray{background:#484f58}
+.ctrl-nav{display:flex;gap:8px;padding:12px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.ctrl-nav button{flex:1;padding:12px;border:none;border-radius:10px;font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;transition:all .15s;touch-action:manipulation}
+.btn-prev{background:rgba(255,255,255,.06);color:#e6edf3}.btn-prev:active{background:rgba(255,255,255,.12)}
+.btn-next{background:var(--accent,#ff2d55);color:#fff}.btn-next:active{opacity:.8}
+.ctrl-grid{padding:8px 16px;border-bottom:1px solid rgba(255,255,255,.08)}
+.grid-title{font-size:11px;color:#8b949e;letter-spacing:.1em;margin-bottom:6px}
+.grid-cols{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.grid-cols button{padding:8px 0;border:1px solid rgba(255,255,255,.1);border-radius:6px;background:transparent;color:#8b949e;font-size:13px;cursor:pointer;transition:all .2s;font-family:inherit}
+.grid-cols button.active{background:var(--accent,#ff2d55);color:#fff;border-color:var(--accent,#ff2d55)}
+.grid-cols button.done{color:#3fb950;border-color:#3fb950}
+.ctrl-cards{flex:1;overflow-y:auto;padding:12px 16px}
+.card-section{margin-bottom:12px}
+.card-section .cs-title{font-size:12px;color:#8b949e;margin-bottom:6px;display:flex;gap:8px;align-items:center}
+.card-section .cs-title .badge{font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.06)}
+.card-btn{display:block;width:100%;padding:12px 14px;border:1px solid rgba(255,255,255,.1);border-radius:10px;background:rgba(255,255,255,.04);cursor:pointer;text-align:left;font-family:inherit;color:#e6edf3;font-size:14px;margin-bottom:6px;transition:all .2s;touch-action:manipulation}
+.card-btn:active{background:rgba(255,255,255,.1);border-color:var(--accent,#ff2d55)}
+.card-btn .cb-icon{display:inline-block;width:24px;text-align:center;margin-right:8px}
+.card-btn .cb-state{float:right;font-size:11px;color:#8b949e}
+.card-btn.open{border-color:var(--accent-3,#00d4aa);background:rgba(0,212,170,.08)}
+.ctrl-notes{padding:12px 16px;border-top:1px solid rgba(255,255,255,.08)}
+.notes-label{font-size:10px;color:#6e7681;text-transform:uppercase;letter-spacing:.12em;margin-bottom:4px}
+.notes-text{font-size:13px;line-height:1.6;color:#8b949e;max-height:80px;overflow-y:auto}
+.ctrl-footer{padding:8px 16px;border-top:1px solid rgba(255,255,255,.06);display:flex;gap:8px;font-size:11px;color:#484f58}
+.ctrl-footer a{color:#8b949e;text-decoration:none}
+.nowrap{white-space:nowrap}
+</style>
+</head>
+<body>
+<div class="ctrl-app">
+  <div class="ctrl-header">
+    <h1>🎮 控制台</h1>
+    <div class="ctrl-status"><span class="dot dot-green" id="conn-dot"></span><span id="conn-label">已连接</span></div>
+  </div>
+
+  <div class="ctrl-nav">
+    <button class="btn-prev" id="btn-prev" onclick="sendGoto(cur-1)">◀ 上一页</button>
+    <button class="btn-next" id="btn-next" onclick="sendGoto(cur+1)">下一页 ▶</button>
+  </div>
+
+  <div class="ctrl-grid">
+    <div class="grid-title">📄 页码跳转</div>
+    <div class="grid-cols" id="page-grid"></div>
+  </div>
+
+  <div class="ctrl-cards" id="card-actions">
+    <div class="card-section">
+      <div class="cs-title">🃏 卡片展开 <span class="badge">控制台遥控</span></div>
+      <button class="card-btn" data-card="s2-answer" onclick="toggleCard(this,'s2-answer','slide2-answer')">
+        <span class="cb-icon">👽</span> Slide 2 · 外星人答案 <span class="cb-state">收起</span>
+      </button>
+      <button class="card-btn" data-card="s4-limits" onclick="toggleCard(this,'s4-limits','slide4-limits')">
+        <span class="cb-icon">⚠️</span> Slide 4 · 模型局限 <span class="cb-state">收起</span>
+      </button>
+      <button class="card-btn" data-card="s16-bottom" onclick="toggleCard(this,'s16-bottom','slide16-bottom')">
+        <span class="cb-icon">🔄</span> Slide 16 · 循环详情 <span class="cb-state">收起</span>
+      </button>
+    </div>
+  </div>
+
+  <div class="ctrl-notes">
+    <div class="notes-label">📝 当前页备注</div>
+    <div class="notes-text" id="notes-display">—</div>
+  </div>
+
+  <div class="ctrl-footer">
+    <span class="nowrap" id="page-indicator">1 / 20</span>
+    <span>·</span>
+    <a href="index.html" target="_blank">📺 主屏幕</a>
+    <span>·</span>
+    <a href="listen.html">🎤 监听</a>
+    <span>·</span>
+    <a href="qa.html">💬 提问</a>
+  </div>
+</div>
+
+<script>
+let cur = 0;
+const TOTAL = 20;
+const TITLES = [
+  '封面','外星人的语言','反认知','模型','模型对比表',
+  '四大工程总览','提示词工程','上下文工程','知识库搭建','招聘简历',
+  '运费对账','规训工程','脚本还是工作流','生日营销','规训→循环',
+  '循环工程','个人AI vs 企业AI','数据隐私','落地Checklist','互动答疑'
+];
+const NOTES = [
+  '欢迎来到今天的分享。开场先问大家一个问题：你们觉得 AI 厉害吗？',
+  '这个游戏告诉我们：AI 的核心——就是猜。给它上文，猜最合理的下一个字。',
+  '它不是真的在思考，它只是在做数学题——算概率，猜哪个字最可能出现在这里。',
+  '模型训练三阶段：先海量预训练→再指令微调→最后RLHF对齐。',
+  '模型选择没有绝对好坏，关键看场景。',
+  '既然AI只是个猜字系统，那我们就要想办法让它猜得更准。',
+  '种子故事：朋友问AI约会建议，问得太笼统。我教他用结构问。',
+  '上下文工程的核心：给AI喂对的数据。不只是提问技巧。',
+  '知识库不需要一步到位。从最简的MD文件开始，逐步升级。',
+  '现场演示环节：打开HR面试工具，展示用规训工程后的简历分析效果。',
+  '从Excel手动对账到AI自动化，核心就是规训工程。',
+  '规训工程就是给AI套上缰绳。让它不仅能说会道，还能真正干活。',
+  '脚本给确定性，工作流给灵活性。关键看业务场景选择。',
+  '生日营销是规训工程的最佳实践。每个节点都有对应组件保障。',
+  '有了规训让你执行，有了循环让你迭代。缺一不可。',
+  '循环工程是四大工程的终极形态。做→查→修→再输出，持续迭代。',
+  '企业和个人的AI应用场景完全不同，工程需求也不同。',
+  '数据隐私是AI落地的安全底线，每个场景都有对应的解决方案。',
+  '落地不是终点，是起点。用Checklist确保每个环节都到位。',
+  '感谢大家的时间！有任何问题欢迎交流。'
+];
+
+/* 初始化页码网格 */
+(function(){
+  const g=document.getElementById('page-grid');
+  for(let i=0;i<TOTAL;i++){
+    const b=document.createElement('button');
+    b.textContent=i+1;b.dataset.idx=i;
+    b.onclick=()=>sendGoto(i);
+    g.appendChild(b);
+  }
+})();
+
+/* 更新UI */
+function updateUI(n){
+  cur=Math.max(0,Math.min(TOTAL-1,n));
+  document.getElementById('page-indicator').textContent=(cur+1)+' / '+TOTAL;
+  document.getElementById('notes-display').textContent=NOTES[cur]||'—';
+  document.querySelectorAll('.grid-cols button').forEach((b,i)=>{
+    b.classList.toggle('active',i===cur);
+    b.classList.toggle('done',i<cur);
+  });
+}
+
+/* 发送翻页指令到主屏幕 */
+function sendGoto(n){
+  n=Math.max(0,Math.min(TOTAL-1,n));
+  updateUI(n);
+  try{window.opener&&window.opener.postMessage({type:'ppt-goto',idx:n},'*')}catch(e){}
+  try{bc.postMessage({type:'goto',idx:n})}catch(e){}
+}
+
+/* 切换卡片展开 */
+function toggleCard(el,id,cardId){
+  el.classList.toggle('open');
+  const state=el.classList.contains('open')?'展开':'收起';
+  el.querySelector('.cb-state').textContent=state;
+  try{bc.postMessage({type:'card',id:cardId})}catch(e){}
+  try{window.opener&&window.opener.postMessage({type:'ppt-card',id:cardId},'*')}catch(e){}
+}
+
+/* BroadcastChannel连接主屏幕 */
+let bc;
+try{
+  bc=new BroadcastChannel('ppt-ctrl');
+  bc.onmessage=function(e){
+    if(e.data&&e.data.type==='goto')updateUI(e.data.idx);
+    if(e.data&&e.data.type==='sync')updateUI(e.data.idx);
+  };
+}catch(e){bc=null}
+
+/* 尝试通过opener同步 */
+try{
+  if(window.opener){
+    window.opener.postMessage({type:'ctrl-ready'},'*');
+    window.addEventListener('message',e=>{
+      if(e.data&&e.data.type==='ppt-sync')updateUI(e.data.idx);
+    });
+  }
+}catch(e){}
+
+/* 初始显示 */
+updateUI(0);
+
+console.log('🎮 控制台已就绪，连接频道: ppt-ctrl');
+</script>
+</body>
+</html>

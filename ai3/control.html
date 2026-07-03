@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>控制台 · AI 真垃圾</title>
+<style>
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0a0a12;--card:rgba(255,255,255,.05);--border:rgba(255,255,255,.08);
+  --text:#f5f5f7;--dim:rgba(245,245,247,.52);--accent:#ff5a36;--accent-2:#ff8c5a;--green:#2e9d5e;
+  --red:#e53e3e;--orange:#e87722;--purple:#9b59b6;
+  --grad:linear-gradient(120deg,#ff5a36 0%,#ff8c5a 60%,#ffb36b 100%);
+  --radius:14px;
+  --sans:'Inter','Noto Sans SC',-apple-system,sans-serif;
+  --mono:'JetBrains Mono',monospace;
+}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);padding:0;overflow-x:hidden}
+/* ── 顶部固定区 ── */
+.sticky{position:sticky;top:0;z-index:100;background:var(--bg);padding:12px 12px 0}
+.top-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;margin-bottom:8px}
+.top-bar .left{display:flex;align-items:center;gap:8px}
+.top-bar .info{font-size:14px;color:var(--dim)}
+.top-bar .info strong{color:var(--text);font-size:20px}
+.top-bar .right{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--dim)}
+.top-bar .right .dot{width:8px;height:8px;border-radius:50%;background:var(--green);display:inline-block;transition:background .3s}
+.top-bar .right .dot.offline{background:var(--red)}
+/* ── 页面网格 ── */
+.page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(40px,1fr));gap:4px;margin-bottom:8px}
+.page-dot{padding:7px 0;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.02);font-size:11px;color:var(--dim);text-align:center;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;user-select:none}
+.page-dot.active{background:var(--accent);border-color:var(--accent);color:#fff}
+.page-dot:active{transform:scale(.95)}
+/* ── 操作按钮区 ── */
+.actions{display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap;min-height:36px}
+.act-btn{padding:8px 14px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--text);font-size:12px;font-weight:500;cursor:pointer;transition:all .2s;-webkit-tap-highlight-color:transparent;white-space:nowrap}
+.act-btn:active{background:rgba(255,255,255,.1)}
+.act-btn.on{border-color:var(--green);background:rgba(35,134,54,.1);color:var(--green)}
+.act-btn.step{border-color:var(--accent);background:rgba(31,111,235,.08);color:#6cb6ff}
+/* ── 锁定行 ── */
+.lock-row{display:flex;gap:6px;margin-bottom:8px;align-items:center}
+.lock-btn{padding:6px 12px;border-radius:8px;border:1px solid var(--border);background:rgba(255,255,255,.04);color:var(--dim);font-size:12px;cursor:pointer;transition:all .2s}
+.lock-btn.locked{border-color:var(--orange);background:rgba(210,153,34,.1);color:var(--orange)}
+.lock-hint{font-size:11px;color:var(--dim)}
+/* ── 滚动区 ── */
+.scroll{overflow-y:auto;padding:0 12px 90px;max-height:calc(100vh - 200px);-webkit-overflow-scrolling:touch}
+/* ── 演讲稿卡片 ── */
+.speaker-panel{background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:8px}
+.speaker-panel .sl{font-size:11px;color:var(--dim);font-family:var(--mono);margin-bottom:8px;letter-spacing:.5px}
+.speaker-panel .sc{font-size:15px;line-height:1.8;color:#d4d4d4;white-space:pre-wrap;word-break:break-word}
+.speaker-panel .sc strong{color:var(--text)}
+/* ── 下一页预览 ── */
+.next-prev{background:rgba(255,255,255,.02);border:1px solid rgba(139,148,158,.08);border-radius:10px;padding:12px;margin-bottom:8px;opacity:.7}
+.next-prev .nl{font-size:10px;color:var(--dim);font-family:var(--mono);margin-bottom:4px}
+.next-prev .nc{font-size:12px;line-height:1.5;color:var(--dim);white-space:pre-wrap}
+/* ── 底部导航 ── */
+.bottom-nav{position:fixed;bottom:16px;left:12px;right:12px;display:flex;gap:8px;z-index:200;max-width:600px;margin:0 auto}
+.bn{flex:1;padding:14px 0;border-radius:10px;border:none;font-size:15px;font-weight:600;cursor:pointer;text-align:center;-webkit-tap-highlight-color:transparent;transition:transform .1s}
+.bn:active{transform:scale(.97)}
+.bp{background:#21262d;color:var(--text);border:1px solid rgba(139,148,158,.2)}
+.bnx{background:var(--green);color:#fff}
+/* ── 响应式 ── */
+@media(max-width:480px){
+  .page-grid{grid-template-columns:repeat(auto-fill,minmax(34px,1fr))}
+  .page-dot{padding:6px 0;font-size:10px}
+  .speaker-panel .sc{font-size:14px}
+}
+</style>
+</head>
+<body>
+<div class="sticky">
+  <!-- 顶部信息栏 -->
+  <div class="top-bar">
+    <div class="left"><div class="info">🎙 <strong id="cp">1</strong> / <span id="tp">20</span></div></div>
+    <div class="right"><span class="dot" id="syncDot"></span> <span id="syncText">连接中…</span></div>
+  </div>
+  <!-- 页面网格跳转 -->
+  <div class="page-grid" id="pg"></div>
+  <!-- 动作按钮（按幻灯片动态显示） -->
+  <div class="actions" id="actBox" style="display:none"></div>
+  <!-- 翻页锁定 -->
+  <div class="lock-row">
+    <button class="lock-btn" id="lockBtn">🔓 翻页已解锁</button>
+    <span class="lock-hint">锁定后展示页不响应翻页</span>
+  </div>
+  <!-- 语音控制 + 快速操作 -->
+  <div style="display:flex;gap:6px;margin-bottom:8px;flex-wrap:wrap">
+    <button class="act-btn" id="voiceBtn" style="border-color:var(--red);color:var(--red)">🎤 启动语音识别</button>
+  </div>
+</div>
+
+<!-- 滚动区：演讲稿 -->
+<div class="scroll">
+  <div class="speaker-panel">
+    <div class="sl" id="sl">P1 · 封面</div>
+    <div class="sc" id="sc">加载中...</div>
+  </div>
+  <div class="next-prev">
+    <div class="nl">⏭ 下一页</div>
+    <div class="nc" id="nc">—</div>
+  </div>
+</div>
+
+<!-- 底部翻页按钮 -->
+<div class="bottom-nav">
+  <button class="bn bp" id="bP">← 上一页</button>
+  <button class="bn bnx" id="bN">下一页 →</button>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+// 配置
+// ══════════════════════════════════════════════════════════════
+const TOTAL = 20;
+let cur = 1;
+let locked = false;
+
+// 每个幻灯片的标题（用于显示）
+const TITLES = {
+  1:'封面', 2:'外星人的语言', 3:'反认知·猜字系统', 4:'模型',
+  5:'模型对比表', 6:'四大工程总览', 7:'提示词工程', 8:'上下文工程',
+  9:'知识库搭建', 10:'招聘简历', 11:'运费对账', 12:'规训工程',
+  13:'脚本vs工作流', 14:'生日营销', 15:'递进对比', 16:'循环工程',
+  17:'个人vs企业AI', 18:'数据隐私', 19:'Checklist+工具包', 20:'互动答疑'
+};
+
+// 每个幻灯片的动作定义
+// type: 'toggle'=单按钮切换, 'step'=步进按钮, 'tlc'=多级别切换
+const ACTIONS = {
+  2:  { type:'toggle', btn:'▶ 展开答案', btnOn:'⏸ 收起答案',
+        msg: () => ({ type:'expand', id:'card2', open: !actState.s2open }),
+        stateKey:'s2open', init:false },
+  4:  { type:'step', steps:['展开阶段②','展开阶段③','展示局限','收起全部'],
+        msg: (step) => {
+          if(step===0) return { type:'expand', id:'card4a', open:true };
+          if(step===1) return { type:'expand', id:'card4b', open:true };
+          if(step===2) return { type:'expand', id:'card4lim', open:true };
+          return [{ type:'expand', id:'card4a', open:false }, { type:'expand', id:'card4b', open:false }, { type:'expand', id:'card4lim', open:false }];
+        }},
+  10:  { type:'toggle', btn:'▶ 打开简历演示', btnOn:'⏸ 关闭演示',
+        msg: () => ({ type:'expand', id:'modal10', open: !actState.s10open }),
+        stateKey:'s10open', init:false },
+  8:  { type:'tlc', levels:['普通提问','+提示词工程','+上下文工程'],
+        prefix:'tlc8', msg: (lv) => ({ type:'tlc', id:'tlc8', level: lv }) },
+  15: { type:'tlc', levels:['只有规训','+循环工程'],
+        prefix:'tlc15', msg: (lv) => ({ type:'tlc', id:'tlc15', level: lv }) },
+  16: { type:'step', steps:['展开①循环流程','展开②AI没有眼睛','展开③多Agent并行','收起全部'],
+        msg: (step) => {
+          if(step===0) return { type:'expand', id:'card16a', open:true };
+          if(step===1) return { type:'expand', id:'card16b', open:true };
+          if(step===2) return { type:'expand', id:'card16c', open:true };
+          return [{ type:'expand', id:'card16a', open:false }, { type:'expand', id:'card16b', open:false }, { type:'expand', id:'card16c', open:false }];
+        }}
+};
+
+// 动作状态
+let actState = { s2open:false, s10open:false, step4:0, tlc8:0, tlc15:0 };
+
+// ══════════════════════════════════════════════════════════════
+// 演讲稿数据
+// ══════════════════════════════════════════════════════════════
+const SCRIPTS = {
+1: `大家好，今天我的分享主题叫 **"AI 真垃圾"**。
+
+为什么取这个名字？**两个意思。**
+
+**第一个意思**——觉得它无所不能，实际用起来**各种不靠谱**。你会觉得：**AI 真垃圾！**
+
+**第二个意思**——用久了，你知道它垃圾在哪，也就知道怎么**规训**它了。
+
+我最核心的关切就是：**如何让 AI 可控地输出我想要的结果。**`,
+
+2: `先跟大家玩个小游戏。
+
+**← ↑ → ↓ ←**  猜下一个：**↑ → ？**
+
+答案是 **↓**。**左上右下，顺时针转圈**。
+
+你刚才做的这件事，就是**AI 每天都在做的事**——根据上文，预测最合理的下一个东西。`,
+
+3: `**AI 的核心——就是个猜字系统。**
+
+它**没有意识，没有理解**，算概率猜答案。
+
+给你一段上文，算概率，猜最合理的字/词。简单到令人不安的机制，就是所有「智能」的起点。`,
+
+4: `**豆包 · ChatGPT · Gemini · 千问 · DeepSeek**……都是**模型**。
+
+**三阶段训练**：
+① 预训练 → 海量文本，猜下一个词
+② 指令微调 → 用问答对教会对话格式
+③ RLHF → 人类打分排序，五个维度
+
+**副作用**：过度优化语气 → 模型变**"舔狗"**
+
+**三个局限**：
+① **幻觉** — 天气案例：正确的调API，幻觉的直接猜
+② **知识截止** — 父亲节案例：训练数据只到2025年
+③ **无真实理解** — 钟表10:10：复现训练数据里的规律`,
+
+5: `**模型对比表**（备用页）
+
+当观众问"该用哪个模型"时翻到这页。
+
+DeepSeek → 推理强 | 千问 → 中文理解强
+Kimi → 超长上下文 | GLM-4 → 工具调用
+豆包 → 日常对话 | ChatGPT → 通用综合`,
+
+6: `吐槽：**AI 真垃圾**——猜字 · 幻觉 · 知识截止 · 无真实理解。
+
+**但是！** 学会**正确的打开方法**，就能变**生产力工具**。
+
+四大工程：
+**① 提示词工程** — 告诉 AI 输出什么结构
+**② 上下文工程** — 给 AI 背景信息
+**③ 规训工程** — 给 AI 套上缰绳
+**④ 循环工程** — 让 AI 自主循环执行
+
+递进关系：提示词（能用）→ 上下文（用对）→ 规训（持续用）→ 循环（自动用）`,
+
+7: `**左边❌**："帮我做个PPT" → AI 瞎猜。
+
+**右边✅**：Trae 语音沟通 → MD → 生成 PPT（元演示——你们现在看到的就是这样做的）。
+
+**揭晓四部曲**：
+① 定角色 — 先说清楚身份
+② 讲要求 — 明确交付物格式
+③ 给参考 — 给模板照着写
+④ 设标准 — 划定范围
+
+**种子故事**：朋友问 AI 约会 → 太笼统 → 教他用结构问 → 方案有骨架了 → 过几天又来了：AI 推荐烤肉，女孩是素食主义者！
+
+→ 不是改指令，是**把背景资料喂给 AI**`,
+
+8: `**三级别对比**（控制台切换三张卡片）：
+
+**🥉 普通提问**：「帮我规划云南5天4夜。」→ 通用模板
+
+**🥈 +提示词工程**：「按每日行程/住宿/费用/注意事项的结构输出。」→ 结构清晰，内容通用
+
+**🥇 +上下文工程**：把一家三口信息写成文件 → AI 直接推荐昆明+抚仙湖，避开了丽江
+
+**揭晓三个 STEP**：
+① 可迁移 — 知识库属于你，换模型不用重新喂
+② 可生长 — AI 不断往里填充新内容
+③ 有记忆 — 第一次去过的地方不会重复推荐
+
+💡 **上下文工程最重要的是——知识库**`,
+
+9: `知识库不是一次性建好的，而是**慢慢长出来的**。三个层级：
+
+🥉 **青铜**：MD + Trae → 零门槛，先积累
+🥈 **白银**：MD + Trae + Obsidian → 能搜能管
+🥇 **黄金**：+ 向量模型/插件 → 语义搜索，智能化
+
+先跑起来最重要。`,
+
+10: `**左边❌**——只用模型+提示词 → 通用分析，不够精准
+
+**右边✅**——套**规训工程六件套**：
+① 工具调用 → 读 JD 文档和评分标准
+② 约束安全 → 评分范围、不越权
+③ 验证校验 → 分数异常自动标记
+④ 状态管理 → 结果写外部文件
+⑤ 错误处理 → 失败自动重试
+⑥ 可观测性 → 评分有来源依据
+
+**关键变量：有没有规训工程给 AI 套上缰绳**`,
+
+11: `**左边❌**——Excel 手工算，半天还怕算错
+
+**右边✅**——脚本自动化：**1秒零误差**
+ERP 读取 → 重量计算 → 地址映射 → 报价档位 → 首重续重 → ✅ 出结果
+
+**关键变量：有没有规训工程给 AI 套上自动化脚本**`,
+
+12: `**AI 真垃圾**——很多时候不是 AI 的问题，是**没给它手脚**，**没套缰绳**。
+
+**规训工程就是手脚和缰绳。**
+
+**六大组件**：
+🔧 工具调用 · 🛡 约束安全 · ✅ 验证校验
+📦 状态管理 · 🔄 错误处理 · 📊 可观测性
+
+💡 **规训工程最重要的是——脚本和工作流**`,
+
+13: `先搞清楚你的需求：
+
+**确定性结果**（错了不行）→ 🐍 脚本（Python）
+**开放性流程**（无标准答案）→ 🤖 AI 工作流
+
+三种实现方式：
+🐍 **脚本** — Python，AI 可以帮你写
+🔗 **固定工作流** — 扣子 Coze / Dify，拖拽完成
+🤖 **AI 工作流** — Trae / Qoder / Claude Code`,
+
+14: `真实案例：**变现400万+**
+
+用户 → 小程序 → 数据库 → AI 处理 → 分析匹配 → 客服 → 收到礼品 → 复购下单 → 发货 → 💰 进公司口袋
+
+每个节点都标注了规训组件：🔧🛠✅📦🔄📊`,
+
+15: `**递进对比**（控制台切换两张卡片）：
+
+**❌ 只有规训工程**：单次执行，做完就完了。超预算不会自己回头改。
+
+**✅ 加循环工程**：做 → 查 → 修 → 再输出，**直到满意**。`,
+
+16: `**AI 为什么垃圾？做一遍就完了。**
+
+**循环工程就是逼它再做一遍。**
+
+**四部曲**：
+LEVEL 01 · 🔍 自查 — AI 做完先审一遍
+LEVEL 02 · 💭 复盘 — 写出分析过程和判断标准
+LEVEL 03 · 👥 会诊 — 多个 AI 各自分析→对比取优
+LEVEL 04 · 📊 绩效 — 打回改进→AI 记住偏好→更准
+
+**底部三栏**（控制台分步展开）：
+① 循环流程 — 用户设定目标→引导提问→循环执行→达成
+② AI 没有眼睛 — 代码能检查，视觉审美做不了→得人把关
+③ 多 Agent 并行 — 从串行到并行→实时通讯对齐→指数级提升`,
+
+17: `**个人 AI**：做PPT、写文案、查资料 → 提示词+上下文就够了 → 错了 Ctrl+Z → 核心：提效
+
+**企业 AI**：对账、简历筛选、生日营销 → 四大工程全得上 → 错了就是钱 → 核心：可控+变现
+
+**企业 AI 必须走循环工程**`,
+
+18: `**数据隐私**——你跟 AI 说的那些话、传的那些文件，去哪了？
+
+① 在豆包网页上问问题 → **用 API**（默认不用于训练）
+② 上传文件让 AI 分析 → **用 Trae**（本地处理）
+③ 在 App 上聊工作机密 → **选隐私模式**
+④ 复制粘贴公司数据 → **用 API 或企业版**
+⑤ 公司多人共用账号 → **一人一账号+权限管理**
+
+🅿️ **Pro：私有化部署** — 数据完全不离开你的网络`,
+
+19: `**Checklist**：
+明确场景 → 选模型 → 搭知识库 → 设计提示词 → 配置规训 → 评估隐私 → 搭建工作流 → 循环优化
+
+**配套工具包（三层）**：
+第一层：API Key — DeepSeek / 通义千问 / SiliconFlow / OpenRouter
+第二层：本地工具 — Trae / Qoder / Claude Code / Codex
+第三层：知识库 — Obsidian / 飞书文档 / Dify`,
+
+20: `**AI —— 当你不会用它的时候，他真的是垃圾。**
+**当你学会用它的时候，就能变废为宝。**
+**厉害的不是AI，是人类的脑子。**
+
+谢谢大家。
+
+预留 10 分钟自由提问。附录：模型对比表 / Token 费用`
+};
+
+// ══════════════════════════════════════════════════════════════
+// BroadcastChannel 通信
+// ══════════════════════════════════════════════════════════════
+let bc;
+try { bc = new BroadcastChannel('ai3-control'); } catch(e) {}
+let connected = false;
+
+if (bc) {
+  bc.onmessage = e => {
+    const d = e.data;
+    if (d.type === 'current') {
+      connected = true;
+      updateSync(true);
+      // 如果展示页报告的当前页与控制台不同，同步过来
+      if (d.slide !== cur) {
+        cur = d.slide;
+        updateUI();
+      }
+    }
+  };
+}
+
+function send(msg) {
+  if (!bc) return;
+  if (Array.isArray(msg)) {
+    msg.forEach(m => bc.postMessage(m));
+  } else {
+    bc.postMessage(msg);
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// UI 更新
+// ══════════════════════════════════════════════════════════════
+function updateUI() {
+  // 页码
+  document.getElementById('cp').textContent = cur;
+  // 网格高亮
+  document.querySelectorAll('.page-dot').forEach((d, i) => {
+    d.className = 'page-dot' + (i + 1 === cur ? ' active' : '');
+  });
+  // 演讲稿
+  const script = SCRIPTS[cur];
+  document.getElementById('sl').textContent = 'P' + cur + ' · ' + (TITLES[cur] || '');
+  document.getElementById('sc').innerHTML = script
+    ? script.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')
+    : '（无演讲稿）';
+  // 下一页
+  const nx = SCRIPTS[cur + 1];
+  if (nx) {
+    document.getElementById('nc').innerHTML =
+      '<strong>P' + (cur + 1) + ' · ' + (TITLES[cur + 1] || '') + '</strong><br>' +
+      nx.substring(0, 120).replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>') + '…';
+  } else {
+    document.getElementById('nc').innerHTML = '— 最后一页 —';
+  }
+  // 动作按钮
+  updateActions();
+}
+
+function updateActions() {
+  const box = document.getElementById('actBox');
+  const act = ACTIONS[cur];
+  if (!act) { box.style.display = 'none'; return; }
+  box.style.display = 'flex';
+  box.innerHTML = '';
+
+  if (act.type === 'toggle') {
+    const isOn = actState[act.stateKey];
+    const btn = document.createElement('button');
+    btn.className = 'act-btn' + (isOn ? ' on' : '');
+    btn.textContent = isOn ? act.btnOn : act.btn;
+    btn.onclick = () => {
+      actState[act.stateKey] = !actState[act.stateKey];
+      send(act.msg());
+      updateActions();
+    };
+    box.appendChild(btn);
+  }
+  else if (act.type === 'step') {
+    const step = actState.step4 || 0;
+    const btn = document.createElement('button');
+    btn.className = 'act-btn step';
+    btn.textContent = '▶ ' + act.steps[step];
+    btn.onclick = () => {
+      send(act.msg(step));
+      actState.step4 = (step + 1) % act.steps.length;
+      updateActions();
+    };
+    box.appendChild(btn);
+  }
+  else if (act.type === 'tlc') {
+    const stateKey = 'tlc' + act.prefix.replace('tlc','');
+    const curLv = actState[stateKey] || 0;
+    act.levels.forEach((label, i) => {
+      const btn = document.createElement('button');
+      btn.className = 'act-btn' + (curLv === i + 1 ? ' on' : '');
+      btn.textContent = (i + 1) + '. ' + label;
+      btn.onclick = () => {
+        if (actState[stateKey] === i + 1) {
+          // 点击已选中的 → 取消选择，恢复默认第一级
+          actState[stateKey] = 0;
+          send({ type:'tlc', id: act.prefix, level: 1 });
+        } else {
+          actState[stateKey] = i + 1;
+          send(act.msg(i + 1));
+        }
+        updateActions();
+      };
+      box.appendChild(btn);
+    });
+  }
+}
+
+function updateSync(ok) {
+  const dot = document.getElementById('syncDot');
+  const text = document.getElementById('syncText');
+  if (ok) {
+    dot.className = 'dot';
+    text.textContent = '已连接';
+  } else {
+    dot.className = 'dot offline';
+    text.textContent = '未连接';
+  }
+}
+
+// ══════════════════════════════════════════════════════════════
+// 导航
+// ══════════════════════════════════════════════════════════════
+function go(n) {
+  if (n < 1 || n > TOTAL || n === cur) return;
+  cur = n;
+  // 重置当前页的动作状态
+  actState.step4 = 0;
+  // 发送翻页命令
+  send({ type:'goto', slide: cur });
+  updateUI();
+}
+
+// ══════════════════════════════════════════════════════════════
+// 初始化
+// ══════════════════════════════════════════════════════════════
+document.addEventListener('DOMContentLoaded', () => {
+  // 构建页面网格
+  const grid = document.getElementById('pg');
+  for (let i = 1; i <= TOTAL; i++) {
+    const dot = document.createElement('div');
+    dot.className = 'page-dot' + (i === 1 ? ' active' : '');
+    dot.textContent = 'P' + i;
+    dot.dataset.page = i;
+    dot.addEventListener('click', () => go(i));
+    grid.appendChild(dot);
+  }
+  document.getElementById('tp').textContent = TOTAL;
+
+  // 底部导航
+  document.getElementById('bP').addEventListener('click', () => go(cur - 1));
+  document.getElementById('bN').addEventListener('click', () => go(cur + 1));
+
+  // 键盘快捷键
+  document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); go(cur + 1); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); go(cur - 1); }
+    if (e.key === 'l' || e.key === 'L') toggleLock();
+  });
+
+  // 翻页锁定
+  document.getElementById('lockBtn').addEventListener('click', toggleLock);
+
+  // 初始渲染
+  updateUI();
+
+  // 检测连接状态
+  setTimeout(() => {
+    if (!connected) updateSync(false);
+  }, 3000);
+  // 定期检测
+  setInterval(() => {
+    if (!connected) updateSync(false);
+  }, 5000);
+});
+
+function toggleLock() {
+  locked = !locked;
+  const btn = document.getElementById('lockBtn');
+  btn.textContent = locked ? '🔒 翻页已锁定' : '🔓 翻页已解锁';
+  btn.className = 'lock-btn' + (locked ? ' locked' : '');
+  // 发送锁定命令到展示页（通过 expand 类型扩展）
+  send({ type: 'lock', locked: locked });
+}
+
+// 语音识别远程控制
+let voiceOn = false;
+document.getElementById('voiceBtn').addEventListener('click', () => {
+  voiceOn = !voiceOn;
+  const btn = document.getElementById('voiceBtn');
+  if (voiceOn) {
+    btn.textContent = '🔴 停止语音识别';
+    btn.style.borderColor = 'var(--green)'; btn.style.color = 'var(--green)';
+    send({ type: 'listen-start' });
+  } else {
+    btn.textContent = '🎤 启动语音识别';
+    btn.style.borderColor = 'var(--red)'; btn.style.color = 'var(--red)';
+    send({ type: 'listen-stop' });
+  }
+});
+</script>
+</body>
+</html>

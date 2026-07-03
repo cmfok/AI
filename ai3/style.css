@@ -1,0 +1,149 @@
+/* product-launch adapted for AI 真垃圾 · 分享会 */
+/* 暗黑主题为主，少量浅色 slide 变体 */
+.tpl-product-launch{
+  --bg:#0a0a12;--bg-soft:#141420;--surface:#1a1a2e;--surface-2:#222244;
+  --ink:#f5f5f7;--ink-2:rgba(245,245,247,.78);--dim:rgba(245,245,247,.52);
+  --border:rgba(255,255,255,.08);--border-strong:rgba(255,255,255,.14);
+  --text-1:#f5f5f7;--text-2:rgba(245,245,247,.78);--text-3:rgba(245,245,247,.52);
+  --accent:#ff5a36;--accent-2:#ff8c5a;--accent-3:#ffb36b;
+  --grad:linear-gradient(120deg,#ff5a36 0%,#ff8c5a 60%,#ffb36b 100%);
+  --green:#2e9d5e;--red:#e53e3e;--orange:#e87722;--purple:#9b59b6;
+  --radius:22px;--radius-lg:32px;
+  --shadow:0 20px 60px rgba(0,0,0,.4);
+  --ok:var(--green);--warn:var(--orange);--danger:var(--red);
+  font-family:'Inter','Noto Sans SC',sans-serif;
+}
+.tpl-product-launch .slide{padding:clamp(32px,6vh,80px) clamp(20px,5vw,112px)}
+.tpl-product-launch .slide.dark{background:var(--bg);color:var(--text-1)}
+.tpl-product-launch .slide.light{background:#ffffff;color:#0a0a12;
+  --text-1:#0a0a12;--text-2:#4a4a58;--text-3:#8a8a96;
+  --border:rgba(10,10,18,.08);--border-strong:rgba(10,10,18,.18);
+}
+.tpl-product-launch .slide.dark .card{
+  background:rgba(255,255,255,.06);border-color:var(--border);
+  box-shadow:none;backdrop-filter:blur(20px);border-radius:var(--radius);
+}
+.tpl-product-launch .slide.light .card{
+  background:#fff;border-color:var(--border);box-shadow:var(--shadow);
+}
+.tpl-product-launch .h1{font-size:clamp(40px,7vw,96px);font-weight:900;letter-spacing:-.045em;line-height:.98}
+.tpl-product-launch .h2{font-size:clamp(22px,3.5vw,64px);font-weight:800;letter-spacing:-.035em;line-height:1.05}
+.tpl-product-launch .kicker{font-size:12px;letter-spacing:2px;text-transform:uppercase;color:var(--accent-2);margin-bottom:12px}
+.tpl-product-launch .lede{font-size:clamp(14px,1.6vw,20px);color:var(--text-2);line-height:1.6}
+
+/* ── Feature cards ── */
+.tpl-product-launch .feature-card{
+  padding:clamp(20px,2.5vw,36px);border-radius:var(--radius-lg);
+  background:rgba(255,255,255,.05);border:1px solid var(--border);
+  position:relative;overflow:hidden;transition:transform .3s,box-shadow .3s;
+}
+.tpl-product-launch .feature-card:hover{transform:translateY(-2px);box-shadow:0 20px 50px rgba(0,0,0,.3)}
+.tpl-product-launch .feature-card .icon{
+  width:clamp(40px,4vw,60px);height:clamp(40px,4vw,60px);
+  border-radius:16px;background:var(--grad);display:flex;
+  align-items:center;justify-content:center;color:#fff;
+  font-size:clamp(18px,2vw,28px);font-weight:900;margin-bottom:16px;
+}
+
+/* ── Step numbers ── */
+.tpl-product-launch .step{display:flex;gap:clamp(12px,1.5vw,24px);align-items:flex-start}
+.tpl-product-launch .step .n{
+  flex:none;width:clamp(40px,4.5vw,56px);height:clamp(40px,4.5vw,56px);
+  border-radius:50%;background:var(--grad);color:#fff;
+  display:flex;align-items:center;justify-content:center;
+  font-weight:900;font-size:clamp(16px,1.8vw,22px);
+}
+
+/* ── Rule numbers ── */
+.tpl-product-launch .rule-num{
+  width:32px;height:32px;border-radius:10px;background:var(--grad);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:900;color:#fff;flex-shrink:0;
+}
+
+/* ── Gradient text ── */
+.tpl-product-launch .grad-text{
+  background:var(--grad);-webkit-background-clip:text;
+  background-clip:text;color:transparent;
+}
+
+/* ── Pills ── */
+.tpl-product-launch .pill{
+  display:inline-block;padding:4px 12px;border-radius:8px;
+  background:rgba(255,255,255,.06);border:1px solid var(--border);
+  font-size:clamp(10px,.8vw,13px);color:var(--dim);margin:3px;
+}
+
+/* ── Cards ── */
+.tpl-product-launch .card-accent{border-left:3px solid var(--accent)}
+.tpl-product-launch .card-warn{border-left:3px solid var(--orange)}
+.tpl-product-launch .card-good{border-left:3px solid var(--green)}
+.tpl-product-launch .card-purple{border-left:3px solid var(--purple)}
+
+/* ── Badges ── */
+.tpl-product-launch .badge{
+  display:inline-block;padding:3px 10px;border-radius:8px;
+  font-size:11px;font-weight:700;letter-spacing:.03em;
+}
+.tpl-product-launch .badge-red{background:rgba(229,62,62,.12);color:var(--red)}
+.tpl-product-launch .badge-green{background:rgba(46,157,94,.12);color:var(--green)}
+.tpl-product-launch .badge-blue{background:rgba(255,90,54,.12);color:var(--accent)}
+.tpl-product-launch .badge-orange{background:rgba(232,119,34,.12);color:var(--orange)}
+
+/* ── VS layout ── */
+.tpl-product-launch .vs{display:grid;grid-template-columns:1fr auto 1fr;gap:clamp(10px,1.5vw,16px);align-items:start;max-width:1100px}
+.tpl-product-launch .vs-arrow{display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--dim);padding-top:40px}
+.tpl-product-launch .key-var{margin-top:clamp(10px,1.5vw,16px);padding:12px 20px;background:rgba(255,90,54,.08);border-left:3px solid var(--accent);border-radius:10px;font-size:clamp(13px,1vw,15px);color:var(--accent);font-weight:600;max-width:1100px}
+
+/* ── Rules list ── */
+.tpl-product-launch .rules .rule{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid var(--border)}
+.tpl-product-launch .rules .rule:last-child{border:none}
+.tpl-product-launch .rule h5{font-size:clamp(13px,1vw,15px);font-weight:600;margin-bottom:2px}
+.tpl-product-launch .rule p{font-size:clamp(11px,.8vw,13px);color:var(--dim);line-height:1.5}
+
+/* ── Flow diagram ── */
+.tpl-product-launch .flow{display:flex;align-items:center;gap:4px;flex-wrap:wrap;justify-content:center}
+.tpl-product-launch .flow-node{padding:7px 12px;border-radius:10px;background:rgba(255,255,255,.06);border:1px solid var(--border);font-size:clamp(10px,.85vw,13px);white-space:nowrap}
+.tpl-product-launch .flow-node.hl-node{background:rgba(255,90,54,.12);border-color:var(--accent);color:var(--accent)}
+.tpl-product-launch .flow-arrow{color:var(--dim);font-size:14px}
+
+/* ── Table ── */
+.tpl-product-launch .tbl{width:100%;border-collapse:collapse;max-width:1000px}
+.tpl-product-launch .tbl th{padding:10px 14px;border-bottom:2px solid var(--border);text-align:left;font-size:12px;color:var(--dim);font-weight:700;text-transform:uppercase;letter-spacing:.05em}
+.tpl-product-launch .tbl td{padding:10px 14px;border-bottom:1px solid var(--border);font-size:clamp(12px,.9vw,14px)}
+
+/* ── Interactive card ── */
+.tpl-product-launch .icard{overflow:hidden;max-height:0;opacity:0;transition:all .4s cubic-bezier(.25,.46,.45,.94)}
+.tpl-product-launch .icard.open{max-height:600px;opacity:1;margin-top:12px}
+
+/* ── Three-level compare ── */
+.tpl-product-launch .tlc{position:relative;min-height:160px}
+.tpl-product-launch .tlc-level{position:absolute;inset:0;opacity:0;pointer-events:none;transition:all .4s}
+.tpl-product-launch .tlc-level.active{opacity:1;pointer-events:auto}
+
+/* ── Checklist ── */
+.tpl-product-launch .cl-item{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-size:clamp(13px,1vw,15px)}
+.tpl-product-launch .cl-box{width:20px;height:20px;border:2px solid var(--border);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center}
+.tpl-product-launch .cl-box.done{border-color:var(--accent);background:rgba(255,90,54,.12);color:var(--accent);font-size:12px}
+
+/* ── Page indicator ── */
+.tpl-product-launch #indicator{position:fixed;bottom:16px;left:50%;transform:translateX(-50%);z-index:50;font-size:12px;color:rgba(255,255,255,.25);font-family:'JetBrains Mono',monospace;letter-spacing:2px;background:rgba(0,0,0,.6);padding:4px 14px;border-radius:8px;backdrop-filter:blur(8px);border:1px solid var(--border)}
+.tpl-product-launch #indicator .cur{color:#f5f5f7;font-weight:700}
+
+/* ── Fade overlay ── */
+.tpl-product-launch #fade{position:fixed;inset:0;background:#0a0a12;z-index:40;opacity:0;pointer-events:none;transition:opacity .3s}
+.tpl-product-launch #fade.show{opacity:1;pointer-events:auto}
+.tpl-product-launch .hints{position:fixed;bottom:12px;left:12px;font-size:10px;color:rgba(255,255,255,.2);z-index:50;pointer-events:none}
+
+/* ── FX container overrides ── */
+.tpl-product-launch [data-fx]{pointer-events:none;z-index:0}
+.tpl-product-launch [data-fx] + *{position:relative;z-index:1}
+
+/* ── Responsive ── */
+@media(max-width:768px){
+  .tpl-product-launch .slide{padding:24px 16px 60px}
+  .tpl-product-launch .vs{grid-template-columns:1fr}
+  .tpl-product-launch .vs-arrow{display:none}
+  .tpl-product-launch .grid.g2,.tpl-product-launch .grid.g3{grid-template-columns:1fr}
+  .tpl-product-launch .grid.g4,.tpl-product-launch .grid.g5{grid-template-columns:1fr 1fr}
+}

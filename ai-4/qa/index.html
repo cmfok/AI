@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>问答 · AI 真垃圾</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:#0a0a0a;color:#f0f0ee;
+  font-family:"Inter","Noto Sans SC","Microsoft YaHei UI",sans-serif;
+  padding:2vh 4vw;min-height:100vh;
+  -webkit-font-smoothing:antialiased;
+}
+h1{font-weight:200;font-size:clamp(24px,5vw,40px);margin-bottom:1vh;letter-spacing:-.02em}
+h1 span{color:#ffaa00;font-weight:300}
+.status{font-size:14px;opacity:.5;margin-bottom:3vh}
+.input-area{display:flex;gap:8px;margin-bottom:2vh}
+.input-area input{
+  flex:1;padding:12px 16px;border:1px solid rgba(255,255,255,.15);
+  background:#1a1a1c;color:#f0f0ee;font-size:16px;font-family:inherit;
+  outline:none;
+}
+.input-area input:focus{border-color:#3366FF}
+.input-area button{
+  padding:12px 24px;border:none;background:#3366FF;color:#fff;
+  font-size:16px;cursor:pointer;font-family:inherit;font-weight:600;
+}
+.input-area button:hover{background:#5577FF}
+.result{
+  background:#1a1a1c;border:1px solid rgba(255,255,255,.1);
+  padding:2vh 3vw;min-height:15vh;margin-bottom:2vh;
+  font-size:clamp(14px,2vw,16px);line-height:1.7;
+}
+.result .match{color:#33cc66;font-weight:600}
+.result .page{color:#3366FF;font-weight:600}
+.result .desc{opacity:.65;margin-top:1vh}
+.history{font-size:13px;opacity:.35;line-height:1.8}
+.info{font-size:11px;opacity:.25;text-align:center;margin-top:2vh}
+</style>
+</head>
+<body>
+<h1>💬 智能<span>问答</span></h1>
+<p class="status">语音/文字输入 → AI 匹配页面 → 跳转 + 显示回答</p>
+
+<div class="input-area">
+  <input type="text" id="questionInput" placeholder="输入你的问题..." onkeydown="if(event.key==='Enter')ask()">
+  <button onclick="ask()">提问</button>
+</div>
+
+<div class="result" id="result">
+  <p style="opacity:.3">问题和匹配结果将显示在这里...</p>
+</div>
+
+<div class="history" id="history"></div>
+<div class="info">BroadcastChannel · 匹配引擎 · 实时跳转</div>
+
+<script>
+const CH = 'ai-ppt-4';
+const bc = new BroadcastChannel(CH);
+
+// Page matching knowledge base
+const knowledge = [
+  {keywords:['箭头','外星人','猜','语言','互动','规律'], slide:2, answer:'答案：↓ 向下！规律：←↑→↓ 是一个循环。AI 就是个猜字系统。'},
+  {keywords:['猜字','核心','概率','反认知','预测','原理'], slide:3, answer:'AI 的核心就是个猜字系统：给它一段上文，算概率，猜最合理的下一个字/词。'},
+  {keywords:['模型','LLM','LMM','训练','预训练','微调','RLHF','幻觉','豆包','千问','Kimi','DeepSeek','ChatGPT','Gemini','Claude'], slide:4, answer:'模型经过三阶段训练：预训练→指令微调→RLHF。不同模型各有擅长领域。'},
+  {keywords:['提示词','prompt','提示词工程','定角色','讲要求','给参考','设标准','四部曲'], slide:7, answer:'提示词工程四部曲：定角色→讲要求→给参考→设标准。派好活，AI才能做对事。'},
+  {keywords:['上下文','context','知识库','喂资料','可迁移','可生长','有记忆','MD','Obsidian','向量'], slide:8, answer:'上下文工程三部曲：可迁移（MD文件）→可生长（边用边积累）→有记忆（AI记住偏好）。最重要的是知识库！'},
+  {keywords:['青铜','白银','黄金','知识库搭建','知识库怎么','怎么搭建','搭建知识库','搭建','Trae知识库','Obsidian知识库'], slide:9, answer:'知识库搭建三阶段：🥉青铜（MD+Trae）→🥈白银（+Obsidian）→🥇黄金（+向量模型）'},
+  {keywords:['简历','招聘','HR','JD','筛选','面试','评分','匹配'], slide:10, answer:'规训工程套用在招聘简历上：多维度评分+JD匹配+预警推荐。关键是有没有给AI套缰绳。'},
+  {keywords:['运费','对账','Excel','自动化','流水线','顺丰'], slide:11, answer:'运费对账案例：手工Excel（漏算/算错/卡顿）vs AI自动化流水线（8节点~3.4秒）。'},
+  {keywords:['规训','工具调用','约束','校验','状态','错误','可观测','六件套','脚本','工作流','缰绳'], slide:12, answer:'规训工程六大组件：①工具调用②约束安全③验证校验④状态管理⑤错误处理⑥可观测性。最重要的是脚本和工作流。'},
+  {keywords:['生日营销','闭环','数据流','400万','用户','小程序','客服','复购','变现'], slide:14, answer:'生日营销数据流闭环：用户→小程序→数据库→AI处理→分析匹配→客服→收到礼品→复购下单→累计变现400万+。'},
+  {keywords:['循环','迭代','自查','复盘','会诊','绩效','做查修','Agent','多Agent'], slide:16, answer:'循环工程四级别：L1自查→L2复盘→L3会诊→L4绩效。做→查→修→再输出，直到满意。'},
+  {keywords:['个人','企业','对比','容错','提效','变现','可控'], slide:17, answer:'个人AI（提效，错了Ctrl+Z）vs 企业AI（可控+变现，错了就是钱）。企业必须四大工程全上。'},
+  {keywords:['隐私','数据','安全','API','私有化','加密','权限','Trae','本地'], slide:18, answer:'数据隐私保护：用API代替网页（不用于训练）、用Trae本地处理、选隐私模式、私有化部署。'},
+  {keywords:['落地','checklist','清单','工具包','行动'], slide:19, answer:'落地Checklist：明确场景→选模型→搭知识库→设计提示词→配置规训→评估隐私→搭工作流→循环优化。'},
+];
+
+function matchPage(question){
+  const q = question.toLowerCase();
+  let best = null, bestScore = 0;
+  knowledge.forEach(k=>{
+    let score = 0;
+    k.keywords.forEach(kw=>{
+      if(q.includes(kw.toLowerCase())) score += 2;
+      // Partial match
+      for(let i=0;i<kw.length-2;i++){
+        if(q.includes(kw.substring(i, Math.min(i+4, kw.length)))){ score += 0.5; break; }
+      }
+    });
+    if(score > bestScore){ bestScore = score; best = k; }
+  });
+  return best && bestScore >= 1 ? best : {slide:20, answer:'这个问题可能需要现场讨论。建议翻到最后一页互动答疑。'};
+}
+
+function ask(){
+  const input = document.getElementById('questionInput');
+  const q = input.value.trim();
+  if(!q) return;
+
+  const match = matchPage(q);
+  const resultEl = document.getElementById('result');
+  resultEl.innerHTML = `
+    <p>❓ <strong>${q}</strong></p>
+    <p style="margin-top:1.4vh"><span class="match">→ 匹配页：</span><span class="page">第 ${match.slide} 页</span></p>
+    <p class="desc">${match.answer}</p>
+  `;
+
+  // Navigate main page
+  bc.postMessage({type:'go', slide:match.slide});
+
+  // Add to history
+  const history = document.getElementById('history');
+  history.innerHTML += '<div>💬 '+q+' → 第'+match.slide+'页</div>';
+
+  input.value = '';
+  input.focus();
+}
+
+// Listen for voice input from listen page
+bc.onmessage = function(e){
+  const msg = e.data;
+  if(msg && msg.type === 'voice' && msg.text){
+    document.getElementById('questionInput').value = msg.text;
+    ask();
+  }
+};
+
+console.log('[QA] Ready on channel:', CH);
+</script>
+</body>
+</html>
