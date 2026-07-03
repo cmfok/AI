@@ -779,36 +779,8 @@ function toggleCard(el){el.classList.toggle('open')}
       var p=document.getElementById("mdPopup");
       if(p) p.scrollBy({top: dir, behavior: "smooth"});
     }
-    // 自动滚动
-    if(d.autoScroll!==undefined){
-      if(d.autoScroll && !window._autoTimer){
-        var pp=document.getElementById("mdPopup");
-        if(pp) window._autoTimer = setInterval(function(){ pp.scrollTop += 12; }, 12);
-      }
-      if(!d.autoScroll && window._autoTimer){
-        clearInterval(window._autoTimer);
-        window._autoTimer = null;
-      }
-    }
-    // 自动滚动丝滑版
-    if(d.autoScroll!==undefined && d.autoScroll!==_lkAuto){
-      _lkAuto=d.autoScroll;
-      if(d.autoScroll){ startSmoothScroll(); }
-      else { stopSmoothScroll(); }
-    }
 
 
-  }
-
-
-  var _lkAuto=0, _autoTimer=null;
-  function startSmoothScroll(){
-    var p=document.getElementById("mdPopup");
-    if(!p||_autoTimer) return;
-    _autoTimer = setInterval(function(){ p.scrollTop += 1; }, 16);
-  }
-  function stopSmoothScroll(){
-    if(_autoTimer){ clearInterval(_autoTimer); _autoTimer = null; }
   }
 
   function poll(){

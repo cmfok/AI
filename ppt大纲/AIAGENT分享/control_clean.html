@@ -536,12 +536,6 @@ function togglePollOverlay(){
   }
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,pollOverlay:_pollOverlayOn})}).catch(function(){});
 }
-
-var _scrollTimer = null;
-
-function stopScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:0})}).catch(function(){});
-  if(_scrollTimer){ clearInterval(_scrollTimer); _scrollTimer = null; }
-}
 </script>
 
 <div class="bottom-nav">
@@ -807,16 +801,6 @@ function scrollPopup(dir){
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,popupScroll:dir>0?Date.now():-Date.now()})}).catch(function(){});
 }
 
-
-var _scrollTimer = null;
-function startScroll(){
-  scrollPopup(1);
-  if(_scrollTimer) return;
-  _scrollTimer = setInterval(function(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:1})}).catch(function(){}); }, 200);
-}
-function stopScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:0})}).catch(function(){});
-  if(_scrollTimer){ clearInterval(_scrollTimer); _scrollTimer = null; }
-}
 </script>
 </body>
 </html>
