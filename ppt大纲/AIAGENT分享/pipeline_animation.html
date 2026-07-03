@@ -56,6 +56,7 @@ body{background:#0d0d0d;display:flex;justify-content:center;align-items:center;m
 }
 .step.done .counter{color:#4caf50}
 .counter .unit-sm{font-size:11px;font-weight:400;color:rgba(255,255,255,.2);margin-left:2px}
+body { transform: scale(0.95); transform-origin: top center; }
 </style>
 </head>
 <body>
@@ -74,14 +75,14 @@ body{background:#0d0d0d;display:flex;justify-content:center;align-items:center;m
 
 <script>
 const steps = [
-  {icon:'📦', label:'STEP 01', title:'读取ERP发货数据', dim:'全部发货单', target:21530, suffix:'条'},
-  {icon:'📋', label:'STEP 02', title:'包装方案核对', dim:'匹配产品→冰袋→箱子规格', target:21530, suffix:'条已匹配'},
-  {icon:'⚖️', label:'STEP 03', title:'计算产品重量', dim:'产品+冰袋+箱子总重', target:21530, suffix:'条已处理'},
-  {icon:'🧊', label:'STEP 04', title:'冰袋/箱子配置', dim:'按温区匹配保温方案', target:3, suffix:'温区全部匹配'},
-  {icon:'📍', label:'STEP 05', title:'地址城市等级映射', dim:'362城市已分级', target:362, suffix:'城市'},
-  {icon:'💰', label:'STEP 06', title:'首重续重计算', dim:'12档计费规则', target:12, suffix:'档全部计算'},
-  {icon:'📊', label:'STEP 07', title:'出库费核算', dim:'出库+打包', target:21530, suffix:'条已核算'},
-  {icon:'🚚', label:'STEP 08', title:'总运费汇总', dim:'最终金额', target:827381.50, suffix:'', isMoney:true},
+  {icon:'📦', label:'', title:'读取ERP发货数据', dim:'全部发货单', target:21530, suffix:'条'},
+  {icon:'📋', label:'', title:'包装方案核对', dim:'匹配产品→冰袋→箱子规格', target:21530, suffix:'条已匹配'},
+  {icon:'⚖️', label:'', title:'计算产品重量', dim:'产品+冰袋+箱子总重', target:21530, suffix:'条已处理'},
+  {icon:'🧊', label:'', title:'冰袋/箱子配置', dim:'按温区匹配保温方案', target:3, suffix:'温区全部匹配'},
+  {icon:'📍', label:'', title:'地址城市等级映射', dim:'362城市已分级', target:362, suffix:'城市'},
+  {icon:'💰', label:'', title:'首重续重计算', dim:'12档计费规则', target:12, suffix:'档全部计算'},
+  {icon:'📊', label:'', title:'出库费核算', dim:'出库+打包', target:21530, suffix:'条已核算'},
+  {icon:'🚚', label:'', title:'总运费汇总', dim:'最终金额', target:827381.50, suffix:'', isMoney:true},
 ];
 
 const pipeline = document.getElementById('pipeline');

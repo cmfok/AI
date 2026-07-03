@@ -542,6 +542,10 @@ var _scrollTimer = null;
 function stopScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:0})}).catch(function(){});
   if(_scrollTimer){ clearInterval(_scrollTimer); _scrollTimer = null; }
 }
+
+var _sfOn = false; function showSfRulesPopup(){ _sfOn = !_sfOn; fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfRules:_sfOn?Date.now():0})}).catch(function(){}); }
+function startSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:1})}).catch(function(){}); }
+function stopSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:0})}).catch(function(){}); }
 </script>
 
 <div class="bottom-nav">
@@ -566,7 +570,8 @@ var ACTIONS = {
   1: ['<button class="btn" id="aBtn">▶ '+ACT[1].l+'</button>'],                                        // P1：封面问号
   2: ['<button class="btn" id="aBtn">▶ '+ACT[2].l+'</button>'],                                        // P2：展开答案
   4: ['<button class="btn" id="aBtn">▶ 展开卡片1</button>'],                                           // P4：三阶段卡片
-  6: ['<button class="btn" onclick="toggleFilePopup()">📄 大纲</button><button class="btn" onclick="stopScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startScroll()" style="font-size:16px">⬇</button>'],                             // P6：显示大纲
+  6: ['<button class="btn" onclick="toggleFilePopup()">📄 大纲</button><button class="btn" onclick="stopScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startScroll()" style="font-size:16px">⬇</button>'],
+  12: ['<button class="btn" onclick="showSfRulesPopup()">📄 规则</button><button class="btn" onclick="stopSfScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startSfScroll()" style="font-size:16px">⬇</button>'],                             // P6：显示大纲
 };
 var CC=0;
 var _speechData = {};  // 从 speech.md 动态加载
@@ -817,6 +822,10 @@ function startScroll(){
 function stopScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:0})}).catch(function(){});
   if(_scrollTimer){ clearInterval(_scrollTimer); _scrollTimer = null; }
 }
+
+se; function showSfRulesPopup(){ _sfOn = !_sfOn; fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfRules:_sfOn?Date.now():0})}).catch(function(){}); }
+function startSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:1})}).catch(function(){}); }
+function stopSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:0})}).catch(function(){}); }
 </script>
 </body>
 </html>

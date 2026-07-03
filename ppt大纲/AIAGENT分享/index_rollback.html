@@ -267,8 +267,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <!-- ====== 6. PROMPT ENGINEERING ====== -->
 <section class="slide" data-title="提示词工程 · 案例">
   <p class="kicker" style="margin-bottom:2px">CASE 01</p>
-  <h2 class="h2" style="margin-bottom:2px!important">让 AI 写 <span style="color:#e53e3e">PPT</span></h2>
-  <p class="lede" style="margin-top:0!important;margin-bottom:8px">同一个需求，两种结果</p>
+  <h2 class="h2" style="margin-bottom:2px!important">让 AI 写 PPT</h2>
+  <p class="lede" style="margin-top:-20px!important;margin-bottom:8px">同一个需求，两种结果</p>
   <div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:8px;min-width:0;align-items:stretch">
     <!-- 左边：传统做法 -->
     <div style="flex:1;min-width:0;border:1px solid rgba(229,62,62,.2);border-radius:14px;overflow:hidden">
@@ -296,7 +296,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
           <img src="/ai/deepseek-ppt.jpg" style="width:100%;max-height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="DeepSeek生成的PPT">
         </div>
       </div>
-      
+      <div style="text-align:center;font-size:clamp(15px,1.6vw,18px);font-weight:700;color:#e53e3e;margin-top:8px;padding:8px 12px;background:rgba(229,62,62,.08);border-radius:6px">多轮沟通生成一份通用模版PPT</div>
     </div>
     </div>
     <!-- 右边：正确做法 -->
@@ -326,18 +326,10 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
             <img src="/ai/trae-ppt.jpg" style="width:100%;max-height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="Trae生成的PPT">
         </div>
       </div>
-      
+      <div style="text-align:center;font-size:clamp(15px,1.6vw,18px);font-weight:700;color:#3b6fff;margin-top:8px;padding:8px 12px;background:rgba(59,111,255,.08);border-radius:6px;line-height:1.5">10分钟语音沟通生成专属PPT<br>本场分享会 PPT 就是这样做的！</div>
     </div>
   </div>
   </div>
-  <div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:2px;min-width:0;align-items:flex-start">
-    <div style="flex:1;text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#e53e3e;padding:6px 10px;background:rgba(229,62,62,.06);border-radius:6px">多轮沟通生成一份通用模版PPT</div>
-    <div style="flex:1;display:flex;flex-direction:column;gap:4px">
-      <div style="text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#3b6fff;padding:6px 10px;background:rgba(59,111,255,.06);border-radius:6px">10分钟语音沟通生成专属PPT</div>
-      <div style="text-align:center;font-size:clamp(18px,1.8vw,24px);font-weight:800;color:#2ea043;padding:6px 10px;background:rgba(46,160,67,.08);border-radius:6px">✅ 本场分享会 PPT 就是这样做的！</div>
-    </div>
-  </div>
-
   <div class="notes">左边❌：帮我做个PPT，AI 瞎猜。右边✅：Trae 语音→MD→生成PPT。<b>本场分享会 PPT 就是这样做的。</b></div>
 </section>
 
@@ -345,7 +337,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <section class="slide" data-title="提示词工程 · 四规则">
   <p class="kicker" style="margin-bottom:2px">四大工程 · CHAPTER 01</p>
   <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
-  <p class="lede" style="margin-top:0!important;margin-bottom:8px">PROMPT ENGINEERING</p>
+  <p class="lede" style="margin-top:-20px!important;margin-bottom:8px">PROMPT ENGINEERING</p>
   <div style="margin-bottom:12px;background:rgba(229,62,62,.08);border-left:3px solid #e53e3e;border-radius:0 8px 8px 0;padding:12px 18px;font-size:clamp(18px,2.2vw,28px);color:var(--text-1);font-weight:600">
     💡 <strong style="color:#e53e3e">核心假设</strong>：相同的模型，通过不同的提问方式，可以获得质量差异巨大的结果
   </div>
@@ -365,9 +357,9 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- ====== 7. CONTEXT COMPARE ====== -->
 <section class="slide" data-title="上下文工程对比">
-  <p class="kicker" style="margin-bottom:2px">CASE 02</p>
-  <h2 class="h2" style="margin-bottom:0!important">让 AI 做 <span style="color:#2ea043">旅游规划</span></h2>
-  <p class="lede" style="margin-top:0!important">不是改怎么问，是让 AI 知道它在跟谁打交道</p>
+  <p class="kicker">Seed Story Continues</p>
+  <h2 class="h2">上下文工程</h2>
+  <p class="lede">不是改怎么问，是让 AI 知道它在跟谁打交道</p>
   <div class="g3 mt-l">
     <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px"><h4 style="margin:0 0 8px;font-size:16px">① 普通提问</h4><p style="font-size:14px;color:var(--text-2);margin:0">「帮我规划云南5天4夜」→ 通用模板，AB方案千篇一律</p></div>
     <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;border-left:3px solid var(--accent)"><h4 style="margin:0 0 8px;font-size:16px">② 提示词工程</h4><p style="font-size:14px;color:var(--text-2);margin:0">按行程/住宿/费用输出→结构清晰但内容通用，不知道你是谁</p></div>
@@ -378,10 +370,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- ====== 8. CONTEXT REVEAL ====== -->
 <section class="slide" data-title="上下文工程揭晓">
-  <p class="kicker" style="margin-bottom:2px">四大工程 · CHAPTER 02</p>
-  <h2 class="h2" style="margin-bottom:0!important">上下文工程</h2>
-  <p class="lede" style="margin-top:0!important;margin-bottom:8px">CONTEXT ENGINEERING</p>
-  <div style="margin-bottom:12px;background:rgba(229,62,62,.08);border-left:3px solid #e53e3e;border-radius:0 8px 8px 0;padding:12px 18px;font-size:clamp(18px,2.2vw,28px);color:var(--text-1);font-weight:600">💡 <strong style="color:#e53e3e">上下文工程</strong>：精妙的艺术与科学——精准地将大语言模型的上下文窗口填充上恰到好处的信息，让模型能准确地迈出下一步</div>
+  <p class="kicker">CHAPTER 02 · CONTEXT ENGINEERING</p>
+  <h2 class="h2">上下文工程</h2>
   <div class="g2 mt-l">
     <div class="stack">
       <div class="comp-card comp-bad"><div class="ct">❌ 普通提问</div><p>通用模板，写给所有人</p></div>
@@ -421,12 +411,12 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <!-- ====== 9. KNOWLEDGE BASE ====== -->
 <section class="slide" data-title="知识库搭建">
   <p class="kicker">Implementation</p>
-  <h2 class="h2" style="margin-bottom:0!important">知识库搭建</h2>
-  <p class="lede" style="margin-top:0!important">从入门到进阶，你的专属 AI 背景资料库</p>
+  <h2 class="h2">知识库搭建</h2>
+  <p class="lede">从入门到进阶，你的专属 AI 背景资料库</p>
   <div class="mt-l">
-    <div class="ladder-step ls-1" style="background:rgba(205,127,50,.06)"><span style="font-size:56px">🥉</span><div><strong style="font-size:34px">青铜：MD + Trae</strong><br><span style="font-size:28px;color:var(--text-2)">写 MD 背景文件，Trae 里直接引用。最简单，立竿见影。</span></div></div>
-    <div class="ladder-step ls-2" style="background:rgba(192,192,192,.08)"><span style="font-size:56px">🥈</span><div><strong style="font-size:34px">白银：MD + Trae + Obsidian</strong><br><span style="font-size:28px;color:var(--text-2)">Obsidian 管理知识库，双向链接、图谱视图、快速检索。</span></div></div>
-    <div class="ladder-step ls-3" style="background:rgba(255,215,0,.06)"><span style="font-size:56px">🥇</span><div><strong style="font-size:34px">黄金：MD + Trae + Obsidian + 向量模型</strong><br><span style="font-size:28px;color:var(--text-2)">接入向量模型/插件，语义搜索、智能推荐。</span></div></div>
+    <div class="ladder-step ls-1"><span style="font-size:56px">🥉</span><div><strong style="font-size:34px">青铜：MD + Trae</strong><br><span style="font-size:28px;color:var(--text-2)">写 MD 背景文件，Trae 里直接引用。最简单，立竿见影。</span></div></div>
+    <div class="ladder-step ls-2"><span style="font-size:56px">🥈</span><div><strong style="font-size:34px">白银：MD + Trae + Obsidian</strong><br><span style="font-size:28px;color:var(--text-2)">Obsidian 管理知识库，双向链接、图谱视图、快速检索。</span></div></div>
+    <div class="ladder-step ls-3"><span style="font-size:56px">🥇</span><div><strong style="font-size:34px">黄金：MD + Trae + Obsidian + 向量模型</strong><br><span style="font-size:28px;color:var(--text-2)">接入向量模型/插件，语义搜索、智能推荐。</span></div></div>
   </div>
   <p class="dim mt-m tc">不急，<b>先跑起来最重要</b>。</p>
   <div class="eco-bar"><div class="eco-row">
@@ -452,19 +442,13 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- ====== 11. FREIGHT COMPARE ====== -->
 <section class="slide" data-title="运费对账">
-  <p class="kicker" style="margin-bottom:2px">Harness · Case Study</p>
-  <h2 class="h2" style="margin-bottom:0!important">案例对比 · 运费对账</h2>
-  <div style="display:flex;gap:8px;margin-top:20px">
-    <div style="flex:1;background:rgba(229,62,62,.1);text-align:center;padding:8px;font-weight:700;color:#e53e3e;font-size:clamp(18px,1.9vw,21px);border-radius:10px 10px 0 0;border:2px solid rgba(229,62,62,.3);border-bottom:none">❌ Excel 手工对账</div>
-    <div style="flex:1;background:rgba(46,160,67,.1);text-align:center;padding:8px;font-weight:700;color:#2ea043;font-size:clamp(18px,1.9vw,21px);border-radius:10px 10px 0 0;border:2px solid rgba(46,160,67,.3);border-bottom:none;position:relative">✅ AI 脚本对账<span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:clamp(16px,1.6vw,18px);font-weight:700;color:#555;font-family:PingFang SC,Microsoft YaHei,Noto Sans SC,sans-serif;cursor:pointer;text-decoration:underline" onclick="showSfRules()">📄 顺丰运费对账规则.MD</span></div>
+  <p class="kicker">Harness · Case Study</p>
+  <h2 class="h2">案例对比 · 运费对账</h2>
+  <div class="comp-grid mt-l">
+    <div class="comp-card comp-bad"><div class="ct">❌ 手动 Excel 操作</div><p>鼠标移动 → 敲公式 → 算错标红<br><span class="tag tag-r" style="font-size:13px;margin-top:8px">漏算</span><span class="tag tag-r" style="font-size:13px">算错</span><span class="tag tag-r" style="font-size:13px">卡顿</span><span class="tag tag-r" style="font-size:13px">死机</span></p></div>
+    <div class="comp-card comp-good"><div class="ct">✅ AI 脚本自动对账</div><p>8 个节点逐个校验 → 数字滚到目标值 → 零误差</p><div class="big-num mt-s">3.4<span class="unit">秒</span></div></div>
   </div>
-  <div style="display:flex;gap:8px;flex:1;min-height:0;position:relative">
-    <iframe src="/ai/excel_animation.html" style="flex:1;border:2px solid rgba(229,62,62,.3);border-radius:0 0 10px 10px"></iframe>
-    <iframe src="/ai/pipeline_animation.html" style="flex:1;border:2px solid rgba(46,160,67,.3);border-radius:0 0 10px 10px"></iframe>
-    <div style="position:absolute;bottom:55px;left:50%;transform:translateX(-50%);z-index:10">
-      <span style="background:#fff;color:#e53e3e;padding:8px 24px;border-radius:8px;font-weight:800;font-size:clamp(21px,2.3vw,27px);border:2px solid rgba(229,62,62,.3);box-shadow:0 2px 10px rgba(0,0,0,.1)">💡 关键变量：<b>有没有自动化脚本</b></span>
-    </div>
-  </div>
+  <p class="lede mt-l tc">关键变量：<b>有没有自动化脚本</b></p>
   <div class="notes">左边❌：Excel手工算——半天怕错。右边✅：脚本自动化——8个节点逐个校验，<b>3.4秒零误差</b>。关键变量：有没有自动化脚本。</div>
 </section>
 
@@ -716,7 +700,7 @@ function toggleCard(el){el.classList.toggle('open')}
 (function(){
   var slides=document.querySelectorAll('.slide');
   var total=slides.length;
-  var _lkScr=0, _lkSfR=0, _lkSfS=0;
+  var _lkScr=0;
   var lastSlide=1, lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, _lkO=false, _lkT=false, _lkF=false, _firstPoll=true;
 
   function goSlide(n){
@@ -732,7 +716,7 @@ function toggleCard(el){el.classList.toggle('open')}
   function applyServerState(d){
     if(!d) return;
     // 首次轮询：只同步状态，不触发动作
-    if(_firstPoll){ _lkO=d.overviewKey||0; _lkT=d.themeKey||0; _lkF=d.filePopup||0; lastCoverQ=d.coverQ||false; _lkSfR=d.sfRules||0; _firstPoll=false; }
+    if(_firstPoll){ _lkO=d.overviewKey||0; _lkT=d.themeKey||0; _lkF=d.filePopup||0; lastCoverQ=d.coverQ||false; _firstPoll=false; }
     var changed=false;
     // 翻页
     if(d.slide && d.slide!==lastSlide){ goSlide(d.slide); changed=true; }
@@ -805,17 +789,6 @@ function toggleCard(el){el.classList.toggle('open')}
         clearInterval(window._autoTimer);
         window._autoTimer = null;
       }
-    }
-    // SF规则弹窗
-    if(d.sfRules!==undefined && d.sfRules!==_lkSfR){ _lkSfR=d.sfRules; if(d.sfRules){ showSfRules(); } else { var p=document.getElementById('mdPopup'); if(p) p.style.display='none'; } }
-    // SF滚动
-    if(d.sfScroll!==undefined && d.sfScroll!==_lkSfS){
-      _lkSfS=d.sfScroll;
-      if(d.sfScroll && !window._sfTimer){
-        var pp=document.getElementById('mdPopup');
-        if(pp) window._sfTimer = setInterval(function(){ pp.scrollTop += 12; }, 12);
-      }
-      if(!d.sfScroll && window._sfTimer){ clearInterval(window._sfTimer); window._sfTimer=null; }
     }
     // 自动滚动丝滑版
     if(d.autoScroll!==undefined && d.autoScroll!==_lkAuto){
@@ -941,15 +914,6 @@ function toggleCard(el){el.classList.toggle('open')}
     </div>
   </div>
 <script>
-function showSfRules(){
-  var popup = document.getElementById('mdPopup');
-  if(!popup) return;
-  popup.style.display = 'block';
-  document.getElementById('mdPopupContent').innerHTML = '加载中...';
-  fetch('/ai/顺丰运费对账完整规则手册.md').then(function(r){return r.text();}).then(function(t){
-    document.getElementById('mdPopupContent').innerHTML = marked.parse(t);
-  });
-}
 function showMdPopup(){
   var popup = document.getElementById('mdPopup');
   if(!popup) return;
