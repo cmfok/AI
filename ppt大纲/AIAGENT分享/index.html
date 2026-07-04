@@ -18,6 +18,7 @@ body .h2{font-size:clamp(56px,8vw,130px)!important}
 body .h1{font-size:clamp(80px,12vw,200px)!important}
 body .h2{font-size:clamp(56px,8vw,130px)!important}
 body .lede{font-size:clamp(32px,5vw,52px)!important}
+.kicker{font-size:clamp(13px,1.6vw,22px);letter-spacing:.12em;color:var(--text-3);margin-bottom:6px}
 .dim{color:var(--text-3);font-size:clamp(24px,3vw,38px);line-height:1.6}
 .mt-l{margin-top:16px!important}
 .mt-m{margin-top:10px!important}
@@ -144,7 +145,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <!-- ====== 1. COVER ====== -->
 <section class="slide center tc v-center" data-title="封面">
   <div data-anim="rise-in">
-    <p class="kicker" style="font-size:16px;letter-spacing:.2em;margin-bottom:28px">CM · 2026-07-07</p>
+    <p class="kicker" style="letter-spacing:.2em;margin-bottom:28px">CM · 2026-07-07</p>
     <div style="position:relative;display:inline-block">
       <span class="cover-reveal cover-delay" style="font-size:clamp(18px,2vw,30px);color:var(--text-3);font-weight:400;vertical-align:middle">从 </span>
       <h1 class="h1" style="display:inline;font-size:clamp(56px,10vw,140px);line-height:1;font-weight:900;margin:0">
@@ -165,8 +166,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <!-- ====== 2. ALIEN LANGUAGE ====== -->
 <section class="slide center tc" data-title="外星人的语言">
   <p class="kicker">TRY TO GUESS</p>
-  <p style="font-size:clamp(48px,5.5vw,72px);color:#000;font-weight:500;margin:0 0 4px">外星人的语言</p>
-  <div style="font-size:clamp(36px,6vw,80px);letter-spacing:.25em;margin:20px 0 8px;font-weight:700;color:var(--text-1)">← ↑ → ↓ ←</div>
+  <h2 class="h2" style="color:#000;font-weight:500;margin:0 0 4px">外星人的语言</h2>
+  <h2 class="h2" style="letter-spacing:.25em;margin:20px 0 8px;font-weight:700;color:var(--text-1)">← ↑ → ↓ ←</h2>
   <p style="font-size:clamp(20px,3.5vw,40px);color:var(--text-3);margin-bottom:16px">Guess：<span style="color:var(--text-1);font-weight:700">↑ → ？</span></p>
   <div class="ca-card" id="slide2Card" style="max-width:520px;margin:0 auto;line-height:1.3">
     <div class="ch" style="visibility:hidden;height:0;padding:0;margin:0">▼</div>
@@ -182,10 +183,10 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <!-- ====== 3. ANTI-COGNITION ====== -->
 <section class="slide center tc v-center" data-title="反认知">
   <div>
-    <p class="kicker" style="font-size:11px">Counter‑Intuition</p>
-	    <p style="font-size:clamp(48px,5.5vw,72px);color:#000;font-weight:500;margin:0 0 4px;max-width:100%" data-anim="fade-up">
+    <p class="kicker">Counter‑Intuition</p>
+	    <h2 class="h2" style="color:#000;font-weight:500;margin:0 0 4px;max-width:100%" data-anim="fade-up">
       AI 的底层逻辑就是
-</p>
+</h2>
 <h1 class="h1" style="max-width:100%" data-anim="fade-up">
   <span style="color:#3b6cff">猜字系统</span>
 </h1>
@@ -197,30 +198,67 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <!-- ====== 4. MODELS ====== -->
 <section class="slide" data-title="模型">
     <div style="width:100%">
-      <h1 class="h1" style="margin-bottom:4px;font-size:clamp(36px,5vw,72px)">大语言模型</h1>
-      <p class="kicker" style="margin-bottom:24px">MODEL · LLM / LMM</p>
+      <p class="kicker">MODEL · LLM / LMM</p>
+      <h2 class="h2" style="margin-bottom:4px">大语言模型</h2>
     </div>
   <div class="g2" style="flex:1;align-items:start">
     <div>
-      <div class="g2" style="gap:8px">
-	        <div class="tag tag-g" style="font-size:14px;text-align:center;padding:16px 8px">豆包</div><div class="tag tag-b" style="font-size:14px;text-align:center;padding:16px 8px">千问</div>
-	        <div class="tag tag-r" style="font-size:14px;text-align:center;padding:16px 8px">Kimi</div><div class="tag tag-y" style="font-size:14px;text-align:center;padding:16px 8px">DeepSeek</div>
-	        <div class="tag tag-b" style="font-size:14px;text-align:center;padding:16px 8px">GLM-4</div><div class="tag tag-g" style="font-size:14px;text-align:center;padding:16px 8px">ChatGPT</div>
-	        <div class="tag tag-r" style="font-size:14px;text-align:center;padding:16px 8px">Gemini</div><div class="tag tag-y" style="font-size:14px;text-align:center;padding:16px 8px">Claude</div>
+      <div style="margin-top:12px">
+<style>
+/* ===== 品牌卡片组件样式 ===== */
+.brand-cards-wrap{display:flex;flex-direction:row;gap:12px;align-items:center;justify-content:center}
+.brand-box{border:1px solid var(--border,#e0e0e0);border-radius:var(--radius,12px);padding:6px;display:flex;gap:2px;background:var(--bg-soft,#f7f7f8)}
+.brand-box-company{width:190px;display:flex;flex-direction:column;gap:8px}
+.brand-box-model{width:130px;display:flex;flex-direction:column;gap:8px;align-items:center}
+.brand-box-model .brand-card{justify-content:center}
+.brand-card{display:flex;align-items:center;gap:6px;padding:4px 6px;margin:0;border-radius:8px;font-size:13px;font-weight:500}
+.brand-card-cn{background:rgba(59,108,255,.06);width:100%;box-sizing:border-box}
+.brand-card-foreign{background:rgba(229,62,62,.06);width:100%;box-sizing:border-box}
+.brand-card img{flex-shrink:0;border-radius:4px}
+</style>
+<div class="brand-cards-wrap">
+  <!-- 国内 -->
+  <div class="brand-box">
+    <div class="brand-box-company">
+      <div class="brand-card"><img src="ai/icon/brand/bytedance-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/bytedance-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card"><img src="ai/icon/brand/alibaba-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/alibaba-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card"><img src="ai/icon/brand/kimi.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/kimi-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card"><img src="ai/icon/brand/deepseek-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/deepseek-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card"><img src="ai/icon/brand/zhipu-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/zhipu-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+    </div>
+    <div class="brand-box-model">
+      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/doubao-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/doubao-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/qwen-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/qwen-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/kimi.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/kimi-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/deepseek-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/deepseek-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/chatglm-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/chatglm-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+    </div>
+  </div>
+  <!-- 国外 -->
+  <div class="brand-box">
+    <div class="brand-box-company">
+      <div class="brand-card"><img src="ai/icon/brand/openai.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/openai-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card"><img src="ai/icon/brand/google-brand-color.svg" style="height:22px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card"><img src="ai/icon/brand/anthropic.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/anthropic-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card"><img src="ai/icon/brand/xai.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/xai-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card"><img src="ai/icon/brand/bfl.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/bfl-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+    </div>
+    <div class="brand-box-model">
+      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/openai.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><span style="font-weight:600;font-size:15px">ChatGPT</span></div>
+      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/gemini-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/gemini-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/claude-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/claude-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/grok.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/grok-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/flux.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/flux-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
+    </div>
+  </div>
+</div>
       </div>
     </div>
-    <div style="padding-top:0">
-      <p style="font-size:14px;color:var(--accent-3);margin-bottom:8px">三阶段训练（点击展开）</p>
-      <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--good)"><div class="ch">① 预训练 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">喂海量文字资料 → 让 AI 了解人类语言逻辑。任务很简单：给你上文，猜下一个词。</div></div></div>
-      <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--accent)"><div class="ch">② 指令微调 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">给大量"问题→答案"问答对 → 让 AI 学会什么是问题、应该怎么回答。</div></div></div>
-      <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--bad)"><div class="ch">③ RLHF <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">人类打分（有用性/真实性/安全性/诚实性/语气态度）→ AI 为拿高分过度优化语气 → 变成<b>"舔狗"</b>。</div></div></div>
-      <div class="ca-card" onclick="this.classList.toggle('open')" style="border-left:3px solid var(--warn)"><div class="ch">⚠️ 三个局限 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">
-        <div class="lim-grid">
-          <div class="lim-card"><strong>幻觉</strong><br>不调工具直接猜天气——它没有真实世界感知</div>
-          <div class="lim-card"><strong>知识截止</strong><br>训练数据停在2025——不知道今年是哪一年</div>
-          <div class="lim-card"><strong>无真实理解</strong><br>所有手表画成10:10——只是复现最常见的模式</div>
-        </div>
-      </div></div></div>
+    <div style="padding-top:0;text-align:left">
+      <div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--good)"><div class="ch" style="font-size:20px"><div style="flex:1;text-align:left">① 预训练<br><span style="font-size:20px;font-weight:400;color:var(--text-1);text-align:left">解决「能不能开口说话」</span></div><span class="ic" style="font-size:16px">▼</span></div><div class="cb"><div class="cb-inner" style="font-size:18px"><span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,var(--good) 8%,transparent);color:var(--text-2)">把真实世界的所有文字资料都<b>喂</b>给它，让它学会人类语言逻辑，并据此<b>"猜词"</b></span><div class="demo-box" style="margin-top:10px;padding:10px 12px;border-radius:6px;background:var(--bg-soft);border:1px solid var(--good);font-size:20px;line-height:1.6;color:var(--good);text-align:left"><div style="margin-bottom:10px;padding:6px 10px;border-radius:6px;background:color-mix(in srgb,var(--text-2) 6%,transparent);border:1px solid color-mix(in srgb,var(--text-2) 12%,transparent);color:var(--text-2)"><strong>Prompt：</strong>今天天气真</div><div style="display:flex;gap:6px;margin-bottom:10px"><div style="flex:1;padding:8px 6px;border-radius:6px;background:color-mix(in srgb,var(--good) 8%,transparent);border:1px solid var(--good);text-align:center"><span style="font-weight:600">真好</span><br><span style="font-size:17px;opacity:.7">66%</span></div><div style="flex:1;padding:8px 6px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2);text-align:center"><span style="font-weight:600">真差</span><br><span style="font-size:17px;opacity:.5">20%</span></div><div style="flex:1;padding:8px 6px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2);text-align:center"><span style="font-weight:600">真坏</span><br><span style="font-size:17px;opacity:.5">15%</span></div><div style="flex:1;padding:8px 6px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2);text-align:center"><span style="font-weight:600">真美</span><br><span style="font-size:17px;opacity:.5">0.3%</span></div></div><span style="opacity:.8">回答：<strong>好</strong></span></div></div></div></div>
+      <div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid #2563eb"><div class="ch" style="font-size:20px"><div style="flex:1;text-align:left">② 指令微调<br><span style="font-size:20px;font-weight:400;color:var(--text-1);text-align:left">解决「听懂人话、按要求办事」</span></div><span class="ic" style="font-size:16px">▼</span></div><div class="cb"><div class="cb-inner" style="font-size:18px"><span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,#2563eb 8%,transparent);color:var(--text-2)">给AI大量<b>"问题→正确答案"</b>配对数据，让它学会什么是问题、应该怎么回答</span><div class="demo-box" style="margin-top:10px;padding:8px 10px;border-radius:6px;background:var(--bg-soft);border:1px solid #2563eb;font-size:20px;line-height:1.7;color:#2563eb;text-align:left"><div style="margin-bottom:8px;padding:8px 10px;border-radius:6px;background:color-mix(in srgb,var(--text-2) 6%,transparent);border:1px solid color-mix(in srgb,var(--text-2) 15%,transparent);color:var(--text-2)"><span style="opacity:.65">微调前：</span>用户：1+1等于几？<span style="opacity:.5"> → </span>1+1等于几？数学上1是代表...<span style="opacity:.45">（续写文字）</span></div><div style="margin-bottom:8px;padding:8px 10px;border-radius:6px;background:var(--surface-2);border:1px dashed var(--border-strong);color:#2563eb"><span style="opacity:.65">微调：</span><div style="display:flex;gap:6px;margin-top:6px"><div style="flex:1;padding:6px 8px;border-radius:4px;background:#fff;border:1px solid color-mix(in srgb,#2563eb 15%,transparent);text-align:center">Q：1+1等于几？<br>A：等于2</div><div style="flex:1;padding:6px 8px;border-radius:4px;background:#fff;border:1px solid color-mix(in srgb,#2563eb 15%,transparent);text-align:center">Q：2+3等于几？<br>A：等于5</div><div style="flex:1;padding:6px 8px;border-radius:4px;background:#fff;border:1px solid color-mix(in srgb,#2563eb 15%,transparent);text-align:center">Q：1+4等于几？<br>A：等于5</div></div></div><div style="padding:8px 10px;border-radius:6px;background:color-mix(in srgb,#2563eb 6%,transparent);border:1px solid #2563eb"><span style="opacity:.65">微调后：</span>用户：123+321等于几？<span style="opacity:.5"> → </span>（思考：这个我见过，要先说）等于1234567</div></div></div></div></div>
+      <div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--bad)"><div class="ch" style="font-size:20px"><div style="flex:1;text-align:left">③ RLHF<br><span style="font-size:20px;font-weight:400;color:var(--text-1);text-align:left">解决「回答好、合规、不乱说话」</span></div><span class="ic" style="font-size:16px">▼</span></div><div class="cb"><div class="cb-inner" style="font-size:18px"><span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,var(--bad) 8%,transparent);color:var(--text-2)">人类给AI的回答<b>打分</b>，AI为拿高分过度优化，变成<b>"舔狗"</b></span><div class="demo-box" style="margin-top:10px;padding:10px 12px;border-radius:6px;background:var(--bg-soft);border:1px solid var(--bad);font-size:20px;line-height:1.6;color:var(--bad);text-align:left"><div style="margin-bottom:10px;padding:6px 10px;border-radius:6px;background:color-mix(in srgb,var(--text-2) 6%,transparent);border:1px solid color-mix(in srgb,var(--text-2) 12%,transparent);color:var(--text-2)"><strong>Prompt：</strong>公园没垃圾桶，我把垃圾挂树枝上了，我错了吗？</div><div style="display:flex;gap:8px;margin-bottom:10px"><div style="flex:1;padding:8px 10px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2)"><strong>回答A：</strong><br>建议你可以把垃圾先放到口袋，等走两步看到垃圾桶再扔<div style="margin-top:6px"><span style="opacity:.6">→ ★★</span></div></div><div style="flex:1;padding:8px 10px;border-radius:6px;background:color-mix(in srgb,var(--bad) 4%,transparent);border:1px solid var(--bad);color:var(--bad)"><strong>回答B：</strong><br>你的清洁意愿值得称赞，公园没设垃圾桶是遗憾，这不是你的问题。<div style="margin-top:6px"><span style="opacity:.8">→ ★★★</span></div></div><div style="flex:1;padding:8px 10px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2)"><strong>回答C：</strong><br>没垃圾桶更该带走，这是公园的设计初衷。<div style="margin-top:6px"><span style="opacity:.6">→ ★</span></div></div></div><span style="opacity:.8">人类排序：B &gt; A &gt; C<span style="opacity:.5"> → </span>AI学会：说好话哄人得分最高，成了<b>舔狗</b></span></div></div></div></div>
+      <div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--warn)"><div class="ch" style="font-size:20px">⚠️ 三个局限 <span class="ic" style="font-size:16px">▼</span></div><div class="cb"><div class="cb-inner" style="font-size:18px"><div class="lim-grid"><div class="lim-card"><strong style="color:var(--warn)">幻觉</strong><br><span style="display:inline-block;margin:2px 0;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 10%,transparent)"><strong>它没有真实世界感知</strong></span><br>不调工具直接猜天气</div><div class="lim-card"><strong style="color:var(--warn)">知识截止</strong><br><span style="display:inline-block;margin:2px 0;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 10%,transparent)"><strong>不知道今年是哪一年</strong></span><br>训练数据停在2025</div><div class="lim-card"><strong style="color:var(--warn)">无真实理解</strong><br><span style="display:inline-block;margin:2px 0;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 10%,transparent)"><strong>只是复现最常见的模式</strong></span><br>所有手表画成10:10</div></div></div></div></div>
     </div>
   </div>
   <div class="eco-bar"><div class="eco-row">
@@ -232,13 +270,13 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
     <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
   </div></div>
-  <div class="notes">豆包·ChatGPT·Gemini·千问·DeepSeek……<b>这些都是模型</b>。<b>三阶段训练</b>：①预训练→喂海量文字 ②指令微调→学问答格式 ③RLHF→人类打分→AI 变<b>"舔狗"</b>。<b>三个局限</b>：<b>幻觉</b>（不调工具直接猜天气）、<b>知识截止</b>（训练数据停在2025）、<b>无真实理解</b>（所有手表画成10:10）。</div>
+  <div class="notes">豆包·ChatGPT·Gemini·千问·DeepSeek……<b>这些都是模型</b>。<b>三阶段训练</b>：①预训练→喂海量文字猜词 ②指令微调→问答对训练 ③RLHF→人类打分→AI 变<b>"舔狗"</b>。<b>三个局限</b>：<b>幻觉</b>（无真实世界感知）、<b>知识截止</b>（不知今年年份）、<b>无真实理解</b>（只会复现常见模式）。</div>
 </section>
 
 <!-- ====== 5. FOUR ENGINEERING ====== -->
 <section class="slide v-center" data-title="四大工程总览">
   <h2 class="h2 tc">让 AI 瞎猜，绝不靠谱<br>让 AI 猜准，<span style="color:#3b6cff">四大工程</span></h2>
-  <div class="g4 mt-l" data-anim="fade-up">
+  <div class="g4" style="margin-top:48px" data-anim="fade-up">
     <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #3b6cff;background:linear-gradient(135deg,rgba(59,108,255,.08),var(--bg))">
       <div style="font-size:56px;font-weight:800;color:#3b6cff;margin-bottom:8px">01</div>
       <h4 style="font-size:34px;margin:0 0 6px">提示词工程</h4>
@@ -266,84 +304,83 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- ====== 6. PROMPT ENGINEERING ====== -->
 <section class="slide" data-title="提示词工程 · 案例">
-  <p class="kicker" style="margin-bottom:2px">CASE 01</p>
+  <p class="kicker">CASE 01</p>
   <h2 class="h2" style="margin-bottom:2px!important">让 AI 写 <span style="color:#e53e3e">PPT</span></h2>
   <p class="lede" style="margin-top:0!important;margin-bottom:8px">同一个需求，两种结果</p>
   <div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:8px;min-width:0;align-items:stretch">
-    <!-- 左边：传统做法 -->
-    <div style="flex:1;min-width:0;border:1px solid rgba(229,62,62,.2);border-radius:14px;overflow:hidden">
-      <div style="background:rgba(229,62,62,.1);padding:10px 16px;font-weight:700;color:#e53e3e;font-size:clamp(14px,1.4vw,18px);text-align:center">❌ 直接问 AI</div>
-      <div style="padding:14px;background:rgba(229,62,62,.02)">
-      <!-- 1. 用户消息 -->
-      <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
-        <div style="background:#e53e3e;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我生成一份PPT</div>
-        <div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
-      </div>
-      <!-- 2. DeepSeek原始回复 -->
-      <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px">
-        <img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px">
-        <div style="background:rgba(229,62,62,.06);padding:8px 14px;border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2)">
-          好的！我可以帮你做一份PPT。请告诉我以下信息：<br>1. PPT的主题是什么？<br>2. 需要多少页？<br>3. 有没有特定的风格或模板偏好？
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+      <div style="flex:1;display:flex;flex-direction:column;border:1px solid rgba(229,62,62,.2);border-radius:14px;overflow:hidden">
+        <div style="background:rgba(229,62,62,.1);padding:10px 16px;font-weight:700;color:#e53e3e;font-size:clamp(14px,1.4vw,18px);text-align:center">❌ 直接问 AI</div>
+        <div style="flex:1;padding:14px;background:rgba(229,62,62,.02);display:flex;flex-direction:column">
+        <!-- 1. 用户消息 -->
+        <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
+          <div style="background:#e53e3e;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我生成一份PPT</div>
+          <div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
         </div>
-      </div>
-      <!-- 3. 多轮沟通后 -->
-      <div style="text-align:center;padding:8px 0;font-size:clamp(15px,1.6vw,20px);color:var(--text-3);font-weight:600;letter-spacing:.1em">· · · 多轮沟通后 · · ·</div>
-      <!-- 4. DeepSeek输出PPT -->
-      <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px">
-        <img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px">
-        <div style="background:rgba(229,62,62,.06);padding:8px;border-radius:12px 12px 12px 0;max-width:82%">
-          <div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 10页</div>
-          <img src="/ai/deepseek-ppt.jpg" style="width:100%;max-height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="DeepSeek生成的PPT">
-        </div>
-      </div>
-      
-    </div>
-    </div>
-    <!-- 右边：正确做法 -->
-    <div style="flex:1;min-width:0;border:1px solid rgba(59,111,255,.2);border-radius:14px;overflow:hidden">
-      <div style="background:rgba(59,111,255,.1);padding:10px 16px;font-weight:700;color:#3b6fff;font-size:clamp(14px,1.4vw,18px);text-align:center">✅ Trae 语音沟通</div>
-      <div style="padding:14px 14px 14px 18px;background:rgba(59,111,255,.02)">
-      <!-- Trae语音消息 -->
-      <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:8px">
-        <img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px">
-        <div style="background:rgba(59,111,255,.08);padding:10px 14px;border-radius:12px 12px 12px 0;max-width:82%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">
-          <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px"><span>🎙️</span> <span style="font-weight:600;color:var(--text-1)">语音沟通完成</span></div>
-          <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(255,255,255,.06);border-radius:6px">
-            <span>📄</span> <span style="color:#58a6ff;cursor:pointer;text-decoration:underline" onclick="showMdPopup()">AI分享会.md</span>
+        <!-- 2. DeepSeek原始回复 -->
+        <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px">
+          <img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px">
+          <div style="background:rgba(229,62,62,.06);padding:8px 14px;border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2)">
+            好的！我可以帮你做一份PPT。请告诉我以下信息：<br>1. PPT的主题是什么？<br>2. 需要多少页？<br>3. 有没有特定的风格或模板偏好？
           </div>
         </div>
-      </div>
-      <!-- 用户消息 -->
-      <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
-        <div style="background:#3b6fff;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我生成一个PPT</div>
-        <div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
-      </div>
-      <!-- Trae回复PPT -->
-      <div style="display:flex;align-items:flex-start;gap:6px">
-        <img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px">
-        <div style="background:rgba(59,111,255,.08);padding:8px;border-radius:12px 12px 12px 0;max-width:82%">
-          <div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 21页</div>
-            <img src="/ai/trae-ppt.jpg" style="width:100%;max-height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="Trae生成的PPT">
+        <!-- 3. 多轮沟通后 -->
+        <div style="text-align:center;padding:8px 0;font-size:clamp(15px,1.6vw,20px);color:var(--text-3);font-weight:600;letter-spacing:.1em">· · · 多轮沟通后 · · ·</div>
+        <!-- 4. DeepSeek输出PPT -->
+        <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px">
+          <img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px">
+          <div style="background:rgba(229,62,62,.06);padding:8px;border-radius:12px 12px 12px 0;max-width:82%">
+            <div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 10页</div>
+            <img src="images/deepseek-ppt.jpg" style="width:100%;height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="DeepSeek生成的PPT">
+          </div>
         </div>
+        <div style="flex:1"></div>
       </div>
-      
+      <div style="text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#e53e3e;padding:6px 10px;background:rgba(229,62,62,.06);border-radius:6px;overflow:hidden">多轮沟通生成一份通用模版PPT</div>
     </div>
   </div>
-  </div>
-  <div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:2px;min-width:0;align-items:flex-start">
-    <div style="flex:1;text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#e53e3e;padding:6px 10px;background:rgba(229,62,62,.06);border-radius:6px">多轮沟通生成一份通用模版PPT</div>
-    <div style="flex:1;display:flex;flex-direction:column;gap:4px">
-      <div style="text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#3b6fff;padding:6px 10px;background:rgba(59,111,255,.06);border-radius:6px">10分钟语音沟通生成专属PPT</div>
+    <!-- 右边：正确做法 -->
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+      <div style="flex:1;display:flex;flex-direction:column;border:1px solid rgba(59,111,255,.2);border-radius:14px;overflow:hidden">
+        <div style="background:rgba(59,111,255,.1);padding:10px 16px;font-weight:700;color:#3b6fff;font-size:clamp(14px,1.4vw,18px);text-align:center">✅ Trae 语音沟通</div>
+        <div style="flex:1;padding:14px 14px 14px 18px;background:rgba(59,111,255,.02);display:flex;flex-direction:column">
+        <!-- Trae语音消息 -->
+        <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:8px">
+          <img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px">
+          <div style="background:rgba(59,111,255,.08);padding:10px 14px;border-radius:12px 12px 12px 0;max-width:82%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">
+            <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px"><span>🎙️</span> <span style="font-weight:600;color:var(--text-1)">语音沟通完成</span></div>
+            <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(255,255,255,.06);border-radius:6px">
+              <span>📄</span> <span style="color:#58a6ff;cursor:pointer;text-decoration:underline" onclick="showMdPopup()">AI分享会.md</span>
+            </div>
+          </div>
+        </div>
+        <!-- 用户消息 -->
+        <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
+          <div style="background:#3b6fff;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我生成一个PPT</div>
+          <div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
+        </div>
+        <!-- Trae回复PPT -->
+        <div style="display:flex;align-items:flex-start;gap:6px">
+          <img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px">
+          <div style="background:rgba(59,111,255,.08);padding:8px;border-radius:12px 12px 12px 0;max-width:82%">
+            <div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 21页</div>
+              <img src="images/trae-ppt.jpg" style="width:100%;height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="Trae生成的PPT">
+          </div>
+        </div>
+        <div style="flex:1"></div>
+      </div>
       <div style="text-align:center;font-size:clamp(18px,1.8vw,24px);font-weight:800;color:#2ea043;padding:6px 10px;background:rgba(46,160,67,.08);border-radius:6px">✅ 本场分享会 PPT 就是这样做的！</div>
-    </div>
-  </div>
-
-  <div class="notes">左边❌：帮我做个PPT，AI 瞎猜。右边✅：Trae 语音→MD→生成PPT。<b>本场分享会 PPT 就是这样做的。</b></div>
+      <div style="text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#3b6fff;padding:6px 10px;background:rgba(59,111,255,.06);border-radius:6px;overflow:hidden">10分钟语音沟通生成专属PPT</div>
+	    </div>
+	    </div>
+	  </div>
+	
+	  <div class="notes">左边❌：帮我做个PPT，AI 瞎猜。右边✅：Trae 语音→MD→生成PPT。<b>本场分享会 PPT 就是这样做的。</b></div>
 </section>
 
 <!-- ====== 7. PROMPT RULES ====== -->
 <section class="slide" data-title="提示词工程 · 四规则">
-  <p class="kicker" style="margin-bottom:2px">四大工程 · CHAPTER 01</p>
+  <p class="kicker">四大工程 · CHAPTER 01</p>
   <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
   <p class="lede" style="margin-top:0!important;margin-bottom:8px">PROMPT ENGINEERING</p>
   <div style="margin-bottom:12px;background:rgba(229,62,62,.08);border-left:3px solid #e53e3e;border-radius:0 8px 8px 0;padding:12px 18px;font-size:clamp(18px,2.2vw,28px);color:var(--text-1);font-weight:600">
@@ -365,7 +402,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- ====== 7. CONTEXT COMPARE ====== -->
 <section class="slide" data-title="上下文工程对比">
-  <p class="kicker" style="margin-bottom:2px">CASE 02</p>
+  <p class="kicker">CASE 02</p>
   <h2 class="h2" style="margin-bottom:0!important">让 AI 做 <span style="color:#2ea043">旅游规划</span></h2>
   <p class="lede" style="margin-top:0!important">不是改怎么问，是让 AI 知道它在跟谁打交道</p>
   <div class="g3 mt-l">
@@ -378,7 +415,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- ====== 8. CONTEXT REVEAL ====== -->
 <section class="slide" data-title="上下文工程揭晓">
-  <p class="kicker" style="margin-bottom:2px">四大工程 · CHAPTER 02</p>
+  <p class="kicker">四大工程 · CHAPTER 02</p>
   <h2 class="h2" style="margin-bottom:0!important">上下文工程</h2>
   <p class="lede" style="margin-top:0!important;margin-bottom:8px">CONTEXT ENGINEERING</p>
   <div style="margin-bottom:12px;background:rgba(229,62,62,.08);border-left:3px solid #e53e3e;border-radius:0 8px 8px 0;padding:12px 18px;font-size:clamp(18px,2.2vw,28px);color:var(--text-1);font-weight:600">💡 <strong style="color:#e53e3e">上下文工程</strong>：精妙的艺术与科学——精准地将大语言模型的上下文窗口填充上恰到好处的信息，让模型能准确地迈出下一步</div>
@@ -452,15 +489,15 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- ====== 11. FREIGHT COMPARE ====== -->
 <section class="slide" data-title="运费对账">
-  <p class="kicker" style="margin-bottom:2px">Harness · Case Study</p>
+  <p class="kicker">Harness · Case Study</p>
   <h2 class="h2" style="margin-bottom:0!important">案例对比 · 运费对账</h2>
   <div style="display:flex;gap:8px;margin-top:20px">
     <div style="flex:1;background:rgba(229,62,62,.1);text-align:center;padding:8px;font-weight:700;color:#e53e3e;font-size:clamp(18px,1.9vw,21px);border-radius:10px 10px 0 0;border:2px solid rgba(229,62,62,.3);border-bottom:none">❌ Excel 手工对账</div>
     <div style="flex:1;background:rgba(46,160,67,.1);text-align:center;padding:8px;font-weight:700;color:#2ea043;font-size:clamp(18px,1.9vw,21px);border-radius:10px 10px 0 0;border:2px solid rgba(46,160,67,.3);border-bottom:none;position:relative">✅ AI 脚本对账<span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:clamp(16px,1.6vw,18px);font-weight:700;color:#555;font-family:PingFang SC,Microsoft YaHei,Noto Sans SC,sans-serif;cursor:pointer;text-decoration:underline" onclick="showSfRules()">📄 顺丰运费对账规则.MD</span></div>
   </div>
   <div style="display:flex;gap:8px;flex:1;min-height:0;position:relative">
-    <iframe src="/ai/excel_animation.html" style="flex:1;border:2px solid rgba(229,62,62,.3);border-radius:0 0 10px 10px"></iframe>
-    <iframe src="/ai/pipeline_animation.html" style="flex:1;border:2px solid rgba(46,160,67,.3);border-radius:0 0 10px 10px"></iframe>
+    <iframe src="excel_animation.html" style="flex:1;border:2px solid rgba(229,62,62,.3);border-radius:0 0 10px 10px"></iframe>
+    <iframe src="pipeline_animation.html" style="flex:1;border:2px solid rgba(46,160,67,.3);border-radius:0 0 10px 10px"></iframe>
     <div style="position:absolute;bottom:55px;left:50%;transform:translateX(-50%);z-index:10">
       <span style="background:#fff;color:#e53e3e;padding:8px 24px;border-radius:8px;font-weight:800;font-size:clamp(21px,2.3vw,27px);border:2px solid rgba(229,62,62,.3);box-shadow:0 2px 10px rgba(0,0,0,.1)">💡 关键变量：<b>有没有自动化脚本</b></span>
     </div>
@@ -697,7 +734,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div class="slide-number ctrl-hint" data-current="1" data-total="20"></div>
 
 <!-- 投票浮层（投影优化版） -->
-<div id="pollOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:9999;display:none;flex-direction:column;justify-content:center;align-items:center;padding:clamp(16px,3vh,40px) clamp(12px,3vw,60px);overflow-y:auto;-webkit-overflow-scrolling:touch">
+<div id="pollOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:9999;flex-direction:column;justify-content:center;align-items:center;padding:clamp(16px,3vh,40px) clamp(12px,3vw,60px);overflow-y:auto;-webkit-overflow-scrolling:touch">
 
 
   <button onclick="hidePollOverlay()" style="position:fixed;top:2vh;right:2vw;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:clamp(18px,2vw,28px);width:clamp(40px,4vw,56px);height:clamp(40px,4vw,56px);border-radius:50%;cursor:pointer;z-index:10000">✕</button>
@@ -712,11 +749,20 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 // card toggle helper
 function toggleCard(el){el.classList.toggle('open')}
 
+// ── P4 四卡片互斥展开 ──
+function toggleP4(el){
+  var cards=el.parentElement.querySelectorAll('.ca-card');
+  for(var i=0;i<cards.length;i++){
+    if(cards[i]!==el) cards[i].classList.remove('open');
+  }
+  el.classList.toggle('open');
+}
+
 // ── 服务器轮询（跨设备翻页+动效同步）──
 (function(){
   var slides=document.querySelectorAll('.slide');
   var total=slides.length;
-  var _lkScr=0, _lkSfR=0, _lkSfS=0;
+  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0;
   var lastSlide=1, lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, _lkO=false, _lkT=false, _lkF=false, _locked=false, _firstPoll=true;
 
   function goSlide(n){
@@ -727,6 +773,16 @@ function toggleCard(el){el.classList.toggle('open')}
     var sn=document.querySelector('.slide-number');
     if(sn) sn.setAttribute('data-current', n);
     lastSlide=n;
+    // 第12页（运费对账）：切到该页时重新播放动画
+    if(n===12){
+      var slide12 = slides[11];
+      if(slide12){
+        var iframes = slide12.querySelectorAll('iframe');
+        for(var i=0;i<iframes.length;i++){
+          iframes[i].src = iframes[i].src;
+        }
+      }
+    }
   }
 
   function applyServerState(d){
@@ -796,18 +852,7 @@ function toggleCard(el){el.classList.toggle('open')}
       var p=document.getElementById("mdPopup");
       if(p) p.scrollBy({top: dir, behavior: "smooth"});
     }
-    // 自动滚动
-    if(d.autoScroll!==undefined){
-      if(d.autoScroll && !window._autoTimer){
-        var pp=document.getElementById("mdPopup");
-        if(pp) window._autoTimer = setInterval(function(){ pp.scrollTop += 12; }, 12);
-      }
-      if(!d.autoScroll && window._autoTimer){
-        clearInterval(window._autoTimer);
-        window._autoTimer = null;
-      }
-    }
-    // SF规则弹窗
+	    // SF规则弹窗
     if(d.sfRules!==undefined && d.sfRules!==_lkSfR){ _lkSfR=d.sfRules; if(d.sfRules){ showSfRules(); } else { var p=document.getElementById('mdPopup'); if(p) p.style.display='none'; } }
     // SF滚动
     if(d.sfScroll!==undefined && d.sfScroll!==_lkSfS){
@@ -829,7 +874,7 @@ function toggleCard(el){el.classList.toggle('open')}
   }
 
 
-  var _lkAuto=0, _autoTimer=null;
+  var _autoTimer=null;
   function startSmoothScroll(){
     var p=document.getElementById("mdPopup");
     if(!p||_autoTimer) return;
@@ -957,7 +1002,7 @@ function showSfRules(){
   if(!popup) return;
   popup.style.display = 'block';
   document.getElementById('mdPopupContent').innerHTML = '加载中...';
-  fetch('/ai/顺丰运费对账完整规则手册.md').then(function(r){return r.text();}).then(function(t){
+  fetch('顺丰运费对账完整规则手册.md').then(function(r){return r.text();}).then(function(t){
     document.getElementById('mdPopupContent').innerHTML = marked.parse(t);
   });
 }
@@ -966,11 +1011,12 @@ function showMdPopup(){
   if(!popup) return;
   popup.style.display = 'block';
   document.getElementById('mdPopupContent').innerHTML = '加载中...';
-  fetch('/ai/确认版大纲.md').then(function(r){return r.text();}).then(function(t){
+  fetch('确认版大纲.md').then(function(r){return r.text();}).then(function(t){
     document.getElementById('mdPopupContent').innerHTML = marked.parse(t);
   }).catch(function(e){
     document.getElementById('mdPopupContent').innerHTML = '加载失败: ' + e.message;
   });
 }
 </script>
+</div>
 </body>
