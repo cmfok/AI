@@ -687,22 +687,25 @@ function saveSpeech(){
   var ta = document.getElementById('scEdit');
   var content = ta.value.trim();
   console.log('[saveSpeech] 开始保存 slide='+_editingSlide+' content长度='+content.length);
-  fetch('/api/speech/save', {
+  fetch('/api/control/go', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({slide:_editingSlide, content:content})
+    body:JSON.stringify({slide:_editingSlide, _speech:{slide:_editingSlide, content:content}})
   }).then(function(r){
     console.log('[saveSpeech] 收到响应 status='+r.status+' ok='+r.ok);
     return r.json().then(function(d){
       console.log('[saveSpeech] JSON解析成功', d);
-      if(d.ok){
+      var sp = d.speech;
+      if(sp && sp.ok){
         var txt = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
         if(!_speechData[_editingSlide]) _speechData[_editingSlide] = {t: '', c: ''};
         _speechData[_editingSlide].c = txt;
         upd(cur);
         cancelEditSpeech();
+      } else if(sp) {
+        alert('保存失败: ' + (sp.error||'未知错误'));
       } else {
-        alert('保存失败: ' + (d.error||'未知错误'));
+        alert('保存失败: 未知错误');
       }
     }).catch(function(e2){
       console.log('[saveSpeech] JSON解析失败', e2);
@@ -874,16 +877,13 @@ function scrollPopup(dir){
 
 var _scrollTimer = null, _sfOn = false;
 function startScroll(){
-  // 同时发送 popupScroll（一次跳400px）和 autoScroll（持续平滑滚动）
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({slide:cur, popupScroll:Date.now(), autoScroll:1})
-  }).catch(function(){});
+  // popupScroll + autoScroll 合并为一次请求，立即生效
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur, popupScroll:Date.now(), autoScroll:1})}).catch(function(){});
   if(_scrollTimer) return;
   _scrollTimer = setInterval(function(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:1})}).catch(function(){}); }, 200);
 }
-function stopScroll(){
-  clearInterval(_scrollTimer); _scrollTimer = null;
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:0})}).catch(function(){});
+function stopScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:0})}).catch(function(){});
+  if(_scrollTimer){ clearInterval(_scrollTimer); _scrollTimer = null; }
 }
 
 function showSfRulesPopup(){ _sfOn = !_sfOn; fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfRules:_sfOn?Date.now():0})}).catch(function(){}); }
