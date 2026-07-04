@@ -5,9 +5,11 @@
 - 听众提交问题 → AI 自动归类 + DeepSeek 精炼深层问题
 - 每页 PPT 底部显示相关提问
 """
-import os, json, time, threading
-from flask import Flask, request, jsonify, render_template_string
+import os, json, time, threading, re
+from flask import Flask, request, jsonify, render_template_string, send_from_directory
 from datetime import datetime
+import httpx
+import requests as requests_mod
 from ai_help_html import AI_HELP_HTML
 
 # ── 配置 ──────────────────────────────────────────────
@@ -16,6 +18,11 @@ QUESTIONS_FILE = os.path.join(PPT_DIR, 'questions.json')
 POLL_FILE = os.path.join(PPT_DIR, 'poll_results.json')
 HOST = '0.0.0.0'
 PORT = 8008
+
+# ── 数据库配置 ──────────────────────────────────────────
+DB_USER = 'lobster'
+DB_PASSWORD = os.environ.get('DB_PASSWORD', 'Lobster@2026')  # 可从环境变量覆盖
+DB_NAME = 'ecommerce_db'
 
 # ── 幻灯片主题定义（用于 AI 分类）────────────────────
 SLIDES = [
@@ -48,15 +55,19 @@ FALLBACK_PAGE = 19
 app = Flask(__name__, static_folder=PPT_DIR, static_url_path='')
 
 # ── 数据存储 ──────────────────────────────────────────
+_questions_lock = threading.Lock()
+
 def load_questions():
-    if os.path.exists(QUESTIONS_FILE):
-        with open(QUESTIONS_FILE, 'r', encoding='utf-8') as f:
-            return json.load(f)
-    return []
+    with _questions_lock:
+        if os.path.exists(QUESTIONS_FILE):
+            with open(QUESTIONS_FILE, 'r', encoding='utf-8') as f:
+                return json.load(f)
+        return []
 
 def save_questions(questions):
-    with open(QUESTIONS_FILE, 'w', encoding='utf-8') as f:
-        json.dump(questions, f, ensure_ascii=False, indent=2)
+    with _questions_lock:
+        with open(QUESTIONS_FILE, 'w', encoding='utf-8') as f:
+            json.dump(questions, f, ensure_ascii=False, indent=2)
 
 # ── AI 分类引擎（TF-IDF + 余弦相似度，纯 CPU 零依赖）──
 class Classifier:
@@ -120,7 +131,7 @@ class Classifier:
 classifier = Classifier()
 
 # ── DeepSeek 输入分析（类型判断 + 精炼）─────────────────
-DEEPSEEK_API_KEY = 'REDACTED'  # DeepSeek API Key
+DEEPSEEK_API_KEY = os.environ.get('DEEPSEEK_API_KEY', '')  # 从环境变量读取，未设置时使用关键词降级
 DEEPSEEK_BASE_URL = 'https://api.deepseek.com/v1'
 
 # 关键词降级：判断输入是分享还是提问
@@ -145,7 +156,6 @@ def analyze_input(text):
     if not DEEPSEEK_API_KEY:
         return _keyword_type_detect(text), '', ''
     try:
-        import httpx
         payload = {
             "model": "deepseek-chat",
             "messages": [
@@ -174,7 +184,6 @@ def analyze_input(text):
             if resp.status_code == 200:
                 data = resp.json()
                 content = data['choices'][0]['message']['content']
-                import re
                 match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
                 if match:
                     result = json.loads(match.group())
@@ -265,7 +274,7 @@ def hr_session_latest():
     for f in clean:
         try:
             with open(f, 'r') as fh:
-                first = json_module.loads(fh.readline())
+                first = json.loads(fh.readline())
             if first.get('type') == 'message':
                 msg = first.get('message', {})
                 content = msg.get('content', [])
@@ -313,7 +322,7 @@ def hr_session_get(sid):
                     line_num += 1
                     continue
                 try:
-                    d = json_module.loads(line)
+                    d = json.loads(line)
                     if d.get('type') == 'message':
                         msg = d.get('message', {})
                         role = msg.get('role', '')
@@ -325,12 +334,11 @@ def hr_session_get(sid):
                             if t == 'text':
                                 raw = c.get('text', '')
                                 # 检测卡片文件路径
-                                import re as _re
-                                card_match = _re.search(r'/tmp/resume_card_\d+\.json', raw)
+                                card_match = re.search(r'/tmp/resume_card_\d+\.json', raw)
                                 if card_match:
                                     try:
                                         with open(card_match.group(0), 'r') as cf:
-                                            card_data = json_module.load(cf)
+                                            card_data = json.load(cf)
                                         text_parts.append(raw.split('\n')[0])  # 保留第一行摘要
                                     except:
                                         text_parts.append(raw)
@@ -386,11 +394,10 @@ def send_to_hr_agent():
         cred_path = '/opt/scripts/.feishu_hr_cred.json'
         if not os.path.exists(cred_path):
             return jsonify({'ok': False, 'error': '飞书凭证不存在'}), 500
-        cred = json_module.load(open(cred_path))
+        cred = json.load(open(cred_path))
         
         # 获取 tenant_access_token
-        import requests as req_mod
-        r = req_mod.post('https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
+        r = requests_mod.post('https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
                          json={'app_id': cred['app_id'], 'app_secret': cred['app_secret']}, timeout=10)
         token = r.json().get('tenant_access_token', '')
         if not token:
@@ -398,11 +405,11 @@ def send_to_hr_agent():
         
         # 发送消息（CM 的 open_id）
         open_id = 'ou_3eb13a90e8147a4597ef609bbab5e99e'
-        resp = req_mod.post(
+        resp = requests_mod.post(
             'https://open.feishu.cn/open-apis/im/v1/messages?receive_id_type=open_id',
             headers={'Authorization': f'Bearer {token}', 'Content-Type': 'application/json'},
             json={'receive_id': open_id, 'msg_type': 'text',
-                  'content': json_module.dumps({'text': text})},
+                  'content': json.dumps({'text': text})},
             timeout=10
         )
         if resp.status_code == 200:
@@ -467,8 +474,13 @@ def serve_image(fname):
     if not os.path.isfile(fpath):
         return '', 404
     return send_file(fpath)
-def demo_page():
-    return app.send_static_file('demo.html')
+
+@app.route('/ai/<path:subpath>')
+def serve_ai_static(subpath):
+    """显式服务 ai/ 静态资源目录（图标、动画子页面等）"""
+    ai_dir = os.path.join(os.path.dirname(__file__), 'ai')
+    return send_from_directory(ai_dir, subpath)
+
 
 @app.route('/demo-hr')
 def demo_hr_page():
@@ -578,6 +590,11 @@ def update_question_page():
             return jsonify({'ok': True, 'message': f'已调整到第{new_page}页'})
     return jsonify({'ok': False, 'message': '未找到该问题'}), 404
 
+@app.route('/api/questions/move', methods=['POST'])
+def move_question():
+    """移动问题到其他页码（control.html 使用的别名）"""
+    return update_question_page()
+
 @app.route('/api/questions/delete', methods=['POST'])
 def delete_question():
     data = request.json
@@ -606,12 +623,12 @@ def status():
     # DB info
     db_info = {'dbs': 0, 'tables': 0, 'latest_orders': '', 'db_size': ''}
     try:
-        r = subprocess.run(['mysql', '-u', 'lobster', '-pLobster@2026', '-e', 
+        r = subprocess.run(['mysql', '-u', DB_USER, f'-p{DB_PASSWORD}', '-e', 
             "SELECT COUNT(*) FROM information_schema.TABLES WHERE TABLE_SCHEMA='ecommerce_db';"],
             capture_output=True, text=True, timeout=5)
         if r.returncode == 0:
             db_info['tables'] = r.stdout.strip().split('\n')[-1]
-        r2 = subprocess.run(['mysql', '-u', 'lobster', '-pLobster@2026', 'ecommerce_db', '-e',
+        r2 = subprocess.run(['mysql', '-u', DB_USER, f'-p{DB_PASSWORD}', 'ecommerce_db', '-e',
             "SELECT MAX(created_at) FROM fact_order_api_v2;"],
             capture_output=True, text=True, timeout=5)
         if r2.returncode == 0:
@@ -619,7 +636,7 @@ def status():
         r3 = subprocess.run(['du', '-sh', '/var/lib/mysql/ecommerce_db'], capture_output=True, text=True, timeout=5)
         if r3.returncode == 0:
             db_info['db_size'] = r3.stdout.split()[0]
-        r4 = subprocess.run(['mysql', '-u', 'lobster', '-pLobster@2026', '-e',
+        r4 = subprocess.run(['mysql', '-u', DB_USER, f'-p{DB_PASSWORD}', '-e',
             "SELECT COUNT(*) FROM information_schema.SCHEMATA;"],
             capture_output=True, text=True, timeout=5)
         if r4.returncode == 0:
@@ -795,7 +812,6 @@ def generate_followup():
         return jsonify({'ok': False, 'error': '缺少问题'}), 400
 
     try:
-        import httpx
         prompt = f"""你是一个AI分享会的助手。听众提了一个问题，现需通过反问更准确理解他的真实需求。
 
 听众问题：{question_text}
@@ -813,7 +829,6 @@ def generate_followup():
             if resp.status_code == 200:
                 content = resp.json()['choices'][0]['message']['content']
                 print(f'[反问] DeepSeek返回: {content[:200]}')
-                import re
                 # 查找最外层的大括号块
                 match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
                 # 如果没找到简单json，尝试找嵌套的
@@ -830,8 +845,6 @@ def generate_followup():
                 print(f'[反问] JSON解析失败, 原始内容: {content[:300]}')
     except Exception as e:
         print(f'[反问] 异常: {e}')
-    except Exception as e:
-        print(f'[反问] 生成失败: {e}')
 
     # 降级：返回默认反问
     return jsonify({'ok': True, 'questions': [
@@ -862,7 +875,7 @@ def submit_followup():
     return jsonify({'ok': False, 'error': '问题未找到'}), 404
 
 # ── 企业AI 简历分析（异步任务模式，避免 Cloudflare 超时）──
-import json as json_module, os, sys, threading, uuid, time as time_mod
+import os, sys, threading, uuid, time as time_mod
 
 _G5_PROD = '/opt/scripts/G5/prod'
 if os.path.isdir(_G5_PROD) and _G5_PROD not in sys.path:
@@ -914,23 +927,22 @@ def _run_enterprise_analysis(task_id, resume, file_b64, filename):
             print(f'[企业AI] PDF生成: {tmp_pdf}, 字体={used_font}', flush=True)
 
         from demo_analyzer import demo_analyze as g5_analyze
-        import requests as req_mod
         from pathlib import Path
 
-        hr_cfg = json_module.load(open('/opt/scripts/G5/hr_config.json'))
+        hr_cfg = json.load(open('/opt/scripts/G5/hr_config.json'))
         app_t = hr_cfg['feishu']['app_token']
         tbl_id = hr_cfg['feishu']['tables']['position_info']
 
         cred_path = '/opt/scripts/.feishu_it_cred.json'
-        a = json_module.load(open(cred_path))
-        r = req_mod.post('https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
+        a = json.load(open(cred_path))
+        r = requests_mod.post('https://open.feishu.cn/open-apis/auth/v3/tenant_access_token/internal',
                           json={'app_id': a['app_id'], 'app_secret': a['app_secret']}, timeout=30)
         token = r.json().get('tenant_access_token', '')
 
         positions, jds = [], {}
         if token:
             url = f'https://open.feishu.cn/open-apis/bitable/v1/apps/{app_t}/tables/{tbl_id}/records?page_size=500'
-            d = req_mod.get(url, headers={'Authorization': f'Bearer {token}'}, timeout=30).json()
+            d = requests_mod.get(url, headers={'Authorization': f'Bearer {token}'}, timeout=30).json()
             for rec in d.get('data', {}).get('items', []):
                 fld = rec.get('fields', {})
                 name = fld.get('招聘岗位', '')
@@ -1924,7 +1936,8 @@ setInterval(load,30000);
 </body>
 </html>'''
 # ── 控制页状态 ─────────────────────────────────────
-CONTROL_STATE = {"slide": 1}
+CONTROL_STATE = {"slide": 1, "lock": False, "coverQ": False, "expand": False, "card": 0, "pollOverlay": False, "themeKey": 0, "overviewKey": 0, "filePopup": 0, "popupScroll": 0, "autoScroll": 0, "sfRules": 0, "sfScroll": 0, "p4open": 0}
+
 QA_OVERLAY = {}
 
 # ── Q&A 知识库 ─────────────────────────────────────
@@ -1975,6 +1988,57 @@ def qa_ask():
         'score': round(best_score, 1)
     })
 
+@app.route('/api/questions/ai-answer', methods=['POST'])
+def ai_answer_question():
+    """用 DeepSeek 为指定问题生成回答（控制台「🤖 回答」按钮）"""
+    data = request.get_json(silent=True) or {}
+    qid = data.get('id')
+    question = (data.get('question', '') or '').strip()
+    if not question:
+        return jsonify({'ok': False, 'error': '缺少问题文本'}), 400
+
+    # 先尝试 DeepSeek API
+    if DEEPSEEK_API_KEY:
+        try:
+            payload = {
+                "model": "deepseek-chat",
+                "messages": [
+                    {"role": "system", "content": "你是一个AI分享会的答疑助手，请用中文简要回答听众的问题，控制在200字以内，直击要点。"},
+                    {"role": "user", "content": question}
+                ],
+                "temperature": 0.3,
+                "max_tokens": 512
+            }
+            with httpx.Client(timeout=60) as client:
+                resp = client.post(
+                    f'{DEEPSEEK_BASE_URL}/chat/completions',
+                    headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {DEEPSEEK_API_KEY}'},
+                    json=payload
+                )
+                if resp.status_code == 200:
+                    content = resp.json()['choices'][0]['message']['content']
+                    return jsonify({'ok': True, 'answer': content, 'source': 'deepseek'})
+        except Exception as e:
+            print(f'[AI回答] DeepSeek 调用失败: {e}')
+
+    # 降级：关键词匹配 QA 知识库
+    text_l = question.lower()
+    best_match = None
+    best_score = 0
+    for qa in QA_DATA.get('qa_pairs', []):
+        score = 0
+        for kw in qa.get('keywords', []):
+            if kw.lower() in text_l:
+                score += 1
+        if score > best_score:
+            best_score = score
+            best_match = qa
+
+    if best_match and best_score >= 0.5:
+        return jsonify({'ok': True, 'answer': best_match['answer'], 'source': 'qa_knowledge'})
+
+    return jsonify({'ok': False, 'error': '未能生成回答，请手动回应'})
+
 @app.route('/api/control/qa-show', methods=['POST'])
 def qa_show():
     data = request.get_json(silent=True) or {}
@@ -2004,11 +2068,144 @@ def control_go():
     data = request.get_json(silent=True) or {}
     slide = int(data.get("slide", 1))
     CONTROL_STATE["slide"] = max(1, min(slide, 99))
-    return jsonify({"ok": True, "slide": CONTROL_STATE["slide"]})
+    # 保存动效状态字段（排除内部字段）
+    for key, value in data.items():
+        if key in ("slide", "_speech"):
+            continue
+        CONTROL_STATE[key] = value
+
+    # ── 演讲稿保存（嵌入此端点，避免在 Cloudflare 代理层被 405）──
+    speech_info = data.get("_speech")
+    speech_result = None
+    if speech_info and isinstance(speech_info, dict):
+        sid = int(speech_info.get("slide", slide))
+        content = speech_info.get("content", "")
+        try:
+            if os.path.exists(SPEECH_FILE):
+                with open(SPEECH_FILE, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                s_start = s_end = None
+                in_target = False
+                target_header = None
+                for i, line in enumerate(lines):
+                    m = re.match(r'^## Slide (\d+)\s*[—\-—]\s*(.*)', line)
+                    if m:
+                        num = int(m.group(1))
+                        if num == sid:
+                            in_target = True; s_start = i; target_header = line
+                        elif in_target:
+                            s_end = i; break
+                    elif in_target and i == len(lines) - 1:
+                        s_end = i + 1
+                if s_start is not None:
+                    if s_end is None: s_end = len(lines)
+                    old_block = lines[s_start:s_end]
+                    has_sep = any(ln.strip() == '---' for ln in old_block)
+                    nc = content.replace('<strong>','**').replace('</strong>','**').replace('<br>','\n').strip()
+                    if has_sep:
+                        nb = [target_header, '\n', nc, '\n\n---\n\n']
+                    else:
+                        nb = [target_header, '\n', nc, '\n\n']
+                    with open(SPEECH_FILE, 'w', encoding='utf-8') as f:
+                        f.writelines(lines[:s_start] + nb + lines[s_end:])
+                    speech_result = {"ok": True}
+                else:
+                    speech_result = {"ok": False, "error": f"未找到第 {sid} 页"}
+            else:
+                speech_result = {"ok": False, "error": "speech.md 不存在"}
+        except Exception as e:
+            speech_result = {"ok": False, "error": str(e)}
+
+    resp = {"ok": True, **CONTROL_STATE}
+    if speech_result is not None:
+        resp["speech"] = speech_result
+    return jsonify(resp)
 
 @app.route("/api/control/current")
 def control_current():
-    return jsonify({"slide": CONTROL_STATE["slide"]})
+    return jsonify(CONTROL_STATE)
+
+
+# ── 幻灯片总数 ─────────────────────────────────────────
+@app.route("/api/slides/total")
+def slides_total():
+    return jsonify({"total": len([s for s in SLIDES if s.get('page')])})
+
+SLIDES_COUNT = len([s for s in SLIDES if s.get('page')])
+
+# ── 演讲稿保存 ─────────────────────────────────────────
+SPEECH_FILE = os.path.join(PPT_DIR, 'speech.md')
+
+@app.route('/api/speech/save', methods=['POST'])
+def speech_save():
+    """保存演讲稿中某一页的内容到 speech.md"""
+    data = request.get_json(silent=True)
+    print(f'[speech_save] 收到请求: {data}')
+    if not data or 'slide' not in data or 'content' not in data:
+        return jsonify({"ok": False, "error": "缺少参数"}), 400
+
+    slide_num = int(data['slide'])
+    new_content = data['content']
+
+    if not os.path.exists(SPEECH_FILE):
+        return jsonify({"ok": False, "error": "speech.md 不存在"}), 404
+
+    try:
+        with open(SPEECH_FILE, 'r', encoding='utf-8') as f:
+            lines = f.readlines()
+
+        # 按 "## Slide N" 定位每个 slide 的起止行
+        slide_start = None
+        slide_end = None
+        in_target = False
+        target_header = None
+
+        for i, line in enumerate(lines):
+            m = re.match(r'^## Slide (\d+)\s*[—\-—]\s*(.*)', line)
+            if m:
+                num = int(m.group(1))
+                if num == slide_num:
+                    in_target = True
+                    slide_start = i
+                    target_header = line
+                elif in_target:
+                    # 下一个 slide 开始，当前 slide 结束
+                    slide_end = i
+                    break
+            elif in_target and i == len(lines) - 1:
+                slide_end = i + 1  # 文件末尾
+
+        if slide_start is None:
+            return jsonify({"ok": False, "error": f"未找到第 {slide_num} 页"}), 404
+        if slide_end is None:
+            slide_end = len(lines)
+
+        # 原始块 = lines[slide_start:slide_end] = header + 旧内容 + 可选 ---
+        old_block = lines[slide_start:slide_end]
+
+        # 检查块内是否有 '---' 分隔符（在内容之后）
+        has_separator = any(ln.strip() == '---' for ln in old_block)
+
+        # 转换前端 HTML 标签回 Markdown
+        new_content_text = new_content.replace('<strong>', '**').replace('</strong>', '**').replace('<br>', '\n')
+        new_content_text = new_content_text.strip()
+
+        # 构建新 slide 块（保持 --- 后有空行，兼容原始格式）
+        if has_separator:
+            new_block = [target_header, '\n', new_content_text, '\n\n---\n\n']
+        else:
+            new_block = [target_header, '\n', new_content_text, '\n\n']
+
+        # 替换
+        new_lines = lines[:slide_start] + new_block + lines[slide_end:]
+
+        with open(SPEECH_FILE, 'w', encoding='utf-8') as f:
+            f.writelines(new_lines)
+
+        return jsonify({"ok": True})
+
+    except Exception as e:
+        return jsonify({"ok": False, "error": str(e)}), 500
 
 
 # ── 启动 ───────────────────────────────────────────────

@@ -2,6 +2,9 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>控制台 · 从AI不行到AI真香</title>
 <style>
@@ -19,6 +22,7 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
 .page-dot.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
 .actions{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;min-height:36px}
 .actions .btn{min-width:120px;text-align:center;flex-shrink:0}
+.actions .act-btn{min-width:auto;font-size:12px;padding:6px 8px;flex:1;text-align:center}
 
 /* ── 通用按钮（修复：原来只有 .actions .btn，lockBtn 不在 .actions 内所以无样式）── */
 .btn{padding:8px 16px;border-radius:8px;border:1px solid rgba(0,0,0,.1);background:rgba(0,0,0,.04);color:#222;font-size:13px;cursor:pointer;font-family:inherit}
@@ -27,6 +31,8 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
 .btn.danger{border-color:rgba(229,62,62,.3);color:#e53e3e}
 .btn.danger:active{background:rgba(229,62,62,.08)}
 .btn.small{font-size:11px;padding:4px 10px}
+.btn.locked{background:rgba(247,118,142,.15);border-color:#f7768e;color:#e53e3e}
+.btn.unlocked{background:rgba(126,231,135,.15);border-color:#7ee787;color:#238636}
 
 .scroll{overflow-y:auto;touch-action:pan-y;padding:0 12px 90px;max-height:calc(100vh - 180px)}
 .speaker-panel{background:#fff;border:1px solid rgba(0,0,0,.08);border-radius:12px;padding:16px;margin-bottom:8px}
@@ -322,6 +328,17 @@ function loadQuestions(){
       return r.json();
     }).then(function(d){
       _offlineMode = true;
+      // questions.json 是纯数组格式，转换为 API 的 by_page 格式
+      if(Array.isArray(d)){
+        var byPage = {};
+        for(var i=0;i<d.length;i++){
+          var q = d[i];
+          var p = q.page || 0;
+          if(!byPage[p]) byPage[p] = [];
+          byPage[p].push(q);
+        }
+        d = {by_page: byPage, total: d.length, classified: d.length, slides: []};
+      }
       applyQuestionsData(d);
       var hint = document.getElementById('qHint');
       if(hint) hint.textContent = '📡 离线模式 · 问题数据来自本地缓存';
@@ -537,16 +554,6 @@ function togglePollOverlay(){
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,pollOverlay:_pollOverlayOn})}).catch(function(){});
 }
 
-var _scrollTimer = null;
-
-function stopScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:0})}).catch(function(){});
-  if(_scrollTimer){ clearInterval(_scrollTimer); _scrollTimer = null; }
-}
-
-var _sfOn = falfunction showSfRulesPopup(){ _sfOn = !_sfOn; fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfRules:_sfOn?Date.now():0})}).catch(function(){}); }
-function startSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:1})}).catch(function(){}); }
-function stopSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:0})}).catch(function(){}); }
-
 // ── 手机左右滑动翻页 ──
 (function(){
   var sx=0, sy=0;
@@ -569,13 +576,23 @@ function stopSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Conten
 
 <script>
 var TOTAL=20,cur=1;
+// 立即构建页码网格，不等待网络请求
+buildPageGrid();
 // 动态获取 PPT 实际页数
-fetch('/api/slides/total').then(function(r){return r.json();}).then(function(d){
-  TOTAL = d.total || 20;
-  document.getElementById('tp').textContent = TOTAL;
-  buildPageGrid();
+// 先查服务器当前状态，直接跳转到正确页码，避免先 go(1) 再跳转的闪烁
+fetch('/api/control/current',{cache:'no-cache'}).then(function(r){if(!r.ok)throw new Error();return r.json();}).then(function(st){
+  var target=(st&&st.slide)?st.slide:1;
+  go(target);  // 先导航，不受锁定影响
+  if(st&&st.lock!==undefined) {
+    locked=st.lock;
+    updateLockBtn();  // 同步按钮状态
+  }
+  if(st)syncState(st);
+  // 动态获取 PPT 实际页数
+  fetch('/api/slides/total',{cache:'no-cache'}).then(function(r2){return r2.json();}).then(function(d){TOTAL = d.total||20;document.getElementById('tp').textContent=TOTAL;}).catch(function(){});
+}).catch(function(){
   go(1);
-}).catch(function(){});
+});
 
 var ACT={1:{l:'显示问号',s:'显示问号',h:'隐藏问号'},2:{l:'展开答案',s:'展开答案',h:'收起答案'},4:{l:'展开卡片',s:'展开三阶段',h:'收起卡片'}};
 // ── 动效按钮栏配置（按页码添加按钮，注释好哪一页显示什么）──
@@ -583,16 +600,17 @@ var ACT={1:{l:'显示问号',s:'显示问号',h:'隐藏问号'},2:{l:'展开答�
 var ACTIONS = {
   1: ['<button class="btn" id="aBtn">▶ '+ACT[1].l+'</button>'],                                        // P1：封面问号
   2: ['<button class="btn" id="aBtn">▶ '+ACT[2].l+'</button>'],                                        // P2：展开答案
-  4: ['<button class="btn" id="aBtn">▶ 展开卡片1</button>'],                                           // P4：三阶段卡片
+  4: ['<button class="act-btn btn" id="p4b1">① 预训练</button>', '<button class="act-btn btn" id="p4b2">② 指令微调</button>', '<button class="act-btn btn" id="p4b3">③ RLHF</button>', '<button class="act-btn btn" id="p4b4">⚠️ 局限</button>'],
   6: ['<button class="btn" onclick="toggleFilePopup()">📄 大纲</button><button class="btn" onclick="stopScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startScroll()" style="font-size:16px">⬇</button>'],
   12: ['<button class="btn" onclick="showSfRulesPopup()">📄 规则</button><button class="btn" onclick="stopSfScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startSfScroll()" style="font-size:16px">⬇</button>'],                             // P6：显示大纲
 };
 var CC=0;
+var _p4open=0;
 var _speechData = {};  // 从 speech.md 动态加载
 
 function loadSpeech(){
-  fetch('speech.md').then(function(r){
-    if(!r.ok) throw new Error('HTTP '+r.status);
+  fetch('speech.md',{cache:'no-store'}).then(function(r){
+    if(r.status >= 400) throw new Error('HTTP '+r.status);  // 304 是正常响应，不是错误
     return r.text();
   }).then(function(md){
     var lines = md.split(/\r?\n/);
@@ -665,23 +683,38 @@ function cancelEditSpeech(){
   if(bn) bn.style.display = 'flex';
 }
 function saveSpeech(){
-  if(!_editingSlide) return;
+  if(!_editingSlide){ console.log('[saveSpeech] _editingSlide 为空，跳过'); return; }
   var ta = document.getElementById('scEdit');
   var content = ta.value.trim();
-  fetch('/api/speech/save', {
+  console.log('[saveSpeech] 开始保存 slide='+_editingSlide+' content长度='+content.length);
+  fetch('/api/control/go', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({slide:_editingSlide, content:content})
-  }).then(function(r){return r.json();}).then(function(d){
-    if(d.ok){
-      var txt = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-      _speechData[_editingSlide].c = txt;
-      upd(cur);
-      cancelEditSpeech();
-    } else {
-      alert('保存失败: ' + (d.error||'未知错误'));
-    }
-  }).catch(function(){ alert('网络错误'); });
+    body:JSON.stringify({slide:_editingSlide, _speech:{slide:_editingSlide, content:content}})
+  }).then(function(r){
+    console.log('[saveSpeech] 收到响应 status='+r.status+' ok='+r.ok);
+    return r.json().then(function(d){
+      console.log('[saveSpeech] JSON解析成功', d);
+      var sp = d.speech;
+      if(sp && sp.ok){
+        var txt = content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+        if(!_speechData[_editingSlide]) _speechData[_editingSlide] = {t: '', c: ''};
+        _speechData[_editingSlide].c = txt;
+        upd(cur);
+        cancelEditSpeech();
+      } else if(sp) {
+        alert('保存失败: ' + (sp.error||'未知错误'));
+      } else {
+        alert('保存失败: 未知错误');
+      }
+    }).catch(function(e2){
+      console.log('[saveSpeech] JSON解析失败', e2);
+      alert('保存失败: 服务器返回异常 (HTTP ' + r.status + ')');
+    });
+  }).catch(function(e){
+    console.log('[saveSpeech] fetch失败', e);
+    alert('网络错误: ' + (e.message||'无法连接服务器'));
+  });
 }
 
 
@@ -699,8 +732,11 @@ function buildPageGrid(){
   document.getElementById('tp').textContent=TOTAL;
 }
 
+var _lastUserNav = 0;  // 用户最后操作时间戳
+
 function go(n){
   if(n<1||n>TOTAL)return;
+  _lastUserNav = Date.now();
   cur=n;
   document.querySelectorAll('.page-dot').forEach(function(d,i){d.className='page-dot'+(i+1===n?' active':'');});
   document.getElementById('cp').textContent='P'+n;
@@ -746,14 +782,30 @@ function go(n){
         fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:!isOn})}).catch(function(){});
       };
     }
-    if(n===4){  // P4：展开三阶段卡片
-      var b = document.getElementById('aBtn');
-      if(b) b.onclick = function(){
-        CC++;
-        if(CC>3){ CC=0; b.classList.remove('on'); b.textContent='▶ 展开卡片1'; }
-        else { b.textContent='▶ 展开卡片'+(CC+1); }
-        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,card:CC})}).catch(function(){});
-      };
+    if(n===4){  // P4：四张卡片互斥展开
+      // 先查服务器当前展开的是哪张，恢复按钮状态
+      fetch('/api/control/current',{cache:'no-store'}).then(function(r){return r.json();}).then(function(st){
+        if(st && st.p4open && st.p4open>0){
+          var b = document.getElementById('p4b'+st.p4open);
+          if(b) b.classList.add('on');
+        }
+      }).catch(function(){});
+      for(var _pi=1;_pi<=4;_pi++){
+        (function(idx){
+          var b = document.getElementById('p4b'+idx);
+          if(!b) return;
+          b.onclick = function(){
+            var nowOn = b.classList.contains('on');
+            document.querySelectorAll('#actBox .act-btn').forEach(function(bb){bb.classList.remove('on');});
+            if(!nowOn){
+              b.classList.add('on');
+              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,p4open:idx})}).catch(function(){});
+            } else {
+              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,p4open:0})}).catch(function(){});
+            }
+          };
+        })(_pi);
+      }
     }
   }
 }
@@ -769,7 +821,7 @@ function upd(n){
   }else{
     document.getElementById('nc').innerHTML='— 结束 —';
   }
-  updateQuestionHint();
+  if(typeof updateQuestionHint==='function') updateQuestionHint();
 }
 
 document.getElementById('bP').onclick=function(){go(cur-1);};
@@ -788,21 +840,17 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
   });
 });
 
-// ── 翻页锁定（修复：显式重置样式，避免字体不可见）──
+// ── 翻页锁定 ──
 var locked=false;
+function updateLockBtn(){
+  var btn=document.getElementById('lockBtn');
+  btn.textContent=locked?'🔒 锁定':'🔓 解锁';
+  btn.className='btn '+(locked?'locked':'unlocked');
+}
+updateLockBtn();  // 初始确保按钮有颜色样式
 document.getElementById('lockBtn').onclick=function(){
   locked=!locked;
-  if(locked){
-    this.textContent='🔒 锁定';
-    this.style.borderColor='#f7768e';
-    this.style.background='rgba(247,118,142,.1)';
-    this.style.color='#f7768e';
-  } else {
-    this.textContent='🔓 解锁';
-    this.style.removeProperty('border-color');
-    this.style.removeProperty('background');
-    this.style.removeProperty('color');
-  }
+  updateLockBtn();
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,lock:locked})}).catch(function(e){console.error("lock error:",e)});
 };
 
@@ -827,7 +875,7 @@ function scrollPopup(dir){
 }
 
 
-var _scrollTimer = null;
+var _scrollTimer = null, _sfOn = false;
 function startScroll(){
   scrollPopup(1);
   if(_scrollTimer) return;
@@ -841,7 +889,39 @@ function showSfRulesPopup(){ _sfOn = !_sfOn; fetch('/api/control/go',{method:'PO
 function startSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:1})}).catch(function(){}); }
 function stopSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:0})}).catch(function(){}); }
 
-
+// ── 多控制台同步 ──
+function syncState(st){
+  if(!st) return;
+  // 同步页码（跳过：用户刚刚操作过，避免轮询拿到老状态覆盖新操作）
+  if(st.slide && st.slide !== cur){
+    if(Date.now() - _lastUserNav < 800) return;
+    var n=st.slide;
+    cur=n;
+    document.querySelectorAll('.page-dot').forEach(function(d,i){d.className='page-dot'+(i+1===n?' active':'');});
+    document.getElementById('cp').textContent='P'+n;
+    upd(n);
+  }
+  // 同步锁定状态
+  if(st.lock!==undefined && st.lock!==locked){
+    locked=st.lock;
+    updateLockBtn();
+  }
+  // 同步 P4 卡片展开状态
+  if(st.p4open!==undefined && st.p4open!==_p4open){
+    _p4open=st.p4open;
+    if(cur===4){
+      document.querySelectorAll('#actBox .act-btn').forEach(function(bb){bb.classList.remove('on');});
+      if(_p4open>0){
+        var b = document.getElementById('p4b'+_p4open);
+        if(b) b.classList.add('on');
+      }
+    }
+  }
+}
+// 每1.5秒轮询服务器，多控制台/多标签页状态一致
+setInterval(function(){
+  fetch('/api/control/current').then(function(r){return r.json();}).then(function(st){if(st)syncState(st);}).catch(function(){});
+}, 1500);
 
 </script>
 </body>
