@@ -717,7 +717,7 @@ function toggleCard(el){el.classList.toggle('open')}
   var slides=document.querySelectorAll('.slide');
   var total=slides.length;
   var _lkScr=0, _lkSfR=0, _lkSfS=0;
-  var lastSlide=1, lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, _lkO=false, _lkT=false, _lkF=false, _firstPoll=true;
+  var lastSlide=1, lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, _lkO=false, _lkT=false, _lkF=false, _locked=false, _firstPoll=true;
 
   function goSlide(n){
     if(!n||n<1||n>total) return;
@@ -735,6 +735,7 @@ function toggleCard(el){el.classList.toggle('open')}
     if(_firstPoll){ _lkO=d.overviewKey||0; _lkT=d.themeKey||0; _lkF=d.filePopup||0; lastCoverQ=d.coverQ||false; _lkSfR=d.sfRules||0; _firstPoll=false; }
     var changed=false;
     // 翻页
+    if(d.lock!==undefined) _locked=d.lock;
     if(d.slide && d.slide!==lastSlide){ goSlide(d.slide); changed=true; }
     // 封面问号
     if(d.coverQ!==undefined && d.coverQ!==lastCoverQ){
@@ -904,6 +905,16 @@ function toggleCard(el){el.classList.toggle('open')}
       container.innerHTML = h;
     }).catch(function(){});
   }
+
+
+  // ── 锁定禁止键盘 ──
+  var _kbBlock = function(e){
+    if(_locked && ['ArrowLeft','ArrowRight',' ','PageUp','PageDown'].indexOf(e.key)>=0){
+      e.stopImmediatePropagation();
+      e.preventDefault();
+    }
+  };
+  document.addEventListener('keydown', _kbBlock, true);
 
   // ── BroadcastChannel（同设备备用）──
   try{
