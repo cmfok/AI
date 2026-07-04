@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>AI 工程化四部曲 · 分享会</title>
+<style>
+/* ═══════════════════ reset & base ═══════════════════ */
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{
+  font-family:-apple-system,"SF Pro Display","Helvetica Neue","Noto Sans SC",sans-serif;
+  background:#000;color:#f5f5f7;overflow-x:hidden;
+  /* 注：翻页滚过50%吸附由JS控制，更精确 */
+}
+
+/* ═══════════════════ 导航 ═══════════════════ */
+nav{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  padding:14px 40px;
+  display:flex;justify-content:space-between;align-items:center;
+  background:rgba(0,0,0,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
+  border-bottom:1px solid rgba(255,255,255,0.06);
+}
+nav .logo{font-size:16px;font-weight:600;letter-spacing:-0.3px}
+nav .logo span{color:#86868b}
+nav .nav-dots{display:flex;gap:6px}
+nav .nav-dots a{
+  width:6px;height:6px;border-radius:50%;background:rgba(255,255,255,0.25);
+  transition:all 0.3s
+}
+nav .nav-dots a.active{background:#0071e3;transform:scale(1.4)}
+.scroll-progress{
+  position:fixed;left:0;right:0;bottom:0;height:2px;z-index:100;
+  background:rgba(255,255,255,0.04)
+}
+.scroll-progress .bar{
+  height:100%;width:0%;
+  background:linear-gradient(90deg,#0071e3,#64b5f6,#86c7ff);
+  transition:width 0.1s linear
+}
+
+/* ═══════════════════ 每节 = 一个"翻页" ═══════════════════ */
+section{
+  min-height:100vh;height:100vh;
+  display:flex;flex-direction:column;justify-content:center;
+  padding:80px 48px 40px;
+  position:relative;overflow:hidden;
+}
+.section-inner{
+  max-width:1200px;margin:0 auto;width:100%;
+  position:relative;z-index:2;
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+}
+.chapter-tag{
+  display:inline-block;
+  padding:4px 14px;border-radius:20px;
+  background:rgba(0,113,227,0.12);color:#64b5f6;
+  font-size:12px;font-weight:600;letter-spacing:1px;
+  margin-bottom:12px;
+}
+
+/* ═══════════════════ Hero ═══════════════════ */
+#hero{
+  background:linear-gradient(180deg,#000 0%,#0a0a1a 40%,#111128 70%,#0a0a1a 100%);
+  text-align:center;padding-top:120px;
+}
+#hero h1{
+  font-size:clamp(40px,7vw,84px);font-weight:700;line-height:1.08;
+  letter-spacing:-2px;
+  background:linear-gradient(135deg,#f5f5f7 0%,#86868b 50%,#f5f5f7 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;
+  background-clip:text;margin-bottom:16px;
+  opacity:0;transform:translateY(40px);
+  transition:all 1s cubic-bezier(0.25,0.46,0.45,0.94)
+}
+#hero h1.visible{opacity:1;transform:translateY(0)}
+#hero .subtitle{
+  font-size:clamp(18px,2.2vw,28px);color:#86868b;font-weight:400;
+  max-width:660px;margin:0 auto 40px;line-height:1.5;
+  opacity:0;transform:translateY(30px);
+  transition:all 0.8s ease 0.2s
+}
+#hero .subtitle.visible{opacity:1;transform:translateY(0)}
+.hero-chapters{
+  display:flex;justify-content:center;gap:16px;flex-wrap:wrap;
+  opacity:0;transform:translateY(20px);
+  transition:all 0.8s ease 0.4s
+}
+.hero-chapters.visible{opacity:1;transform:translateY(0)}
+.hero-chapters span{
+  padding:8px 20px;border-radius:12px;
+  background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.06);
+  font-size:14px;color:#86868b
+}
+.hero-chapters span b{color:#f5f5f7}
+
+/* ═══════════════════ 章节标题 ═══════════════════ */
+.chapter-title{
+  font-size:clamp(28px,4vw,52px);font-weight:700;line-height:1.15;
+  margin-bottom:8px;
+  opacity:0;transform:translateY(30px);
+  transition:all 0.8s ease
+}
+.chapter-title.visible{opacity:1;transform:translateY(0)}
+.chapter-title .en{
+  font-size:clamp(14px,1.2vw,20px);font-weight:300;letter-spacing:1px;
+  display:block;color:rgba(255,255,255,0.3);margin-bottom:4px;
+}
+.chapter-desc{
+  color:#86868b;font-size:16px;line-height:1.6;max-width:520px;
+  margin-bottom:clamp(16px,3vh,40px);
+  opacity:0;transform:translateY(20px);
+  transition:all 0.8s ease 0.1s
+}
+.chapter-desc.visible{opacity:1;transform:translateY(0)}
+
+/* ═══════════════════ 内容区 ═══════════════════ */
+.content-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:40px;
+  opacity:0;transform:translateY(40px);
+  transition:all 0.8s ease 0.2s
+}
+.content-grid.visible{opacity:1;transform:translateY(0)}
+
+.story-card{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.06);
+  border-radius:16px;padding:28px;
+  backdrop-filter:blur(10px);
+}
+.story-card .emoji{font-size:24px;margin-bottom:8px;display:block}
+.story-card h4{font-size:16px;font-weight:600;margin-bottom:8px}
+.story-card p,.story-card .body{color:#86868b;font-size:14px;line-height:1.7}
+.story-card .highlight{
+  background:rgba(0,113,227,0.1);color:#64b5f6;
+  padding:0 4px;border-radius:3px
+}
+.rules-grid{
+  display:grid;grid-template-columns:1fr 1fr;gap:12px;
+}
+.rule-item{
+  background:rgba(255,255,255,0.02);
+  border:1px solid rgba(255,255,255,0.05);
+  border-radius:12px;padding:18px 16px;
+  transition:all 0.3s
+}
+.rule-item:active{border-color:rgba(0,113,227,0.3)}
+.rule-item .num{
+  font-size:11px;font-weight:600;letter-spacing:1px;
+  color:rgba(255,255,255,0.25);font-family:monospace;margin-bottom:4px;
+}
+.rule-item h5{font-size:15px;font-weight:600;margin-bottom:4px}
+.rule-item .body-sm{color:#86868b;font-size:13px;line-height:1.6}
+.callout-block{
+  margin-top:20px;padding:14px 18px;
+  border-radius:12px;
+  background:rgba(0,113,227,0.06);
+  border-left:3px solid #0071e3;
+  font-size:14px;line-height:1.6
+}
+.callout-block strong{color:#f5f5f7}
+.tools-bar{
+  margin-top:16px;padding-top:12px;
+  border-top:1px solid rgba(255,255,255,0.06)
+}
+.tools-bar .tools-label{
+  font-size:11px;letter-spacing:1px;
+  color:rgba(255,255,255,0.2);font-family:monospace;margin-bottom:6px;
+}
+.tools-bar .tags{display:flex;gap:6px;flex-wrap:wrap}
+.tools-bar .tags span{
+  padding:4px 12px;border-radius:6px;
+  font-size:12px;font-weight:500;
+  background:rgba(0,113,227,0.1);color:#64b5f6;
+}
+.tools-bar .tags span.light{background:rgba(255,255,255,0.04);color:#86868b}
+#ch1{background:linear-gradient(180deg,#0a0a1a 0%,#111 40%,#0d0d0d 100%)}
+#ch2{background:linear-gradient(180deg,#0d0d0d 0%,#0a0a1a 40%,#0d0d0d 100%)}
+#ch3{background:linear-gradient(180deg,#0d0d0d 0%,#111 40%,#0a0a1a 100%)}
+#ch4{background:linear-gradient(180deg,#0a0a1a 0%,#0d0d0d 40%,#000 100%)}
+
+/* ═══════════════════ 结尾 ═══════════════════ */
+#closing{background:#000;text-align:center}
+#closing h2{
+  font-size:clamp(28px,4vw,56px);font-weight:700;
+  opacity:0;transform:translateY(30px);
+  transition:all 0.8s ease
+}
+#closing h2.visible{opacity:1;transform:translateY(0)}
+#closing p{
+  color:#86868b;font-size:18px;margin-top:16px;
+  opacity:0;transform:translateY(20px);
+  transition:all 0.8s ease 0.15s
+}
+#closing p.visible{opacity:1;transform:translateY(0)}
+footer{
+  padding:24px;text-align:center;
+  color:rgba(255,255,255,0.12);font-size:11px;
+  border-top:1px solid rgba(255,255,255,0.03)
+}
+
+/* ═══════════════════ Q&A 弹窗 ═══════════════════ */
+.qa-overlay{
+  position:fixed;bottom:0;left:0;right:0;z-index:200;
+  background:rgba(0,0,0,0.92);backdrop-filter:blur(20px);
+  border-top:1px solid rgba(0,113,227,0.3);
+  padding:24px 32px 32px;
+  transform:translateY(100%);
+  transition:transform 0.5s cubic-bezier(0.25,0.46,0.45,0.94);
+  max-height:60vh;overflow-y:auto;
+}
+.qa-overlay.show{transform:translateY(0)}
+.qa-overlay .qa-q{
+  font-size:16px;font-weight:600;color:#f5f5f7;
+  margin-bottom:12px;
+}
+.qa-overlay .qa-q::before{content:'💬 '}
+.qa-overlay .qa-a{
+  font-size:14px;line-height:1.7;color:#d4d4d4;
+  white-space:pre-wrap;
+}
+.qa-overlay .qa-a strong{color:#f5f5f7}
+.qa-overlay .qa-close{
+  position:absolute;top:12px;right:16px;
+  background:none;border:none;color:rgba(255,255,255,0.3);
+  font-size:20px;cursor:pointer;padding:4px;
+}
+.qa-overlay .qa-tag{
+  display:inline-block;margin-top:10px;padding:3px 10px;border-radius:6px;
+  background:rgba(0,113,227,0.1);color:#64b5f6;font-size:11px;
+}
+@media(max-width:768px){
+  .qa-overlay{padding:16px 16px 24px;max-height:50vh}
+  .qa-overlay .qa-q{font-size:15px}
+  .qa-overlay .qa-a{font-size:13px}
+}
+
+/* ═══════════════════ 实时字幕 ═══════════════════ */
+.subtitle-bar{
+  position:fixed;bottom:0;left:0;right:0;z-index:199;
+  background:rgba(0,0,0,0.75);backdrop-filter:blur(10px);
+  padding:8px 32px 12px;
+  text-align:center;
+  opacity:0;transition:opacity 0.3s;
+}
+.subtitle-bar.show{opacity:1}
+.subtitle-text{
+  font-size:20px;font-weight:400;color:#f5f5f7;
+  letter-spacing:0.5px;line-height:1.4;
+  max-width:900px;margin:0 auto;
+  min-height:1.4em;
+}
+.subtitle-text .highlight{color:#64b5f6;font-weight:500}
+@media(max-width:768px){
+  .subtitle-bar{padding:6px 16px 10px}
+  .subtitle-text{font-size:16px}
+}
+
+/* ═══════════════════ 📱 手机适配 ═══════════════════ */
+@media(max-width:768px){
+  nav{padding:10px 16px;backdrop-filter:blur(10px)}
+  nav .logo{font-size:14px}
+  nav .nav-dots a{width:5px;height:5px}
+
+  section{
+    padding:70px 16px 20px;
+    min-height:100dvh;height:100dvh;
+  }
+  .section-inner{justify-content:flex-start;padding-top:10px}
+
+  /* 手机：内容区变横滑 */
+  .content-grid{
+    grid-template-columns:1fr;
+    gap:0;
+    /* 横滑容器 */
+    display:flex;overflow-x:auto;overflow-y:hidden;
+    scroll-snap-type:x mandatory;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    flex:1;
+    margin:0 -16px;padding:0 16px;
+    gap:0;
+  }
+  .content-grid::-webkit-scrollbar{display:none}
+  /* 每个子项 = 一屏横滑卡片 */
+  .content-grid > *{
+    width:calc(100vw - 80px);
+    flex:none;
+    scroll-snap-align:start;
+    margin-right:12px;
+  }
+  .content-grid > :last-child{margin-right:0}
+
+  /* 横滑指示器 */
+  .swipe-hint{
+    display:flex;justify-content:center;gap:6px;
+    margin-top:10px;
+  }
+  .swipe-hint span{
+    width:6px;height:6px;border-radius:50%;
+    background:rgba(255,255,255,0.15);
+    transition:all 0.3s
+  }
+  .swipe-hint span.active{background:#0071e3;width:18px;border-radius:3px}
+
+  /* 手机规则卡片变单列 */
+  .rules-grid{grid-template-columns:1fr;gap:10px}
+  .rule-item{padding:14px}
+  .story-card{padding:20px}
+
+  .chapter-title{font-size:clamp(22px,8vw,32px);margin-bottom:4px}
+  .chapter-desc{font-size:14px;margin-bottom:12px}
+  #hero h1{font-size:clamp(32px,12vw,48px)}
+  #hero .subtitle{font-size:16px;margin-bottom:24px}
+  .hero-chapters span{font-size:12px;padding:6px 14px}
+  .tools-bar .tags span{font-size:11px;padding:3px 10px}
+}
+@media(min-width:769px){
+  .swipe-hint{display:none}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">AI <span>Engineering</span></div>
+  <div class="nav-dots">
+    <a href="#hero"></a><a href="#ch1"></a><a href="#ch2"></a><a href="#ch3"></a><a href="#ch4"></a><a href="#closing"></a>
+  </div>
+</nav>
+<div class="scroll-progress"><div class="bar" id="progressBar"></div></div>
+
+<!-- ════ HERO ════ -->
+<section id="hero">
+  <div class="section-inner">
+    <h1 id="heroTitle">AI 工程化四部曲</h1>
+    <p class="subtitle" id="heroSub">Prompt · Context · Harness · Loop<br>四个工程，把 AI 助理训练成得力干将</p>
+    <div class="hero-chapters" id="heroChapters">
+      <span>CHAPTER 01 <b>Prompt</b></span>
+      <span>CHAPTER 02 <b>Context</b></span>
+      <span>CHAPTER 03 <b>Harness</b></span>
+      <span>CHAPTER 04 <b>Loop</b></span>
+    </div>
+  </div>
+</section>
+
+<!-- ════ CH1 · Prompt ════ -->
+<section id="ch1">
+  <div class="section-inner">
+    <span class="chapter-tag">CHAPTER 01</span>
+    <h2 class="chapter-title"><span class="en">Prompt Engineering</span>提示词工程</h2>
+    <p class="chapter-desc">派活说不清楚，员工一定干偏。AI 也一样——输入质量决定输出质量。</p>
+    <div class="content-grid" id="cg1">
+      <div class="story-card">
+        <span class="emoji">📖</span>
+        <h4>助理第一天上班</h4>
+        <p>❌ <span style="color:#ff6b6b">"做一份上月经营分析"</span><br>→ 助理不知道从哪下手<br><br>✅ <span class="highlight">"你是运营分析助理，用表格列出各品类销售额、环比变化，标出异常项"</span><br>→ 一次做对</p>
+        <div class="callout-block" style="margin-top:12px"><strong>💡 提示词工程 = 派活要讲清楚角色、要求和标准</strong></div>
+      </div>
+      <div>
+        <div class="rules-grid">
+          <div class="rule-item"><div class="num">RULE 01</div><h5>🎯 定角色</h5><div class="body-sm">先说清楚身份，AI 立刻切换到对应视角</div></div>
+          <div class="rule-item"><div class="num">RULE 02</div><h5>📋 讲要求</h5><div class="body-sm">明确交付物：表格、数字、格式</div></div>
+          <div class="rule-item"><div class="num">RULE 03</div><h5>📝 给参考</h5><div class="body-sm">给一个模板，照这个格式写</div></div>
+          <div class="rule-item"><div class="num">RULE 04</div><h5>🚧 设标准</h5><div class="body-sm">划定范围：只看线上渠道，异常项标红</div></div>
+        </div>
+        <div class="tools-bar"><div class="tools-label">AI 对话平台</div><div class="tags"><span>🌐 DeepSeek</span><span class="light">💬 ChatGPT</span><span class="light">🍫 豆包</span><span class="light">📖 Kimi</span></div></div>
+      </div>
+    </div>
+    <div class="swipe-hint" id="swipe1"><span class="active"></span><span></span></div>
+  </div>
+</section>
+
+<!-- ════ CH2 · Context ════ -->
+<section id="ch2">
+  <div class="section-inner">
+    <span class="chapter-tag">CHAPTER 02</span>
+    <h2 class="chapter-title"><span class="en">Context Engineering</span>上下文工程</h2>
+    <p class="chapter-desc">派完活，还得给资料。不给资料就做，等于闭着眼睛干活。</p>
+    <div class="content-grid" id="cg2">
+      <div class="story-card">
+        <span class="emoji">📖</span>
+        <h4>光派活不够，得给东西</h4>
+        <p>"这是上月的原始销售数据和前三个月的报告参考，各品类成本结构说明在这份文档里。基于这些做分析。"</p>
+        <div class="callout-block" style="margin-top:12px"><strong>💡 AI 能做出好分析——不是因为它更聪明，而是你给了它足够多的背景信息。</strong></div>
+      </div>
+      <div>
+        <div class="rules-grid">
+          <div class="rule-item"><div class="num">STEP 01</div><h5>📁 给历史数据</h5><div class="body-sm">把原始数据喂给 AI，像助理登录系统看到真实业绩</div></div>
+          <div class="rule-item"><div class="num">STEP 02</div><h5>📋 给参考模板</h5><div class="body-sm">给前几个月的报告，照这个格式和风格写</div></div>
+          <div class="rule-item"><div class="num">STEP 03</div><h5>📚 给业务规则</h5><div class="body-sm">品类分类、成本核算、异常判定标准写成文档喂给 AI</div></div>
+          <div class="rule-item"><div class="num" style="color:rgba(255,255,255,0.4)">🔑</div><h5>给数据 → 给参考 → 给规则</h5><div class="body-sm">每一步都让 AI 的回答更靠谱</div></div>
+        </div>
+        <div class="tools-bar"><div class="tools-label">RAG 知识库工具</div><div class="tags"><span>🤖 Dify</span><span class="light">⚡ FastGPT</span><span class="light">📚 RAGFlow</span><span class="light">🔗 AnythingLLM</span></div></div>
+      </div>
+    </div>
+    <div class="swipe-hint" id="swipe2"><span class="active"></span><span></span></div>
+  </div>
+</section>
+
+<!-- ════ CH3 · Harness ════ -->
+<section id="ch3">
+  <div class="section-inner">
+    <span class="chapter-tag">CHAPTER 03</span>
+    <h2 class="chapter-title"><span class="en">Harness Engineering</span>规训工程</h2>
+    <p class="chapter-desc">没有 SOP、没有权限、没有质量检查，再聪明也干不好。</p>
+    <div class="content-grid" id="cg3">
+      <div class="story-card">
+        <span class="emoji">📖</span>
+        <h4>得按流程干活</h4>
+        <p>① 拉取销售数据 ② 按品类汇总 ③ 对比上月标异常 ④ 生成报告提交审核<br><br>同时告诉它：<strong>可以查数据库不能改、异常先标红不篡改、报告自动检查格式</strong>。</p>
+        <div class="callout-block" style="margin-top:12px"><strong>💡 Harness = 给 AI 定 SOP、配工具、设边界、做检验</strong></div>
+      </div>
+      <div>
+        <div class="rules-grid">
+          <div class="rule-item"><div class="num">STEP 01</div><h5>📋 定工作流程</h5><div class="body-sm">拉数据→汇总→对比→出报告→审核，不跳步</div></div>
+          <div class="rule-item"><div class="num">STEP 02</div><h5>🔧 配系统权限</h5><div class="body-sm">让 AI 能查 ERP、读数据库，像开通了系统账号</div></div>
+          <div class="rule-item"><div class="num">STEP 03</div><h5>🚫 划安全红线</h5><div class="body-sm">能读不能改、敏感数据不对外，红线划清楚</div></div>
+          <div class="rule-item"><div class="num">STEP 04</div><h5>✅ 做质量检验</h5><div class="body-sm">报告自动检查，不达标打回重做</div></div>
+        </div>
+        <div class="tools-bar"><div class="tools-label">AI Agent 生态</div><div class="tags"><span>🦞 OpenClaw</span><span class="light">🤖 Dify</span><span class="light">⚡ FastGPT</span><span class="light">🔗 LangChain</span></div></div>
+      </div>
+    </div>
+    <div class="swipe-hint" id="swipe3"><span class="active"></span><span></span></div>
+  </div>
+</section>
+
+<!-- ════ CH4 · Loop ════ -->
+<section id="ch4">
+  <div class="section-inner">
+    <span class="chapter-tag">CHAPTER 04</span>
+    <h2 class="chapter-title"><span class="en">Loop Engineering</span>循环工程</h2>
+    <p class="chapter-desc">AI 第一次做的报告不可能完美。好管理者会让助理先做→审核→给反馈→改进。</p>
+    <div class="content-grid" id="cg4">
+      <div class="story-card">
+        <span class="emoji">📖</span>
+        <h4>第一次不完美，打回去</h4>
+        <p>✅ 打回去：<br><span class="highlight">"品类按线上/线下重新分类，金额再核对，异常项补充原因分析"</span><br><br>助理修改后好多了。下个月一次做对。</p>
+        <div class="callout-block" style="margin-top:12px;background:rgba(255,255,255,0.04);border-left-color:#64b5f6"><strong>💡 AI 不是天生就会——是你一次次打回去给反馈练出来的。</strong></div>
+      </div>
+      <div>
+        <div class="rules-grid">
+          <div class="rule-item"><div class="num">LEVEL 01</div><h5>🔍 自查</h5><div class="body-sm">AI 做完自己先审一遍，像交活前过一遍</div></div>
+          <div class="rule-item"><div class="num">LEVEL 02</div><h5>💭 复盘</h5><div class="body-sm">让 AI 写出分析过程和判断标准，看思路对不对</div></div>
+          <div class="rule-item"><div class="num">LEVEL 03</div><h5>👥 会诊</h5><div class="body-sm">重要数据让两三个 AI 各自分析再对比取优</div></div>
+          <div class="rule-item"><div class="num">LEVEL 04</div><h5>📊 绩效反馈</h5><div class="body-sm">你看完打回改进→AI 记住偏好→下次更准</div></div>
+        </div>
+        <div class="callout-block" style="margin-top:12px;background:rgba(0,113,227,0.08);text-align:center;padding:12px"><strong>🔑 自查 → 复盘 → 会诊 → 绩效反馈。<br>你带人的方法，带 AI 同样有效。</strong></div>
+      </div>
+    </div>
+    <div class="swipe-hint" id="swipe4"><span class="active"></span><span></span></div>
+  </div>
+</section>
+
+<!-- ════ CLOSING ════ -->
+<section id="closing">
+  <div class="section-inner">
+    <h2>企业深度定制 AI<br>核心是把人审 AI 的反馈循环<br>嵌进你的业务流程</h2>
+    <p>Loop 没有通用工具——因为它必须长在你的业务里</p>
+  </div>
+</section>
+
+<!-- Q&A 弹窗 -->
+<div class="qa-overlay" id="qaOverlay">
+  <button class="qa-close" id="qaClose">✕</button>
+  <div class="qa-q" id="qaOverlayQ"></div>
+  <div class="qa-a" id="qaOverlayA"></div>
+  <div class="qa-tag" id="qaOverlayTag">AI 实时回答</div>
+</div>
+
+<!-- 实时字幕 -->
+<div class="subtitle-bar" id="subtitleBar">
+  <div class="subtitle-text" id="subtitleText"></div>
+</div>
+
+<footer><p>AI 工程化四部曲 · 分享会 · © 2026</p></footer>
+
+<script>
+// Hero 入场
+document.addEventListener('DOMContentLoaded',()=>{
+  document.getElementById('heroTitle').classList.add('visible');
+  setTimeout(()=>document.getElementById('heroSub').classList.add('visible'),200);
+  setTimeout(()=>document.getElementById('heroChapters').classList.add('visible'),400);
+	  initSnapScroll();
+	  // 远程控制轮询（控制台翻页）
+	  startRemoteControl();
+	});
+
+	// ═══════════════════════════════════════════
+	// 远程控制翻页（轮询 /api/control/current）
+	// ═══════════════════════════════════════════
+	let lastControlledSlide=0;
+	function startRemoteControl(){
+	  pollRemoteSlide();
+	  setInterval(pollRemoteSlide,1500);
+	}
+
+	async function pollRemoteSlide(){
+	  try{
+	    const r=await fetch('/api/control/current');
+	    const d=await r.json();
+	    if(!d.slide) return;
+	    const slide=d.slide; // 1-based
+	    const sections=document.querySelectorAll('section');
+	    const idx=Math.max(0,Math.min(slide-1,sections.length-1));
+	    if(slide!==lastControlledSlide){
+	      lastControlledSlide=slide;
+	      const target=sections[idx];
+	      if(target) target.scrollIntoView({behavior:'smooth',block:'start'});
+	    }
+	  }catch(e){/* 忽略 */};
+	}
+
+	// Q&A 弹窗轮询
+	let lastQaId=0;
+	async function pollQaOverlay(){
+	  try{
+	    const r=await fetch('/api/control/qa-overlay');
+	    const d=await r.json();
+	    if(!d.question||!d.answer) return;
+	    const qaId=d.slide||0;
+	    if(qaId!==lastQaId&&qaId>0){
+	      lastQaId=qaId;
+	      document.getElementById('qaOverlayQ').textContent=d.question;
+	      document.getElementById('qaOverlayA').textContent=d.answer;
+	      document.getElementById('qaOverlay').classList.add('show');
+	    }
+	  }catch(e){}
+	}
+	document.getElementById('qaClose').addEventListener('click',()=>{
+	  document.getElementById('qaOverlay').classList.remove('show');
+	});
+	// 5秒轮询 Q&A
+	setInterval(pollQaOverlay,2000);
+
+	// 字幕轮询
+	let subtitleTimer=0;
+	async function pollSubtitle(){
+	  try{
+	    const r=await fetch('/api/control/subtitle');
+	    const d=await r.json();
+	    const bar=document.getElementById('subtitleBar');
+	    const text=document.getElementById('subtitleText');
+	    if(d.text&&d.text.trim()){
+	      text.textContent=d.text;
+	      bar.classList.add('show');
+	      clearTimeout(subtitleTimer);
+	      subtitleTimer=setTimeout(()=>bar.classList.remove('show'),3000);
+	    }
+	  }catch(e){}
+	}
+	setInterval(pollSubtitle,800);
+
+	// ═══════════════════════════════════════════
+	// 滚动翻页吸附（JS控制，精确50%阈值）
+	// ═══════════════════════════════════════════
+function initSnapScroll(){
+  const sections=document.querySelectorAll('section');
+  let isSnapping=false;
+
+  // 获取当前最靠近视口顶部的节索引
+  function getCurrentSectionIndex(){
+    let minIdx=0,minDist=Infinity;
+    sections.forEach((s,i)=>{
+      const rect=s.getBoundingClientRect();
+      const dist=Math.abs(rect.top);
+      if(dist<minDist){minDist=dist;minIdx=i;}
+    });
+    return minIdx;
+  }
+
+  // 吸附到指定节
+  function snapTo(idx){
+    if(isSnapping||idx<0||idx>=sections.length)return;
+    isSnapping=true;
+    const target=sections[idx];
+    const top=target.offsetTop;
+    window.scrollTo({top,behavior:'smooth'});
+    // 等待动画完成
+    const check=()=>{
+      if(Math.abs(window.scrollY-top)<5){
+        isSnapping=false;
+        updateUI();
+      }else requestAnimationFrame(check);
+    };
+    setTimeout(check,100);
+  }
+
+  // 更新进度条和导航点
+  function updateUI(){
+    const st=window.scrollY,dh=document.documentElement.scrollHeight-window.innerHeight;
+    document.getElementById('progressBar').style.width=Math.min(st/dh,1)*100+'%';
+    const dots=document.querySelectorAll('.nav-dots a');
+    let a=0;
+    sections.forEach((s,i)=>{const r=s.getBoundingClientRect();if(r.top<=150)a=i});
+    dots.forEach((d,i)=>d.classList.toggle('active',i===a));
+  }
+
+  // 观察入场动画
+  const obs=new IntersectionObserver(e=>{e.forEach(i=>{if(i.isIntersecting)i.target.classList.add('visible')})},{threshold:0.15});
+  document.querySelectorAll('.chapter-title,.chapter-desc,.content-grid,#closing h2,#closing p').forEach(el=>obs.observe(el));
+
+  // 滚动结束 → 判断是否需要翻页
+  let scrollTimer;
+  window.addEventListener('scroll',()=>{
+    updateUI();
+    if(isSnapping)return;
+    clearTimeout(scrollTimer);
+    scrollTimer=setTimeout(()=>{
+      const idx=getCurrentSectionIndex();
+      const current=sections[idx];
+      if(!current)return;
+      const rect=current.getBoundingClientRect();
+      const visible=Math.max(0,Math.min(1,rect.bottom/window.innerHeight));
+      // 滚过50% → 翻到下一节；反之回当前节
+      if(rect.top<0){
+        // 正在往下翻
+        const hiddenRatio=-rect.top/rect.height;
+        snapTo(hiddenRatio>0.5?idx+1:idx);
+      }else if(rect.top>0){
+        // 正在往上翻
+        const hiddenRatio=1-rect.bottom/rect.height;
+        snapTo(hiddenRatio>0.5?idx-1:idx);
+      }else{
+        snapTo(idx);
+      }
+    },150);
+  });
+
+  // 手机横滑指示器
+  document.querySelectorAll('.content-grid').forEach(grid=>{
+    grid.addEventListener('scroll',()=>{
+      const parent=grid.closest('section');
+      if(!parent)return;
+      const hints=parent.querySelectorAll('.swipe-hint span');
+      if(!hints.length)return;
+      const idx=Math.round(grid.scrollLeft/grid.clientWidth);
+      hints.forEach((h,i)=>h.classList.toggle('active',i===idx));
+    });
+  });
+
+  // 窗口resize重算
+  window.addEventListener('resize',()=>{setTimeout(updateUI,200)});
+  updateUI();
+}
+</script>
+</body>
+</html>
