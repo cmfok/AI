@@ -247,6 +247,15 @@
         el.classList.add('anim-'+a);
       });
 
+      // re-trigger iframe animations by reloading each iframe
+      slides[n].querySelectorAll('iframe').forEach(iframe => {
+        const src = iframe.src;
+        if (src && !src.startsWith('about:') && !src.startsWith('javascript:')) {
+          iframe.src = 'about:blank';
+          requestAnimationFrame(() => { iframe.src = src; });
+        }
+      });
+
       // counter-up
       slides[n].querySelectorAll('.counter').forEach(el => {
         const target = parseFloat(el.getAttribute('data-to')||el.textContent);

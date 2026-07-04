@@ -49,21 +49,21 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 /* compare */
 .comp-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
-.comp-card{padding:18px 24px;border-radius:var(--radius);font-size:22px;line-height:1.6}
-.comp-bad{background:color-mix(in srgb,var(--bad) 4%,transparent);border:1px solid color-mix(in srgb,var(--bad) 12%,transparent)}
-.comp-good{background:color-mix(in srgb,var(--good) 4%,transparent);border:1px solid color-mix(in srgb,var(--good) 12%,transparent)}
-.comp-bad .ct{color:var(--bad);font-weight:700;font-size:24px;margin-bottom:6px}
-.comp-good .ct{color:var(--good);font-weight:700;font-size:24px;margin-bottom:6px}
+.comp-card{padding:20px 24px;border-radius:12px;font-size:24px;line-height:1.6}
+.comp-bad{background:#fff;border:1px solid color-mix(in srgb,var(--bad) 25%,transparent);border-left:4px solid var(--bad);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.comp-good{background:#fff;border:1px solid color-mix(in srgb,var(--good) 25%,transparent);border-left:4px solid var(--good);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.comp-bad .ct{color:var(--bad);font-weight:700;font-size:28px;margin-bottom:8px}
+.comp-good .ct{color:var(--good);font-weight:700;font-size:28px;margin-bottom:8px}
 
 /* step box */
 .step-box{border-left:3px solid var(--accent);padding:16px 22px;margin:8px 0;background:var(--bg-soft);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:20px;line-height:1.6}
 
 /* rules grid (from AIEN1) */
-.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.rule-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:18px 16px;transition:all 0.3s;box-shadow:0 2px 12px rgba(250,245,235,.06)}
-.rule-item .num{font-size:11px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,.35);font-family:monospace;margin-bottom:4px}
-.rule-item h5{font-size:15px;font-weight:600;margin-bottom:4px}
-.rule-item .body-sm{color:#86868b;font-size:13px;line-height:1.6}
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;grid-auto-rows:1fr;margin-bottom:24px}
+.rule-item{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px 18px;transition:all 0.3s;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.rule-item .num{font-size:14px;font-weight:600;letter-spacing:0;color:rgba(0,0,0,.35);font-family:var(--font-sans);margin-bottom:2px}
+.rule-item h5{font-size:34px;font-weight:600;margin-bottom:8px;color:var(--text-1)}
+.rule-item .body-sm{color:var(--text-2);font-size:28px;line-height:1.6}
 
 /* callout block (from AIEN1) */
 .callout-block{padding:14px 20px;border-radius:12px;background:rgba(229,62,62,.06);border-left:3px solid #e53e3e;font-size:clamp(16px,1.8vw,24px);line-height:1.6;margin-bottom:16px;color:var(--text-1)}
@@ -86,8 +86,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .fr-ln .k{color:#569cd6}
 
 /* six pack */
-.six-pack{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.six-pack .item{background:var(--surface-2);border-radius:var(--radius-sm);padding:14px 20px;font-size:18px;line-height:1.5;border:1px solid var(--border)}
+.six-pack{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.six-pack .item{background:#fff;border-radius:12px;padding:18px 20px;font-size:20px;line-height:1.5;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .six-pack .item .in{font-weight:600;color:var(--accent)}
 
 /* ladder */
@@ -119,14 +119,14 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .big-num .unit{font-size:.3em;color:var(--text-3);font-weight:400}
 
 /* eco bar */
-.eco-bar{position:absolute;bottom:40px;left:clamp(48px,4vw,88px);right:clamp(48px,5vw,100px);display:flex;flex-direction:column;gap:8px;z-index:1}
-.eco-row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.eco-row .layer-tag{font-size:10px;color:var(--text-3);opacity:.5;margin-right:4px;white-space:nowrap}
-.eco-bar .pill{font-size:clamp(14px,1.6vw,22px);opacity:.85;padding:4px 12px;border-radius:8px;border:2px solid var(--border);white-space:nowrap;display:inline-flex;align-items:center;gap:4px}
-.eco-bar .pill .ic{display:inline-block;width:clamp(18px,2vw,28px);height:clamp(18px,2vw,28px);flex-shrink:0;border-radius:6px}
-.eco-bar .pill img{width:clamp(14px,1.6vw,22px);height:clamp(14px,1.6vw,22px);flex-shrink:0;border-radius:6px;object-fit:contain}
-.eco-bar .pill img.err+.dot{display:inline-block;width:clamp(12px,1.4vw,18px);height:clamp(12px,1.4vw,18px);border-radius:6px;flex-shrink:0}
+.eco-bar{position:absolute;bottom:32px;left:clamp(48px,5vw,100px);right:clamp(38px,4vw,80px);display:flex;flex-direction:column;gap:6px;z-index:1}
 .eco-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.eco-row .layer-tag{font-size:8px;color:var(--text-3);opacity:.5;margin-right:4px;white-space:nowrap}
+.eco-bar .pill{font-size:clamp(11px,1.28vw,18px);opacity:.85;padding:3px 10px;border-radius:6px;border:2px solid var(--border);white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
+.eco-bar .pill .ic{display:inline-block;width:clamp(14px,1.6vw,22px);height:clamp(14px,1.6vw,22px);flex-shrink:0;border-radius:6px}
+.eco-bar .pill img{width:clamp(11px,1.28vw,18px);height:clamp(11px,1.28vw,18px);flex-shrink:0;border-radius:6px;object-fit:contain}
+.eco-bar .pill img.err+.dot{display:inline-block;width:clamp(10px,1.12vw,14px);height:clamp(10px,1.12vw,14px);border-radius:6px;flex-shrink:0}
+.eco-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 
 /* limit cards */
 .lim-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;margin-top:10px}
@@ -188,7 +188,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     <p id="coverSub" class="lede cover-sub cover-reveal" style="text-align:center;font-size:clamp(20px,2.6vw,38px);max-width:100%;margin-top:28px;transition-delay:4s">—— 重塑 AI 认知，教你落地用好 AI</p>
     <p style="margin-top:36px;color:var(--text-2);font-size:18px">搭建 AI Agent ，实现提效增收实战分享</p>
   </div>
-  <div class="notes"><b>从"AI不行"到"AI真香"</b>——我的真实心路历程。第一阶段：刚用觉得无所不能，实际各种不靠谱，觉得<b>AI真垃圾</b>。第二阶段：用久了摸透脾气，知道怎么<b>规训</b>它，让它可控地输出想要的结果——<b>AI真香！</b>我核心的关切：<b>如何让 AI 可控地输出我想要的结果。</b></div>
+  <div class="notes"><b>从"AI不行"到"AI真香"</b>——我的真实心路历程。第一阶段：刚用觉得无所不能，实际各种不靠谱，觉得<b>AI真垃圾</b>。第二阶段：用久了摸透脾气，知道怎么<b>约束</b>它，让它可控地输出想要的结果——<b>AI真香！</b>我核心的关切：<b>如何让 AI 可控地输出我想要的结果。</b></div>
 </section>
 
 <!-- ====== 2. ALIEN LANGUAGE ====== -->
@@ -308,7 +308,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     </div>
     <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #ff5c8a;background:linear-gradient(135deg,rgba(255,92,138,.08),var(--bg))">
       <div style="font-size:56px;font-weight:800;color:#ff5c8a;margin-bottom:8px">03</div>
-      <h4 style="font-size:34px;margin:0 0 6px">规训工程</h4>
+      <h4 style="font-size:34px;margin:0 0 6px">驾驭工程</h4>
       <p style="font-size:28px;color:var(--text-2);margin:0">给 AI 套上缰绳，让它能干活</p>
     </div>
     <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #1aaf6c;background:linear-gradient(135deg,rgba(26,175,108,.08),var(--bg))">
@@ -318,7 +318,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     </div>
   </div>
   <p class="lede mt-l" style="text-align:center;max-width:100%">从「它能猜」到「它能猜准」——中间缺的就是<b>工程</b></p>
-  <div class="notes">让 AI 瞎猜，绝不靠谱。<b>四大工程，让 AI 猜准。</b>提示词工程——教你怎么跟 AI 说话。上下文工程——让 AI 知道它在跟谁打交道。规训工程——给 AI 套上缰绳。循环工程——做→查→修→再输出。</div>
+  <div class="notes">让 AI 瞎猜，绝不靠谱。<b>四大工程，让 AI 猜准。</b>提示词工程——教你怎么跟 AI 说话。上下文工程——让 AI 知道它在跟谁打交道。驾驭工程——给 AI 套上缰绳。循环工程——做→查→修→再输出。</div>
 </section>
 
 <!-- ====== 6. PROMPT ENGINEERING ====== -->
@@ -403,7 +403,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
   <p class="lede" style="margin-top:0!important;margin-bottom:8px">PROMPT ENGINEERING</p>
   <div class="callout-block">
-    💡 <strong>核心假设</strong>：相同的模型，通过不同的提问方式，可以获得质量差异巨大的结果
+    💡 <strong>通过不同的提问方式，可以获得质量差异巨大的结果</strong>
   </div>
   <div class="rules-grid" style="grid-template-columns:1fr 1fr 1fr">
     <div class="rule-item"><div class="num">RULE 01</div><h5>🎯 定角色</h5><div class="body-sm">先说清楚身份，AI 立刻切换到对应视角</div></div>
@@ -467,7 +467,9 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   <p class="kicker">四大工程 · CHAPTER 02</p>
   <h2 class="h2" style="margin-bottom:0!important">上下文工程</h2>
   <p class="lede" style="margin-top:0!important;margin-bottom:8px">CONTEXT ENGINEERING</p>
-  <div style="margin-bottom:12px;background:rgba(229,62,62,.08);border-left:3px solid #e53e3e;border-radius:0 8px 8px 0;padding:12px 18px;font-size:clamp(18px,2.2vw,28px);color:var(--text-1);font-weight:600">💡 <strong style="color:#e53e3e">上下文工程</strong>：精妙的艺术与科学——精准地将大语言模型的上下文窗口填充上恰到好处的信息，让模型能准确地迈出下一步</div>
+  <div class="callout-block">
+    💡 <strong>精准地将上下文窗口填充上恰到好处的信息，让模型能准确地迈出下一步</strong>
+  </div>
   <div class="g2 mt-l">
     <div class="stack">
       <div class="comp-card comp-bad"><div class="ct">❌ 普通提问</div><p>通用模板，写给所有人</p></div>
@@ -530,10 +532,10 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   <h2 class="h2">案例对比 · 招聘简历</h2>
   <div class="comp-grid mt-l">
     <div class="comp-card comp-bad"><div class="ct">❌ 只用模型 + 提示词</div><p>通用分析，不精准。AI 能聊，但分析维度单一，缺少结构化评估。</p></div>
-    <div class="comp-card comp-good"><div class="ct">✅ 套上规训工程六件套</div><p>多维度评分 + JD 匹配 + 预警推荐。AI 不仅分析，还能给出量化评分和录用建议。</p></div>
+    <div class="comp-card comp-good"><div class="ct">✅ 套上驾驭工程六件套</div><p>多维度评分 + JD 匹配 + 预警推荐。AI 不仅分析，还能给出量化评分和录用建议。</p></div>
   </div>
-  <p class="lede mt-l tc">关键变量：<b>有没有规训工程给 AI 套上缰绳</b></p>
-  <div class="notes">左边❌：只用模型+提示词→通用分析。右边✅：套规训六件套→多维度评分+JD匹配+预警推荐。关键变量：有没有规训工程给 AI 套上缰绳。</div>
+  <p class="lede mt-l tc">关键变量：<b>有没有驾驭工程给 AI 套上缰绳</b></p>
+  <div class="notes">左边❌：只用模型+提示词→通用分析。右边✅：套约束六件套→多维度评分+JD匹配+预警推荐。关键变量：有没有驾驭工程给 AI 套上缰绳。</div>
 </section>
 
 <!-- ====== 11. FREIGHT COMPARE ====== -->
@@ -555,16 +557,31 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 </section>
 
 <!-- ====== 12. DISCIPLINE REVEAL ====== -->
-<section class="slide" data-title="规训工程揭晓">
-  <p class="kicker">CHAPTER 03 · HARNESS ENGINEERING</p>
-  <h2 class="h2">规训工程</h2>
-  <p class="lede">给 AI 套上缰绳，让它能落地执行</p>
-  <div class="g2 mt-l">
-    <div class="stack">
-      <div class="comp-card comp-bad"><div class="ct">❌ 没有规训工程</div><p>只有上下文，AI 能说会道但干不了活——像一匹野马，跑得快但不受控</p></div>
-      <div class="comp-card comp-good"><div class="ct">✅ 有规训工程</div><p>套上缰绳，能落地执行——该调工具调工具，该校验校验，该报错报错</p></div>
+<section class="slide" data-title="驾驭工程揭晓">
+  <p class="kicker">四大工程 · CHAPTER 03</p>
+  <h2 class="h2" style="margin-bottom:2px!important">驾驭工程</h2>
+  <p class="lede" style="margin-top:0!important;margin-bottom:8px">HARNESS ENGINEERING</p>
+  <div class="callout-block">
+    💡 <strong>「约束即赋能」——不是限制 AI 的能力，而是将其强大但不可控的智能转化为可靠、可预测、可管理的生产力量。</strong>
+  </div>
+  <div style="display:flex;gap:clamp(14px,2.5vw,24px);align-items:stretch;margin-top:clamp(10px,1.8vh,20px)">
+    <div class="stack" style="flex:1;min-width:0">
+      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06);height:100%;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-size:14px;font-weight:600;letter-spacing:0;color:rgba(0,0,0,.35);font-family:var(--font-sans);margin-bottom:2px">CORE INSIGHT</div>
+        <h5 style="font-size:26px;font-weight:700;margin-bottom:6px;color:var(--text-1);line-height:1.4">驾驭工程最重要的是——<span style="color:var(--accent)">📜脚本</span>和<span style="color:var(--accent)">🔄工作流</span></h5>
+        <div style="color:var(--text-2);font-size:18px;line-height:1.7">
+          <p style="margin:0 0 8px">六大组件定义了"要做什么"，<strong>脚本</strong>和<strong>工作流</strong>则是让这些约束真正跑起来的<strong>执行载体</strong>。</p>
+          <p style="margin:0 0 8px">脚本将检验规则写成可执行代码，<br>工作流编排输入→处理→校验→纠错的完整闭环。<br>两者结合，才能把"理论上的约束"变成"<strong>生产级的可靠</strong>"。</p>
+          <p style="margin:0;font-size:14px;color:var(--text-3)">OpenAI 实证：相同模型+数据+提示词，仅通过优化 Harness（工作流脚本），成功率从 42% 跃升至 78%。</p>
+        </div>
+      </div>
     </div>
-    <div class="six-pack">
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:44px;flex-shrink:0;gap:6px;color:var(--text-3);font-size:26px;font-weight:600;letter-spacing:0">
+      <div style="width:2px;flex:1;background:var(--border);border-radius:1px;max-height:60px"></div>
+      <span>🔧</span><span>六<br>大<br>组<br>件</span>
+      <div style="width:2px;flex:1;background:var(--border);border-radius:1px;max-height:60px"></div>
+    </div>
+    <div class="six-pack" style="flex:1;min-width:0">
       <div class="item"><span class="in">① 工具调用</span><br>AI 能调用外部工具和 API</div>
       <div class="item"><span class="in">② 约束安全</span><br>设定规则边界，不能越界</div>
       <div class="item"><span class="in">③ 验证校验</span><br>输出前自检，确保正确</div>
@@ -572,9 +589,6 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <div class="item"><span class="in">⑤ 错误处理</span><br>出错了能自己发现修正</div>
       <div class="item"><span class="in">⑥ 可观测性</span><br>每一步可追踪可回溯</div>
     </div>
-  </div>
-  <div style="margin-top:20px;padding:18px 24px;background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:var(--radius);text-align:center">
-    <p style="font-size:18px;color:var(--accent);margin:0"><strong>💡 规训工程最重要的是——脚本和工作流</strong></p>
   </div>
   <div class="eco-bar">
     <div class="eco-row">
@@ -593,7 +607,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/codex.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>Codex</span>
     </div>
   </div>
-  <div class="notes"><b>规训工程 = 给 AI 装上手脚、套上缰绳。</b>六大组件：工具调用、约束安全、验证校验、状态管理、错误处理、可观测性。规训工程最重要的是脚本和工作流。</div>
+  <div class="notes"><b>驾驭工程 = 给 AI 装上手脚、套上缰绳。</b>六大组件：工具调用、约束安全、验证校验、状态管理、错误处理、可观测性。驾驭工程最重要的是脚本和工作流。</div>
 </section>
 
 <!-- ====== 13. SCRIPT VS WORKFLOW ====== -->
@@ -634,29 +648,32 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     <span class="tag tag-g">🔧 工具调用</span><span class="tag tag-b">🛡 约束安全</span><span class="tag tag-y">✅ 验证校验</span><span class="tag tag-g">📦 状态管理</span><span class="tag tag-r">🔄 容错</span><span class="tag tag-b">📊 可观测性</span>
   </div>
   <div class="big-num mt-l">400<span class="unit">万+</span></div>
-  <div class="notes">真实案例：<b>变现400万+</b>。用户→小程序→数据库→AI处理→分析匹配→客服→礼品→复购→进公司口袋。每个节点标注规训组件，每天自动循环。全流程自动化。</div>
+  <div class="notes">真实案例：<b>变现400万+</b>。用户→小程序→数据库→AI处理→分析匹配→客服→礼品→复购→进公司口袋。每个节点标注约束组件，每天自动循环。全流程自动化。</div>
 </section>
 
 <!-- ====== 15. PROGRESSIVE ====== -->
 <section class="slide" data-title="递进对比">
   <p class="kicker">Progression</p>
-  <h2 class="h2">规训 → 循环</h2>
+  <h2 class="h2">约束 → 循环</h2>
   <div class="comp-grid mt-l">
-    <div class="comp-card comp-bad"><div class="ct">❌ 只有规训工程</div><p>单次执行，做完就完了——AI 输出结果，不管好不好，交差了事。</p></div>
+    <div class="comp-card comp-bad"><div class="ct">❌ 只有驾驭工程</div><p>单次执行，做完就完了——AI 输出结果，不管好不好，交差了事。</p></div>
     <div class="comp-card comp-good"><div class="ct">✅ 加上循环工程</div><p><b>做 → 查 → 修 → 再输出</b>，直到满意——AI 自己检查、修正、优化。</p></div>
   </div>
   <p class="lede mt-l tc">从「能干」到「能干好」的质变</p>
-  <div class="notes">只有规训→单次执行。加上循环→<b>做→查→修→再输出</b>，直到满意。从"能干"到"能干好"的质变。</div>
+  <div class="notes">只有约束→单次执行。加上循环→<b>做→查→修→再输出</b>，直到满意。从"能干"到"能干好"的质变。</div>
 </section>
 
 <!-- ====== 16. LOOP REVEAL ====== -->
 <section class="slide" data-title="循环工程揭晓">
-  <p class="kicker">CHAPTER 04 · LOOP ENGINEERING</p>
-  <h2 class="h2">循环工程</h2>
-  <p class="lede">做 → 查 → 修 → 再输出，直到满意</p>
+  <p class="kicker">四大工程 · CHAPTER 04</p>
+  <h2 class="h2" style="margin-bottom:2px!important">循环工程</h2>
+  <p class="lede" style="margin-top:0!important;margin-bottom:8px">LOOP ENGINEERING</p>
+  <div class="callout-block">
+    💡 <strong>通过反复执行-验证-修正的闭环，可以将单次输出的不确定性收敛为确定性结果</strong>
+  </div>
   <div class="g2 mt-l">
     <div class="stack">
-      <div class="comp-card comp-bad"><div class="ct">❌ 只有规训</div><p>单次执行，有没有问题它不管</p></div>
+      <div class="comp-card comp-bad"><div class="ct">❌ 只有约束</div><p>单次执行，有没有问题它不管</p></div>
       <div class="comp-card comp-good"><div class="ct">✅ 加上循环</div><p>做 → 查 → 修 → 再输出——AI 自己检查修正直到符合标准</p></div>
     </div>
     <div class="stack">
@@ -704,12 +721,12 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     <thead><tr><th>维度</th><th>个人 AI</th><th>企业 AI</th></tr></thead>
     <tbody>
       <tr><td>应用场景</td><td>做PPT、写文案、查资料、旅游规划</td><td>对账、简历筛选、生日营销、数据同步</td></tr>
-      <tr><td>工程需求</td><td>提示词 + 上下文</td><td style="color:var(--accent);font-weight:600">四大工程全得上（规训+循环是核心）</td></tr>
+      <tr><td>工程需求</td><td>提示词 + 上下文</td><td style="color:var(--accent);font-weight:600">四大工程全得上（约束+循环是核心）</td></tr>
       <tr><td>容错</td><td>错了 Ctrl+Z</td><td>错了就是钱</td></tr>
       <tr><td>核心</td><td>提效</td><td style="color:var(--accent);font-weight:600">可控 + 变现</td></tr>
     </tbody>
   </table>
-  <div class="notes">差的不是模型，是<b>工程</b>。个人：提示词+上下文就够了，错了Ctrl+Z。企业：<b>四大工程全得上</b>，规训+循环是核心，错了就是钱。</div>
+  <div class="notes">差的不是模型，是<b>工程</b>。个人：提示词+上下文就够了，错了Ctrl+Z。企业：<b>四大工程全得上</b>，约束+循环是核心，错了就是钱。</div>
 </section>
 
 <!-- ====== 18. DATA PRIVACY ====== -->
@@ -748,7 +765,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <div class="check-item">☐ 选择模型 <span style="color:var(--text-3);font-size:12px">🎯 模型</span></div>
       <div class="check-item">☐ 搭建知识库 <span style="color:var(--text-3);font-size:12px">📚 上下文工程</span></div>
       <div class="check-item">☐ 设计提示词 <span style="color:var(--text-3);font-size:12px">💬 提示词工程</span></div>
-      <div class="check-item">☐ 配置规训策略 <span style="color:var(--text-3);font-size:12px">🔧 规训工程</span></div>
+      <div class="check-item">☐ 配置约束策略 <span style="color:var(--text-3);font-size:12px">🔧 驾驭工程</span></div>
       <div class="check-item">☐ 评估数据隐私</div>
       <div class="check-item">☐ 搭建工作流 <span style="color:var(--text-3);font-size:12px">🔄 循环工程</span></div>
       <div class="check-item">☐ 循环优化 <span style="color:var(--text-3);font-size:12px">🔄 循环工程</span></div>
@@ -759,21 +776,18 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <div class="tool-layer tl-3"><h4>第三层：知识库</h4><p style="font-size:14px;color:var(--text-2);margin:0">Obsidian · 飞书文档 · Dify</p></div>
     </div>
   </div>
-  <div class="notes">落地Checklist：明确场景→选模型→搭知识库→设计提示词→配置规训→评估隐私→搭建工作流→循环优化。三层工具包：API Key→本地工具→知识库。</div>
+  <div class="notes">落地Checklist：明确场景→选模型→搭知识库→设计提示词→配置约束→评估隐私→搭建工作流→循环优化。三层工具包：API Key→本地工具→知识库。</div>
 </section>
 
 <!-- ====== 20. Q&A ====== -->
 <section class="slide center tc v-center" data-title="互动答疑">
   <div>
     <p class="kicker">Q&A</p>
-    <h2 class="h2">互动答疑</h2>
+    <h2 class="h2" style="font-size:clamp(250px,75vw,500px)!important;font-weight:800;color:#3B82F6;text-align:center;margin:0;border:none;padding:0;line-height:1">?</h2>
     <div style="margin-top:36px;padding:clamp(28px,5vh,48px) clamp(24px,4vw,40px);background:color-mix(in srgb,var(--accent) 5%,transparent);border:1px solid color-mix(in srgb,var(--accent) 12%,transparent);border-radius:var(--radius);max-width:700px;margin-left:auto;margin-right:auto">
-      <p style="font-size:clamp(20px,2.4vw,30px);line-height:1.5">
-        AI —— 当你不会用它的时候，它真的是垃圾。<br>当你学会用它的时候，就能<b>变废为宝</b>。
-      </p>
       <p class="dim mt-m">厉害的不是 AI，是<b>人类的脑子</b>。</p>
     </div>
-    <p class="lede mt-l">预留 10 分钟自由提问</p>
+
   </div>
   <div class="notes"><b>AI——当你不会用它的时候，它真的是垃圾。当你学会用它的时候，就能变废为宝。厉害的不是 AI，是人类的脑子。</b>预留十分钟自由提问。谢谢大家。</div>
 </section>

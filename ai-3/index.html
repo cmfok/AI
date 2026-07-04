@@ -454,7 +454,7 @@ function render(i){
 }
 
 function go(i){
-  if(transitioning||i===cur||i<0||i>=S.length)return;
+  if(transitioning||pageLocked||i===cur||i<0||i>=S.length)return;
   transitioning=true;cur=i;
   fade.classList.add('show');
   setTimeout(()=>{
@@ -473,20 +473,27 @@ document.addEventListener('keydown',e=>{
   if(e.key==='f'||e.key==='F'){document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();}
 });
 
-// ── 触摸滑动 ──
-let tx=0,ty=0;
-document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
-document.addEventListener('touchend',e=>{
+// ── 触摸滑动（改进：降低阈值 + 阻止纵向滚动干扰）──
+let tx=0,ty=0,swiping=false;
+document.addEventListener('touchstart',e=>{
+  tx=e.touches[0].clientX;ty=e.touches[0].clientY;swiping=false;
+},{passive:true});
+document.addEventListener('touchmove',e=>{
   if(pageLocked)return;
-  const dx=e.changedTouches[0].clientX-tx,dy=e.changedTouches[0].clientY-ty;
-  if(Math.abs(dx)>Math.abs(dy)&&Math.abs(dx)>50)go(dx<0?cur+1:cur-1);
+  const dx=Math.abs(e.touches[0].clientX-tx),dy=Math.abs(e.touches[0].clientY-ty);
+  if(dx>dy&&dx>20){e.preventDefault();swiping=true;}
+},{passive:false});
+document.addEventListener('touchend',e=>{
+  if(pageLocked||!swiping)return;
+  const dx=e.changedTouches[0].clientX-tx;
+  if(Math.abs(dx)>30)go(dx<0?cur+1:cur-1);
 },{passive:true});
 
 // ── 鼠标滚轮 ──
 let wheelCool=false;
 document.addEventListener('wheel',e=>{
   if(pageLocked)return;
-  if(wheelCool)return;wheelCool=true;setTimeout(()=>wheelCool=false,800);
+  if(wheelCool)return;wheelCool=true;setTimeout(()=>wheelCool=false,1200);
   go(e.deltaY>0?cur+1:cur-1);
 },{passive:true});
 
