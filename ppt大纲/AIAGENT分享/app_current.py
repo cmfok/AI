@@ -37,13 +37,13 @@ SLIDES = [
     {"page": 9,  "title": "案例·约会翻车",               "tags": "案例 约会 知识库 背景 信息 适配度"},
     {"page": 10, "title": "上下文工程",                   "tags": "上下文 知识库 RAG 历史数据 参考模板 业务规则"},
     {"page": 11, "title": "知识库搭建",                   "tags": "知识库 搭建 Trae Obsidian 向量 语义搜索 入门 进阶"},
-    {"page": 12, "title": "案例·运费+招聘",              "tags": "案例 运费 对账 招聘 简历 规训 脚本 工作流 校验 工具"},
-    {"page": 13, "title": "规训工程",                     "tags": "规训 工具调用 约束 验证 状态 错误处理 可观测 缰绳 MCP"},
+    {"page": 12, "title": "案例·运费+招聘",              "tags": "案例 运费 对账 招聘 简历 约束 脚本 工作流 校验 工具"},
+    {"page": 13, "title": "约束工程",                     "tags": "约束 工具调用 约束 验证 状态 错误处理 可观测 缰绳 MCP"},
     {"page": 14, "title": "案例·生日营销",               "tags": "案例 生日 营销 循环 自动 扫描 通知 回写"},
     {"page": 15, "title": "循环工程",                     "tags": "循环 自查 复盘 会诊 绩效 反馈 多Agent 并行 通讯"},
     {"page": 16, "title": "个人AI vs 企业AI",            "tags": "个人 企业 效率 可控 容错 生产环境"},
     {"page": 17, "title": "数据隐私",                     "tags": "隐私 数据 泄露 加密 私有化 本地化"},
-    {"page": 18, "title": "落地Checklist",               "tags": "Checklist 落地 场景 模型 提示词 规训 监控"},
+    {"page": 18, "title": "落地Checklist",               "tags": "Checklist 落地 场景 模型 提示词 约束 监控"},
     {"page": 19, "title": "互动答疑",                     "tags": "答疑 互动 问题 自由 讨论 QA"},
 ]
 
@@ -2082,7 +2082,8 @@ def control_current():
 # ── 幻灯片总数 ─────────────────────────────────────────
 @app.route("/api/slides/total")
 def slides_total():
-    return jsonify({"total": len([s for s in SLIDES if s.get('page')])})
+    # 以 index.html 实际 <section class="slide"> 数量为准（当前 21 页）
+    return jsonify({"total": 21})
 
 SLIDES_COUNT = len([s for s in SLIDES if s.get('page')])
 
