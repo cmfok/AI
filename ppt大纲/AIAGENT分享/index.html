@@ -60,8 +60,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 /* rules grid (from AIEN1) */
 .rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.rule-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:18px 16px;transition:all 0.3s}
-.rule-item .num{font-size:11px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,0.25);font-family:monospace;margin-bottom:4px}
+.rule-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:18px 16px;transition:all 0.3s;box-shadow:0 2px 12px rgba(250,245,235,.06)}
+.rule-item .num{font-size:11px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,.35);font-family:monospace;margin-bottom:4px}
 .rule-item h5{font-size:15px;font-weight:600;margin-bottom:4px}
 .rule-item .body-sm{color:#86868b;font-size:13px;line-height:1.6}
 
@@ -79,9 +79,9 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .fr-dot:nth-child(3){background:#27c93f}
 .fr-name{margin-left:auto;color:rgba(255,255,255,.3);font-size:10px;letter-spacing:.5px}
 .fr-body{padding:10px 0;flex:1}
-.fr-ln{display:flex;align-items:baseline;padding:0 14px;white-space:nowrap}
+.fr-ln{display:flex;align-items:baseline;padding:0 14px;white-space:nowrap;color:#e6edf3}
 .fr-ln .ln{display:inline-block;width:1.8em;text-align:right;color:rgba(255,255,255,.12);font-size:.9em;margin-right:12px;user-select:none;flex-shrink:0}
-.fr-ln .c{color:#6a9955}
+.fr-ln .c{color:#6a9955;font-weight:700}
 .fr-ln .s{color:#ce9178}
 .fr-ln .k{color:#569cd6}
 
@@ -412,21 +412,25 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <div class="file-reader">
         <div class="fr-bar"><span class="fr-dot"></span><span class="fr-dot"></span><span class="fr-dot"></span><span class="fr-name">prompt.md</span></div>
         <div class="fr-body">
-          <div class="fr-ln"><span class="ln">1</span><span class="c"># 角色 🎯</span></div>
-          <div class="fr-ln"><span class="ln">2</span>你是一位资深PPT设计师，擅长科技主题</div>
+          <div class="fr-ln"><span class="ln">1</span><span class="c"># 定角色 — 资深PPT设计师</span></div>
+          <div class="fr-ln"><span class="ln">2</span>你擅长科技峰会幻灯片，观众多为使用豆包元宝一类AI软件的轻度使用者</div>
           <div class="fr-ln"><span class="ln">3</span></div>
-          <div class="fr-ln"><span class="ln">4</span><span class="c"># 要求 📋</span></div>
-          <div class="fr-ln"><span class="ln">5</span>设计「AI 落地分享会」PPT大纲</div>
-          <div class="fr-ln"><span class="ln">6</span>输出 Markdown 格式，含演讲备注</div>
-          <div class="fr-ln"><span class="ln">7</span></div>
-          <div class="fr-ln"><span class="ln">8</span><span class="c"># 参考模板 📝</span></div>
-          <div class="fr-ln"><span class="ln">9</span><span class="s"># {标题}  ## {副标题}</span></div>
-          <div class="fr-ln"><span class="ln">10</span><span class="s">- 要点</span></div>
-          <div class="fr-ln"><span class="ln">11</span></div>
-          <div class="fr-ln"><span class="ln">12</span><span class="c"># 标准 🚧</span></div>
-          <div class="fr-ln"><span class="ln">13</span>✅ 每页≤6个要点</div>
-          <div class="fr-ln"><span class="ln">14</span>✅ 清晰的故事线</div>
-          <div class="fr-ln"><span class="ln">15</span>❌ 大段文字·复杂术语</div>
+          <div class="fr-ln"><span class="ln">4</span><span class="c"># 讲要求 — 页面内容</span></div>
+          <div class="fr-ln"><span class="ln">5</span>· 标题：提示词工程 · CHAPTER 01</div>
+          <div class="fr-ln"><span class="ln">6</span>· 核心假设：相同模型×不同提问→差异巨大</div>
+          <div class="fr-ln"><span class="ln">7</span>· 2×2网格展示四规则：定角色·讲要求·给参考·设标准</div>
+          <div class="fr-ln"><span class="ln">8</span>· 底部生态栏：豆包·千问·Kimi·DeepSeek·ChatGPT等</div>
+          <div class="fr-ln"><span class="ln">9</span>· notes备注：显示本页提示词</div>
+          <div class="fr-ln"><span class="ln">10</span></div>
+          <div class="fr-ln"><span class="ln">11</span><span class="c"># 给参考 — 页面结构</span></div>
+          <div class="fr-ln"><span class="ln">12</span>callout-block → 💡 核心假设</div>
+          <div class="fr-ln"><span class="ln">13</span>rules-grid × rule-item → 四规则卡片</div>
+          <div class="fr-ln"><span class="ln">14</span>eco-bar → 底部AI平台标签栏</div>
+          <div class="fr-ln"><span class="ln">15</span></div>
+          <div class="fr-ln"><span class="ln">16</span><span class="c"># 设标准 — 质量红线</span></div>
+          <div class="fr-ln"><span class="ln">17</span>✅ 一页完整·无需翻页·规则说明≤15字</div>
+          <div class="fr-ln"><span class="ln">18</span>✅ 有故事线：PPT设计→四规则→上下文工程</div>
+          <div class="fr-ln"><span class="ln">19</span>❌ 不要额外动画·不改现有布局</div>
         </div>
       </div>
     </div>
@@ -901,13 +905,13 @@ function toggleP4(el){
     // 大纲弹窗
     if(d.filePopup!==_lkF){
       _lkF=d.filePopup;
-      if(d.filePopup){ showMdPopup(); var p=document.getElementById("mdPopup"); if(p) p.scrollTop=0; }
+      if(d.filePopup){ showMdPopup(); var c=document.getElementById("mdPopupContent"); if(c) c.scrollTop=0; }
       else { var p=document.getElementById("mdPopup"); if(p) p.style.display="none"; }
     }
     // 弹窗滚动
     if(d.popupScroll && d.popupScroll!==_lkScr){ _lkScr=d.popupScroll; var dir=d.popupScroll>0?400:-400;
-      var p=document.getElementById("mdPopup");
-      if(p) p.scrollBy({top: dir, behavior: "smooth"});
+      var c=document.getElementById("mdPopupContent");
+      if(c) c.scrollBy({top: dir, behavior: "smooth"});
     }
 	    // SF规则弹窗
     if(d.sfRules!==undefined && d.sfRules!==_lkSfR){ _lkSfR=d.sfRules; if(d.sfRules){ showSfRules(); } else { var p=document.getElementById('mdPopup'); if(p) p.style.display='none'; } }
@@ -915,8 +919,8 @@ function toggleP4(el){
     if(d.sfScroll!==undefined && d.sfScroll!==_lkSfS){
       _lkSfS=d.sfScroll;
       if(d.sfScroll && !window._sfTimer){
-        var pp=document.getElementById('mdPopup');
-        if(pp) window._sfTimer = setInterval(function(){ pp.scrollTop += 12; }, 12);
+        var cc=document.getElementById('mdPopupContent');
+        if(cc) window._sfTimer = setInterval(function(){ cc.scrollTop += 12; }, 12);
       }
       if(!d.sfScroll && window._sfTimer){ clearInterval(window._sfTimer); window._sfTimer=null; }
     }
@@ -933,9 +937,9 @@ function toggleP4(el){
 
   var _autoTimer=null;
   function startSmoothScroll(){
-    var p=document.getElementById("mdPopup");
-    if(!p||_autoTimer) return;
-    _autoTimer = setInterval(function(){ p.scrollTop += 1; }, 16);
+    var c=document.getElementById("mdPopupContent");
+    if(!c||_autoTimer) return;
+    _autoTimer = setInterval(function(){ c.scrollTop += 1; }, 16);
   }
   function stopSmoothScroll(){
     if(_autoTimer){ clearInterval(_autoTimer); _autoTimer = null; }
