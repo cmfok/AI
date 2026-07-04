@@ -2082,8 +2082,15 @@ def control_current():
 # ── 幻灯片总数 ─────────────────────────────────────────
 @app.route("/api/slides/total")
 def slides_total():
-    # 以 index.html 实际 <section class="slide"> 数量为准（当前 21 页）
-    return jsonify({"total": 21})
+    """自动从 index.html 统计实际 <section class="slide"> 数量"""
+    index_path = os.path.join(PPT_DIR, 'index.html')
+    try:
+        with open(index_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        count = content.count('<section class="slide')
+        return jsonify({"total": max(count, 1)})
+    except Exception:
+        return jsonify({"total": 21})  # 降级默认值
 
 SLIDES_COUNT = len([s for s in SLIDES if s.get('page')])
 
