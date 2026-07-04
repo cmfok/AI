@@ -58,6 +58,33 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 /* step box */
 .step-box{border-left:3px solid var(--accent);padding:16px 22px;margin:8px 0;background:var(--bg-soft);border-radius:0 var(--radius-sm) var(--radius-sm) 0;font-size:20px;line-height:1.6}
 
+/* rules grid (from AIEN1) */
+.rules-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.rule-item{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.05);border-radius:12px;padding:18px 16px;transition:all 0.3s}
+.rule-item .num{font-size:11px;font-weight:600;letter-spacing:1px;color:rgba(255,255,255,0.25);font-family:monospace;margin-bottom:4px}
+.rule-item h5{font-size:15px;font-weight:600;margin-bottom:4px}
+.rule-item .body-sm{color:#86868b;font-size:13px;line-height:1.6}
+
+/* callout block (from AIEN1) */
+.callout-block{padding:14px 20px;border-radius:12px;background:rgba(229,62,62,.06);border-left:3px solid #e53e3e;font-size:clamp(16px,1.8vw,24px);line-height:1.6;margin-bottom:16px;color:var(--text-1)}
+.callout-block strong{color:#e53e3e}
+.callout-block .emoji{font-size:1.1em;margin-right:4px}
+
+/* file reader (prompt demo inspired by AIEN1) */
+.file-reader{background:#0d1117;border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden;font-family:ui-monospace,'SF Mono','Cascadia Code','JetBrains Mono',monospace;font-size:clamp(11px,1vw,13px);line-height:1.6;display:flex;flex-direction:column;height:100%}
+.fr-bar{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.06)}
+.fr-dot{width:8px;height:8px;border-radius:50%}
+.fr-dot:nth-child(1){background:#ff5f56}
+.fr-dot:nth-child(2){background:#ffbd2e}
+.fr-dot:nth-child(3){background:#27c93f}
+.fr-name{margin-left:auto;color:rgba(255,255,255,.3);font-size:10px;letter-spacing:.5px}
+.fr-body{padding:10px 0;flex:1}
+.fr-ln{display:flex;align-items:baseline;padding:0 14px;white-space:nowrap}
+.fr-ln .ln{display:inline-block;width:1.8em;text-align:right;color:rgba(255,255,255,.12);font-size:.9em;margin-right:12px;user-select:none;flex-shrink:0}
+.fr-ln .c{color:#6a9955}
+.fr-ln .s{color:#ce9178}
+.fr-ln .k{color:#569cd6}
+
 /* six pack */
 .six-pack{display:grid;grid-template-columns:1fr 1fr;gap:8px}
 .six-pack .item{background:var(--surface-2);border-radius:var(--radius-sm);padding:14px 20px;font-size:18px;line-height:1.5;border:1px solid var(--border)}
@@ -121,7 +148,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 @media(max-width:768px){
   .slide{padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px)}
-  .g2,.g3,.g4,.comp-grid,.six-pack{grid-template-columns:1fr}
+  .g2,.g3,.g4,.comp-grid,.six-pack,.rules-grid{grid-template-columns:1fr}
+  .file-reader{min-height:200px}
   .chart-flow .arrow-node{display:none}.chart-flow{gap:4px}
 }
 </style>
@@ -164,7 +192,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 </section>
 
 <!-- ====== 2. ALIEN LANGUAGE ====== -->
-<section class="slide center tc" data-title="外星人的语言">
+<section class="slide center tc v-center" data-title="外星人的语言">
   <p class="kicker">TRY TO GUESS</p>
   <h2 class="h2" style="color:#000;font-weight:500;margin:0 0 4px">外星人的语言</h2>
   <h2 class="h2" style="letter-spacing:.25em;margin:20px 0 8px;font-weight:700;color:var(--text-1)">← ↑ → ↓ ←</h2>
@@ -206,7 +234,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <div style="margin-top:12px">
 <style>
 /* ===== 品牌卡片组件样式 ===== */
-.brand-cards-wrap{display:flex;flex-direction:row;gap:12px;align-items:center;justify-content:center}
+.brand-cards-wrap{display:flex;flex-direction:row;gap:12px;align-items:center;justify-content:flex-start;transform:scale(1.2);transform-origin:top left}
 .brand-box{border:1px solid var(--border,#e0e0e0);border-radius:var(--radius,12px);padding:6px;display:flex;gap:2px;background:var(--bg-soft,#f7f7f8)}
 .brand-box-company{width:190px;display:flex;flex-direction:column;gap:8px}
 .brand-box-model{width:130px;display:flex;flex-direction:column;gap:8px;align-items:center}
@@ -261,15 +289,6 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--warn)"><div class="ch" style="font-size:20px">⚠️ 三个局限 <span class="ic" style="font-size:16px">▼</span></div><div class="cb"><div class="cb-inner" style="font-size:18px"><div class="lim-grid"><div class="lim-card"><strong style="color:var(--warn)">幻觉</strong><br><span style="display:inline-block;margin:2px 0;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 10%,transparent)"><strong>它没有真实世界感知</strong></span><br>不调工具直接猜天气</div><div class="lim-card"><strong style="color:var(--warn)">知识截止</strong><br><span style="display:inline-block;margin:2px 0;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 10%,transparent)"><strong>不知道今年是哪一年</strong></span><br>训练数据停在2025</div><div class="lim-card"><strong style="color:var(--warn)">无真实理解</strong><br><span style="display:inline-block;margin:2px 0;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 10%,transparent)"><strong>只是复现最常见的模式</strong></span><br>所有手表画成10:10</div></div></div></div></div>
     </div>
   </div>
-  <div class="eco-bar"><div class="eco-row">
-    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
-    <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="/ai/icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>千问</span>
-    <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="/ai/icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
-    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
-    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
-  </div></div>
   <div class="notes">豆包·ChatGPT·Gemini·千问·DeepSeek……<b>这些都是模型</b>。<b>三阶段训练</b>：①预训练→喂海量文字猜词 ②指令微调→问答对训练 ③RLHF→人类打分→AI 变<b>"舔狗"</b>。<b>三个局限</b>：<b>幻觉</b>（无真实世界感知）、<b>知识截止</b>（不知今年年份）、<b>无真实理解</b>（只会复现常见模式）。</div>
 </section>
 
@@ -369,7 +388,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
         </div>
         <div style="flex:1"></div>
       </div>
-      <div style="text-align:center;font-size:clamp(18px,1.8vw,24px);font-weight:800;color:#2ea043;padding:6px 10px;background:rgba(46,160,67,.08);border-radius:6px">✅ 本场分享会 PPT 就是这样做的！</div>
+      <div style="text-align:center;font-size:clamp(18px,1.8vw,24px);font-weight:800;color:#2ea043;padding:6px 10px;background:rgba(46,160,67,.08);border-radius:6px;border:2px solid rgba(46,160,67,.3)">✅ 本场分享会 PPT 就是这样做的！</div>
       <div style="text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#3b6fff;padding:6px 10px;background:rgba(59,111,255,.06);border-radius:6px;overflow:hidden">10分钟语音沟通生成专属PPT</div>
 	    </div>
 	    </div>
@@ -383,21 +402,47 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   <p class="kicker">四大工程 · CHAPTER 01</p>
   <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
   <p class="lede" style="margin-top:0!important;margin-bottom:8px">PROMPT ENGINEERING</p>
-  <div style="margin-bottom:12px;background:rgba(229,62,62,.08);border-left:3px solid #e53e3e;border-radius:0 8px 8px 0;padding:12px 18px;font-size:clamp(18px,2.2vw,28px);color:var(--text-1);font-weight:600">
-    💡 <strong style="color:#e53e3e">核心假设</strong>：相同的模型，通过不同的提问方式，可以获得质量差异巨大的结果
+  <div class="callout-block">
+    💡 <strong>核心假设</strong>：相同的模型，通过不同的提问方式，可以获得质量差异巨大的结果
   </div>
-  <div class="g2 mt-m">
-    <div class="stack">
-      <div class="step-box"><strong>① 定角色</strong> · 告诉 AI 它是谁——"你是一个资深PPT设计师"</div>
-      <div class="step-box"><strong>② 讲要求</strong> · 明确输出格式、风格、禁忌</div>
-      <div class="step-box"><strong>③ 给参考</strong> · 提供范例，让 AI 知道你要的感觉</div>
-      <div class="step-box"><strong>④ 设标准</strong> · 告诉 AI 怎么判断做得好不好</div>
+  <div class="rules-grid" style="grid-template-columns:1fr 1fr 1fr">
+    <div class="rule-item"><div class="num">RULE 01</div><h5>🎯 定角色</h5><div class="body-sm">先说清楚身份，AI 立刻切换到对应视角</div></div>
+    <div class="rule-item"><div class="num">RULE 02</div><h5>📋 讲要求</h5><div class="body-sm">明确交付物：表格、数字、格式</div></div>
+    <div style="grid-row:span 2;padding:0;background:transparent;border:none">
+      <div class="file-reader">
+        <div class="fr-bar"><span class="fr-dot"></span><span class="fr-dot"></span><span class="fr-dot"></span><span class="fr-name">prompt.md</span></div>
+        <div class="fr-body">
+          <div class="fr-ln"><span class="ln">1</span><span class="c"># 角色 🎯</span></div>
+          <div class="fr-ln"><span class="ln">2</span>你是一位资深PPT设计师，擅长科技主题</div>
+          <div class="fr-ln"><span class="ln">3</span></div>
+          <div class="fr-ln"><span class="ln">4</span><span class="c"># 要求 📋</span></div>
+          <div class="fr-ln"><span class="ln">5</span>设计「AI 落地分享会」PPT大纲</div>
+          <div class="fr-ln"><span class="ln">6</span>输出 Markdown 格式，含演讲备注</div>
+          <div class="fr-ln"><span class="ln">7</span></div>
+          <div class="fr-ln"><span class="ln">8</span><span class="c"># 参考模板 📝</span></div>
+          <div class="fr-ln"><span class="ln">9</span><span class="s"># {标题}  ## {副标题}</span></div>
+          <div class="fr-ln"><span class="ln">10</span><span class="s">- 要点</span></div>
+          <div class="fr-ln"><span class="ln">11</span></div>
+          <div class="fr-ln"><span class="ln">12</span><span class="c"># 标准 🚧</span></div>
+          <div class="fr-ln"><span class="ln">13</span>✅ 每页≤6个要点</div>
+          <div class="fr-ln"><span class="ln">14</span>✅ 清晰的故事线</div>
+          <div class="fr-ln"><span class="ln">15</span>❌ 大段文字·复杂术语</div>
+        </div>
+      </div>
     </div>
-    <div>
-      <div class="ca-card open" onclick="this.classList.toggle('open')"><div class="ch">🌱 种子故事 <span class="ic">▼</span></div><div class="cb"><div class="cb-inner">朋友问 AI 约会→太笼统→教他用结构问→方案完整。但过了几天又失败了——AI 推荐<b>烤肉</b>，那女孩是<b>素食主义者</b>。引出上下文工程。</div></div></div>
-    </div>
+    <div class="rule-item"><div class="num">RULE 03</div><h5>📝 给参考</h5><div class="body-sm">给一个模板，照这个格式写</div></div>
+    <div class="rule-item"><div class="num">RULE 04</div><h5>🚧 设标准</h5><div class="body-sm">划定范围：只看线上渠道，异常项标红</div></div>
   </div>
-  <div class="notes">四个规则：定角色·讲要求·给参考·设标准。种子故事：朋友问AI约会→教他用结构问→方案完整。但AI推荐烤肉，女孩是素食主义者。引出上下文工程。</div>
+  <div class="eco-bar"><div class="eco-row">
+    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/brand/doubao-color.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
+    <span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img src="/ai/icon/brand/qwen-color.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6F69F7"></span>千问</span>
+    <span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px" onerror="this.classList.add('err')"><span class="dot" style="background:#777777"></span>Kimi</span>
+    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
+  </div></div>
+  <div class="notes">四个规则：定角色·讲要求·给参考·设标准。</div>
 </section>
 
 <!-- ====== 7. CONTEXT COMPARE ====== -->
@@ -437,9 +482,9 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   <div class="eco-bar">
     <div class="eco-row">
       <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-      <span class="pill" style="border-color:#6B57FF;background:rgba(107,87,255,.08)"><img src="/ai/icon/kimi.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6B57FF"></span>Kimi</span>
-      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/bytedance.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
-      <span class="pill" style="border-color:#FF6A00;background:rgba(255,106,0,.08)"><img src="/ai/icon/alibabacloud.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#FF6A00"></span>通义千问</span>
+      <span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px" onerror="this.classList.add('err')"><span class="dot" style="background:#777777"></span>Kimi</span>
+      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/brand/doubao-color.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
+      <span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img src="/ai/icon/brand/qwen-color.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6F69F7"></span>通义千问</span>
       <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
       <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
       <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
@@ -762,7 +807,7 @@ function toggleP4(el){
 (function(){
   var slides=document.querySelectorAll('.slide');
   var total=slides.length;
-  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0;
+  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0, _lkP4=0;
   var lastSlide=1, lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, _lkO=false, _lkT=false, _lkF=false, _locked=false, _firstPoll=true;
 
   function goSlide(n){
@@ -815,6 +860,18 @@ function toggleP4(el){
     if(d.card!==undefined && d.card!==lastCard){
       lastCard=d.card;
       // 由 runtime.js 或自定义逻辑处理
+    }
+    // P4 卡片远程展开（控制台按钮 → 大屏联动）
+    if(d.p4open!==undefined && d.p4open!==_lkP4){
+      _lkP4=d.p4open;
+      var p4slide = document.querySelector('.slide[data-title="模型"]');
+      if(p4slide){
+        var cards = p4slide.querySelectorAll('.ca-card');
+        for(var ci=0;ci<cards.length;ci++){ cards[ci].classList.remove('open'); }
+        if(d.p4open>0 && d.p4open<=cards.length){
+          cards[d.p4open-1].classList.add('open');
+        }
+      }
     }
     // 投票浮层
     if(d.pollOverlay!==undefined && d.pollOverlay!==lastPollOverlay){
