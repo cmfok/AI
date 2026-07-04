@@ -2068,11 +2068,58 @@ def control_go():
     data = request.get_json(silent=True) or {}
     slide = int(data.get("slide", 1))
     CONTROL_STATE["slide"] = max(1, min(slide, 99))
+    # 保存动效状态字段（排除内部字段）
     for key, value in data.items():
-        if key in ("slide",):
+        if key in ("slide", "_speech"):
             continue
         CONTROL_STATE[key] = value
-    return jsonify({"ok": True, **CONTROL_STATE})
+
+    # ── 演讲稿保存（嵌入此端点，避免在 Cloudflare 代理层被 405）──
+    speech_info = data.get("_speech")
+    speech_result = None
+    if speech_info and isinstance(speech_info, dict):
+        sid = int(speech_info.get("slide", slide))
+        content = speech_info.get("content", "")
+        try:
+            if os.path.exists(SPEECH_FILE):
+                with open(SPEECH_FILE, 'r', encoding='utf-8') as f:
+                    lines = f.readlines()
+                s_start = s_end = None
+                in_target = False
+                target_header = None
+                for i, line in enumerate(lines):
+                    m = re.match(r'^## Slide (\d+)\s*[—\-—]\s*(.*)', line)
+                    if m:
+                        num = int(m.group(1))
+                        if num == sid:
+                            in_target = True; s_start = i; target_header = line
+                        elif in_target:
+                            s_end = i; break
+                    elif in_target and i == len(lines) - 1:
+                        s_end = i + 1
+                if s_start is not None:
+                    if s_end is None: s_end = len(lines)
+                    old_block = lines[s_start:s_end]
+                    has_sep = any(ln.strip() == '---' for ln in old_block)
+                    nc = content.replace('<strong>','**').replace('</strong>','**').replace('<br>','\n').strip()
+                    if has_sep:
+                        nb = [target_header, '\n', nc, '\n\n---\n\n']
+                    else:
+                        nb = [target_header, '\n', nc, '\n\n']
+                    with open(SPEECH_FILE, 'w', encoding='utf-8') as f:
+                        f.writelines(lines[:s_start] + nb + lines[s_end:])
+                    speech_result = {"ok": True}
+                else:
+                    speech_result = {"ok": False, "error": f"未找到第 {sid} 页"}
+            else:
+                speech_result = {"ok": False, "error": "speech.md 不存在"}
+        except Exception as e:
+            speech_result = {"ok": False, "error": str(e)}
+
+    resp = {"ok": True, **CONTROL_STATE}
+    if speech_result is not None:
+        resp["speech"] = speech_result
+    return jsonify(resp)
 
 @app.route("/api/control/current")
 def control_current():
