@@ -217,8 +217,13 @@
       document.body.appendChild(overview);
     }
 
-    /* ===== navigation ===== */
-    function go(n, fromRemote){
+	    /* ===== expose API for external sync ===== */
+	    window.__deckGo = function(n){ go(Math.max(0, Math.min(total-1, n))); };
+	    window.__deckGetIdx = function(){ return idx; };
+	    window.__deckGetTotal = function(){ return total; };
+
+	    /* ===== navigation ===== */
+	    function go(n, fromRemote){
       n = Math.max(0, Math.min(total-1, n));
       slides.forEach((s,i) => {
         s.classList.toggle('is-active', i===n);
@@ -957,13 +962,12 @@
       }
     });
 
-    // hash deep-link
-    function fromHash(){
-      const m = /^#\/(\d+)/.exec(location.hash||'');
-      if (m) go(Math.max(0, parseInt(m[1],10)-1));
-    }
-    window.addEventListener('hashchange', fromHash);
-    fromHash();
-    go(idx);
+	    // hash — keep sync but don't deep-link on load (always start at page 1)
+	    function fromHash(){
+	      const m = /^#\/(\d+)/.exec(location.hash||'');
+	      if (m) go(Math.max(0, parseInt(m[1],10)-1));
+	    }
+	    window.addEventListener('hashchange', fromHash);
+	    go(idx);
   });
 })();

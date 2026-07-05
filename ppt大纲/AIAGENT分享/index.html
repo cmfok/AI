@@ -146,53 +146,110 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cover-reveal.show{opacity:1}
 .cover-delay{transition-delay:2s}
 
-@media(max-width:768px){
-  .slide{overflow-y:auto;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px)}
-  .g2,.g3,.g4,.comp-grid,.six-pack,.rules-grid{grid-template-columns:1fr}
-  .file-reader{min-height:200px}
-  .chart-flow .arrow-node{display:none}.chart-flow{gap:4px}
-  body .h1{font-size:clamp(48px,11vw,80px)!important}
-  body .h2{font-size:clamp(28px,7vw,56px)!important}
-  body .lede{font-size:clamp(18px,4.5vw,32px)!important}
-  .dim{font-size:clamp(16px,3.5vw,24px)}
-  .kicker{font-size:clamp(11px,2.5vw,14px)}
-  .six-pack .item{font-size:16px;padding:12px 14px}
-  .comp-card{padding:14px 16px;font-size:16px}
-  .eco-bar .pill{font-size:11px;padding:3px 8px}
-  .brand-cards-wrap{transform:scale(.85);transform-origin:top left}
-  .eco-bar{position:static;margin-top:12px}
-  .callout-block{font-size:clamp(14px,3.5vw,18px)!important;padding:12px 16px}
-  .step-box,.ladder-step,.check-item,.tool-layer{font-size:15px;padding:12px 16px}
-  .ca-card .ch{font-size:18px}
-  .ca-card .cb-inner{font-size:15px}
-  .lim-card{font-size:16px;padding:14px 16px}
-  .big-num{font-size:clamp(40px,8vw,80px)}
-  .cover-q{display:none!important}
-  .slide .h1{line-height:1.15!important}
-  .slide .h2{line-height:1.2!important}
-}
-@media(max-width:480px){
-  .slide{padding:clamp(12px,3.5vw,20px) clamp(10px,3.5vw,16px)}
-  body .h1{font-size:clamp(32px,10vw,56px)!important}
-  body .h2{font-size:clamp(22px,7vw,36px)!important}
-  body .lede{font-size:clamp(16px,5vw,24px)!important}
-  .dim{font-size:clamp(14px,4vw,18px)}
-  .kicker{font-size:clamp(10px,3vw,13px)}
-  .six-pack .item{font-size:14px;padding:10px 12px}
-  .comp-card{padding:10px 12px;font-size:14px}
-  .brand-cards-wrap{transform:scale(.6);transform-origin:top left}
-  .comp-card .ct{font-size:14px}
-  .callout-block{font-size:clamp(12px,3.5vw,15px)!important;padding:8px 12px}
-  .step-box,.ladder-step,.check-item,.tool-layer{font-size:13px;padding:10px 12px;gap:6px}
-  .ca-card .ch{font-size:15px}
-  .ca-card .cb-inner{font-size:13px}
-  .lim-card{font-size:14px;padding:12px 14px}
-  .big-num{font-size:clamp(28px,9vw,50px)}
-  .eco-bar .pill{font-size:10px;padding:2px 6px}
-  .eco-bar .pill .ic{width:12px;height:12px}
-  .eco-bar .pill img{width:10px;height:10px}
-  .eco-row{gap:4px}
-}
+	@media(max-width:768px){
+	  .deck-header{top:12px!important;left:20px!important;right:20px!important;font-size:11px!important}
+	  .slide{overflow-y:auto;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px)}
+	  .g2,.g3,.g4,.comp-grid,.six-pack,.rules-grid{grid-template-columns:1fr}
+	  .mt-l{margin-top:14px!important}.mt-m{margin-top:8px!important}
+	  .file-reader{min-height:200px}
+	  .chart-flow .arrow-node{display:none}.chart-flow{gap:4px}
+	  body .h1{font-size:clamp(48px,11vw,80px)!important}
+	  body .h2{font-size:clamp(28px,7vw,56px)!important}
+	  body .lede{font-size:clamp(18px,4.5vw,32px)!important}
+	  .dim{font-size:clamp(16px,3.5vw,24px)}
+	  .kicker{font-size:clamp(11px,2.5vw,14px)}
+	  /* ── 覆盖内联大字 ── */
+	  .slide [style*="font-size:56px"]{font-size:42px!important}
+	  .slide [style*="font-size:34px"]{font-size:26px!important}
+	  .rule-item h5{font-size:24px!important}
+	  .rule-item .body-sm{font-size:18px!important}
+	  .six-pack .item{font-size:16px;padding:12px 14px}
+	  .comp-card{padding:14px 16px;font-size:16px}
+	  .eco-bar .pill{font-size:11px;padding:3px 8px}
+	  .brand-cards-wrap{transform:scale(.85);transform-origin:top left}
+	  .eco-bar{position:static;margin-top:12px}
+	  .callout-block{font-size:clamp(14px,3.5vw,18px)!important;padding:12px 16px}
+	  .step-box,.ladder-step,.check-item,.tool-layer{font-size:15px;padding:12px 16px}
+	  .ca-card .ch{font-size:18px}
+	  .ca-card .cb-inner{font-size:15px}
+	  .lim-card{font-size:16px;padding:14px 16px}
+	  .big-num{font-size:clamp(40px,8vw,80px)}
+	  .cover-q{display:none!important}
+	  .slide .h1{line-height:1.15!important}
+	  .slide .h2{line-height:1.2!important}
+	  /* ── flex 竖排 ── */
+	  [data-title*="运费"] [style*="display:flex"],
+	  [data-title*="驾驭工程"] [style*="display:flex"][style*="gap:clamp(14px"]{flex-direction:column!important;gap:12px!important}
+	  [data-title*="运费"] [style*="flex:1"]{flex:auto!important;width:100%!important}
+	}
+	@media(max-width:480px){
+	  /* ── 基础间距 ── */
+	  .deck-header{top:8px!important;left:14px!important;right:14px!important;font-size:10px!important}
+	  .slide{padding:clamp(22px,4vw,32px) clamp(12px,4vw,20px)}
+	  .mt-l{margin-top:12px!important}.mt-m{margin-top:6px!important}
+	  /* ── 标题字号 ── */
+	  body .h1{font-size:clamp(40px,11vw,64px)!important}
+	  body .h2{font-size:clamp(28px,8vw,44px)!important}
+	  body .lede{font-size:clamp(20px,5.5vw,28px)!important}
+	  .dim{font-size:clamp(16px,4.5vw,20px)}
+	  .kicker{font-size:clamp(12px,3.5vw,15px)}
+	  /* ── 覆盖内联大字（!important 穿透 inline style）── */
+	  .slide [style*="font-size:56px"]{font-size:36px!important}
+	  .slide [style*="font-size:34px"]{font-size:22px!important}
+	  .slide [style*="font-size:28px"]{font-size:18px!important}
+	  .slide [style*="font-size:26px"]{font-size:18px!important}
+	  .slide [style*="font-size:20px"]{font-size:16px!important}
+	  .slide [style*="font-size:18px"]{font-size:15px!important}
+	  .slide [style*="font-size:17px"]{font-size:14px!important}
+	  /* ── 覆盖内联 max-width ── */
+	  .slide [style*="max-width:520px"],
+	  .slide [style*="max-width:700px"]{max-width:100%!important}
+	  /* ── flex 布局 → 竖排 ── */
+	  .slide [style*="display:flex"][style*="gap:clamp(20px"],
+	  .slide [style*="display:flex"][style*="gap:20px"],
+	  [data-title*="运费"] [style*="display:flex"],
+	  [data-title*="驾驭工程"] [style*="display:flex"][style*="gap:clamp(14px"]{flex-direction:column!important;gap:10px!important}
+	  [data-title*="运费"] [style*="flex:1"]{flex:auto!important;width:100%!important}
+	  /* ── 组件字号 ── */
+	  .rule-item h5{font-size:20px!important}
+	  .rule-item .body-sm{font-size:15px!important}
+	  .six-pack .item{font-size:16px;padding:12px 14px}
+	  .comp-card{padding:12px 14px;font-size:16px}
+	  .brand-cards-wrap{transform:none!important;gap:6px;width:100%}
+	  .brand-box{flex:1!important;min-width:0!important}
+	  .brand-box-company{display:none!important}
+	  .brand-box-model{width:100%!important;align-items:stretch!important}
+	  .brand-card{font-size:13px!important;padding:4px 6px!important;gap:4px!important}
+	  .brand-card img{width:18px!important;height:18px!important;flex-shrink:0}
+	  .brand-card img[style*="auto"],
+	  .brand-card img[style*="height:16px"]{width:auto!important;height:14px!important}
+	  .brand-card span{font-size:13px!important}
+	  /* 训练卡片紧贴模型卡片 */
+	  [data-title="模型"] .g2{gap:4px!important}
+	  /* 第5页：2×2 卡片布局 */
+	  [data-title="四大工程总览"] .h2{font-size:clamp(24px,7vw,36px)!important;margin-bottom:8px!important}
+	  [data-title="四大工程总览"] .g4{grid-template-columns:1fr 1fr!important;margin-top:10px!important;gap:6px!important}
+	  [data-title="四大工程总览"] .g4>div{padding:10px 8px!important;border-radius:10px!important}
+	  [data-title="四大工程总览"] .g4>div>div:first-child{font-size:32px!important;margin-bottom:2px!important}
+	  [data-title="四大工程总览"] .g4 h4{font-size:17px!important;margin:0!important}
+	  [data-title="四大工程总览"] .g4 p{font-size:13px!important;margin:0!important}
+	  .comp-card .ct{font-size:16px}
+	  .callout-block{font-size:clamp(14px,4vw,17px)!important;padding:10px 14px}
+	  .step-box,.ladder-step,.check-item,.tool-layer{font-size:15px;padding:12px 14px;gap:6px}
+	  .ca-card .ch{font-size:16px!important}
+	  .ca-card .cb-inner{font-size:14px!important}
+	  .lim-card{font-size:16px;padding:14px 16px}
+	  .big-num{font-size:clamp(36px,10vw,60px)}
+	  .tool-layer h4{font-size:16px!important}
+	  /* ── 生态栏 ── */
+	  .eco-bar{position:static!important;margin-top:12px}
+	  .eco-bar .pill{font-size:12px;padding:3px 8px}
+	  .eco-bar .pill .ic{width:14px;height:14px}
+	  .eco-bar .pill img{width:12px;height:12px}
+	  .eco-row{gap:5px}
+	  /* ── 绝对定位元素防重叠 ── */
+	  [data-title*="运费"] [style*="position:absolute"]{position:static!important;transform:none!important;margin:6px auto;text-align:center;display:block}
+	}
 </style>
 <script src="assets/runtime.js" defer></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -864,45 +921,47 @@ function toggleP4(el){
 
 // ── 服务器轮询（跨设备翻页+动效同步）──
 (function(){
-  var slides=document.querySelectorAll('.slide');
-  var total=slides.length;
-  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0, _lkP4=0;
-  var lastSlide=1, lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, _lkO=false, _lkT=false, _lkF=false, _locked=false, _firstPoll=true;
+	  var slides=document.querySelectorAll('.slide');
+	  var total=slides.length;
+	  var lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null;
+	  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0, _lkP4=0, _lkO=false, _lkT=false, _lkF=false;
+	  var _locked=false, _firstPoll=true, _lastRemoteNav=0;
 
-  function goSlide(n){
-    if(!n||n<1||n>total) return;
-    var cur=document.querySelector('.slide.is-active');
-    if(cur) cur.classList.remove('is-active');
-    if(slides[n-1]) slides[n-1].classList.add('is-active');
-    var sn=document.querySelector('.slide-number');
-    if(sn) sn.setAttribute('data-current', n);
-    lastSlide=n;
-    // 同步到服务器（防止每 500ms 轮询把翻页覆盖回服务器默认状态）
-    fetch('/api/control/go',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({slide:n})
-    }).catch(function(){});
-    // 第12页（运费对账）：切到该页时重新播放动画
-    if(n===12){
-      var slide12 = slides[11];
-      if(slide12){
-        var iframes = slide12.querySelectorAll('iframe');
-        for(var i=0;i<iframes.length;i++){
-          iframes[i].src = iframes[i].src;
-        }
-      }
-    }
-  }
+	  var lastSlide=1;  // 当前页码（1-based），用于 touch 和 sync
+
+	  // ── 本地翻页（直接操作 DOM，不依赖 runtime.js）──
+	  function localGoSlide(n){
+	    if(!n||n<1||n>total) return;
+	    var cur = document.querySelector('.slide.is-active');
+	    if(cur) cur.classList.remove('is-active');
+	    if(slides[n-1]) slides[n-1].classList.add('is-active');
+	    var sn = document.querySelector('.slide-number');
+	    if(sn) sn.setAttribute('data-current', n);
+	    lastSlide = n;
+	    // 同时通知 runtime.js（如果存在）
+	    if(window.__deckGo) window.__deckGo(n-1);
+	  }
 
   function applyServerState(d){
     if(!d) return;
-    // 首次轮询：只同步状态，不触发动作
-    if(_firstPoll){ _lkO=d.overviewKey||0; _lkT=d.themeKey||0; _lkF=d.filePopup||0; lastCoverQ=d.coverQ||false; _lkSfR=d.sfRules||0; _firstPoll=false; }
+	    // 首次轮询：只同步状态不触发动作（除非锁定 → 跳转到锁定页）
+	    if(_firstPoll){
+	      _lkO=d.overviewKey||0; _lkT=d.themeKey||0; _lkF=d.filePopup||0; lastCoverQ=d.coverQ||false; _lkSfR=d.sfRules||0;
+	      _firstPoll=false;
+	      // 控制台锁定 → 直接跳到锁定页
+	      if(d.lock && d.slide){
+	        _locked=true; window.__deckLocked=true;
+	        localGoSlide(d.slide);
+	      }
+	      return;
+	    }
     var changed=false;
-    // 翻页
-    if(d.lock!==undefined) _locked=d.lock;
-    if(d.slide && d.slide!==lastSlide){ goSlide(d.slide); changed=true; }
+		    // 锁定状态同步；未锁定时仅读 lock，不跟页码
+		    if(d.lock!==undefined){ _locked=d.lock; window.__deckLocked = _locked; }
+		    if(d.lock && d.slide && d.slide !== lastSlide && Date.now() - _lastRemoteNav >= 2000){
+		      _lastRemoteNav = Date.now();
+		      localGoSlide(d.slide);
+		    }
     // 封面问号
     if(d.coverQ!==undefined && d.coverQ!==lastCoverQ){
       lastCoverQ=d.coverQ;
@@ -1006,8 +1065,13 @@ function toggleP4(el){
     if(_autoTimer){ clearInterval(_autoTimer); _autoTimer = null; }
   }
 
-  function poll(){
-    fetch('/api/control/current').then(function(r){
+	  function poll(){
+	    // 同步 runtime.js 的页码（键盘翻页也会改变 slides）
+	    if(window.__deckGetIdx){
+	      var rIdx = window.__deckGetIdx() + 1;
+	      if(rIdx !== lastSlide){ lastSlide = rIdx; _lastRemoteNav = Date.now(); }
+	    }
+	    fetch('/api/control/current').then(function(r){
       if(!r.ok) return;
       return r.json();
     }).then(function(d){
@@ -1074,33 +1138,36 @@ function toggleP4(el){
   }
 
 
-  // ── 锁定禁止键盘 ──
-  var _kbBlock = function(e){
-    if(_locked && ['ArrowLeft','ArrowRight',' ','PageUp','PageDown'].indexOf(e.key)>=0){
-      e.stopImmediatePropagation();
-      e.preventDefault();
-    }
-  };
-  document.addEventListener('keydown', _kbBlock, true);
+	  // ── 锁定禁止键盘 ──
+	  window.__deckLocked = false;
+	  var _kbBlock = function(e){
+	    if(_locked && ['ArrowLeft','ArrowRight',' ','PageUp','PageDown'].indexOf(e.key)>=0){
+	      e.stopImmediatePropagation();
+	      e.preventDefault();
+	    }
+	  };
+	  document.addEventListener('keydown', _kbBlock, true);
 
-  // ── 移动端触屏滑动翻页（锁定状态下禁止）──
-  var _tx = 0, _ty = 0;
-  document.addEventListener('touchstart', function(e){
-    var t = e.touches && e.touches[0];
-    if(t){ _tx = t.clientX; _ty = t.clientY; }
-  }, {passive:true});
-  document.addEventListener('touchend', function(e){
-    if(_locked) return;  // 锁定状态下禁止滑动翻页
-    var t = e.changedTouches && e.changedTouches[0];
-    if(!t) return;
-    var dx = t.clientX - _tx, dy = t.clientY - _ty;
-    var absDx = Math.abs(dx), absDy = Math.abs(dy);
-    if(absDx < 30 || absDy > absDx * 1.5) return;  // 忽略短滑和垂直滑动
-    if(dx < 0) goSlide(lastSlide + 1);
-    else goSlide(lastSlide - 1);
-  }, {passive:true});
+	  // ── 移动端触屏滑动翻页 ──
+	  var _tx = 0, _ty = 0;
+	  document.addEventListener('touchstart', function(e){
+	    var t = e.touches && e.touches[0];
+	    if(t){ _tx = t.clientX; _ty = t.clientY; }
+	  }, {passive:true});
+	  document.addEventListener('touchend', function(e){
+	    if(_locked) return;
+	    var t = e.changedTouches && e.changedTouches[0];
+	    if(!t) return;
+	    var dx = t.clientX - _tx, dy = t.clientY - _ty;
+	    var absDx = Math.abs(dx), absDy = Math.abs(dy);
+	    if(absDx < 30 || absDy > absDx * 1.5) return;
+	    var target = dx < 0 ? lastSlide + 1 : lastSlide - 1;
+	    _lastRemoteNav = Date.now();
+	    localGoSlide(target);
+	    // 不通知服务器 — 投屏端只读不写，控制台是唯一写入者
+	  }, {passive:true});
 
-  // ── BroadcastChannel（同设备备用）──
+	  // ── BroadcastChannel（同设备备用）──
   try{
     var bc=new BroadcastChannel('ppt-ctrl');
     bc.onmessage=function(e){
@@ -1113,10 +1180,11 @@ function toggleP4(el){
         }
         lastCoverQ=d.show;
       }
-      if(d.type==='goto'||d.slide){
-        var n=(typeof d.slide==='number')?d.slide:parseInt(d.slide);
-        goSlide(n);
-      }
+	      if((d.type==='goto'||d.slide) && _locked){
+	        var n=(typeof d.slide==='number')?d.slide:parseInt(d.slide);
+	        _lastRemoteNav = Date.now();
+	        localGoSlide(n);
+	      }
     };
   }catch(e){}
 })();
