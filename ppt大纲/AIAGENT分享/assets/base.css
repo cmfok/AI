@@ -43,7 +43,7 @@ a:hover{text-decoration:underline}
 code,kbd,pre,samp{font-family:var(--font-mono)}
 
 /* ================= SLIDE SYSTEM ================= */
-.deck{position:relative;width:100vw;height:100vh;overflow:hidden;background:var(--bg)}
+.deck{position:relative;width:100vw;height:100vh;overflow:hidden;background:var(--bg);touch-action:pan-y pinch-zoom}
 .slide{
   position:absolute;inset:0;
   display:none;
