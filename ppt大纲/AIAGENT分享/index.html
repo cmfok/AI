@@ -11,8 +11,8 @@
 :root{--font-display:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;--anim-dur:.7s;--font-sans:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif}
 body{line-height:1.35!important}
 .slide p{margin-bottom:6px}
-.slide{justify-content:flex-start;padding:clamp(32px,3vw,56px) clamp(48px,5vw,100px)}
-.slide.v-center{justify-content:center}
+.slide{flex-direction:column;justify-content:flex-start;padding:clamp(32px,3vw,56px) clamp(48px,5vw,100px)}
+.slide.v-center{flex-direction:column;justify-content:center}
 body .h1{font-size:clamp(80px,12vw,200px)!important}
 body .h2{font-size:clamp(56px,8vw,130px)!important}
 body .h1{font-size:clamp(80px,12vw,200px)!important}
@@ -147,30 +147,51 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cover-delay{transition-delay:2s}
 
 @media(max-width:768px){
-  .slide{padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px)}
+  .slide{overflow-y:auto;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px)}
   .g2,.g3,.g4,.comp-grid,.six-pack,.rules-grid{grid-template-columns:1fr}
   .file-reader{min-height:200px}
   .chart-flow .arrow-node{display:none}.chart-flow{gap:4px}
-  body .h2{font-size:clamp(32px,9vw,56px)!important}
-  body .lede{font-size:clamp(22px,6vw,32px)!important}
-  .dim{font-size:clamp(18px,4vw,24px)}
+  body .h1{font-size:clamp(48px,11vw,80px)!important}
+  body .h2{font-size:clamp(28px,7vw,56px)!important}
+  body .lede{font-size:clamp(18px,4.5vw,32px)!important}
+  .dim{font-size:clamp(16px,3.5vw,24px)}
+  .kicker{font-size:clamp(11px,2.5vw,14px)}
   .six-pack .item{font-size:16px;padding:12px 14px}
   .comp-card{padding:14px 16px;font-size:16px}
-  .kicker{font-size:clamp(11px,2.5vw,14px)}
   .eco-bar .pill{font-size:11px;padding:3px 8px}
+  .brand-cards-wrap{transform:scale(.85);transform-origin:top left}
+  .eco-bar{position:static;margin-top:12px}
+  .callout-block{font-size:clamp(14px,3.5vw,18px)!important;padding:12px 16px}
+  .step-box,.ladder-step,.check-item,.tool-layer{font-size:15px;padding:12px 16px}
+  .ca-card .ch{font-size:18px}
+  .ca-card .cb-inner{font-size:15px}
+  .lim-card{font-size:16px;padding:14px 16px}
+  .big-num{font-size:clamp(40px,8vw,80px)}
+  .cover-q{display:none!important}
+  .slide .h1{line-height:1.15!important}
+  .slide .h2{line-height:1.2!important}
 }
 @media(max-width:480px){
-  .slide{padding:clamp(14px,4vw,20px) clamp(12px,4vw,16px)}
-  .brand-cards-wrap{transform:scale(.7);transform-origin:top left}
-  .comp-card .ct{font-size:16px}
-  .callout-block{font-size:clamp(13px,3.5vw,16px)!important;padding:10px 14px}
-  .step-box{font-size:14px;padding:10px 14px}
-  .ladder-step{font-size:14px;padding:12px 16px;gap:10px}
-  .check-item{font-size:14px;padding:10px 14px}
-  .tool-layer{font-size:14px;padding:12px 14px}
-  .ca-card .ch{font-size:16px}
-  .ca-card .cb-inner{font-size:14px}
+  .slide{padding:clamp(12px,3.5vw,20px) clamp(10px,3.5vw,16px)}
+  body .h1{font-size:clamp(32px,10vw,56px)!important}
+  body .h2{font-size:clamp(22px,7vw,36px)!important}
+  body .lede{font-size:clamp(16px,5vw,24px)!important}
+  .dim{font-size:clamp(14px,4vw,18px)}
+  .kicker{font-size:clamp(10px,3vw,13px)}
   .six-pack .item{font-size:14px;padding:10px 12px}
+  .comp-card{padding:10px 12px;font-size:14px}
+  .brand-cards-wrap{transform:scale(.6);transform-origin:top left}
+  .comp-card .ct{font-size:14px}
+  .callout-block{font-size:clamp(12px,3.5vw,15px)!important;padding:8px 12px}
+  .step-box,.ladder-step,.check-item,.tool-layer{font-size:13px;padding:10px 12px;gap:6px}
+  .ca-card .ch{font-size:15px}
+  .ca-card .cb-inner{font-size:13px}
+  .lim-card{font-size:14px;padding:12px 14px}
+  .big-num{font-size:clamp(28px,9vw,50px)}
+  .eco-bar .pill{font-size:10px;padding:2px 6px}
+  .eco-bar .pill .ic{width:12px;height:12px}
+  .eco-bar .pill img{width:10px;height:10px}
+  .eco-row{gap:4px}
 }
 </style>
 <script src="assets/runtime.js" defer></script>

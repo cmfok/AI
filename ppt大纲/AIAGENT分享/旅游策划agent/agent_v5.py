@@ -2,7 +2,16 @@
 """
 旅行 Agent v5 — 全自动 Loop + 酒店三方案对比 + Markdown 输出
 ==============================================================
-新增:
+
+⚠️⚠️⚠️ 铁规则（不可违反）⚠️⚠️⚠️
+
+1. 禁止编造假数据、硬编码虚构价格/评分
+2. 禁止用"参考价""估算"掩盖假数据
+3. 所有数据必须来自 data_fetcher.py 的真实 API/抓取结果
+4. 数据缺失时标注"数据缺失"，严禁用假数据填充
+5. 违反上述 = 严重违规，立即修正
+
+功能:
 - 酒店输出3档方案（经济型/舒适型/亲子精选），每个方案含优缺点分析
 - 自动保存 Markdown 文件到输出目录
 - 结构化日志与状态追踪
@@ -51,6 +60,26 @@ class AgentState:
         self.log(f"WARN | {ctx}: {detail}", "WARN")
 
 state = AgentState()
+
+
+# ══════════════════════════════════════════════════════════════
+# 2. 数据提取工具
+# ══════════════════════════════════════════════════════════════
+
+def get_items(d: dict, key: str = 'itemList') -> list:
+    """从 data_fetcher 响应中提取数据列表
+    
+    参数:
+        d: 查询响应 dict（含 data.itemList）
+        key: 提取的键名
+    返回:
+        list: 数据项列表
+    """
+    data = d.get('data', {}) or {}
+    if isinstance(data, dict):
+        items = data.get(key, [])
+        return list(items) if isinstance(items, list) else []
+    return data if isinstance(data, list) else []
 
 
 # ══════════════════════════════════════════════════════════════
@@ -201,7 +230,7 @@ def collect_data(info: dict) -> tuple:
         
         # ── 查酒店（关键：至少获取6个以上供三方案筛选）──
         if "hotel" in gaps:
-            r = flyai(f'search-hotel --dest-name "{info["dest"]}" --check-in-date {info["date"]}')
+            r = query(f'search-hotel --dest-name "{info["dest"]}" --check-in-date {info["date"]}')
             if get_items(r):
                 results["hotel"] = r
                 gaps.remove("hotel")
@@ -209,7 +238,7 @@ def collect_data(info: dict) -> tuple:
                 state.gaps_filled.append(f"hotel(L{loop})")
             else:
                 state.add_warning("酒店", "主策略失败，尝试关键词搜索")
-                r2 = flyai(f'keyword-search --query "{info["dest"]}亲子酒店双床房推荐"')
+                r2 = query(f'keyword-search --query "{info["dest"]}亲子酒店双床房推荐"')
                 if get_items(r2):
                     results["hotel"] = r2
                     gaps.remove("hotel")
@@ -220,14 +249,14 @@ def collect_data(info: dict) -> tuple:
         
         # ── 查火车 ──
         if "train" in gaps:
-            r = flyai(f'search-train --origin "{info["from"]}" --dest "{info["dest"]}" --date {info["date"]}')
+            r = query(f'search-train --origin "{info["from"]}" --dest "{info["dest"]}" --date {info["date"]}')
             if get_items(r):
                 results["train"] = r
                 gaps.remove("train")
                 fixed += 1
                 state.gaps_filled.append(f"train(L{loop})")
             else:
-                r2 = flyai(f'keyword-search --query "{info["from"]}到{info["dest"]}高铁火车票 {info["date"]}"')
+                r2 = query(f'keyword-search --query "{info["from"]}到{info["dest"]}高铁火车票 {info["date"]}"')
                 if get_items(r2):
                     results["train"] = r2
                     gaps.remove("train")
@@ -236,14 +265,14 @@ def collect_data(info: dict) -> tuple:
         
         # ── 查景点 ──
         if "poi" in gaps:
-            r = flyai(f'search-poi --city-name "{info["dest"]}"')
+            r = query(f'search-poi --city-name "{info["dest"]}"')
             if get_items(r):
                 results["poi"] = r
                 gaps.remove("poi")
                 fixed += 1
                 state.gaps_filled.append(f"poi(L{loop})")
             else:
-                r2 = flyai(f'keyword-search --query "{info["dest"]}必去景点攻略门票"')
+                r2 = query(f'keyword-search --query "{info["dest"]}必去景点攻略门票"')
                 if get_items(r2):
                     results["poi"] = r2
                     gaps.remove("poi")
@@ -252,14 +281,14 @@ def collect_data(info: dict) -> tuple:
         
         # ── 查机票 ──
         if "flight" in gaps:
-            r = flyai(f'search-flight --origin "{info["from"]}" --destination "{info["dest"]}" --dep-date {info["date"]}')
+            r = query(f'search-flight --origin "{info["from"]}" --destination "{info["dest"]}" --dep-date {info["date"]}')
             if get_items(r):
                 results["flight"] = r
                 gaps.remove("flight")
                 fixed += 1
                 state.gaps_filled.append(f"flight(L{loop})")
             else:
-                r2 = flyai(f'keyword-search --query "{info["from"]}到{info["dest"]}机票 {info["date"]}"')
+                r2 = query(f'keyword-search --query "{info["from"]}到{info["dest"]}机票 {info["date"]}"')
                 if get_items(r2):
                     results["flight"] = r2
                     gaps.remove("flight")
@@ -268,32 +297,11 @@ def collect_data(info: dict) -> tuple:
         
         # ── 🚗 全程自驾距离估算（仅当 drive_mode 为"全程自驾"或"both"时计算）──
         if "drive" not in results and info.get("drive_mode") in ("全程自驾", "both"):
-            dist_map = {
-                "广州-大理": 1600, "广州-丽江": 1750, "广州-昆明": 1400,
-                "昆明-大理": 320, "成都-大理": 800, "广州-桂林": 500
-            }
-            dist = dist_map.get(f'{info["from"]}-{info["dest"]}', 800)
-            results["drive"] = {
-                "km": dist, "h": round(dist / 100, 1),
-                "gas": f"¥{int(dist * 0.7)}", "toll": f"¥{int(dist * 0.5)}",
-                "total": int(dist * 1.2)
-            }
+            results["drive"] = calc_drive_cost(info["from"], info["dest"])
 
         # ── 🚗 当地租车费用估算（当 drive_mode 为"当地租车"或"both"时计算）──
         if "rental" not in results and info.get("drive_mode") in ("当地租车", "both"):
-            # 租车费用 = 日租金 × 天数 + 保险 + 油费
-            rental_per_day = 300  # 经济型 SUV ¥200~400/天，取中间值
-            insurance = 50 * info["days"]  # 保险约 ¥50/天
-            gas_local = 80 * info["days"]  # 当地每天油费约 ¥80
-            rental_total = rental_per_day * info["days"] + insurance + gas_local
-            results["rental"] = {
-                "per_day": rental_per_day,
-                "days": info["days"],
-                "insurance": insurance,
-                "gas_local": gas_local,
-                "total": rental_total,
-                "note": "经济型SUV估算，携程/神州租车实际价格以预订为准"
-            }
+            results["rental"] = calc_rental_cost(info["days"])
         
         # ── 打印进展 ──
         icons = {"hotel": "🏨", "train": "🚄", "poi": "🎯", "flight": "✈️"}
