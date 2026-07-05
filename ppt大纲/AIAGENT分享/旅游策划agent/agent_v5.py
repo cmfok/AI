@@ -120,6 +120,10 @@ def parse(q: str) -> dict:
     m = re.search(r'预算\s*(\d+)\s*万', q)
     if m:
         info["budget"] = int(m.group(1)) * 10000
+    else:
+        m = re.search(r'预算\s*(\d{4,})', q)  # 4位以上数字，直接作为元
+        if m:
+            info["budget"] = int(m.group(1))
 
     for c in C:
         if f"从{c}" in q or f"{c}出发" in q:
@@ -230,70 +234,49 @@ def collect_data(info: dict) -> tuple:
         
         # ── 查酒店（关键：至少获取6个以上供三方案筛选）──
         if "hotel" in gaps:
-            r = query(f'search-hotel --dest-name "{info["dest"]}" --check-in-date {info["date"]}')
+            kid_flag = " --kid true" if info.get("style") == "亲子" else ""
+            r = query(f'search-hotel --city "{info["dest"]}"{kid_flag}')
             if get_items(r):
                 results["hotel"] = r
                 gaps.remove("hotel")
                 fixed += 1
                 state.gaps_filled.append(f"hotel(L{loop})")
             else:
-                state.add_warning("酒店", "主策略失败，尝试关键词搜索")
-                r2 = query(f'keyword-search --query "{info["dest"]}亲子酒店双床房推荐"')
-                if get_items(r2):
-                    results["hotel"] = r2
-                    gaps.remove("hotel")
-                    fixed += 1
-                    state.gaps_filled.append("hotel(降级)")
-                else:
-                    state.add_error("酒店", "所有策略均失败")
+                state.add_error("酒店", f"缓存和搜索引擎均无{info['dest']}酒店数据")
         
         # ── 查火车 ──
         if "train" in gaps:
-            r = query(f'search-train --origin "{info["from"]}" --dest "{info["dest"]}" --date {info["date"]}')
+            r = query(f'search-train --from "{info["from"]}" --to "{info["dest"]}" --date {info["date"]}')
             if get_items(r):
                 results["train"] = r
                 gaps.remove("train")
                 fixed += 1
                 state.gaps_filled.append(f"train(L{loop})")
             else:
-                r2 = query(f'keyword-search --query "{info["from"]}到{info["dest"]}高铁火车票 {info["date"]}"')
-                if get_items(r2):
-                    results["train"] = r2
-                    gaps.remove("train")
-                    fixed += 1
-                    state.gaps_filled.append("train(降级)")
+                state.add_warning("火车", f"缓存和搜索引擎均无{info['from']}→{info['dest']}火车数据")
         
         # ── 查景点 ──
         if "poi" in gaps:
-            r = query(f'search-poi --city-name "{info["dest"]}"')
+            kid_flag = " --kid true" if info.get("style") == "亲子" else ""
+            r = query(f'search-poi --city "{info["dest"]}"{kid_flag}')
             if get_items(r):
                 results["poi"] = r
                 gaps.remove("poi")
                 fixed += 1
                 state.gaps_filled.append(f"poi(L{loop})")
             else:
-                r2 = query(f'keyword-search --query "{info["dest"]}必去景点攻略门票"')
-                if get_items(r2):
-                    results["poi"] = r2
-                    gaps.remove("poi")
-                    fixed += 1
-                    state.gaps_filled.append("poi(降级)")
+                state.add_error("景点", f"缓存和搜索引擎均无{info['dest']}景点数据")
         
         # ── 查机票 ──
         if "flight" in gaps:
-            r = query(f'search-flight --origin "{info["from"]}" --destination "{info["dest"]}" --dep-date {info["date"]}')
+            r = query(f'search-flight --from "{info["from"]}" --to "{info["dest"]}" --date {info["date"]}')
             if get_items(r):
                 results["flight"] = r
                 gaps.remove("flight")
                 fixed += 1
                 state.gaps_filled.append(f"flight(L{loop})")
             else:
-                r2 = query(f'keyword-search --query "{info["from"]}到{info["dest"]}机票 {info["date"]}"')
-                if get_items(r2):
-                    results["flight"] = r2
-                    gaps.remove("flight")
-                    fixed += 1
-                    state.gaps_filled.append("flight(降级)")
+                state.add_warning("机票", f"缓存和搜索引擎均无{info['from']}→{info['dest']}机票数据")
         
         # ── 🚗 全程自驾距离估算（仅当 drive_mode 为"全程自驾"或"both"时计算）──
         if "drive" not in results and info.get("drive_mode") in ("全程自驾", "both"):
@@ -322,21 +305,20 @@ def collect_data(info: dict) -> tuple:
 def price_parse(raw: str) -> int:
     """解析酒店价格字符串为整数
     
-    参数:
-        raw: 价格原始字符串，如 "¥9x"、"¥1xx"、"450"
-    
-    返回:
-        int: 整数价格，失败返回99999
+    支持格式：
+        - "¥180-280"（价格区间，取最低价）
+        - "¥268"（单一价格）
+        - "暂无报价"（返回99999）
     """
     try:
         s = str(raw)
-        # 模糊价格替换
-        for old, new in [("xx", "00"), ("9x", "90"), ("1xx", "100"),
-                        ("2xx", "200"), ("3xx", "300"), ("4xx", "400"),
-                        ("5xx", "500"), ("6xx", "600")]:
-            s = s.replace(old, new)
-        n = int(re.sub(r'[^0-9]', '', s))
-        return n if n > 0 else 99999
+        if '暂无' in s or '需登录' in s:
+            return 99999
+        # 取第一个数字作为价格（区间则取最低）
+        nums = re.findall(r'\d+', s)
+        if nums:
+            return int(nums[0])
+        return 99999
     except:
         return 99999
 
@@ -432,7 +414,7 @@ def gen_hotel_section(hotels: list, budget: int, days: int, guests: str) -> str:
         str: 完整的酒店方案 Markdown
     """
     if not hotels:
-        return "\n### 🏨 住宿方案\n\n> ⚠️ FlyAI 接口未返回酒店数据，建议使用飞猪APP手动查询。\n"
+        return "\n### 🏨 住宿方案\n\n> ⚠️ 未获取到酒店数据，建议在携程/飞猪APP手动查询。\n"
 
     budget_per_night = budget // (days - 1) if days > 1 else budget  # 总预算/(天数-1) 约为每晚预算
 
@@ -525,7 +507,7 @@ def gen_hotel_section(hotels: list, budget: int, days: int, guests: str) -> str:
         p += f"| 👶 **亲子品质** | {most['name']}（¥{most['price']}/晚）|\n"
 
     p += f"""
-> ⚠️ **预订提醒**：以上为 FlyAI 实时查询结果（{datetime.now().strftime('%Y-%m-%d')}），暑假旺季价格波动大，建议提前2周在飞猪/携程下单，并**致电确认双床房**。
+> ⚠️ **预订提醒**：以上数据来自携程真实搜索（{datetime.now().strftime('%Y-%m-%d')}），暑假旺季价格波动大，建议提前2周在飞猪/携程下单，并**致电确认双床房**。
 """
     return p
 
@@ -557,7 +539,19 @@ def gen_plan_md(info: dict, res: dict, gaps: list, loop_count: int) -> str:
     from_city = info["from"]
     date_str = info["date"]
 
-    # 计算预算
+    # 计算预算 — 使用真实机票价格
+    flight_est = 3600  # 默认3人估算
+    if flights:
+        # 尝试从真实数据中提取单人价格
+        for f in flights:
+            raw_p = f.get('price', '')
+            nums = re.findall(r'\d+', str(raw_p))
+            if nums:
+                single = int(nums[0])
+                flight_est = single * 3  # 3人
+                break
+
+    # 酒店最低价
     best_hotel_price = 100
     if hotels:
         try:
@@ -565,7 +559,6 @@ def gen_plan_md(info: dict, res: dict, gaps: list, loop_count: int) -> str:
         except:
             pass
 
-    flight_est = 3600 if info["prefer"] == "飞机" else 0  # 3人机票估算
     hotel_total = best_hotel_price * (days - 1)
     rental_cost = rental.get("total", 0) if drive_mode in ("当地租车", "both") else 0  # 🚗 租车费用
     drive_cost = drive.get("total", 0) if drive_mode in ("全程自驾", "both") else 0  # 🚗 全程自驾费用
@@ -600,20 +593,46 @@ def gen_plan_md(info: dict, res: dict, gaps: list, loop_count: int) -> str:
     # 机票
     if flights:
         p += "### ✈️ 机票\n\n"
+        p += "| # | 航空公司/航班 | 路线 | 价格 | 来源 |\n"
+        p += "|---|------------|------|------|------|\n"
         for i, f in enumerate(flights[:3], 1):
-            p += f"| {i} | {f.get('flightNo', f.get('_name', f.get('name', '?')))} | {f.get('price', f.get('_price', '?'))} |\n"
+            airline = f.get('airline', '?')
+            flight_no = f.get('flightNo', '')
+            name = f"{airline} {flight_no}".strip() if airline != '?' else flight_no
+            ffrom = f.get('from', '?')
+            fto = f.get('to', '?')
+            price = f.get('price', '?')
+            source = f.get('source', '?')
+            note = f.get('note', '')
+            p += f"| {i} | {name} | {ffrom}→{fto} | {price} | {source} |\n"
+            if note:
+                p += f"| | _{note}_ | | | |\n"
         p += "\n"
     else:
-        p += "### ✈️ 机票\n\n> ⚠️ FlyAI 未返回机票数据，建议飞猪APP查询。\n\n"
+        p += "### ✈️ 机票\n\n> ⚠️ 未获取到机票数据，建议在携程/飞猪APP查询。\n\n"
 
     # 火车
     if trains:
         p += "### 🚄 高铁/火车\n\n"
+        p += "| # | 车次 | 路线 | 时间 | 座位 | 价格 | 来源 |\n"
+        p += "|---|------|------|------|------|------|------|\n"
         for i, t in enumerate(trains[:3], 1):
-            p += f"| {i} | {t.get('_name', t.get('trainNo', t.get('name', '?')))} | {t.get('_price', t.get('price', '?'))} |\n"
+            train_no = t.get('trainNo', '?')
+            tfrom = t.get('from', '?')
+            tto = t.get('to', '?')
+            dep = t.get('depTime', '?')
+            arr = t.get('arrTime', '?')
+            dur = t.get('duration', '')
+            seat = t.get('seat', '?')
+            price = t.get('price', '?')
+            source = t.get('source', '?')
+            time_str = f"{dep}-{arr}"
+            if dur and dur != '待查':
+                time_str += f" ({dur})"
+            p += f"| {i} | {train_no} | {tfrom}→{tto} | {time_str} | {seat} | {price} | {source} |\n"
         p += "\n"
     else:
-        p += "### 🚄 高铁/火车\n\n> ⚠️ FlyAI 未返回火车数据。\n\n"
+        p += "### 🚄 高铁/火车\n\n> ⚠️ 未获取到火车数据，建议在12306查询。\n\n"
 
     # 🚗 自驾对比（语义区分：全程自驾 vs 当地租车）
     if drive_mode != "none":
