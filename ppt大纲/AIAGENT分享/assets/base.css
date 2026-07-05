@@ -46,19 +46,16 @@ code,kbd,pre,samp{font-family:var(--font-mono)}
 .deck{position:relative;width:100vw;height:100vh;overflow:hidden;background:var(--bg)}
 .slide{
   position:absolute;inset:0;
-  display:flex;flex-direction:column;justify-content:center;
+  display:none;
   padding:72px 96px;
   box-sizing:border-box;
   opacity:0;pointer-events:none;
-  transition:opacity .5s var(--ease), transform .5s var(--ease);
-  transform:translateX(30px);
   overflow:hidden;
 }
-.slide.is-active{opacity:1;pointer-events:auto;transform:translateX(0);z-index:2}
-.slide.is-prev{transform:translateX(-30px)}
+.slide.is-active{display:flex;flex-direction:column;justify-content:center;opacity:1;pointer-events:auto;z-index:2}
 
 /* single-page standalone (used when a layout file is opened directly) */
-body.single .slide{position:relative;width:100vw;height:100vh;opacity:1;transform:none;pointer-events:auto}
+body.single .slide{position:relative;width:100vw;height:100vh;display:flex;flex-direction:column;justify-content:center;opacity:1;pointer-events:auto}
 
 /* ================= TYPOGRAPHY ================= */
 .eyebrow{font-size:13px;font-weight:500;letter-spacing:.16em;text-transform:uppercase;color:var(--text-3)}

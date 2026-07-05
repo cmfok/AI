@@ -1057,23 +1057,21 @@ function toggleP4(el){
   document.addEventListener('keydown', _kbBlock, true);
 
   // ── 移动端触屏滑动翻页（锁定状态下禁止）──
-  (function(){
-    var _tx = 0, _ty = 0;
-    document.addEventListener('touchstart', function(e){
-      var t = e.touches && e.touches[0];
-      if(t){ _tx = t.clientX; _ty = t.clientY; }
-    }, {passive:true});
-    document.addEventListener('touchend', function(e){
-      if(_locked) return;  // 锁定状态下禁止滑动翻页
-      var t = e.changedTouches && e.changedTouches[0];
-      if(!t) return;
-      var dx = t.clientX - _tx, dy = t.clientY - _ty;
-      var absDx = Math.abs(dx), absDy = Math.abs(dy);
-      if(absDx < 30 || absDy > absDx * 1.5) return;  // 忽略短滑和垂直滑动
-      if(dx < 0) goSlide(lastSlide + 1);  // 左滑→下一页
-      else goSlide(lastSlide - 1);  // 右滑→上一页
-    }, {passive:true});
-  })();
+  var _tx = 0, _ty = 0;
+  document.addEventListener('touchstart', function(e){
+    var t = e.touches && e.touches[0];
+    if(t){ _tx = t.clientX; _ty = t.clientY; }
+  }, {passive:true});
+  document.addEventListener('touchend', function(e){
+    if(_locked) return;  // 锁定状态下禁止滑动翻页
+    var t = e.changedTouches && e.changedTouches[0];
+    if(!t) return;
+    var dx = t.clientX - _tx, dy = t.clientY - _ty;
+    var absDx = Math.abs(dx), absDy = Math.abs(dy);
+    if(absDx < 30 || absDy > absDx * 1.5) return;  // 忽略短滑和垂直滑动
+    if(dx < 0) goSlide(lastSlide + 1);
+    else goSlide(lastSlide - 1);
+  }, {passive:true});
 
   // ── BroadcastChannel（同设备备用）──
   try{
