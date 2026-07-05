@@ -151,6 +151,26 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   .g2,.g3,.g4,.comp-grid,.six-pack,.rules-grid{grid-template-columns:1fr}
   .file-reader{min-height:200px}
   .chart-flow .arrow-node{display:none}.chart-flow{gap:4px}
+  body .h2{font-size:clamp(32px,9vw,56px)!important}
+  body .lede{font-size:clamp(22px,6vw,32px)!important}
+  .dim{font-size:clamp(18px,4vw,24px)}
+  .six-pack .item{font-size:16px;padding:12px 14px}
+  .comp-card{padding:14px 16px;font-size:16px}
+  .kicker{font-size:clamp(11px,2.5vw,14px)}
+  .eco-bar .pill{font-size:11px;padding:3px 8px}
+}
+@media(max-width:480px){
+  .slide{padding:clamp(14px,4vw,20px) clamp(12px,4vw,16px)}
+  .brand-cards-wrap{transform:scale(.7);transform-origin:top left}
+  .comp-card .ct{font-size:16px}
+  .callout-block{font-size:clamp(13px,3.5vw,16px)!important;padding:10px 14px}
+  .step-box{font-size:14px;padding:10px 14px}
+  .ladder-step{font-size:14px;padding:12px 16px;gap:10px}
+  .check-item{font-size:14px;padding:10px 14px}
+  .tool-layer{font-size:14px;padding:12px 14px}
+  .ca-card .ch{font-size:16px}
+  .ca-card .cb-inner{font-size:14px}
+  .six-pack .item{font-size:14px;padding:10px 12px}
 }
 </style>
 <script src="assets/runtime.js" defer></script>
@@ -1035,6 +1055,25 @@ function toggleP4(el){
     }
   };
   document.addEventListener('keydown', _kbBlock, true);
+
+  // ── 移动端触屏滑动翻页（锁定状态下禁止）──
+  (function(){
+    var _tx = 0, _ty = 0;
+    document.addEventListener('touchstart', function(e){
+      var t = e.touches && e.touches[0];
+      if(t){ _tx = t.clientX; _ty = t.clientY; }
+    }, {passive:true});
+    document.addEventListener('touchend', function(e){
+      if(_locked) return;  // 锁定状态下禁止滑动翻页
+      var t = e.changedTouches && e.changedTouches[0];
+      if(!t) return;
+      var dx = t.clientX - _tx, dy = t.clientY - _ty;
+      var absDx = Math.abs(dx), absDy = Math.abs(dy);
+      if(absDx < 30 || absDy > absDx * 1.5) return;  // 忽略短滑和垂直滑动
+      if(dx < 0) goSlide(lastSlide + 1);  // 左滑→下一页
+      else goSlide(lastSlide - 1);  // 右滑→上一页
+    }, {passive:true});
+  })();
 
   // ── BroadcastChannel（同设备备用）──
   try{

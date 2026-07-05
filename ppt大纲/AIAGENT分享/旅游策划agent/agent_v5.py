@@ -625,8 +625,10 @@ def gen_plan_md(info: dict, res: dict, gaps: list, loop_count: int) -> str:
 
     flight_est = 3600 if info["prefer"] == "飞机" else 0  # 3人机票估算
     hotel_total = best_hotel_price * (days - 1)
+    rental_cost = rental.get("total", 0) if drive_mode in ("当地租车", "both") else 0  # 🚗 租车费用
+    drive_cost = drive.get("total", 0) if drive_mode in ("全程自驾", "both") else 0  # 🚗 全程自驾费用
     other_cost = 2500
-    est_total = flight_est + hotel_total + other_cost
+    est_total = flight_est + hotel_total + rental_cost + drive_cost + other_cost
 
     p = f"""# 🧭 {d} {days}天{days - 1}夜 旅行方案
 
@@ -753,7 +755,16 @@ def gen_plan_md(info: dict, res: dict, gaps: list, loop_count: int) -> str:
 |------|------|
 | ✈️ 机票（{info['guests']} 往返）| ¥{flight_est:,} |
 | 🏨 住宿（{days - 1}晚） | ¥{hotel_total:,} |
-| 🍜 餐饮 + 门票 + 当地交通 | ¥{other_cost:,} |
+"""
+    # 🚗 自驾费用行（按语义区分）
+    if drive_mode == "全程自驾":
+        p += f"| 🚗 全程自驾（{from_city}→{d} 单程） | ¥{drive_cost:,} |\n"
+    elif drive_mode == "当地租车":
+        p += f"| 🏎️ 当地租车（{rental.get('days', days)}天） | ¥{rental_cost:,} |\n"
+    elif drive_mode == "both":
+        p += f"| 🚗 全程自驾（{from_city}→{d}） | ¥{drive_cost:,} |\n"
+        p += f"| 🏎️ 当地租车（{rental.get('days', days)}天） | ¥{rental_cost:,} |\n"
+    p += f"""| 🍜 餐饮 + 门票 + 当地交通 | ¥{other_cost:,} |
 | **预估总计** | **¥{est_total:,}** |
 | **预算状态** | {'✅ 预算内' if est_total <= budget else f'⚠️ 超 ¥{est_total - budget:,}'} |
 
