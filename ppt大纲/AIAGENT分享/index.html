@@ -856,6 +856,12 @@ function toggleP4(el){
     var sn=document.querySelector('.slide-number');
     if(sn) sn.setAttribute('data-current', n);
     lastSlide=n;
+    // 同步到服务器（防止每 500ms 轮询把翻页覆盖回服务器默认状态）
+    fetch('/api/control/go',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({slide:n})
+    }).catch(function(){});
     // 第12页（运费对账）：切到该页时重新播放动画
     if(n===12){
       var slide12 = slides[11];

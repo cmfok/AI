@@ -12,11 +12,16 @@
 import subprocess, json, re, sys, time, os
 from datetime import datetime, timedelta
 
+# ── 数据层（纯 Python，零 CLI 依赖，Windows/Linux 通用）──
+try:
+    from data_fetcher import query, calc_drive_cost, calc_rental_cost
+except ImportError:
+    print("❌ 缺少 data_fetcher.py，请确保与 agent_v5.py 同目录")
+    sys.exit(1)
+
 # ── 配置 ──
 MAX_LOOP = 6
-FLYAI = "npx --yes @fly-ai/flyai-cli"
 OUTPUT_DIR = os.path.dirname(os.path.abspath(__file__))
-TIMEOUT = 25
 
 # ══════════════════════════════════════════════════════════════
 # 1. 状态管理
@@ -46,77 +51,6 @@ class AgentState:
         self.log(f"WARN | {ctx}: {detail}", "WARN")
 
 state = AgentState()
-
-# ══════════════════════════════════════════════════════════════
-# 2. 工具调用层（FlyAI CLI 封装）
-# ══════════════════════════════════════════════════════════════
-
-def flyai(cmd: str, timeout: int = TIMEOUT) -> dict:
-    """调用 FlyAI CLI 并解析 JSON 响应
-    
-    参数:
-        cmd: FlyAI 子命令（如 search-hotel --dest-name "大理"）
-        timeout: 超时秒数
-    
-    返回:
-        dict: API 响应 JSON，失败时返回 {"error": "原因"}
-    """
-    full_cmd = f'{FLYAI} {cmd}'
-    state.log(f"🔧 调用 {cmd[:60]}...")
-    try:
-        r = subprocess.run(full_cmd, shell=True, capture_output=True, text=True, timeout=timeout)
-        if r.returncode != 0:
-            state.add_warning("FlyAI", f"退出码 {r.returncode}: {r.stderr[:100]}")
-            return {"error": f"exit_code_{r.returncode}"}
-        if not r.stdout.strip():
-            state.add_warning("FlyAI", "空响应")
-            return {"error": "empty"}
-        return json.loads(r.stdout)
-    except subprocess.TimeoutExpired:
-        state.add_error("FlyAI", f"超时 ({timeout}s): {cmd[:60]}")
-        return {"error": "timeout"}
-    except json.JSONDecodeError:
-        state.add_error("FlyAI", f"JSON解析失败: {r.stdout[:200]}")
-        return {"error": "json_parse"}
-    except Exception as e:
-        state.add_error("FlyAI", str(e))
-        return {"error": "fail"}
-
-
-def get_items(d, key='itemList'):
-    """从 FlyAI 嵌套响应中提取数据列表
-    
-    参数:
-        d: FlyAI 响应 dict
-        key: 提取的键名（itemList 或 data）
-    
-    返回:
-        list: 提取后的数据列表
-    """
-    data = d.get('data', {}) or {}
-    if isinstance(data, dict):
-        if key in data:
-            items = data[key]
-            flat = []
-            for item in items:
-                if isinstance(item, dict) and 'journeys' in item:
-                    for j in item['journeys']:
-                        for s in j.get('segments', []):
-                            s['_price'] = j.get('priceInfo', {}).get('minPrice', '?')
-                            s['_name'] = f"{s.get('marketingTransportName', '')}{s.get('marketingTransportNo', '')} {s.get('depStationName', '')}-{s.get('arrStationName', '')} {s.get('depDateTime', '')[:10]}"
-                            flat.append(s)
-                else:
-                    flat.append(item)
-            return flat
-        if 'journeys' in data:
-            items = []
-            for j in data['journeys']:
-                for s in j.get('segments', []):
-                    s['_price'] = j.get('priceInfo', {}).get('minPrice', '?')
-                    s['_name'] = f"{s.get('marketingTransportName', '')}{s.get('marketingTransportNo', '')}"
-                    items.append(s)
-            return items
-    return [] if isinstance(data, dict) else (data if isinstance(data, list) else [])
 
 
 # ══════════════════════════════════════════════════════════════
