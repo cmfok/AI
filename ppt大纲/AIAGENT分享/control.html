@@ -1098,6 +1098,7 @@ var _lastUserNav = 0;  // 用户最后操作时间戳
 function go(n){
   if(n<1||n>TOTAL)return;
   _lastUserNav = Date.now();
+  resetIdleTimer();
   cur=n;
   document.querySelectorAll('.page-dot').forEach(function(d,i){d.className='page-dot'+(i+1===n?' active':'');});
   document.getElementById('cp').textContent='P'+n;
@@ -1205,18 +1206,48 @@ document.querySelectorAll('.tab-btn').forEach(function(btn){
   });
 });
 
-// ── 翻页锁定 ──
+// ── 翻页锁定 + 闲置自动锁定 ──
 var locked=false;
+var _idleTimer = null;
+var IDLE_LOCK_MS = 10 * 60 * 1000; // 10分钟
+
+function resetIdleTimer(){
+  if(_idleTimer) clearTimeout(_idleTimer);
+  if(!locked){
+    _idleTimer = setTimeout(function(){
+      locked = true;
+      updateLockBtn();
+      fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,lock:true})}).catch(function(e){console.warn('[锁定] 自动锁定失败:',e);});
+      console.log('🔒 已闲置10分钟，自动锁定');
+    }, IDLE_LOCK_MS);
+  }
+}
+
+// 用户主动解锁时重置计时器
+function userUnlock(){
+  locked = false;
+  updateLockBtn();
+  resetIdleTimer();
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,lock:false})}).catch(function(e){console.error("lock error:",e)});
+}
+
 function updateLockBtn(){
   var btn=document.getElementById('lockBtn');
   btn.textContent=locked?'🔒 锁定':'🔓 解锁';
   btn.className='btn '+(locked?'locked':'unlocked');
 }
-updateLockBtn();  // 初始确保按钮有颜色样式
+updateLockBtn();
+// 初始启动闲置计时
+resetIdleTimer();
 document.getElementById('lockBtn').onclick=function(){
-  locked=!locked;
-  updateLockBtn();
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,lock:locked})}).catch(function(e){console.error("lock error:",e)});
+  if(locked){
+    userUnlock();
+  } else {
+    locked=true;
+    updateLockBtn();
+    if(_idleTimer) clearTimeout(_idleTimer);
+    fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,lock:true})}).catch(function(e){console.error("lock error:",e)});
+  }
 };
 
 // ── 总览（触发投屏 O 键）──
@@ -1265,11 +1296,16 @@ function syncState(st){
     document.getElementById('cp').textContent='P'+n;
     upd(n);
   }
-  // 同步锁定状态
-  if(st.lock!==undefined && st.lock!==locked){
-    locked=st.lock;
-    updateLockBtn();
-  }
+	  // 同步锁定状态
+	  if(st.lock!==undefined && st.lock!==locked){
+	    locked=st.lock;
+	    updateLockBtn();
+	    if(locked){
+	      if(_idleTimer) clearTimeout(_idleTimer);
+	    } else {
+	      resetIdleTimer();
+	    }
+	  }
   // 同步 P1 封面动效状态
   if(st.coverP1!==undefined){
     var cb = document.getElementById('aBtn');
