@@ -25,6 +25,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .mt-m{margin-top:10px!important}
 .accent{color:var(--accent)}.accent-red{color:var(--accent-3,#e03e3e)}
 
+.slide .h2{margin-top:0!important}
+
 /* tags */
 .tag{display:inline-block;padding:5px 16px;border-radius:var(--radius-sm);font-size:18px;font-weight:500;margin:2px}
 .tag-g{background:color-mix(in srgb,var(--good) 10%,transparent);color:var(--good)}
@@ -227,6 +229,13 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cover-sub.show{opacity:1}
 .cover-reveal{opacity:0;transition:opacity 1.5s ease}
 .cover-reveal.show{opacity:1}
+
+/* P1 控制按钮 + 过渡动画 */
+.p1-ctrl-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);color:#e6edf3;padding:6px 16px;border-radius:6px;font-size:clamp(11px,1vw,14px);cursor:pointer;font-family:var(--font-sans);transition:all .2s;font-weight:500;user-select:none}
+.p1-ctrl-btn:hover{background:rgba(255,255,255,.12);border-color:#3fb950}
+.p1-ctrl-btn:active{transform:scale(.95)}
+#fadeOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#0d1117;z-index:998;pointer-events:none;opacity:0;transition:opacity .8s ease}
+#flashOverlay{position:fixed;top:0;left:0;width:100%;height:100%;background:#fff;z-index:999;pointer-events:none;opacity:0;transition:opacity .15s ease}
 .cover-delay{transition-delay:2s}
 [data-title="知识库搭建"] .p10-tabs{display:none!important}
 
@@ -536,6 +545,11 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	    <div class="terminal" id="termRight" style="flex:1;font-family:'PingFang SC','Microsoft YaHei','Noto Sans SC','SF Mono',Consolas,Menlo,monospace;font-size:clamp(15px,1.8vw,22px);line-height:1.5;color:#e6edf3;overflow-y:auto;white-space:pre-wrap;min-height:0;background:rgba(0,0,0,.2);border:1px solid #21262d;border-radius:8px;padding:clamp(12px,1.4vw,18px)"><span style="color:#8b949e">等待提问...</span></div>
   </div>
 </div>
+<div style="display:flex;gap:8px;justify-content:center;align-items:center;margin-top:10px;flex-shrink:0">
+  <button class="p1-ctrl-btn" onclick="startTerminalDemo()">▶ 开始演示</button>
+  <span style="color:#30363d;font-size:14px">|</span>
+  <button class="p1-ctrl-btn" onclick="resetAllAnimations()">↺ Flash Reset</button>
+</div>
 <div class="notes">从会用AI，到用好AI</div>
 </section>
 
@@ -571,7 +585,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 </div>
 </div>
 <p class="lede cp1-sub" id="cp1Sub1">重塑 AI 认知，教你落地用好 AI</p>
-<p style="margin-top:36px;color:var(--text-2);font-size:18px">搭建 AI Agent ，实现提效增收实战分享</p>
+<p style="margin-top:36px;color:var(--text-2);font-size:18px">重塑 AI 认知，教你落地用好 AI</p>
 <div class="notes"><b>"你真的会用AI吗？" → "从会用AI，到用好AI"</b></div>
 </section>
 <!-- ====== 3. ALIEN LANGUAGE ====== -->
@@ -608,7 +622,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <section class="slide" data-title="模型">
 <div style="width:100%">
 <p class="kicker">MODEL · LLM / LMM</p>
-<h2 class="h2" style="margin-bottom:4px">大语言模型</h2>
+<h2 class="h2" style="margin-bottom:2px!important">大语言模型</h2>
 <p class="lede" style="margin-top:4px;font-weight:300;color:var(--text-2)">了解它的原理和能力边界 你才能真正用好它</p>
 </div>
 <div style="display:grid;grid-template-columns:auto 1fr;gap:35px;align-items:start;flex:1;margin-top:15px">
@@ -868,9 +882,11 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div class="p8-body">
   <!-- LEFT -->
   <div class="p8-left">
-    <p class="kicker">四大工程 · CHAPTER 01</p>
-    <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
-    <p class="lede" style="margin-top:0!important;margin-bottom:8px">PROMPT ENGINEERING</p>
+    <div style="display:flex;flex-direction:column">
+      <p class="kicker">四大工程 · CHAPTER 01</p>
+      <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
+      <p class="lede" style="margin-top:0!important;margin-bottom:8px">PROMPT ENGINEERING</p>
+    </div>
     <div class="callout-block">
         💡 <strong>通过不同的提问方式，可以获得质量差异巨大的结果</strong>
     </div>
@@ -1062,9 +1078,11 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div style="display:flex;gap:clamp(14px,2vw,36px);flex:1;min-height:0">
   <!-- 左列：标题+callout+三卡片 -->
   <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:clamp(8px,1.2vh,16px)">
-    <p class="kicker" style="margin:0">四大工程 · CHAPTER 02</p>
-    <h2 class="h2" style="margin:0 0 2px!important">上下文工程</h2>
-    <p class="lede" style="margin:0!important;margin-bottom:4px!important">CONTEXT ENGINEERING</p>
+    <div style="display:flex;flex-direction:column">
+      <p class="kicker" style="margin-bottom:6px">四大工程 · CHAPTER 02</p>
+      <h2 class="h2" style="margin:0 0 2px!important">上下文工程</h2>
+      <p class="lede" style="margin:0!important;margin-bottom:4px!important">CONTEXT ENGINEERING</p>
+    </div>
     <div class="callout-block">
       💡 <strong>精准地将上下文窗口填充上恰到好处的信息，让模型能准确地迈出下一步</strong>
     </div>
@@ -1217,7 +1235,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <!-- ====== 11. KNOWLEDGE BASE ====== -->
 <section class="slide" data-title="知识库搭建">
 <p class="kicker">Implementation</p>
-<h2 class="h2" style="margin-bottom:0!important">知识库搭建</h2>
+<h2 class="h2" style="margin-bottom:2px!important">知识库搭建</h2>
 <p class="lede" style="margin-top:0!important">从入门到进阶，你的专属 AI 背景资料库</p>
 <div class="p10-tabs"><span class="p10-tab active" data-p10="bronze">🥉 青铜</span><span class="p10-tab" data-p10="silver">🥈 白银</span><span class="p10-tab" data-p10="gold">🥇 黄金</span></div>
 <div style="display:flex;flex-direction:column;flex:1;min-height:0;margin-top:6px">
@@ -1816,7 +1834,7 @@ function p12hrShowScoring(e){
 .p13-aavatar{width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 15%,transparent);font-size:clamp(13px,1.2vw,16px)}
 .p13-abubble{background:rgba(0,0,0,.06);padding:clamp(8px,.8vw,14px) clamp(12px,1.2vw,20px);border-radius:12px 12px 12px 0;max-width:85%;font-size:clamp(15px,1.3vw,20px);line-height:1.7;color:var(--text-2);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)}
 .p13-abubble .step-title{color:var(--text-3);font-weight:400;display:block;margin-bottom:2px;font-size:clamp(10px,0.9vw,15px)}
-.p13-abubble .step-detail{color:#555;font-weight:700;display:block;margin-bottom:2px;font-size:clamp(11px,1vw,16px)}
+.p13-abubble .step-detail{color:var(--text-3);font-weight:700;display:block;margin-bottom:2px;font-size:clamp(10px,0.9vw,15px)}
 .p13-abubble .step-result{color:var(--text-1);font-weight:700;display:block;font-size:clamp(13px,1.1vw,18px)}
 .p13-step-green{color:var(--good);font-weight:700}
 .p13-step-red{color:var(--bad);font-weight:700}
@@ -1829,9 +1847,11 @@ function p12hrShowScoring(e){
 <div class="p13-body">
   <!-- LEFT -->
   <div class="p13-left">
-    <p class="kicker">四大工程 · CHAPTER 03</p>
-    <h2 class="h2" style="margin-bottom:2px!important">驾驭工程</h2>
-    <p class="lede" style="margin-top:0!important;margin-bottom:8px">HARNESS ENGINEERING</p>
+    <div style="display:flex;flex-direction:column">
+      <p class="kicker">四大工程 · CHAPTER 03</p>
+      <h2 class="h2" style="margin-bottom:2px!important">驾驭工程</h2>
+      <p class="lede" style="margin-top:0!important;margin-bottom:8px">HARNESS ENGINEERING</p>
+    </div>
     <div class="callout-block">
         💡 <strong>「约束即赋能」——不是限制 AI 的能力，而是将其强大但不可控的智能转化为可靠、可预测、可管理的生产力量。</strong>
     </div>
@@ -2171,144 +2191,363 @@ function p12hrShowScoring(e){
 </section>
 <!-- ====== 16. BIRTHDAY MARKETING ====== -->
 <section class="slide" data-title="生日营销">
+<style>
+.case-grid{display:flex;gap:clamp(8px,1vw,16px);min-height:0;align-items:stretch;flex:1;position:relative}
+.case-col-left{flex:0.35;min-width:0;display:flex;flex-direction:column;gap:clamp(2px,.3vh,6px);align-items:center;overflow:visible}
+.case-col{flex:1;min-width:0;display:flex;flex-direction:column}
+.case-card{flex:1;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.06);background:#fff}
+/* 数据流 SVG 路径动画 */
+.data-flow-svg{position:absolute;top:0;left:50px;width:calc(100% - 50px);height:30%;pointer-events:none;z-index:5;overflow:visible}
+</style>
 <p class="kicker">Harness · Real Case</p>
 <h2 class="h2">拆解 · 生日营销</h2>
 <p class="lede">一个闭环数据流，累计变现 <span style="color:var(--accent);font-weight:700">400 万+</span></p>
 
-<div style="flex:1;display:flex;gap:clamp(16px,2.5vw,40px);min-height:0;align-items:stretch">
+<div class="case-grid">
 
-<!-- 左：AI助理对话框（类似P6的对话场景） -->
-<div style="flex:1.2;min-width:0;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08)">
-  <!-- 顶栏 -->
-  <div style="background:linear-gradient(135deg,rgba(122,92,255,.12),rgba(122,92,255,.04));padding:clamp(4px,.4vw,8px) clamp(10px,.8vw,14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0">
-    <span style="width:clamp(14px,1.2vw,18px);height:clamp(14px,1.2vw,18px);border-radius:50%;background:color-mix(in srgb,var(--accent) 20%,transparent);display:flex;align-items:center;justify-content:center;font-size:clamp(8px,.7vw,10px)">🤖</span>
-    <span style="font-size:clamp(14px,1.2vw,18px);font-weight:600;flex:1">AI 营销助手</span>
-    <span style="color:var(--text-3);font-size:clamp(13px,1.05vw,17px)">🟢 运行中</span>
-  </div>
-  <!-- 对话区 -->
-  <div style="flex:1;padding:clamp(8px,.6vw,14px);overflow-y:auto;background:color-mix(in srgb,var(--bg) 90%,var(--accent) 2%);display:flex;flex-direction:column;gap:clamp(8px,.7vh,14px)">
+<!-- SVG 数据流路径动画 - 极简几何设计 -->
+<svg class="data-flow-svg" viewBox="0 0 100 80" preserveAspectRatio="xMinYMin meet">
+  <defs>
+    <path id="fp" d="M 14,22 L 45,22 L 76,22" fill="none"/>
+  </defs>
 
-    <!-- ① 用户：开始任务 -->
-    <div style="display:flex;align-items:flex-end;gap:6px;justify-content:flex-end">
-      <div style="background:#fff;color:var(--text-1);padding:clamp(6px,.6vw,12px) clamp(10px,1vw,16px);border-radius:12px 12px 0 12px;max-width:72%;font-size:clamp(14px,1.2vw,18px);line-height:1.7;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)">
-        <span style="font-weight:600;color:var(--accent)">客服：</span>帮我跑今天的生日营销，看看哪些客户需要回访
-      </div>
-      <div style="width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#555;overflow:hidden;font-size:clamp(13px,1.2vw,16px)">👩</div>
+  <!-- 横向连接线 -->
+  <path d="M 14,22 L 45,22 L 76,22" fill="none" stroke="#3b6cff" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- 节点图标（直接用 emoji 覆盖） -->
+  <text x="8" y="30" text-anchor="middle" font-size="18" font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,sans-serif">👤</text>
+  <text x="45" y="30" text-anchor="middle" font-size="18" font-family="Apple Color Emoji,Segoe UI Emoji,Noto Color Emoji,sans-serif">📱</text>
+
+  <!-- 流动球 -->
+  <circle r="2.5" fill="#3b6cff">
+    <animateMotion dur="2.5s" repeatCount="indefinite" rotate="auto">
+      <mpath href="#fp"/>
+    </animateMotion>
+  </circle>
+
+  <!-- 端点环脉冲 -->
+  <circle cx="76" cy="22" r="4" fill="none" stroke="#3b6cff" stroke-width="1.5">
+    <animate attributeName="r" values="3;7;3" dur="2s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values=".4;0;.4" dur="2s" repeatCount="indefinite"/>
+  </circle>
+</svg>
+
+<!-- ██ 左列：已由 SVG 承担图标，此处仅做占位 ██ -->
+<div class="case-col-left">
+  <div style="flex:1;min-height:clamp(4px,.4vh,8px)"></div>
+</div>
+
+<!-- ██ 中列：AI Agent 分栏对话框（文件树 + 聊天区，参考 P13 风格） ██ -->
+<div class="case-col">
+  <div class="case-card" style="overflow:hidden">
+    <!-- 顶栏 -->
+    <div style="background:linear-gradient(135deg,rgba(122,92,255,.1),rgba(122,92,255,.03));padding:clamp(3px,.3vw,6px) clamp(8px,.6vw,12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0">
+      <span style="width:clamp(12px,1vw,16px);height:clamp(12px,1vw,16px);border-radius:50%;background:color-mix(in srgb,var(--accent) 20%,transparent);display:flex;align-items:center;justify-content:center;font-size:clamp(7px,.6vw,9px)">🤖</span>
+      <span style="font-size:clamp(12px,1vw,16px);font-weight:600;flex:1;color:var(--text-1)">AI Agent 营销助手</span>
+      <span style="color:var(--good);font-size:clamp(11px,.9vw,15px)">🟢 运行中</span>
     </div>
-
-    <!-- ② AI：访问数据库 -->
-    <div style="display:flex;align-items:flex-start;gap:6px">
-      <div style="width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 15%,transparent);font-size:clamp(13px,1.2vw,16px)">🤖</div>
-      <div style="background:rgba(0,0,0,.06);padding:clamp(6px,.6vw,12px) clamp(10px,1vw,16px);border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(14px,1.2vw,18px);line-height:1.7;color:var(--text-2);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)">
-        <span style="font-weight:700;color:var(--good);font-size:clamp(11px,1vw,15px)">🔗 连接数据源</span><br>
-        <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:rgba(59,108,255,.08);border-radius:4px;margin:2px 0">🗄️ 数据库</span> 已连接<br>
-        开始查询今日生日客户…
+    <!-- 分栏主体：左侧文件树 + 右侧聊天 -->
+    <div style="flex:1;display:flex;min-height:0">
+      <!-- ██ 左侧文件树：展示 AI Agent 功能 + 数据库读取 ██ -->
+      <div style="width:clamp(110px,12vw,180px);flex-shrink:0;background:#fff;display:flex;flex-direction:column;border-right:1px solid var(--border)">
+        <div style="padding:clamp(4px,.3vh,8px) clamp(6px,.5vw,10px);font-size:clamp(11px,.9vw,14px);font-weight:600;color:var(--text-2);border-bottom:1px solid var(--border);background:var(--bg-soft)">
+          <span>🤖</span> AI Agent 功能
+        </div>
+        <div style="flex:1;overflow-y:auto;padding:clamp(4px,.3vh,8px) 0">
+          <!-- 数据读取能力 -->
+          <div style="padding:clamp(3px,.2vh,5px) clamp(6px,.5vw,10px);font-size:clamp(11px,.9vw,14px);font-weight:600;cursor:default;display:flex;align-items:center;gap:4px;color:var(--text-1)">
+            <span style="font-size:clamp(7px,.5vw,9px);color:var(--text-3)">▼</span> 📂 数据库
+          </div>
+          <div style="padding-left:clamp(12px,1vw,18px)">
+            <div style="padding:clamp(2px,.15vh,4px) clamp(6px,.5vw,10px);font-size:clamp(10px,.8vw,13px);color:var(--text-2);display:flex;align-items:center;gap:4px;background:rgba(59,108,255,.06);border-radius:4px;margin:1px 4px 1px 0">
+              <span>🗄️</span> 销售数据
+            </div>
+            <div style="padding:clamp(2px,.15vh,4px) clamp(6px,.5vw,10px);font-size:clamp(10px,.8vw,13px);color:var(--text-2);display:flex;align-items:center;gap:4px">
+              <span>👥</span> 客户资料
+            </div>
+            <div style="padding:clamp(2px,.15vh,4px) clamp(6px,.5vw,10px);font-size:clamp(10px,.8vw,13px);color:var(--text-2);display:flex;align-items:center;gap:4px">
+              <span>📦</span> 商品数据
+            </div>
+            <div style="padding:clamp(2px,.15vh,4px) clamp(6px,.5vw,10px);font-size:clamp(10px,.8vw,13px);color:var(--text-2);display:flex;align-items:center;gap:4px">
+              <span>💰</span> 产品价格
+            </div>
+            <div style="padding:clamp(2px,.15vh,4px) clamp(6px,.5vw,10px);font-size:clamp(10px,.8vw,13px);color:var(--text-2);display:flex;align-items:center;gap:4px">
+              <span>⚙️</span> 产品参数
+            </div>
+          </div>
+          <!-- AI 分析能力 -->
+          <div style="padding:clamp(3px,.2vh,5px) clamp(6px,.5vw,10px);font-size:clamp(11px,.9vw,14px);font-weight:600;cursor:default;display:flex;align-items:center;gap:4px;color:var(--text-1);margin-top:clamp(4px,.3vh,6px)">
+            <span style="font-size:clamp(7px,.5vw,9px);color:var(--text-3)">▼</span> 📂 AI 分析
+          </div>
+          <div style="padding-left:clamp(12px,1vw,18px)">
+            <div style="padding:clamp(2px,.15vh,4px) clamp(6px,.5vw,10px);font-size:clamp(10px,.8vw,13px);color:var(--text-2);display:flex;align-items:center;gap:4px">
+              <span>🎯</span> 生日匹配
+            </div>
+            <div style="padding:clamp(2px,.15vh,4px) clamp(6px,.5vw,10px);font-size:clamp(10px,.8vw,13px);color:var(--text-2);display:flex;align-items:center;gap:4px;background:rgba(59,108,255,.06);border-radius:4px;margin:1px 4px 1px 0">
+              <span>📋</span> 客户清单
+            </div>
+            <div style="padding:clamp(2px,.15vh,4px) clamp(6px,.5vw,10px);font-size:clamp(10px,.8vw,13px);color:var(--text-2);display:flex;align-items:center;gap:4px">
+              <span>🎁</span> 礼品推荐
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <!-- ③ AI：查询客户资料 -->
-    <div style="display:flex;align-items:flex-start;gap:6px">
-      <div style="width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 15%,transparent);font-size:clamp(13px,1.2vw,16px)">🤖</div>
-      <div style="background:rgba(0,0,0,.06);padding:clamp(6px,.6vw,12px) clamp(10px,1vw,16px);border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(14px,1.2vw,18px);line-height:1.7;color:var(--text-2);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)">
-        <span style="font-weight:700;color:var(--good);font-size:clamp(11px,1vw,15px)">👥 匹配客户资料</span><br>
-        生日 = 今天 · 消费等级 = VIP<br>
-        共找到 <strong style="color:var(--accent)">23 位</strong> 符合条件的客户
-      </div>
-    </div>
-
-    <!-- ④ AI：关联商品数据 + 价格 -->
-    <div style="display:flex;align-items:flex-start;gap:6px">
-      <div style="width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 15%,transparent);font-size:clamp(13px,1.2vw,16px)">🤖</div>
-      <div style="background:rgba(0,0,0,.06);padding:clamp(6px,.6vw,12px) clamp(10px,1vw,16px);border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(14px,1.2vw,18px);line-height:1.7;color:var(--text-2);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)">
-        <span style="font-weight:700;color:var(--good);font-size:clamp(11px,1vw,15px)">📦 智能礼品匹配</span><br>
-        按 <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:rgba(230,126,34,.08);border-radius:4px">💰 产品价格</span> 筛选预算 ¥100-300<br>
-        关联 <span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;background:rgba(122,92,255,.08);border-radius:4px">⚙️ 产品参数</span> 匹配客户偏好
-      </div>
-    </div>
-
-    <!-- ⑤ AI：输出推荐清单 -->
-    <div style="display:flex;align-items:flex-start;gap:6px">
-      <div style="width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 15%,transparent);font-size:clamp(13px,1.2vw,16px)">🤖</div>
-      <div style="background:rgba(0,0,0,.06);padding:clamp(6px,.6vw,12px) clamp(10px,1vw,16px);border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(14px,1.2vw,18px);line-height:1.7;color:var(--text-2);border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)">
-        <span style="font-weight:700;color:var(--good);font-size:clamp(11px,1vw,15px)">✅ 分析完成 · 推荐清单</span><br>
-        <div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px">
-          <span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:4px;background:rgba(255,92,138,.08);border:1px solid rgba(255,92,138,.2);font-size:clamp(12px,1vw,15px)">🎁 养生礼盒 × 8</span>
-          <span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:4px;background:rgba(59,108,255,.08);border:1px solid rgba(59,108,255,.2);font-size:clamp(12px,1vw,15px)">🧴 护肤套装 × 6</span>
-          <span style="display:inline-flex;align-items:center;gap:3px;padding:2px 8px;border-radius:4px;background:rgba(230,126,34,.08);border:1px solid rgba(230,126,34,.2);font-size:clamp(12px,1vw,15px)">🍰 蛋糕券 × 9</span>
+      <!-- ██ 右侧聊天区 ██ -->
+      <div style="flex:1;min-width:0;background:color-mix(in srgb,var(--bg) 92%,var(--accent) 2%);display:flex;flex-direction:column">
+        <div style="flex:1;padding:clamp(8px,.6vw,14px);overflow-y:auto;display:flex;flex-direction:column;gap:clamp(8px,.6vh,14px)">
+          <!-- AI：发送客户清单文件 -->
+          <div style="display:flex;align-items:flex-start;gap:6px">
+            <div style="width:clamp(20px,1.6vw,26px);height:clamp(20px,1.6vw,26px);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 15%,transparent);font-size:clamp(11px,1vw,14px)">🤖</div>
+            <div style="flex:1;min-width:0;background:rgba(0,0,0,.04);padding:clamp(8px,.6vw,14px);border-radius:10px 10px 10px 0;border:1px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.04)">
+              <!-- 文件附件卡片 -->
+              <div style="display:flex;align-items:center;gap:clamp(6px,.4vw,12px);padding:clamp(6px,.4vh,10px);border:1px solid rgba(59,108,255,.2);border-radius:8px;background:linear-gradient(135deg,rgba(59,108,255,.06),transparent);margin-bottom:clamp(6px,.4vh,10px)">
+                <span style="font-size:clamp(18px,1.6vw,26px);flex-shrink:0">📋</span>
+                <div style="min-width:0;flex:1">
+                  <div style="font-weight:700;font-size:clamp(12px,1vw,18px);color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">未来14天小朋友生日客户清单</div>
+                  <div style="font-size:clamp(10px,.8vw,14px);color:var(--text-3)">📄 生成时间：2026-07-07 · 共 964+ 位客户</div>
+                </div>
+                <span style="font-size:clamp(14px,1.1vw,20px);color:var(--accent)">⬇️</span>
+              </div>
+              <!-- 温馨提示 -->
+              <div style="padding:clamp(4px,.3vh,8px);background:rgba(230,126,34,.06);border-radius:6px;border-left:3px solid #e67e22;font-size:clamp(11px,.9vw,15px);color:var(--text-2);line-height:1.6">
+                💡 <strong style="color:var(--text-1)">温馨提示：</strong>请及时联系客户并发出生日提醒，把握营销时机。
+              </div>
+            </div>
+          </div>
+          <!-- 客服回复 -->
+          <div style="display:flex;align-items:flex-end;gap:6px;justify-content:flex-end">
+            <div style="background:#fff;color:var(--text-1);padding:clamp(5px,.4vw,10px) clamp(8px,.8vw,14px);border-radius:10px 10px 0 10px;max-width:72%;font-size:clamp(12px,1vw,16px);line-height:1.7;border:1px solid var(--border);box-shadow:0 1px 6px rgba(0,0,0,.04)">
+              <span style="font-weight:600;color:var(--accent)">客服：</span>收到，立即安排回访！
+            </div>
+            <div style="width:clamp(20px,1.6vw,26px);height:clamp(20px,1.6vw,26px);border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#e0e0e0;font-size:clamp(11px,1vw,14px)">👩</div>
+          </div>
+          <!-- 闭环提示 -->
+          <div style="text-align:center;padding:clamp(4px,.4vh,8px);background:rgba(26,175,108,.07);border-radius:8px;border:1px dashed rgba(26,175,108,.3);margin-top:auto">
+            <span style="font-size:clamp(12px,1vw,16px);color:#1aaf6c;font-weight:700">🔄 客户复购 → 💰 预计变现 ¥153,276</span>
+          </div>
+        </div>
+        <!-- 底栏 -->
+        <div style="padding:clamp(3px,.3vw,6px) clamp(6px,.5vw,10px);border-top:1px solid var(--border);background:var(--bg);display:flex;align-items:center;gap:clamp(3px,.3vw,6px);flex-shrink:0">
+          <span style="font-size:clamp(10px,.8vw,14px);color:var(--text-3)">📎</span>
+          <div style="flex:1;border:1px solid var(--border);border-radius:16px;padding:clamp(3px,.2vw,5px) clamp(6px,.5vw,10px);background:var(--bg-soft);font-size:clamp(11px,.9vw,14px);color:var(--text-3)">输入消息...</div>
+          <span style="font-size:clamp(10px,.8vw,14px);color:var(--text-3)">➤</span>
         </div>
       </div>
     </div>
-
-    <!-- ⑥ 客服回复 -->
-    <div style="display:flex;align-items:flex-end;gap:6px;justify-content:flex-end">
-      <div style="background:#fff;color:var(--text-1);padding:clamp(6px,.6vw,12px) clamp(10px,1vw,16px);border-radius:12px 12px 0 12px;max-width:72%;font-size:clamp(14px,1.2vw,18px);line-height:1.7;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)">
-        <span style="font-weight:600;color:var(--accent)">客服：</span>好的，我来安排回访！这些礼品方案很适合
-      </div>
-      <div style="width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#555;overflow:hidden;font-size:clamp(13px,1.2vw,16px)">👩</div>
-    </div>
-
-    <!-- ⑦ 闭环提示 -->
-    <div style="text-align:center;padding:clamp(4px,.4vh,8px);background:rgba(26,175,108,.08);border-radius:8px;border:1px dashed rgba(26,175,108,.3);margin-top:auto">
-      <span style="font-size:clamp(13px,1.05vw,18px);color:#1aaf6c;font-weight:700">🔄 客户复购 → 💰 预计变现 ¥47,200</span>
-    </div>
-
-  </div>
-  <!-- 底栏 -->
-  <div style="padding:clamp(4px,.4vw,8px) clamp(8px,.7vw,12px);border-top:1px solid var(--border);background:var(--bg);display:flex;align-items:center;gap:clamp(4px,.4vw,8px);flex-shrink:0">
-    <span style="font-size:clamp(12px,1vw,16px)">📎</span>
-    <div style="flex:1;border:1px solid var(--border);border-radius:20px;padding:clamp(4px,.3vw,6px) clamp(8px,.7vw,12px);background:var(--bg-soft);font-size:clamp(13px,1.05vw,16px);color:var(--text-3)">输入消息...</div>
-    <span style="font-size:clamp(12px,1vw,16px)">➤</span>
   </div>
 </div>
 
-<!-- 右：链路总结 -->
-<div style="flex:0.8;min-width:0;display:flex;flex-direction:column;gap:clamp(8px,1vh,16px)">
-  <!-- 数据源文件树 -->
-  <div style="border:1px solid var(--border);border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06);background:#fff">
-    <div style="background:var(--bg-soft);padding:clamp(3px,.3vw,6px) clamp(8px,.7vw,12px);border-bottom:1px solid var(--border);font-size:clamp(11px,1vw,14px);font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:4px">
-      <span>📁</span> <span>业务数据</span>
-      <span style="margin-left:auto;display:flex;gap:4px">
-        <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--bad)"></span>
-        <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--warn)"></span>
-        <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--good)"></span>
-      </span>
+<!-- ██ 右列：客户清单表格 ██ -->
+<div class="case-col">
+  <div class="case-card">
+    <div style="background:linear-gradient(135deg,rgba(59,108,255,.08),rgba(59,108,255,.02));padding:clamp(3px,.3vw,6px) clamp(8px,.6vw,12px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0;font-weight:700;font-size:clamp(11px,.9vw,15px);color:var(--accent)">
+      <span>📋</span> 未来 14 天生日客户清单
     </div>
-    <div style="padding:clamp(8px,.6vw,14px);font-size:clamp(13px,1.2vw,18px);line-height:2.2;color:var(--text-2)">
-      <div><span style="display:inline-flex;align-items:center;gap:4px">🗄️</span> <span style="color:var(--text-1);font-weight:500">数据库</span></div>
-      <div><span style="display:inline-flex;align-items:center;gap:4px">👥</span> <span style="color:var(--text-1);font-weight:500">客户资料</span> <span style="font-size:clamp(11px,1vw,14px);color:var(--text-3)">3,285 条</span></div>
-      <div><span style="display:inline-flex;align-items:center;gap:4px">📦</span> <span style="color:var(--text-1);font-weight:500">商品数据</span> <span style="font-size:clamp(11px,1vw,14px);color:var(--text-3)">12,471 条</span></div>
-      <div><span style="display:inline-flex;align-items:center;gap:4px">💰</span> <span style="color:var(--text-1);font-weight:500">产品价格</span> <span style="font-size:clamp(11px,1vw,14px);color:var(--text-3)">6,803 条</span></div>
-      <div><span style="display:inline-flex;align-items:center;gap:4px">⚙️</span> <span style="color:var(--text-1);font-weight:500">产品参数</span> <span style="font-size:clamp(11px,1vw,14px);color:var(--text-3)">2,156 条</span></div>
+    <div style="flex:1;overflow-y:auto;padding:0">
+      <table style="width:100%;border-collapse:collapse;font-size:clamp(9px,.7vw,12px)">
+        <thead>
+          <tr style="background:var(--bg-soft);border-bottom:1px solid var(--border)">
+            <th style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:left;font-weight:700;color:var(--text-2);white-space:nowrap">客户姓名</th>
+            <th style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:left;font-weight:700;color:var(--text-2);white-space:nowrap">生日</th>
+            <th style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:left;font-weight:700;color:var(--text-2);white-space:nowrap">上次购买</th>
+            <th style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:var(--text-2);white-space:nowrap">年消费<br>次数</th>
+            <th style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:var(--text-2);white-space:nowrap">客户<br>忠诚度</th>
+            <th style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:left;font-weight:700;color:var(--text-2);white-space:nowrap">推荐产品</th>
+            <th style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:left;font-weight:700;color:var(--text-2);white-space:nowrap">可送赠品</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- ⭐ 高忠诚度（7+次） -->
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">赵强</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-09 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">儿童安全座椅</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#1aaf6c">12 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(26,175,108,.12);color:#1aaf6c;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 高</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">儿童增高垫</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 故事机</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-soft)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">王芳</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-15 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">幼儿米粉 3盒</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#1aaf6c">8 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(26,175,108,.12);color:#1aaf6c;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 高</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">儿童面条礼盒</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 餐具套装</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">林峰</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-22 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">婴儿推车</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#1aaf6c">7 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(26,175,108,.12);color:#1aaf6c;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 高</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">轻便伞车</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 防蚊帐</span></td>
+          </tr>
+          <!-- ⭐ 中高忠诚度（4-6次） -->
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-soft)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">张美丽</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-10 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">儿童奶粉 2段</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#3b6cff">6 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(59,108,255,.12);color:#3b6cff;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 中高</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">儿童奶粉 3段</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 益智积木</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">刘丽</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-21 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">儿童牙刷套装</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#3b6cff">5 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(59,108,255,.12);color:#3b6cff;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 中高</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">牙膏+牙刷</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 绘本</span></td>
+          </tr>
+          <!-- ⭐ 中忠诚度（2-3次） -->
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-soft)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">李建国</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-12 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">纸尿裤 XL码</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#e67e22">4 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(230,126,34,.12);color:#e67e22;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 中</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">拉拉裤 XXL</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 婴儿湿巾</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">陈小明</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-18 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">儿童水杯 320ml</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#e67e22">3 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(230,126,34,.12);color:#e67e22;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 中</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">儿童保温杯</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 贴纸书</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-soft)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">周婷</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-11 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">婴儿润肤露</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#e67e22">2 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(230,126,34,.12);color:#e67e22;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 中</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">儿童防晒霜</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 小风扇</span></td>
+          </tr>
+          <!-- ⭐ 低忠诚度（1次） -->
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">吴刚</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-14 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">儿童拖鞋</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:var(--text-3)">1 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(0,0,0,.06);color:var(--text-3);font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 低</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">运动凉鞋</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 袜子礼盒</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-soft)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">孙莉</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-17 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">奶瓶刷套装</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:var(--text-3)">1 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(0,0,0,.06);color:var(--text-3);font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 低</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">吸管杯</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 围兜</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">黄磊</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-20 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">婴儿帽子</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:var(--text-3)">1 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(0,0,0,.06);color:var(--text-3);font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 低</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">遮阳帽</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 口水巾</span></td>
+          </tr>
+          <!-- ⭐ 高忠诚度 -->
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-soft)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">沈静</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-08 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">婴儿抱被</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#1aaf6c">10 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(26,175,108,.12);color:#1aaf6c;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 高</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">凉席</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 安抚巾</span></td>
+          </tr>
+          <!-- ⭐ 中忠诚度 -->
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">何伟</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-13 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">婴儿奶瓶</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#e67e22">4 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(230,126,34,.12);color:#e67e22;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 中</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">学饮杯</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 奶嘴</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-soft)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">宋涛</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-23 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">儿童积木</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#e67e22">3 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(230,126,34,.12);color:#e67e22;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 中</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">磁力片</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 拼图</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">郑涛</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-16 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">儿童绘本</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#e67e22">3 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(230,126,34,.12);color:#e67e22;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 中</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">点读笔</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 彩色笔</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-soft)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">冯雪</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-24 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">婴儿摇铃</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:#e67e22">2 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(230,126,34,.12);color:#e67e22;font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 中</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">手抓球</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 布书</span></td>
+          </tr>
+          <!-- ⭐ 低忠诚度 -->
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">林梅</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-19 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">婴儿睡袋</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:var(--text-3)">1 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(0,0,0,.06);color:var(--text-3);font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 低</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">空调被</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 小夜灯</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border);background:var(--bg-soft)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">唐亮</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-25 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">沙滩裤</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:var(--text-3)">1 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(0,0,0,.06);color:var(--text-3);font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 低</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">泳衣</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 沙滩玩具</span></td>
+          </tr>
+          <tr style="border-bottom:1px solid var(--border)">
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);font-weight:600;color:var(--accent)">高远</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">07-26 🎂</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-2)">儿童蜡笔</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center;font-weight:700;color:var(--text-3)">1 次</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);text-align:center"><span style="padding:1px 5px;border-radius:4px;background:rgba(0,0,0,.06);color:var(--text-3);font-weight:700;font-size:clamp(8px,.65vw,11px)">⭐ 低</span></td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px);color:var(--text-1)">水彩笔</td>
+            <td style="padding:clamp(2px,.15vw,4px) clamp(2px,.15vw,4px)"><span style="padding:1px 5px;border-radius:4px;background:rgba(255,92,138,.12);color:#ff5c8a;font-weight:600;font-size:clamp(8px,.6vw,11px)">🎁 画本</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <!-- 底栏统计 -->
+    <div style="padding:clamp(3px,.2vw,6px) clamp(8px,.6vw,12px);border-top:1px solid var(--border);background:linear-gradient(135deg,rgba(26,175,108,.05),rgba(26,175,108,.02));display:flex;align-items:center;justify-content:space-between;flex-shrink:0;font-size:clamp(10px,.8vw,14px)">
+      <span style="color:var(--text-3)">📊 合计：<strong style="color:var(--accent)">964+ 位</strong> 客户即将迎来小朋友生日</span>
+      <span style="font-weight:700;color:#1aaf6c">💰 预计变现 ¥153,276</span>
     </div>
   </div>
-
-  <!-- 链路标签 -->
-  <div style="border:1px solid rgba(59,108,255,.25);border-radius:12px;padding:clamp(8px,.6vw,14px);background:linear-gradient(135deg,rgba(59,108,255,.04),var(--bg) 60%);box-shadow:0 2px 8px rgba(0,0,0,.06)">
-    <div style="font-weight:700;font-size:clamp(12px,1.1vw,17px);color:#3b6cff;margin-bottom:clamp(6px,.5vh,10px)">📋 完整链路</div>
-    <div style="display:flex;flex-direction:column;gap:clamp(4px,.3vh,8px)">
-      <div style="display:flex;align-items:center;gap:clamp(4px,.3vw,8px);font-size:clamp(12px,1vw,16px)"><span style="flex-shrink:0">👤</span><span style="flex:1">客户生日触发</span><span style="color:var(--text-3);font-size:clamp(10px,.8vw,13px)">Step 1</span></div>
-      <div style="height:1px;background:rgba(59,108,255,.15);margin:0 10px"></div>
-      <div style="display:flex;align-items:center;gap:clamp(4px,.3vw,8px);font-size:clamp(12px,1vw,16px)"><span style="flex-shrink:0">🗄️</span><span style="flex:1">数据库 + 客户资料</span><span style="color:var(--text-3);font-size:clamp(10px,.8vw,13px)">Step 2</span></div>
-      <div style="height:1px;background:rgba(59,108,255,.15);margin:0 10px"></div>
-      <div style="display:flex;align-items:center;gap:clamp(4px,.3vw,8px);font-size:clamp(12px,1vw,16px)"><span style="flex-shrink:0">📦💰⚙️</span><span style="flex:1">商品 + 价格 + 参数匹配</span><span style="color:var(--text-3);font-size:clamp(10px,.8vw,13px)">Step 3</span></div>
-      <div style="height:1px;background:rgba(59,108,255,.15);margin:0 10px"></div>
-      <div style="display:flex;align-items:center;gap:clamp(4px,.3vw,8px);font-size:clamp(12px,1vw,16px)"><span style="flex-shrink:0">📞</span><span style="flex:1">客服回访 + 礼品推送</span><span style="color:var(--text-3);font-size:clamp(10px,.8vw,13px)">Step 4</span></div>
-      <div style="height:1px;background:rgba(59,108,255,.15);margin:0 10px"></div>
-      <div style="display:flex;align-items:center;gap:clamp(4px,.3vw,8px);font-size:clamp(12px,1vw,16px);font-weight:700;color:#1aaf6c"><span style="flex-shrink:0">💰</span><span style="flex:1">客户复购 → 变现</span><span style="font-size:clamp(10px,.8vw,13px)">Done</span></div>
-    </div>
-  </div>
-
-  <!-- 驾驭工程标签 -->
-  <div style="display:flex;flex-wrap:wrap;gap:4px">
-    <span class="tag tag-g">🔧 工具调用</span><span class="tag tag-b">🛡 约束安全</span><span class="tag tag-y">✅ 验证校验</span><span class="tag tag-g">📦 状态管理</span><span class="tag tag-r">🔄 容错</span><span class="tag tag-b">📊 可观测性</span>
-  </div>
-
-  <!-- big number -->
-  <div class="big-num" style="text-align:center;margin-top:auto">400<span class="unit">万+</span></div>
 </div>
 
 </div>
-<div class="notes">真实案例：<b>变现400万+</b>。客户→小程序→数据库→AI处理→分析匹配→客服回访→客户→礼品→客户复购→进公司口袋。完整的闭环：从客户出发，最终回到客户复购。每个节点标注约束组件，每天自动循环。</div>
+<div class="notes">真实案例：<b>变现400万+</b>。用户→小程序→数据库→AI处理→分析匹配→客服回访→客户→礼品→客户复购→进公司口袋。完整的闭环：从客户出发，最终回到客户复购。每天自动循环。</div>
 </section>
 <!-- ====== 17. PROGRESSIVE ====== -->
 <section class="slide" data-title="递进对比">
@@ -2383,18 +2622,112 @@ function p12hrShowScoring(e){
 <!-- ====== 19. PERSONAL VS ENTERPRISE ====== -->
 <section class="slide" data-title="个人vs企业AI">
 <p class="kicker">Comparison</p>
-<h2 class="h2">个人 AI vs 企业 AI</h2>
-<p class="lede">差的不是模型，是<b>工程</b></p>
-<table class="compare-table mt-l">
-<thead><tr><th>维度</th><th>个人 AI</th><th>企业 AI</th></tr></thead>
-<tbody>
-<tr><td>应用场景</td><td>做PPT、写文案、查资料、旅游规划</td><td>对账、简历筛选、生日营销、数据同步</td></tr>
-<tr><td>工程需求</td><td>提示词 + 上下文</td><td style="color:var(--accent);font-weight:600">四大工程全得上（约束+循环是核心）</td></tr>
-<tr><td>容错</td><td>错了 Ctrl+Z</td><td>错了就是钱</td></tr>
-<tr><td>核心</td><td>提效</td><td style="color:var(--accent);font-weight:600">可控 + 变现</td></tr>
-</tbody>
-</table>
-<div class="notes">差的不是模型，是<b>工程</b>。个人：提示词+上下文就够了，错了Ctrl+Z。企业：<b>四大工程全得上</b>，约束+循环是核心，错了就是钱。</div>
+<h2 class="h2" style="margin-bottom:0!important">个人 AI vs 企业 AI</h2>
+<p class="lede" style="margin-top:2px;font-weight:300;color:var(--text-2)">根据自身的使用场景，决定投入的<b style="color:var(--accent)">工程深度</b></p>
+
+<div style="display:flex;gap:clamp(10px,1.2vw,18px);flex:1;min-height:0;align-items:stretch">
+
+  <!-- ██ 左侧：个人 AI -->
+  <div style="flex:1;border:1px solid var(--border);border-radius:var(--radius);padding:clamp(10px,1.2vh,18px) clamp(10px,1vw,16px);display:flex;flex-direction:column;background:linear-gradient(180deg,var(--bg-soft) 0%,var(--bg) 100%)">
+    <div style="text-align:center;margin-bottom:clamp(6px,0.8vh,10px)">
+      <span style="font-size:clamp(28px,2.8vw,40px)">🧑</span>
+      <h3 style="font-size:clamp(20px,2vw,28px);margin:2px 0 0;color:var(--text-1);font-weight:600">个人 AI</h3>
+      <p style="color:var(--text-3);font-size:clamp(20px,1.5vw,22px);margin:1px 0 0">消费级 · 追求效率，错了能改</p>
+    </div>
+
+    <!-- 四大工程进度条 -->
+    <div style="margin-bottom:clamp(6px,0.8vh,10px)">
+      <div style="font-size:clamp(20px,1.3vw,22px);color:var(--text-3);margin-bottom:3px">工程投入</div>
+      <div style="display:flex;gap:3px;height:clamp(28px,3vh,38px)">
+        <div style="flex:1;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,18px);color:#fff;font-weight:700;font-family:var(--font-sans)">提示词</div>
+        <div style="flex:1;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,18px);color:#fff;font-weight:700;font-family:var(--font-sans)">上下文</div>
+        <div style="flex:1;background:#e8c94e;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,18px);color:rgba(0,0,0,.6);font-weight:600;font-family:var(--font-sans);border:1px dashed rgba(0,0,0,.12)">驾驭</div>
+        <div style="flex:1;background:var(--border);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,18px);color:var(--text-3);font-family:var(--font-sans)">循环</div>
+      </div>
+      <div style="font-size:clamp(16px,1.1vw,20px);color:var(--text-3);margin-top:2px;text-align:center">2+1 / 4 工程 · 驾驭看能力，可以试试</div>
+      <div style="font-size:clamp(16px,1.1vw,20px);color:#a8882a;margin-top:1px;text-align:center;font-weight:500">🟡 驾驭 = 高级玩法，能力够就上</div>
+    </div>
+
+    <!-- 场景卡片 -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:clamp(4px,0.5vh,6px)">
+      <div style="padding:clamp(6px,0.7vh,10px) clamp(10px,1vw,14px);background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:clamp(20px,1.4vw,24px);display:flex;align-items:center;gap:8px;font-family:var(--font-sans)">
+        <span style="font-size:clamp(20px,1.6vw,26px);flex-shrink:0">📝</span><span>写周报、润色文案</span>
+      </div>
+      <div style="padding:clamp(6px,0.7vh,10px) clamp(10px,1vw,14px);background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:clamp(20px,1.4vw,24px);display:flex;align-items:center;gap:8px;font-family:var(--font-sans)">
+        <span style="font-size:clamp(20px,1.6vw,26px);flex-shrink:0">🔍</span><span>问 AI 查数据、学工具</span>
+      </div>
+      <div style="padding:clamp(6px,0.7vh,10px) clamp(10px,1vw,14px);background:var(--bg);border:1px solid var(--border);border-radius:8px;font-size:clamp(20px,1.4vw,24px);display:flex;align-items:center;gap:8px;font-family:var(--font-sans)">
+        <span style="font-size:clamp(20px,1.6vw,26px);flex-shrink:0">📊</span><span>做 PPT、整理数据表格</span>
+      </div>
+      <div style="padding:clamp(6px,0.7vh,10px) clamp(10px,1vw,14px);background:rgba(232,201,78,.08);border:1px dashed rgba(232,201,78,.35);border-radius:8px;font-size:clamp(20px,1.4vw,24px);display:flex;align-items:center;gap:8px;font-family:var(--font-sans)">
+        <span style="font-size:clamp(20px,1.6vw,26px);flex-shrink:0">⚡</span><span>写个脚本自动处理表格 — 驾驭入门</span>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:clamp(6px,0.8vh,10px);padding:clamp(6px,0.7vh,10px);background:rgba(0,0,0,.03);border-radius:8px">
+      <span style="font-size:clamp(20px,1.3vw,22px);color:var(--text-2)">容错：</span>
+      <span style="font-size:clamp(20px,1.5vw,26px);font-weight:600;font-family:var(--font-sans)">错了 Ctrl+Z</span>
+      <span style="display:block;font-size:clamp(20px,1.2vw,22px);color:var(--text-3);margin-top:2px">核心诉求：提效</span>
+    </div>
+  </div>
+
+  <!-- VS 分隔 -->
+  <div style="display:flex;align-items:center;justify-content:center;flex-shrink:0;align-self:center">
+    <div style="width:clamp(36px,4vw,52px);height:clamp(36px,4vw,52px);border-radius:50%;border:2px solid var(--border);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:clamp(20px,1.5vw,24px);color:var(--text-3);background:var(--bg);font-family:var(--font-sans);box-shadow:0 2px 8px rgba(0,0,0,.04)">VS</div>
+  </div>
+
+  <!-- ██ 右侧：企业 AI -->
+  <div style="flex:1.4;border:2px solid rgba(59,108,255,.28);border-radius:var(--radius);padding:clamp(10px,1.2vh,18px) clamp(10px,1vw,16px);display:flex;flex-direction:column;background:linear-gradient(180deg,rgba(59,108,255,.045),var(--bg) 100%);box-shadow:0 4px 20px rgba(59,108,255,.08)">
+    <div style="text-align:center;margin-bottom:clamp(6px,0.8vh,10px)">
+      <span style="font-size:clamp(28px,2.8vw,40px)">🏢</span>
+      <h3 style="font-size:clamp(20px,2vw,28px);margin:2px 0 0;color:var(--accent);font-weight:700">企业 AI</h3>
+      <p style="color:var(--text-2);font-size:clamp(20px,1.5vw,22px);margin:1px 0 0;font-weight:600">生产级 · 追求可控，出错就是损失</p>
+    </div>
+
+    <!-- 四大工程进度条 -->
+    <div style="margin-bottom:clamp(6px,0.8vh,10px)">
+      <div style="font-size:clamp(20px,1.3vw,22px);color:var(--text-3);margin-bottom:3px">工程投入</div>
+      <div style="display:flex;gap:3px;height:clamp(28px,3vh,38px)">
+        <div style="flex:1;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,18px);color:#fff;font-weight:700;font-family:var(--font-sans);box-shadow:0 1px 4px rgba(59,108,255,.25)">提示词</div>
+        <div style="flex:1;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,18px);color:#fff;font-weight:700;font-family:var(--font-sans);box-shadow:0 1px 4px rgba(59,108,255,.25)">上下文</div>
+        <div style="flex:1;background:var(--accent);border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,18px);color:#fff;font-weight:700;font-family:var(--font-sans);box-shadow:0 1px 4px rgba(59,108,255,.25)">驾驭</div>
+        <div style="flex:1;background:#e03e3e;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.1vw,18px);color:#000;font-weight:700;font-family:var(--font-sans)">循环</div>
+      </div>
+      <div style="font-size:clamp(16px,1.1vw,20px);color:var(--accent);margin-top:2px;font-weight:700;text-align:center">⚠ 4 / 4 工程全上 · 一个都不能少</div>
+      <div style="font-size:clamp(16px,1.1vw,20px);color:#c0392b;margin-top:1px;text-align:center;font-weight:500">🔴 循环 = 企业落地的核心环节</div>
+    </div>
+
+    <!-- 场景卡片 -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:clamp(4px,0.5vh,6px)">
+      <div style="padding:clamp(6px,0.7vh,10px) clamp(10px,1vw,14px);background:var(--bg);border:1px solid rgba(59,108,255,.18);border-radius:8px;font-size:clamp(20px,1.4vw,24px);display:flex;align-items:center;gap:8px;font-family:var(--font-sans)">
+        <span style="font-size:clamp(20px,1.6vw,26px);flex-shrink:0">📦</span><span>运费对账 — 差一分都是损失</span>
+      </div>
+      <div style="padding:clamp(6px,0.7vh,10px) clamp(10px,1vw,14px);background:var(--bg);border:1px solid rgba(59,108,255,.18);border-radius:8px;font-size:clamp(20px,1.4vw,24px);display:flex;align-items:center;gap:8px;font-family:var(--font-sans)">
+        <span style="font-size:clamp(20px,1.6vw,26px);flex-shrink:0">📄</span><span>简历筛选 — 漏一个就错过人才</span>
+      </div>
+      <div style="padding:clamp(6px,0.7vh,10px) clamp(10px,1vw,14px);background:var(--bg);border:1px solid rgba(59,108,255,.18);border-radius:8px;font-size:clamp(20px,1.4vw,24px);display:flex;align-items:center;gap:8px;font-family:var(--font-sans)">
+        <span style="font-size:clamp(20px,1.6vw,26px);flex-shrink:0">🎂</span><span>生日营销 — 漏发就是事故</span>
+      </div>
+      <div style="padding:clamp(6px,0.7vh,10px) clamp(10px,1vw,14px);background:var(--bg);border:1px solid rgba(59,108,255,.18);border-radius:8px;font-size:clamp(20px,1.4vw,24px);display:flex;align-items:center;gap:8px;font-family:var(--font-sans)">
+        <span style="font-size:clamp(20px,1.6vw,26px);flex-shrink:0">🔄</span><span>数据同步 — 断了就全乱</span>
+      </div>
+    </div>
+
+    <div style="text-align:center;margin-top:clamp(6px,0.8vh,10px);padding:clamp(6px,0.7vh,10px);background:rgba(229,62,62,.07);border-radius:8px;border:1px solid rgba(229,62,62,.18)">
+      <span style="font-size:clamp(20px,1.3vw,22px);color:var(--text-2)">容错：</span>
+      <span style="font-size:clamp(22px,1.7vw,30px);font-weight:700;color:var(--bad);font-family:var(--font-sans)">错了就是钱</span>
+      <span style="display:block;font-size:clamp(20px,1.2vw,22px);color:var(--text-3);margin-top:2px">核心诉求：<b style="font-size:clamp(20px,1.5vw,28px);font-weight:700;color:var(--accent);font-family:var(--font-sans)">可控 + 变现</b></span>
+    </div>
+  </div>
+
+</div>
+
+<!-- 底部一句话总结 -->
+<div style="margin-top:clamp(6px,0.7vh,8px);padding:clamp(6px,0.7vh,10px) clamp(14px,1.4vw,22px);background:linear-gradient(90deg,rgba(59,108,255,.06),rgba(59,108,255,.02));border-left:3px solid var(--accent);border-radius:0 8px 8px 0">
+  <span style="font-size:clamp(20px,1.3vw,22px);color:var(--text-2);font-family:var(--font-sans)">💡 <b style="color:var(--accent)">一句话：</b>个人 AI 帮你省时间，企业 AI 帮你赚钱。差的那两个工程（<b style="color:var(--text-1)">驾驭 + 循环</b>），就是「玩玩」和「投产」的分界线。</span>
+</div>
+
+<div class="notes">差的不是模型，是<b>工程深度</b>。个人：提示词+上下文就够了，错了Ctrl+Z。企业：<b>四大工程全得上</b>，驾驭保证不出错，循环保证持续跑。核心是可控+变现。底部金句：个人AI帮你省时间，企业AI帮你赚钱，驾驭+循环就是玩玩和投产的分界线。</div>
 </section>
 <!-- ====== 20. DATA PRIVACY ====== -->
 <section class="slide" data-title="数据隐私">
@@ -2443,7 +2776,7 @@ function p12hrShowScoring(e){
 </div>
 <div class="notes">落地Checklist：明确场景→选模型→搭知识库→设计提示词→配置约束→评估隐私→搭建工作流→循环优化。三层工具包：API Key→本地工具→知识库。</div>
 </section>
-<!-- ====== 22. Q&A ====== -->
+<!-- ====== 22. Q&A（互动答疑——提问环节，无控制动效） ====== -->
 <section class="slide center tc v-center" data-title="互动答疑" style="background:#0d1117;overflow:hidden">
 <div id="qnaCodeBg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;font-family:SF Mono,Consolas,monospace;font-size:13px;line-height:1.6;color:rgba(255,255,255,.12);overflow:hidden;text-align:left;padding:20px;pointer-events:none;opacity:0.9"></div>
 <div style="position:relative;z-index:1">
@@ -2805,7 +3138,7 @@ function toggleP4(el){
 	  var slides=document.querySelectorAll('.slide');
 	  var total=slides.length;
 	  var lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, lastCoverP1=false;
-	  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0, _lkP4=0, _lkO=false, _lkT=false, _lkF=false;
+	  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0, _lkP4=0, _lkO=false, _lkT=false, _lkF=false, _lkCt=false, _lkRa=false;
 	  var _locked=false, _firstPoll=true, _lastRemoteNav=0;
 
 	  var lastSlide=1;  // 当前页码（1-based），用于 touch 和 sync
@@ -2815,14 +3148,14 @@ function toggleP4(el){
 	    var _origDeckGo = window.__deckGo;
 	    window.__deckGo = function(n){
 	      var page = n + 1;  // runtime n is 0-based
-	      // 切到 P2 前折叠答案卡片
-	      if(page === 2){
+	      // 切到 P3 前折叠答案卡片
+	      if(page === 3){
 	        var c2=document.getElementById('slide2Card');
 	        if(c2) c2.classList.remove('open');
 	        lastExpand=false;
 	      }
-	      // 切到 P4 前收起所有卡片
-	      if(page === 4){
+	      // 切到 P5 前收起所有卡片
+	      if(page === 5){
 	        var p4=document.querySelector('.slide[data-title="模型"]');
 	        if(p4){
 	          var cds=p4.querySelectorAll('.ca-card');
@@ -2906,9 +3239,16 @@ function toggleP4(el){
 	    if(_firstPoll){
 	      _lkO=d.overviewKey||0; _lkT=d.themeKey||0; _lkF=d.filePopup||0; lastCoverQ=d.coverQ||false; _lkSfR=d.sfRules||0;
 	      // 首次轮询不触发动效，只记录状态（防止服务器残留状态自动暴露隐藏内容）
-	      if(d.coverP1!==undefined) lastCoverP1=d.coverP1;
+	      if(d.coverP1!==undefined){
+	        lastCoverP1 = d.coverP1;
+	        // coverP1（封面动效）不涉及隐藏内容，可直接同步视觉状态
+	        if(d.coverP1 && window.showMorph) window.showMorph(true);
+	      }
 	      if(d.expand!==undefined) lastExpand=d.expand;
 	      if(d.p4open!==undefined) lastCard=d.p4open;
+	      // coverTerminal/resetAll 为一次性触发，首次轮询仅记录不执行
+	      if(d.coverTerminal!==undefined) _lkCt=d.coverTerminal;
+	      if(d.resetAll!==undefined) _lkRa=d.resetAll;
 	      _firstPoll=false;
 	      // 控制台锁定 → 直接跳到锁定页
 	      if(d.lock && d.slide){
@@ -2937,7 +3277,19 @@ function toggleP4(el){
     // P1：从会用AI动效（toggle 激活/还原）
     if(d.coverP1!==undefined && d.coverP1!==lastCoverP1){
       lastCoverP1=d.coverP1;
-      if(window.showMorph) window.showMorph();
+      if(window.showMorph) window.showMorph(d.coverP1);
+      changed=true;
+    }
+    // P1 终端演示（一次性触发）
+    if(d.coverTerminal!==undefined && d.coverTerminal!==_lkCt){
+      _lkCt=d.coverTerminal;
+      if(typeof startTerminalDemo==='function') startTerminalDemo();
+      changed=true;
+    }
+    // Flash Reset（一次性触发）
+    if(d.resetAll!==undefined && d.resetAll!==_lkRa){
+      _lkRa=d.resetAll;
+      if(typeof resetAllAnimations==='function') resetAllAnimations();
       changed=true;
     }
     // 展开/卡片动效（slide 2 expand, slide 4 card）
@@ -3241,8 +3593,10 @@ function toggleP4(el){
   var s2 = document.getElementById('cp1S2');
   if(!s1 || !s2) return;
   var _activated = false;
-  window.showMorph = function(){
-    if(!_activated){
+  window.showMorph = function(force){
+    var target = (force !== undefined) ? !!force : !_activated;
+    if(target === _activated) return;
+    if(target){
       _activated = true;
       s1.querySelectorAll('[data-group="1"]').forEach(function(el){el.style.color='transparent'});
       s1.style.opacity = '0';
@@ -3637,5 +3991,55 @@ function initQuestions(){
 }
 setTimeout(runTerminal,500);
 setTimeout(initQuestions,1000);
+
+// ═══ P1 终端演示 + Flash Reset ═══
+function sleep(ms){return new Promise(function(r){setTimeout(r,ms)})}
+
+async function startTerminalDemo(){
+  var el=document.getElementById('termLeft');
+  if(!el)return;
+  var w=C.wht,d=C.dim,g=C.grn,b=C.blu,o=C.ora;
+  el.innerHTML='';
+  // 分字符输入
+  var txt="$ let's begin";
+  for(var i=0;i<txt.length;i++){el.innerHTML+=txt[i];await sleep(35)}
+  el.innerHTML+='\n';await sleep(300);
+  // 代码模块淡入
+  await out(el,'\n'+d('╭')+d('────────────────────────────────────────')+d('╮')+'\n',50);
+  await out(el,d('│  ')+w('AI Demo Environment')+d('                   \u2502')+'\n',50);
+  await out(el,d('│  ')+g('✓ Models Initialized')+d('                  \u2502')+'\n',50);
+  await out(el,d('│  ')+g('✓ All Systems Ready')+d('                   \u2502')+'\n',50);
+  await out(el,d('╰')+d('────────────────────────────────────────')+d('╯')+'\n\n',50);
+  await out(el,o('✨  ')+w('准备就绪 · 进入分享')+'\n\n',200);
+  await out(el,d('Navigating to P2...')+'\n',500);
+  // 渐变淡出
+  var fo=document.getElementById('fadeOverlay');
+  if(fo)fo.style.opacity='1';
+  await sleep(900);
+  // 切换到 P2
+  var ss=document.querySelectorAll('.slide');
+  ss.forEach(function(s){s.classList.remove('is-active')});
+  if(ss[1])ss[1].classList.add('is-active');
+  if(window.__deckGo)window.__deckGo(1);
+  await sleep(200);
+  if(fo)fo.style.opacity='0';
+}
+
+function resetAllAnimations(){
+  // 恢复 P2 封面动效
+  if(window.showMorph)window.showMorph(false);
+  // 关闭封面问号揭示
+  document.querySelectorAll('.cover-reveal').forEach(function(el){el.classList.remove('show')});
+  // 闪光效果
+  var fl=document.getElementById('flashOverlay');
+  if(fl){fl.style.opacity='0.35';setTimeout(function(){fl.style.opacity='0'},150)}
+  // 重置 P1 终端
+  var el=document.getElementById('termLeft');
+  if(el)el.innerHTML='';
+  setTimeout(function(){if(typeof runTerminal==='function')runTerminal()},400);
+}
 </script>
+<!-- 过渡与闪光浮层 -->
+<div id="fadeOverlay"></div>
+<div id="flashOverlay"></div>
 </body>

@@ -49,6 +49,29 @@ SLIDES = [
     {"page": 19, "title": "落地Checklist",               "tags": "Checklist 落地 场景 模型 提示词 约束 监控"},
 ]
 
+# ── 幻灯片详细描述（用于 LLM 语义理解）──────────────────
+SLIDE_DESCRIPTIONS = [
+    {"page": 1,  "title": "【新插入页】",          "desc": "新的幻灯片页面，标题待填写"},
+    {"page": 2,  "title": "封面",                 "desc": "AI 真垃圾分享会开场页，介绍演讲主题和两个阶段感受"},
+    {"page": 3,  "title": "外星人的语言",         "desc": "互动猜字游戏，展示LLM预测下一个词的原理，让观众理解AI底层模式识别机制"},
+    {"page": 4,  "title": "训练三阶段/RLHF",      "desc": "大模型训练流程：预训练→指令微调→RLHF评分，涵盖有用性/真实性/安全性/诚实性"},
+    {"page": 5,  "title": "核心能力&局限",        "desc": "大模型的核心能力（语言理解/逻辑推理/知识召回/代码生成）和局限（幻觉/知识截止）"},
+    {"page": 6,  "title": "Token概念&费用",       "desc": "Token的概念、成本计算、按量付费模式、未来趋势判断"},
+    {"page": 7,  "title": "模型对比",              "desc": "DeepSeek/通义千问/Kimi/GLM/豆包等模型的擅长场景对比"},
+    {"page": 8,  "title": "案例·语音→PPT",        "desc": "提示词工程实际案例：通过语音输入自动生成PPT，展示提示词输出结构设计"},
+    {"page": 9,  "title": "提示词工程",             "desc": "如何写好Prompt让AI听话：角色设定、要求约束、参考示例、质量标准、任务派发"},
+    {"page": 10, "title": "案例·约会翻车",         "desc": "上下文工程案例：因知识库缺失导致AI回答翻车，说明背景信息的重要性"},
+    {"page": 11, "title": "上下文工程",             "desc": "RAG/知识库/历史数据/参考模板/业务规则：让AI理解业务上下文的工程方法"},
+    {"page": 12, "title": "知识库搭建",             "desc": "如何使用Trae/Obsidian搭建知识库、向量存储与语义搜索、入门到进阶路径"},
+    {"page": 13, "title": "案例·运费+招聘",        "desc": "约束工程案例：运费对账规则校验、招聘简历筛选的脚本工作流和校验机制"},
+    {"page": 14, "title": "约束工程",               "desc": "工具调用/MCP/约束验证/状态管理/错误处理/可观测性：如何给AI套上缰绳"},
+    {"page": 15, "title": "案例·生日营销",         "desc": "循环工程案例：生日营销自动化——自动扫描客户→通知→回写的闭环流程"},
+    {"page": 16, "title": "循环工程",               "desc": "自查/复盘/会诊/绩效反馈/多Agent并行协作/Agent间通讯机制"},
+    {"page": 17, "title": "个人AI vs 企业AI",      "desc": "个人使用与落地到企业生产环境的差异：效率优先vs可控性/容错性"},
+    {"page": 18, "title": "数据隐私",               "desc": "AI时代的数据隐私保护：加密/私有化部署/本地化方案/防泄露措施"},
+    {"page": 19, "title": "落地Checklist",         "desc": "AI落地的完整检查清单：场景识别→模型选择→提示词设计→约束构建→监控运维"},
+]
+
 # 不展示问题的封面/过渡页（不参与 AI 分类，已有问题强制迁移）
 COVER_PAGES = {2, 4, 7}
 # 无法归类的问题统一放到此页
@@ -57,7 +80,7 @@ FALLBACK_PAGE = 20
 app = Flask(__name__, static_folder=PPT_DIR, static_url_path='')
 
 # ── 数据存储 ──────────────────────────────────────────
-_questions_lock = threading.Lock()
+_questions_lock = threading.RLock()
 
 def load_questions():
     with _questions_lock:
@@ -205,44 +228,187 @@ def analyze_input(text):
     # 降级
     return _keyword_type_detect(text), '', ''
 
+# ── 语义理解管道（新增）──────────────────────────────────
+import hashlib
+
+_semantic_cache = {}  # text_hash → {ts, result}
+_SEMANTIC_CACHE_TTL = 300  # 5 分钟
+
+def _build_semantic_system_prompt():
+    """构建语义理解管道的 System Prompt（含四大工程体系 + 19 页详情）"""
+    slide_text = '\n'.join([
+        f"P{s['page']}: {s['title']}（{s['desc']}）"
+        for s in SLIDE_DESCRIPTIONS
+    ])
+    return f"""你是一个AI分享会的语义理解引擎。本次分享会的主题是"AI真垃圾"——
+探讨AI在企业场景下的真实落地实践，核心内容围绕四大工程体系：
+
+【四大工程体系】
+① 提示词工程（Prompt Engineering）
+  - 写好指令让AI听话：角色设定、要求约束、参考示例、任务派发
+  - 案例：语音→PPT 智能转换（第8页）
+
+② 上下文工程（Context Engineering）
+  - RAG/知识库/背景信息：让AI理解业务上下文
+  - 案例：约会翻车之知识库缺失（第10页）、知识库搭建（第12页）
+
+③ 规训工程（Constraint Engineering）
+  - MCP/约束/校验/工具调用：限制AI的行为边界
+  - 案例：运费对账规则、招聘简历筛选（第13页）
+
+④ 循环工程（Loop Engineering）
+  - 自循环Agent/多Agent编排：AI自主闭环运行
+  - 案例：生日营销自动化（第15页）
+
+【页面列表（共19页）】
+{slide_text}
+
+请分析以下听众输入，严格按JSON格式返回。
+注意：
+- 页面匹配基于语义理解，禁止关键词硬匹配
+- 候选页列表长度 0~3，最多3个候选
+- 改写后的表述要简洁清晰，适合投屏展示
+- 无法匹配任何页面时返回空列表"""
+
+def _keyword_fallback(text):
+    """语义理解降级：关键词方案"""
+    rtype = _keyword_type_detect(text)
+    # TF-IDF 分类
+    page, score = classifier.classify(text)
+    return {
+        'type': rtype,
+        'refined': text[:200],
+        'page': page if page else None,
+        'candidate_pages': [page] if page else [],
+        'reason': '关键词降级匹配'
+    }
+
+def semantic_understand(text, source='manual'):
+    """语义理解管道：类型识别 + 问题改写 + 语义页码匹配 + 多页面判断
+    返回: {type, refined, page, candidate_pages, reason}
+    """
+    text_hash = hashlib.md5(text.encode('utf-8')).hexdigest()
+    # 检查缓存
+    if text_hash in _semantic_cache:
+        cached = _semantic_cache[text_hash]
+        if time.time() - cached['ts'] < _SEMANTIC_CACHE_TTL:
+            print(f'[语义理解] 缓存命中: {text[:50]}...')
+            return cached['result']
+
+    if not DEEPSEEK_API_KEY:
+        result = _keyword_fallback(text)
+        _semantic_cache[text_hash] = {'ts': time.time(), 'result': result}
+        return result
+
+    system_prompt = _build_semantic_system_prompt()
+    try:
+        payload = {
+            "model": "deepseek-chat",
+            "messages": [
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": f'听众输入：{text}\n\n返回格式：{{"type":"question|share","refined":"改写后表述","page":页码,"candidate_pages":[页码列表],"reason":"匹配理由"}}'}
+            ],
+            "temperature": 0.3,
+            "max_tokens": 2048
+        }
+        with httpx.Client(timeout=15) as client:
+            resp = client.post(
+                f'{DEEPSEEK_BASE_URL}/chat/completions',
+                headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {DEEPSEEK_API_KEY}'},
+                json=payload
+            )
+            if resp.status_code == 200:
+                content = resp.json()['choices'][0]['message']['content']
+                match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
+                if match:
+                    result = json.loads(match.group())
+                    rtype = result.get('type', '').strip().lower()
+                    if rtype not in ('share', 'question'):
+                        rtype = 'question'
+                    refined = result.get('refined', text)[:500]
+                    page = result.get('page')
+                    candidate_pages = result.get('candidate_pages', [])
+                    if not isinstance(candidate_pages, list):
+                        candidate_pages = []
+                    candidate_pages = [p for p in candidate_pages if isinstance(p, int) and 1 <= p <= len(SLIDES)][:3]
+                    if page is not None and (not isinstance(page, int) or page < 1 or page > len(SLIDES)):
+                        page = None
+
+                    result_data = {
+                        'type': rtype,
+                        'refined': refined,
+                        'page': page,
+                        'candidate_pages': candidate_pages,
+                        'reason': result.get('reason', '')
+                    }
+                    _semantic_cache[text_hash] = {'ts': time.time(), 'result': result_data}
+                    print(f'[语义理解] 成功: type={rtype}, page={page}, candidates={candidate_pages}')
+                    return result_data
+    except httpx.TimeoutException:
+        print(f'[语义理解] LLM 超时(15s)，降级到关键词: {text[:50]}...')
+    except Exception as e:
+        print(f'[语义理解] LLM 调用失败: {e}')
+
+    # 降级
+    result = _keyword_fallback(text)
+    _semantic_cache[text_hash] = {'ts': time.time(), 'result': result}
+    return result
+
+def _semantic_cache_cleanup():
+    """后台线程：定期清理过期的语义理解缓存"""
+    while True:
+        time.sleep(60)
+        now = time.time()
+        global _semantic_cache
+        keys_to_del = [k for k, v in _semantic_cache.items() if now - v['ts'] >= _SEMANTIC_CACHE_TTL]
+        for k in keys_to_del:
+            del _semantic_cache[k]
+        if keys_to_del:
+            print(f'[缓存清理] 移除了 {len(keys_to_del)} 条语义理解缓存')
+
 # ── 后台异步归类 ──────────────────────────────────────
 def classify_pending():
     """后台线程：处理未归类/未定类型的问题 + 精炼 + 迁移封面页问题"""
     while True:
-        time.sleep(5)
-        questions = load_questions()
-        changed = False
-        for q in questions:
-            # 阶段1：还未判断类型 → 用 LLM 分析（类型 + 精炼）
-            if q.get('type') is None:
-                qtype, refined, deeper = analyze_input(q['question'])
-                q['type'] = qtype
-                if refined:
-                    q['refined'] = refined
-                    q['deeper'] = deeper
-                    q['refined_at'] = datetime.now().isoformat()
-                changed = True
-                print(f'[类型] 问题#{q["id"]} → {qtype} (精炼:{bool(refined)})')
+        try:
+            time.sleep(5)
+            questions = load_questions()
+            changed = False
+            for q in questions:
+                # 阶段1：还未判断类型 → 用 LLM 分析（类型 + 精炼）
+                if q.get('type') is None:
+                    qtype, refined, deeper = analyze_input(q['question'])
+                    q['type'] = qtype
+                    if refined:
+                        q['refined'] = refined
+                        q['deeper'] = deeper
+                        q['refined_at'] = datetime.now().isoformat()
+                    changed = True
+                    print(f'[类型] 问题#{q["id"]} → {qtype} (精炼:{bool(refined)})')
 
-            page = q.get('page')
-            # 阶段2：未归类 → 分类到幻灯片页
-            if page is None:
-                page, score = classifier.classify(q['question'])
-                q['page'] = page
-                q['score'] = round(score, 3)
-                q['classified_at'] = datetime.now().isoformat()
-                changed = True
-                print(f'[分类] 问题#{q["id"]} → 第{page}页 (置信度:{score:.2f})')
-            # 阶段3：落在封面页 → 重新分配到非封面页
-            elif page in COVER_PAGES:
-                new_page, score = classifier.classify(q['question'])
-                q['page'] = new_page
-                q['score'] = round(score, 3)
-                q['classified_at'] = datetime.now().isoformat()
-                changed = True
-                print(f'[迁移] 问题#{q["id"]} 原第{page}页(封面) → 第{new_page}页 (置信度:{score:.2f})')
-        if changed:
-            save_questions(questions)
+                page = q.get('page')
+                # 阶段2：未归类 → 分类到幻灯片页
+                if page is None:
+                    page, score = classifier.classify(q['question'])
+                    q['page'] = page
+                    q['score'] = round(score, 3)
+                    q['classified_at'] = datetime.now().isoformat()
+                    changed = True
+                    print(f'[分类] 问题#{q["id"]} → 第{page}页 (置信度:{score:.2f})')
+                # 阶段3：落在封面页 → 重新分配到非封面页
+                elif page in COVER_PAGES:
+                    new_page, score = classifier.classify(q['question'])
+                    q['page'] = new_page
+                    q['score'] = round(score, 3)
+                    q['classified_at'] = datetime.now().isoformat()
+                    changed = True
+                    print(f'[迁移] 问题#{q["id"]} 原第{page}页(封面) → 第{new_page}页 (置信度:{score:.2f})')
+            if changed:
+                save_questions(questions)
+        except Exception as e:
+            print(f'[后台] classify_pending 异常: {e}', flush=True)
+            import traceback
+            traceback.print_exc()
 
 # ── 全局 CORS（允许 demo 页面从任何域名调用 API）──
 @app.after_request
@@ -525,42 +691,62 @@ def submit_question():
     data = request.get_json(force=True)
     name = data.get('name', '').strip() or '匿名'
     question = data.get('question', '').strip()
+    source = data.get('source', 'manual')  # qrcode | voice | manual
     if not question:
         return jsonify({'ok': False, 'error': '内容不能为空'}), 400
     if len(question) > 500:
         return jsonify({'ok': False, 'error': '内容不能超过500字'}), 400
 
+    # 语义理解管道：类型识别 + 问题改写 + 页码匹配 + 多页面判断
+    sem_result = semantic_understand(question, source)
+    rtype = sem_result['type']
+    refined = sem_result['refined']
+    page = sem_result['page']
+    candidate_pages = sem_result['candidate_pages']
+    reason = sem_result['reason']
+
+    # 'share' 类型：不入队列，直接返回
+    if rtype == 'share':
+        print(f'[提交] 分享场景(不入队列): {question[:60]}...')
+        return jsonify({
+            'ok': True, 'type': 'share',
+            'question': question, 'refined': refined,
+            'message': '感谢你的分享！你的经验已记录。'
+        })
+
+    # 'question' 类型：进入问题队列
     with _questions_lock:
         questions = load_questions()
         qid = len(questions) + 1
+        multi_page = len(candidate_pages) > 1
         entry = {
             'id': qid,
             'name': name,
             'question': question,
-            'type': None,       # 'share'（分享场景）| 'question'（提问）
-            'refined': '',
+            'original': question,
+            'type': rtype,          # 'question'
+            'refined': refined,
             'deeper': '',
-            'page': None,
+            'page': page,
+            'candidate_pages': candidate_pages,
+            'multi_page': multi_page,
             'score': None,
+            'source': source,
             'created_at': datetime.now().isoformat(),
-            'classified_at': None,
-            'refined_at': None,
+            'classified_at': datetime.now().isoformat(),
+            'refined_at': datetime.now().isoformat(),
         }
         questions.append(entry)
         save_questions(questions)
 
-    # 立即尝试分类（同步，简单场景）
-    try:
-        page, score = classifier.classify(question)
-        entry['page'] = page
-        entry['score'] = round(score, 3)
-        entry['classified_at'] = datetime.now().isoformat()
-        save_questions(questions)
-    except:
-        page = None
-        pass  # 后台线程会处理
-
-    return jsonify({'ok': True, 'id': qid, 'page': page, 'message': '谢谢！你的内容已提交'})
+    print(f'[提交] 问题#{qid}: type={rtype}, page={page}, candidates={candidate_pages}, source={source}')
+    return jsonify({
+        'ok': True, 'id': qid, 'page': page,
+        'type': rtype, 'refined': refined,
+        'candidate_pages': candidate_pages,
+        'multi_page': multi_page,
+        'message': '谢谢！你的问题已提交'
+    })
 
 @app.route('/api/questions', methods=['GET'])
 def get_questions():
@@ -573,10 +759,14 @@ def get_questions():
             'id': q['id'],
             'name': q['name'],
             'question': q['question'],
+            'original': q.get('original', q['question']),
             'type': q.get('type'),        # 'share' | 'question' | null
             'refined': q.get('refined', ''),
             'deeper': q.get('deeper', ''),
             'page': q.get('page'),
+            'candidate_pages': q.get('candidate_pages', []),
+            'multi_page': q.get('multi_page', False),
+            'source': q.get('source', 'manual'),
         })
     return jsonify({
         'total': len(questions),
@@ -607,14 +797,108 @@ def move_question():
 
 @app.route('/api/questions/delete', methods=['POST'])
 def delete_question():
-    data = request.json
+    data = request.get_json(silent=True) or {}
     qid = data.get('id')
     if qid is None:
         return jsonify({'ok': False, 'message': '缺少参数'}), 400
-    questions = load_questions()
-    questions = [q for q in questions if q['id'] != qid]
-    save_questions(questions)
+    with _questions_lock:
+        questions = load_questions()
+        questions = [q for q in questions if q['id'] != qid]
+        save_questions(questions)
     return jsonify({'ok': True, 'message': '已删除'})
+
+# ── 语义理解 API（新增）─────────────────────────────────
+
+@app.route('/api/questions/semantic-understand', methods=['POST'])
+def api_semantic_understand():
+    """语义理解管道：类型识别 + 问题改写 + 页码匹配 + 多页面判断"""
+    data = request.get_json(silent=True) or {}
+    text = data.get('text', '').strip()
+    source = data.get('source', 'manual')
+    if not text:
+        return jsonify({'ok': False, 'error': '缺少文本'}), 400
+    result = semantic_understand(text, source)
+    return jsonify({'ok': True, **result})
+
+
+@app.route('/api/questions/multi-page-ask', methods=['POST'])
+def api_multi_page_ask():
+    """多页面候选反问：返回候选页列表供听众选择"""
+    data = request.get_json(silent=True) or {}
+    qid = data.get('qid')
+    candidate_pages = data.get('candidate_pages', [])
+    if not candidate_pages:
+        return jsonify({'ok': False, 'error': '无候选页'}), 400
+
+    # 构建选项列表
+    page_map = {s['page']: s['title'] for s in SLIDES}
+    options = []
+    for p in candidate_pages:
+        title = page_map.get(p, f'第{p}页')
+        options.append(f'第{p}页 - {title}')
+    options.append('以上都不是，请直接回答')
+
+    return jsonify({
+        'ok': True,
+        'questions': [{
+            'q': '您的问题似乎涉及以下多个主题，请问最接近哪一个？',
+            'options': options
+        }]
+    })
+
+
+@app.route('/api/questions/voice-process', methods=['POST'])
+def api_voice_process():
+    """语音语义处理：语音文字→语义理解→入队列"""
+    data = request.get_json(silent=True) or {}
+    text = data.get('text', '').strip()
+    session_id = data.get('session_id', '')
+    if not text:
+        return jsonify({'ok': False, 'error': '缺少语音文本'}), 400
+
+    # 调用语义理解管道
+    result = semantic_understand(text, 'voice')
+    if result['type'] == 'share':
+        return jsonify({
+            'ok': True, 'type': 'share',
+            'refined': result['refined'],
+            'entered_queue': False,
+            'message': '分享场景，不入队列'
+        })
+
+    # 'question' 类型：创建问题加入队列
+    with _questions_lock:
+        questions = load_questions()
+        qid = len(questions) + 1
+        multi_page = len(result['candidate_pages']) > 1
+        entry = {
+            'id': qid,
+            'name': '语音',
+            'question': text,
+            'original': text,
+            'type': 'question',
+            'refined': result['refined'],
+            'deeper': '',
+            'page': result['page'],
+            'candidate_pages': result['candidate_pages'],
+            'multi_page': multi_page,
+            'score': None,
+            'source': 'voice',
+            'created_at': datetime.now().isoformat(),
+            'classified_at': datetime.now().isoformat(),
+            'refined_at': datetime.now().isoformat(),
+        }
+        questions.append(entry)
+        save_questions(questions)
+
+    return jsonify({
+        'ok': True, 'type': 'question',
+        'refined': result['refined'],
+        'qid': qid,
+        'page': result['page'],
+        'entered_queue': True
+    })
+
 
 @app.route('/status')
 def status_page():
@@ -812,12 +1096,62 @@ def vote_extra_poll():
     return jsonify({'ok': True, 'results': polls[poll_id]})
 
 # ── 反问环节 API ──────────────────────────────────────
+@app.route('/api/followup/debug', methods=['GET'])
+def debug_followup():
+    """调试端点：直接测试反问生成，返回完整DeepSeek响应"""
+    question_text = request.args.get('q', 'How to debug this issue?')
+    try:
+        prompt = f"""你是一个AI分享会的助手。听众提了一个问题，现需通过反问更准确理解他的真实需求。
+
+听众问题：{question_text}
+
+请生成2个选择题，每个3-4个选项，选项要贴合AI在企业应用的实际场景。
+
+请严格按以下JSON格式返回（不要任何多余文字）：
+{{"questions":[{{"q":"反问问题","options":["选项1","选项2","选项3"]}},{{"q":"反问问题2","options":["选项1","选项2","选项3"]}}]}}"""
+        print(f'[debug_followup] API_KEY长度={len(DEEPSEEK_API_KEY)}, URL={DEEPSEEK_BASE_URL}', flush=True)
+        with httpx.Client(timeout=30) as client:
+            resp = client.post(
+                f'{DEEPSEEK_BASE_URL}/chat/completions',
+                headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {DEEPSEEK_API_KEY}'},
+                json={"model": "deepseek-chat", "messages": [{"role": "user", "content": prompt}], "temperature": 0.3, "max_tokens": 2048}
+            )
+            result = {
+                'http_status': resp.status_code,
+                'key_prefix': DEEPSEEK_API_KEY[:8] if DEEPSEEK_API_KEY else 'EMPTY',
+                'key_len': len(DEEPSEEK_API_KEY),
+            }
+            if resp.status_code == 200:
+                raw = resp.json()
+                content = raw['choices'][0]['message']['content']
+                result['deepseek_content'] = content[:1000]
+                # Try parse
+                outer_match = re.search(r'\{.*\}', content, re.DOTALL)
+                if outer_match:
+                    result['matched_text'] = outer_match.group()[:500]
+                    try:
+                        parsed = json.loads(outer_match.group())
+                        result['parsed_ok'] = True
+                        result['questions'] = parsed.get('questions', [])
+                    except json.JSONDecodeError as jde:
+                        result['parsed_ok'] = False
+                        result['parse_error'] = str(jde)
+                else:
+                    result['matched_text'] = '(no match)'
+            else:
+                result['response_body'] = resp.text[:500]
+            return jsonify(result)
+    except Exception as e:
+        return jsonify({'error': str(e), 'traceback': traceback.format_exc()}), 500
+
+
 @app.route('/api/followup', methods=['POST'])
 def generate_followup():
     """根据已提交的问题，生成反问选项"""
     data = request.get_json(force=True)
     qid = data.get('id')
     question_text = data.get('question', '')
+    debug_mode = data.get('_debug', False)  # 调试标志
     if not question_text:
         return jsonify({'ok': False, 'error': '缺少问题'}), 400
 
@@ -837,26 +1171,34 @@ def generate_followup():
                 json={"model": "deepseek-chat", "messages": [{"role": "user", "content": prompt}], "temperature": 0.3, "max_tokens": 2048}
             )
             if resp.status_code == 200:
-                content = resp.json()['choices'][0]['message']['content']
+                raw = resp.json()
+                content = raw['choices'][0]['message']['content']
                 print(f'[反问] DeepSeek返回: {content[:200]}')
-                # 查找最外层的大括号块
-                match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
-                # 如果没找到简单json，尝试找嵌套的
-                if not match:
-                    match = re.search(r'\{.*\}', content, re.DOTALL)
-                if match:
-                    result = json.loads(match.group())
-                    questions = result.get('questions', [])
-                    if questions:
-                        for q in questions:
-                            q['options'] = q.get('options', []) + ['其他（请填写）']
-                        return jsonify({'ok': True, 'questions': questions})
-                # JSON解析失败，用原始内容作为问题（可能DeepSeek返回了文字描述）
+                # 提取最外层 JSON 并解析
+                outer_match = re.search(r'\{.*\}', content, re.DOTALL)
+                if outer_match:
+                    try:
+                        result = json.loads(outer_match.group())
+                        questions = result.get('questions', [])
+                        if questions:
+                            for q in questions:
+                                q['options'] = q.get('options', []) + ['其他（请填写）']
+                            return jsonify({'ok': True, 'questions': questions})
+                    except json.JSONDecodeError as jde:
+                        print(f'[反问] JSON解析异常: {jde}')
+                        if debug_mode:
+                            return jsonify({'ok': False, 'debug': f'JSONDecodeError: {jde}', 'matched_text': outer_match.group()[:500], 'full_content': content[:1000]}), 200
                 print(f'[反问] JSON解析失败, 原始内容: {content[:300]}')
+                if debug_mode:
+                    return jsonify({'ok': False, 'debug': 'no valid questions found', 'content': content[:1500]}), 200
+            else:
+                print(f'[反问] HTTP {resp.status_code}: {resp.text[:200]}')
+                if debug_mode:
+                    return jsonify({'ok': False, 'debug': f'HTTP {resp.status_code}', 'body': resp.text[:500]}), 200
     except Exception as e:
         print(f'[反问] 异常: {e}')
-
-    # 降级：返回默认反问
+        if debug_mode:
+            return jsonify({'ok': False, 'debug': f'Exception: {e}'}), 200
     return jsonify({'ok': True, 'questions': [
         {'q': '你提到的场景，目前是手工操作还是已经有系统支持？', 'options': ['纯手工', '有系统但不完善', '有系统但不好用', '其他（请填写）'], 'type': 'choice'},
         {'q': '你希望AI在这件事上做到什么程度？', 'options': ['完全自动，不用人管', '辅助决策，人来确认', '先跑通一个试点看看', '其他（请填写）'], 'type': 'choice'},
@@ -1946,7 +2288,7 @@ setInterval(load,30000);
 </body>
 </html>'''
 # ── 控制页状态 ─────────────────────────────────────
-CONTROL_STATE = {"slide": 1, "lock": False, "coverQ": False, "coverP1": False, "expand": False, "card": 0, "pollOverlay": False, "themeKey": 0, "overviewKey": 0, "filePopup": 0, "popupScroll": 0, "autoScroll": 0, "sfRules": 0, "sfScroll": 0, "p4open": 0}
+CONTROL_STATE = {"slide": 1, "lock": False, "coverQ": False, "coverP1": False, "expand": False, "card": 0, "pollOverlay": False, "qaShow": False, "themeKey": 0, "overviewKey": 0, "filePopup": 0, "popupScroll": 0, "autoScroll": 0, "sfRules": 0, "sfScroll": 0, "p4open": 0}
 CONTROL_STATE_LOCK = threading.Lock()
 
 QA_OVERLAY = {}
@@ -2001,20 +2343,43 @@ def qa_ask():
 
 @app.route('/api/questions/ai-answer', methods=['POST'])
 def ai_answer_question():
-    """用 DeepSeek 为指定问题生成回答（控制台「🤖 回答」按钮）"""
+    """用 DeepSeek 为指定问题生成针对性回答（控制台「🤖 回答」按钮）
+    增强版：结合页面内容针对性回答，避免泛泛而谈"""
     data = request.get_json(silent=True) or {}
     qid = data.get('id')
     question = (data.get('question', '') or '').strip()
     if not question:
         return jsonify({'ok': False, 'error': '缺少问题文本'}), 400
 
+    # 获取页面信息（前端传递，用于针对性回答）
+    page = data.get('page')
+    page_title = data.get('page_title', '')
+    page_content = data.get('page_content', '')
+
     # 先尝试 DeepSeek API
     if DEEPSEEK_API_KEY:
         try:
+            if page and page_title:
+                # 针对性回答：带页面内容
+                summary = page_content[:300] if page_content else ''
+                system_prompt = f"""你是一个AI分享会的答疑助手。
+
+听众的问题被归类到第{page}页「{page_title}」。
+该页面的核心主题是：{summary}
+
+请基于该页面的具体内容针对性回答以下问题。注意：
+1. 控制在200字以内，直击要点
+2. 仅围绕本页面的内容回答，不要引用其他页面的内容
+3. 结合页面中的实际案例来解释
+4. 使用通俗易懂的语言"""
+            else:
+                # 无页面信息时使用通用提示
+                system_prompt = "你是一个AI分享会的答疑助手，请用中文简要回答听众的问题，控制在200字以内，直击要点。"
+
             payload = {
                 "model": "deepseek-chat",
                 "messages": [
-                    {"role": "system", "content": "你是一个AI分享会的答疑助手，请用中文简要回答听众的问题，控制在200字以内，直击要点。"},
+                    {"role": "system", "content": system_prompt},
                     {"role": "user", "content": question}
                 ],
                 "temperature": 0.3,
@@ -2028,7 +2393,8 @@ def ai_answer_question():
                 )
                 if resp.status_code == 200:
                     content = resp.json()['choices'][0]['message']['content']
-                    return jsonify({'ok': True, 'answer': content, 'source': 'deepseek'})
+                    source_tag = 'deepseek_page' if page else 'deepseek'
+                    return jsonify({'ok': True, 'answer': content, 'source': source_tag})
         except Exception as e:
             print(f'[AI回答] DeepSeek 调用失败: {e}')
 
@@ -2285,5 +2651,9 @@ if __name__ == '__main__':
     # 启动后台分类线程
     t = threading.Thread(target=classify_pending, daemon=True)
     t.start()
+
+    # 启动语义理解缓存清理线程
+    t_cache = threading.Thread(target=_semantic_cache_cleanup, daemon=True)
+    t_cache.start()
 
     app.run(host=HOST, port=PORT, debug=False, threaded=True)

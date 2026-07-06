@@ -122,6 +122,7 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
       <button class="btn" id="lockBtn" style="font-size:11px;padding:5px 8px;white-space:nowrap">🔓 解锁</button>
       <button class="btn" onclick="showOverview()" style="font-size:11px;padding:5px 8px;white-space:nowrap">📋 总览</button>
       <button class="btn" onclick="cycleTheme()" style="font-size:11px;padding:5px 8px;white-space:nowrap">🎨 换肤</button>
+      <!-- P22 已改为被动提问页（互动答疑），不再需要专用控制按钮 -->
     </div>
     <div class="right"><span class="dot"></span>已连接</div>
   </div>
@@ -259,19 +260,35 @@ function aiAnswer(id){
   qi.answer = '';
   qi.error = '';
   renderQuestions();
+  // 获取当前页面内容（从 speechData 中获取）
+  var page = qi.p || 1;
+  var pageTitle = '';
+  var pageContent = '';
+  if(_speechData && _speechData[page]){
+    pageTitle = _speechData[page].t || '';
+    pageContent = _speechData[page].c || '';
+  }
+  // 用改写后的问题作为参数，同时传递页面信息
+  var questionText = qi.q || qi.o || '';
   fetch('/api/questions/ai-answer', {
     method:'POST',
     headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({id:id, question:qi.q})
+    body:JSON.stringify({
+      id:id,
+      question: questionText,
+      page: page,
+      page_title: pageTitle,
+      page_content: pageContent
+    })
   }).then(function(r){return r.json();}).then(function(d){
     if(d.ok){
       qi.answer = d.answer;
       qi.loading = false;
       renderQuestions();
       // 发送给 PPT 展示页：下弹出方式显示答案
-      fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:qi.p, answer:d.answer, answer_question:qi.q, answer_slide:qi.p, answer_mode:'bottom-popup'})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
-      try{ new BroadcastChannel('ppt-ctrl').postMessage({type:'voice-answer',question:qi.q,answer:d.answer,slide:qi.p,mode:'bottom-popup'}); }catch(e){}
-      try{ new BroadcastChannel('ai3-control').postMessage({type:'voice-answer',question:qi.q,answer:d.answer,slide:qi.p,mode:'bottom-popup'}); }catch(e){}
+      fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:qi.p, answer:d.answer, answer_question:questionText, answer_slide:qi.p, answer_mode:'bottom-popup'})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
+      try{ new BroadcastChannel('ppt-ctrl').postMessage({type:'voice-answer',question:questionText,answer:d.answer,slide:qi.p,mode:'bottom-popup'}); }catch(e){}
+      try{ new BroadcastChannel('ai3-control').postMessage({type:'voice-answer',question:questionText,answer:d.answer,slide:qi.p,mode:'bottom-popup'}); }catch(e){}
     } else {
       qi.error = d.error || '回答失败';
       qi.loading = false;
@@ -378,11 +395,29 @@ function applyQuestionsData(d){
       var q = qs[i];
       var sid = String(q.id);
       if(_deletedIds[sid]) continue;
-      if(!_qdata[sid]){ _qdata[sid] = {q:q.question, p:q.page||1, answer:'', loading:false, error:'', n:q.name||'匿名'}; }
+      var refined = q.refined || q.question;
+      if(!_qdata[sid]){
+        _qdata[sid] = {
+          q: refined,           // 显示用：LLM 改写后的问题
+          o: q.original || q.question,  // 原始问题（用于对比显示）
+          p: q.page||1,
+          answer: '', loading: false, error: '',
+          n: q.name||'匿名',
+          t: q.type,             // 'share' | 'question' | null
+          s: q.source || 'manual',  // 来源
+          cp: q.candidate_pages || [],  // 候选页
+          mp: q.multi_page || false    // 多页面标记
+        };
+      }
       else {
-        _qdata[sid].q = q.question;
+        _qdata[sid].q = refined;
+        _qdata[sid].o = q.original || q.question;
         _qdata[sid].p = q.page||1;
         _qdata[sid].n = q.name||'匿名';
+        _qdata[sid].t = q.type;
+        _qdata[sid].s = q.source || 'manual';
+        _qdata[sid].cp = q.candidate_pages || [];
+        _qdata[sid].mp = q.multi_page || false;
       }
     }
   }
@@ -525,18 +560,35 @@ function renderQuestions(){
     list.innerHTML = '<div style="text-align:center;padding:30px;color:#999;font-size:13px">💬 暂无问题</div>';
     return;
   }
+  // 来源图标映射
+  var srcIcon = {'qrcode':'📱','voice':'🎤','manual':'⌨️'};
+  var srcLabel = {'qrcode':'扫码','voice':'语音','manual':'输入'};
   var h = '';
   for(var i=0;i<ids.length;i++){
     var id = ids[i];
     var qi = _qdata[id];
+    var icon = srcIcon[qi.s] || '⌨️';
+    var label = srcLabel[qi.s] || '输入';
+    // 判断是否有改写差异
+    var hasDiff = qi.o && qi.q && qi.o !== qi.q;
     h += '<div style="background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.08);border-radius:8px;padding:10px 12px;margin-bottom:6px">';
-    // 头部：用户 + 页码
+    // 头部：用户 + 页码 + 来源图标 + 多页面标记
     h += '<div style="display:flex;gap:6px;margin-bottom:4px;align-items:center">';
     h += '<span style="color:#777;font-size:12px">👤 ' + (qi.n||'匿名') + '</span>';
     h += '<span style="color:#1f6feb;font-size:10px;background:rgba(0,113,227,.1);padding:1px 6px;border-radius:4px;font-weight:500">P' + (qi.p||'?') + '</span>';
+    h += '<span title="' + label + '" style="font-size:14px">' + icon + '</span>';
+    if(qi.mp){
+      h += '<span style="color:#e67700;font-size:10px;background:rgba(230,119,0,.1);padding:1px 6px;border-radius:4px">多页候选</span>';
+    }
     h += '</div>';
-    // 问题正文
-    h += '<div style="color:#222;line-height:1.6;margin-bottom:6px;font-size:13px">' + qi.q + '</div>';
+    // 问题正文（改写后）
+    h += '<div style="color:#222;line-height:1.6;margin-bottom:2px;font-size:13px">' + qi.q + '</div>';
+    // 改写对比（仅当有差异时显示）
+    if(hasDiff){
+      h += '<div style="font-size:11px;color:#999;background:rgba(0,0,0,.04);border-radius:4px;padding:4px 8px;margin-bottom:4px">';
+      h += '<span style="color:#999">📝 原：</span><span style="color:#666">' + qi.o.substring(0,100) + '</span>';
+      h += '</div>';
+    }
     // AI 回答结果
     if(qi.answer){
       h += '<div style="font-size:12px;color:#7ee787;padding:8px;background:rgba(0,0,0,.15);border-radius:6px;margin-bottom:6px">🤖 ' + qi.answer + '</div>';
@@ -630,6 +682,9 @@ function togglePollOverlay(){
   }
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,pollOverlay:_pollOverlayOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
+
+// P22 已改为互动答疑页（被动展示），不再需要投屏 Q&A 控制按钮
+// 提问管理通过顶栏「💬 提问」Tab 页操作
 
 // ── 手机左右滑动翻页 ──
 (function(){
@@ -1231,10 +1286,10 @@ function syncState(st){
       else { ab.classList.remove('on'); ab.textContent='\u25B6 '+ACT[2].l; }
     }
   }
-  // 同步 P4 卡片展开状态
+  // 同步 P5 卡片展开状态
   if(st.p4open!==undefined && st.p4open!==_p4open){
     _p4open=st.p4open;
-    if(cur===4){
+    if(cur===5){
       document.querySelectorAll('#actBox .act-btn').forEach(function(bb){bb.classList.remove('on');});
       if(_p4open>0){
         var b = document.getElementById('p4b'+_p4open);
