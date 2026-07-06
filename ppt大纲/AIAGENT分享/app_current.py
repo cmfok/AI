@@ -687,6 +687,10 @@ def poll_results_page():
 def ask_page():
     return render_template_string(ASK_HTML)
 
+@app.route('/listen')
+def listen_page():
+    return app.send_static_file('listen.html')
+
 @app.route('/questions')
 def questions_page():
     return render_template_string(QUESTIONS_HTML)
@@ -916,6 +920,74 @@ def api_voice_process():
         'page': result['page'],
         'entered_queue': True
     })
+
+
+@app.route('/api/listener/classify', methods=['POST'])
+def listener_classify():
+    """监听页：语音文字分类（分享/提问）+ 精炼"""
+    data = request.get_json(silent=True) or {}
+    text = data.get('text', '').strip()
+    if not text:
+        return jsonify({'ok': False, 'error': '内容为空'}), 400
+    
+    # 复用语义理解管道
+    result = semantic_understand(text, 'voice')
+    
+    if result['type'] == 'share':
+        return jsonify({
+            'ok': True,
+            'type': 'share',
+            'summary': f"📌 分享场景：{result['refined']}",
+            'not_question': True
+        })
+    else:
+        return jsonify({
+            'ok': True,
+            'type': 'question',
+            'summary': f"📝 问题已记录：{result['refined']}",
+            'page': result['page'],
+            'candidate_pages': result.get('candidate_pages', [])
+        })
+
+
+@app.route('/api/listener/send', methods=['POST'])
+def listener_send():
+    """监听页：将语音文字提交为问题"""
+    data = request.get_json(silent=True) or {}
+    text = data.get('text', '').strip()
+    if not text:
+        return jsonify({'ok': False, 'error': '内容为空'}), 400
+    
+    # 语义理解
+    result = semantic_understand(text, 'voice')
+    
+    if result['type'] == 'share':
+        return jsonify({'ok': True, 'type': 'share', 'message': '分享场景，已记录'})
+    
+    # 作为问题入队列
+    from datetime import datetime
+    with _questions_lock:
+        questions = load_questions()
+        qid = len(questions) + 1
+        entry = {
+            'id': qid,
+            'name': '语音',
+            'question': text,
+            'original': text,
+            'type': 'question',
+            'refined': result['refined'],
+            'deeper': '',
+            'page': result['page'],
+            'candidate_pages': result.get('candidate_pages', []),
+            'multi_page': len(result.get('candidate_pages', [])) > 1,
+            'source': 'voice',
+            'created_at': datetime.now().isoformat(),
+            'classified_at': datetime.now().isoformat(),
+        }
+        questions.append(entry)
+        save_questions(questions)
+    
+    return jsonify({'ok': True, 'qid': qid, 'page': result['page']})
 
 
 @app.route('/status')
