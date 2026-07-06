@@ -80,7 +80,7 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
 <body>
 <div class="sticky">
   <div class="top-bar">
-    <div class="left"><div class="info">🎙 <strong id="cp">1</strong> / <span id="tp">20</span></div></div>
+    <div class="left"><div class="info">🎙 <strong id="cp">1</strong> / <span id="tp">21</span></div></div>
     <div class="center" style="display:flex;gap:4px;align-items:center">
       <button class="btn" id="lockBtn" style="font-size:11px;padding:5px 8px;white-space:nowrap">🔓 解锁</button>
       <button class="btn" onclick="showOverview()" style="font-size:11px;padding:5px 8px;white-space:nowrap">📋 总览</button>
@@ -89,10 +89,12 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
     <div class="right"><span class="dot"></span>已连接</div>
   </div>
   <div class="page-grid" id="pg"></div>
-  <div id="lockRow" style="display:flex;gap:4px;margin-bottom:6px;align-items:stretch">
-    <button class="tab-btn active" data-tab="script" style="font-size:12px">📝 演讲稿</button>
-    <button class="tab-btn" data-tab="questions" style="font-size:12px">💬 观众问题</button>
-    <button class="tab-btn" data-tab="poll" style="font-size:12px">📊 投票结果</button>
+  <div id="lockRow" style="display:flex;gap:4px;margin-bottom:6px;align-items:stretch;flex-wrap:wrap">
+    <button class="tab-btn active" data-tab="script" style="font-size:12px">📝 讲稿</button>
+    <button class="tab-btn" data-tab="questions" style="font-size:12px">💬 提问</button>
+    <button class="tab-btn" data-tab="poll" style="font-size:12px">📊 投票</button>
+    <button class="tab-btn" data-tab="model" style="font-size:12px">🧪 模型</button>
+    <button class="tab-btn" data-tab="image" style="font-size:12px">🎨 生图</button>
   </div>
 </div>
 <div class="scroll">
@@ -118,6 +120,22 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
       <div class="nc" id="nc">—</div>
     </div>
   </div>
+  <div class="tab-content" id="tabImage" style="display:none">
+    <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+      <span style="font-size:13px;color:#777;font-weight:600">🎨 豆包生图</span>
+      <span style="font-size:10px;color:#999;padding:2px 8px;background:rgba(0,0,0,.05);border-radius:8px">Seedream 4.5 · 2K</span>
+      <button class="btn small" id="imagePopupBtn" onclick="toggleImagePopup()" style="margin-left:4px;font-size:11px">📺 投屏显示</button>
+    </div>
+    <div style="font-size:10px;color:#aaa;margin-bottom:8px;line-height:1.5">输入描述 → 点击生图 → 豆包 Seedream 生成图片。Key在服务端，不暴露到浏览器。</div>
+    <div id="imageResultArea" style="background:rgba(0,0,0,.02);border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:10px;min-height:320px;max-height:480px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;align-items:center;justify-content:center">
+      <div id="imagePlaceholder" style="text-align:center;padding:30px;color:#999;font-size:13px">输入提示词，点击"生成图片"</div>
+      <img id="imageResult" style="max-width:100%;max-height:400px;border-radius:8px;display:none" alt="生成的图片">
+    </div>
+    <div style="display:flex;gap:4px;align-items:stretch">
+      <textarea id="imagePrompt" style="flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,.1);font-size:13px;background:#fff;font-family:inherit;resize:none;min-height:36px;line-height:1.5" placeholder="描述你想生成的图片..." rows="2"></textarea>
+      <button class="btn on" id="imageGenerateBtn" onclick="generateImage()" style="font-size:12px;padding:8px 16px;white-space:nowrap">🖼 生图</button>
+    </div>
+  </div>
 
   <div class="tab-content" id="tabQuestions">
     <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px">
@@ -137,6 +155,27 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
     </div>
     <div id="pollResults" style="min-height:0">
       <div style="text-align:center;padding:30px;color:#999;font-size:13px">加载中...</div>
+    </div>
+  </div>
+
+  <div class="tab-content" id="tabModel">
+    <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
+      <span style="font-size:13px;color:#777;font-weight:600">🧪 模型测试</span>
+      <span style="font-size:10px;color:#999;padding:2px 8px;background:rgba(0,0,0,.05);border-radius:8px">直调 DeepSeek API</span>
+      <button class="btn small" id="modelClearBtn" onclick="clearModelChat()" style="font-size:11px">🗑 清空</button>
+      <button class="btn small" id="modelPopupBtn" onclick="toggleModelPopup()" style="margin-left:4px;font-size:11px">📺 投屏显示</button>
+    </div>
+    <div id="modelApiKeyRow" style="display:flex;gap:4px;align-items:center;margin-bottom:8px">
+      <span style="font-size:11px;color:#999;white-space:nowrap">🔑 API Key</span>
+      <span style="flex:1;font-size:12px;color:#777;padding:5px 8px;border-radius:6px;background:rgba(0,0,0,.03);border:1px solid rgba(0,0,0,.08)">已配置在服务器</span>
+    </div>
+    <div style="font-size:10px;color:#aaa;margin-bottom:8px;line-height:1.5">提示：不添加任何提示词，直接提问模型，观察原生回答。Key在服务端，不暴露到浏览器。</div>
+    <div id="modelChatBox" style="background:rgba(0,0,0,.02);border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:10px;min-height:280px;max-height:400px;overflow-y:auto;margin-bottom:8px">
+      <div style="text-align:center;padding:30px;color:#999;font-size:13px">输入问题开始测试</div>
+    </div>
+    <div style="display:flex;gap:4px;align-items:stretch">
+      <textarea id="modelInput" style="flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,.1);font-size:13px;background:#fff;font-family:inherit;resize:none;min-height:36px;line-height:1.5" placeholder="输入问题，按 Enter 发送..." rows="1"></textarea>
+      <button class="btn on" id="modelSendBtn" onclick="sendModelMsg()" style="font-size:12px;padding:8px 16px;white-space:nowrap">发送</button>
     </div>
   </div>
 </div>
@@ -239,7 +278,7 @@ function showMovePicker(id){
   // 构建页码网格
   var g = document.getElementById('moveGrid');
   g.innerHTML = '';
-  for(var i=1;i<=20;i++){
+  for(var i=1;i<=TOTAL;i++){
     var d = document.createElement('div');
     d.className = 'move-dot' + (i===_moveTargetPage?' cur':'');
     d.textContent = 'P'+i;
@@ -384,7 +423,7 @@ function toggleFilter(){
   var btn = document.getElementById('filterBtn');
   if(_filterPage){
     btn.className = 'btn small on';
-    btn.textContent = '📌 仅 P' + (cur>20?'附':(cur===5?'转':(cur>5?cur-1:cur)));
+    btn.textContent = '📌 仅 P' + (cur>21?'附':(cur===5?'转':(cur>5?cur-1:cur)));
   } else {
     btn.className = 'btn small';
     btn.textContent = '📄 当前页';
@@ -567,6 +606,192 @@ function togglePollOverlay(){
   },{passive:true});
 })();
 
+// ── 模型测试（直调 DeepSeek API）──
+var _modelMsgs = [];
+var _modelSending = false;
+var _modelPopupOn = false;
+
+function toggleModelPopup(){
+  _modelPopupOn = !_modelPopupOn;
+  var btn = document.getElementById('modelPopupBtn');
+  if(_modelPopupOn){
+    btn.className = 'btn small on';
+    btn.textContent = '📺 投屏中...';
+  } else {
+    btn.className = 'btn small';
+    btn.textContent = '📺 投屏显示';
+  }
+  // 同步到服务器
+  var lastQ = '', lastA = '';
+  for(var i=_modelMsgs.length-1;i>=0;i--){
+    var m = _modelMsgs[i];
+    if(m.role === 'assistant' && !lastA) lastA = m.content;
+    if(m.role === 'user' && !lastQ) lastQ = m.content;
+  }
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,modelPopup:{show:_modelPopupOn,question:lastQ,answer:lastA}})}).catch(function(){});
+}
+
+// ── 生图模块 ──
+var _imagePopupOn = false;
+var _imageGenerating = false;
+
+function generateImage(){
+  if(_imageGenerating) return;
+  var prompt = document.getElementById('imagePrompt').value.trim();
+  if(!prompt){ alert('请输入图片描述'); return; }
+  _imageGenerating = true;
+  var btn = document.getElementById('imageGenerateBtn');
+  btn.textContent = '⏳ 生成中...';
+  btn.disabled = true;
+  document.getElementById('imagePlaceholder').style.display = 'none';
+  document.getElementById('imageResult').style.display = 'none';
+  fetch('/api/doubao/generate-image', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({prompt:prompt})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.ok && d.url){
+      var img = document.getElementById('imageResult');
+      img.src = d.url;
+      img.style.display = 'block';
+      // 如果投屏开启，发送到大屏
+      if(_imagePopupOn){
+        syncImageToProjector(d.url, prompt);
+      }
+    } else {
+      alert('生图失败: ' + (d.error||'未知错误'));
+      document.getElementById('imagePlaceholder').style.display = 'block';
+    }
+    _imageGenerating = false;
+    btn.textContent = '🖼 生图';
+    btn.disabled = false;
+  }).catch(function(err){
+    alert('网络错误');
+    _imageGenerating = false;
+    btn.textContent = '🖼 生图';
+    btn.disabled = false;
+    document.getElementById('imagePlaceholder').style.display = 'block';
+  });
+}
+
+function toggleImagePopup(){
+  _imagePopupOn = !_imagePopupOn;
+  var btn = document.getElementById('imagePopupBtn');
+  if(_imagePopupOn){
+    btn.className = 'btn small on';
+    btn.textContent = '📺 投屏中...';
+    // 同步当前图片到大屏
+    var img = document.getElementById('imageResult');
+    if(img.style.display !== 'none' && img.src){
+      syncImageToProjector(img.src, document.getElementById('imagePrompt').value);
+    }
+  } else {
+    btn.className = 'btn small';
+    btn.textContent = '📺 投屏显示';
+    // 关闭大屏图片
+    fetch('/api/control/image-overlay',{
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body:JSON.stringify({show:false})
+    }).catch(function(){});
+  }
+}
+
+function syncImageToProjector(url, prompt){
+  fetch('/api/control/image-overlay',{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({show:true, url:url, prompt:prompt})
+  }).catch(function(){});
+}
+
+function initModelKey(){
+  // 不需要了，Key 在服务端
+}
+function saveModelKey(){
+  // 不需要了，Key 已配置在服务端
+}
+function clearModelChat(){
+  _modelMsgs = [];
+  renderModelChat();
+  document.getElementById('modelInput').value = '';
+}
+function renderModelChat(){
+  var box = document.getElementById('modelChatBox');
+  if(!box) return;
+  if(_modelMsgs.length === 0){
+    box.innerHTML = '<div style="text-align:center;padding:30px;color:#999;font-size:13px">输入问题开始测试</div>';
+    return;
+  }
+  var h = '';
+  for(var i=0;i<_modelMsgs.length;i++){
+    var m = _modelMsgs[i];
+    if(m.role === 'user'){
+      h += '<div style="display:flex;justify-content:flex-end;margin-bottom:6px"><div style="max-width:80%;padding:6px 10px;border-radius:8px 8px 2px 8px;background:#1f6feb;color:#fff;font-size:13px;line-height:1.5">' + escapeHtml(m.content) + '</div></div>';
+    } else {
+      h += '<div style="display:flex;justify-content:flex-start;margin-bottom:6px"><div style="max-width:80%;padding:6px 10px;border-radius:8px 8px 8px 2px;background:rgba(0,0,0,.06);color:#222;font-size:13px;line-height:1.5;white-space:pre-wrap">' + escapeHtml(m.content) + '</div></div>';
+    }
+  }
+  if(_modelSending){
+    h += '<div style="display:flex;justify-content:flex-start;margin-bottom:6px"><div style="padding:6px 10px;border-radius:8px 8px 8px 2px;background:rgba(0,0,0,.06);color:#999;font-size:13px">🤔 模型思考中...</div></div>';
+  }
+  box.innerHTML = h;
+  box.scrollTop = box.scrollHeight;
+}
+function escapeHtml(s){
+  if(!s) return '';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+function sendModelMsg(){
+  if(_modelSending) return;
+  var input = document.getElementById('modelInput');
+  var q = input.value.trim();
+  if(!q) return;
+  input.value = '';
+  input.style.height = 'auto';
+  _modelMsgs.push({role:'user', content: q});
+  _modelSending = true;
+  renderModelChat();
+  // 调用服务端接口（Key 在服务端，不暴露到浏览器）
+  fetch('/api/deepseek/ask', {
+    method: 'POST',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({question: q})
+  }).then(function(r){
+    return r.json();
+  }).then(function(d){
+    if(d.ok){
+      var answer = d.answer || '(无应答)';
+      _modelMsgs.push({role:'assistant', content: answer});
+      _modelSending = false;
+      renderModelChat();
+      if(_modelPopupOn){
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,modelPopup:{show:true,question:q,answer:answer}})}).catch(function(){});
+      }
+    } else {
+      _modelMsgs.push({role:'assistant', content: '❌ ' + (d.error||'回答失败')});
+      _modelSending = false;
+      renderModelChat();
+    }
+  }).catch(function(err){
+    _modelMsgs.push({role:'assistant', content: '❌ 网络错误'});
+    _modelSending = false;
+    renderModelChat();
+  });
+}
+function handleModelKeydown(e){
+  if(e.key === 'Enter' && !e.shiftKey){
+    e.preventDefault();
+    sendModelMsg();
+  }
+}
+// Tab 切换时自动适配输入框
+document.addEventListener('DOMContentLoaded', function(){
+  var modelInput = document.getElementById('modelInput');
+  if(modelInput) modelInput.addEventListener('keydown', handleModelKeydown);
+  initModelKey();
+});
+
 </script>
 
 <div class="bottom-nav">
@@ -588,17 +813,25 @@ fetch('/api/control/current',{cache:'no-cache'}).then(function(r){if(!r.ok)throw
     updateLockBtn();  // 同步按钮状态
   }
   if(st)syncState(st);
+  // 初始加载：强制重置 P1 动效状态为关闭（防止服务器残留状态导致按钮异常显示）
+  // 必须在 syncState 之后执行，确保按钮恢复正常
+  if(st && st.coverP1){
+    st.coverP1 = false;  // 先修正传入数据，下次轮询自动同步服务器
+    fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverP1:false})}).catch(function(){});
+    var aBtn = document.getElementById('aBtn');
+    if(aBtn){ aBtn.classList.remove('on'); aBtn.textContent='\u25B6 '+ACT[1].l; }
+  }
   // 动态获取 PPT 实际页数
-  fetch('/api/slides/total',{cache:'no-cache'}).then(function(r2){return r2.json();}).then(function(d){TOTAL = d.total||20;document.getElementById('tp').textContent=TOTAL;}).catch(function(){});
+  fetch('/api/slides/total',{cache:'no-cache'}).then(function(r2){return r2.json();}).then(function(d){TOTAL = d.total||21;document.getElementById('tp').textContent=TOTAL;}).catch(function(){});
 }).catch(function(){
   go(1);
 });
 
-var ACT={1:{l:'显示问号',s:'显示问号',h:'隐藏问号'},2:{l:'展开答案',s:'展开答案',h:'收起答案'},4:{l:'展开卡片',s:'展开三阶段',h:'收起卡片'}};
+var ACT={1:{l:'揭示主题',s:'揭示主题',h:'重置问句'},2:{l:'展开答案',s:'展开答案',h:'收起答案'},4:{l:'展开卡片',s:'展开三阶段',h:'收起卡片'}};
 // ── 动效按钮栏配置（按页码添加按钮，注释好哪一页显示什么）──
 // 格式：ACTIONS[页码] = ['<button ...>', '<button ...>']
 var ACTIONS = {
-  1: ['<button class="btn" id="aBtn">▶ '+ACT[1].l+'</button>'],                                        // P1：封面问号
+  1: ['<button class="btn" id="aBtn">▶ '+ACT[1].l+'</button>'],                                        // P1：从会用AI动效
   2: ['<button class="btn" id="aBtn">▶ '+ACT[2].l+'</button>'],                                        // P2：展开答案
   4: ['<button class="act-btn btn" id="p4b1">① 预训练</button>', '<button class="act-btn btn" id="p4b2">② 指令微调</button>', '<button class="act-btn btn" id="p4b3">③ RLHF</button>', '<button class="act-btn btn" id="p4b4">⚠️ 局限</button>'],
   6: ['<button class="btn" onclick="toggleFilePopup()">📄 大纲</button><button class="btn" onclick="stopScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startScroll()" style="font-size:16px">⬇</button>'],
@@ -763,14 +996,13 @@ function go(n){
   // 或直接用 onclick 在 html 里写死简单动作
   // 复杂动作（如 toggle）在 bindActionEvents 里处理
   function bindActionEvents(n){
-    if(n===1){  // P1：封面问号
+    if(n===1){  // P1：从会用AI动效
       var b = document.getElementById('aBtn');
       if(b) b.onclick = function(){
         var isOn = b.classList.contains('on');
         if(isOn){ b.classList.remove('on'); b.textContent='▶ '+ACT[1].l; }
         else { b.classList.add('on'); b.textContent=ACT[1].h; }
-        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverQ:!isOn})}).catch(function(){});
-        try{new BroadcastChannel('ppt-ctrl').postMessage({type:'toggle-cover-q',show:!isOn})}catch(e){}
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverP1:!isOn})}).catch(function(){});
       };
     }
     if(n===2){  // P2：展开答案
@@ -817,7 +1049,7 @@ function upd(n){
   document.getElementById('sc').innerHTML = s.c;
   var nx=_speechData[n+1];
   if(nx){
-    document.getElementById('nc').innerHTML='<strong>'+(n+1>20?'附':(n+1===5?'转':'P'+(n+1>5?n:n+1)))+' · '+nx.t+'</strong><br>'+nx.c.substring(0,100).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'…';
+    document.getElementById('nc').innerHTML='<strong>'+(n+1>21?'附':(n+1===5?'转':'P'+(n+1>5?n:n+1)))+' · '+nx.t+'</strong><br>'+nx.c.substring(0,100).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'…';
   }else{
     document.getElementById('nc').innerHTML='— 结束 —';
   }
@@ -906,6 +1138,22 @@ function syncState(st){
   if(st.lock!==undefined && st.lock!==locked){
     locked=st.lock;
     updateLockBtn();
+  }
+  // 同步 P1 封面动效状态
+  if(st.coverP1!==undefined){
+    var cb = document.getElementById('aBtn');
+    if(cb){
+      if(st.coverP1){ cb.classList.add('on'); cb.textContent=ACT[1].h; }
+      else { cb.classList.remove('on'); cb.textContent='\u25B6 '+ACT[1].l; }
+    }
+  }
+  // 同步 P2 展开状态
+  if(st.expand!==undefined){
+    var ab = document.getElementById('aBtn');
+    if(ab){
+      if(st.expand){ ab.classList.add('on'); ab.textContent=ACT[2].h; }
+      else { ab.classList.remove('on'); ab.textContent='\u25B6 '+ACT[2].l; }
+    }
   }
   // 同步 P4 卡片展开状态
   if(st.p4open!==undefined && st.p4open!==_p4open){

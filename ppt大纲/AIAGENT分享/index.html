@@ -1,12 +1,13 @@
 <!DOCTYPE html>
-<html lang="zh-CN" data-themes="minimal-white,editorial-serif,swiss-grid,japanese-minimal,pitch-deck-vc">
+
+<html data-themes="minimal-white,editorial-serif,swiss-grid,japanese-minimal,pitch-deck-vc" lang="zh-CN">
 <head>
-<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
 <title>从AI不行到AI真香 · 分享会</title>
-<link rel="stylesheet" href="assets/fonts.css">
-<link rel="stylesheet" href="assets/base.css">
-<link rel="stylesheet" href="assets/animations/animations.css">
-<link rel="stylesheet" href="assets/themes/minimal-white.css" id="theme-link">
+<link href="assets/fonts.css" rel="stylesheet"/>
+<link href="assets/base.css" rel="stylesheet"/>
+<link href="assets/animations/animations.css" rel="stylesheet"/>
+<link href="assets/themes/minimal-white.css" id="theme-link" rel="stylesheet"/>
 <style>
 :root{--font-display:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;--anim-dur:.7s;--font-sans:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif}
 body{line-height:1.35!important}
@@ -71,7 +72,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .callout-block .emoji{font-size:1.1em;margin-right:4px}
 
 /* file reader (prompt demo inspired by AIEN1) */
-.file-reader{background:#0d1117;border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden;font-family:ui-monospace,'SF Mono','Cascadia Code','JetBrains Mono',monospace;font-size:clamp(11px,1vw,13px);line-height:1.6;display:flex;flex-direction:column;height:100%}
+.file-reader{background:#0d1117;border:1px solid rgba(255,255,255,.08);border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.15);font-family:ui-monospace,'SF Mono','Cascadia Code','JetBrains Mono',monospace;font-size:clamp(11px,1vw,13px);line-height:1.6;display:flex;flex-direction:column;height:100%}
 .fr-bar{display:flex;align-items:center;gap:6px;padding:8px 14px;background:rgba(255,255,255,.03);border-bottom:1px solid rgba(255,255,255,.06)}
 .fr-dot{width:8px;height:8px;border-radius:50%}
 .fr-dot:nth-child(1){background:#ff5f56}
@@ -146,6 +147,14 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cover-reveal.show{opacity:1}
 .cover-delay{transition-delay:2s}
 
+/* ── P1 从会用AI动效（字符精确位移）── */
+.cp1-stage{position:relative;display:flex;justify-content:center;align-items:center;height:clamp(80px,14vw,180px);min-width:clamp(360px,60vw,1000px)}
+.cp1-char{position:absolute;font-size:clamp(56px, 10vw, 140px);font-weight:900;line-height:1;letter-spacing:var(--letter-tight);color:var(--text-1);transition:left 1.2s cubic-bezier(.34,1.56,.64,1),opacity 1s ease,transform .9s ease;will-change:left,opacity}
+.cp1-char.leaving{opacity:0;transform:scale(.3);pointer-events:none}
+.cp1-char.hidden{opacity:0;transform:scale(.4)}
+.cp1-sub{opacity:0;transition:opacity .8s ease;margin-top:clamp(20px,2.5vw,36px)}
+.cp1-sub.show{opacity:1}
+
 	@media(max-width:768px){
 	  .deck-header{top:12px!important;left:20px!important;right:20px!important;font-size:11px!important}
 	  .slide{overflow-y:auto;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px)}
@@ -157,6 +166,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  body .h2{font-size:clamp(28px,7vw,56px)!important}
 	  body .lede{font-size:clamp(18px,4.5vw,32px)!important}
 	  .dim{font-size:clamp(16px,3.5vw,24px)}
+	  .cp1-char{font-size:clamp(36px,10vw,64px)!important}
 	  .kicker{font-size:clamp(11px,2.5vw,14px)}
 	  /* ── 覆盖内联大字 ── */
 	  .slide [style*="font-size:56px"]{font-size:42px!important}
@@ -192,6 +202,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  body .h2{font-size:clamp(28px,8vw,44px)!important}
 	  body .lede{font-size:clamp(20px,5.5vw,28px)!important}
 	  .dim{font-size:clamp(16px,4.5vw,20px)}
+	  .cp1-char{font-size:clamp(32px,10vw,56px)!important}
 	  .kicker{font-size:clamp(12px,3.5vw,15px)}
 	  /* ── 覆盖内联大字（!important 穿透 inline style）── */
 	  .slide [style*="font-size:56px"]{font-size:36px!important}
@@ -251,7 +262,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  [data-title*="运费"] [style*="position:absolute"]{position:static!important;transform:none!important;margin:6px auto;text-align:center;display:block}
 	}
 </style>
-<script src="assets/runtime.js" defer></script>
+<script defer="" src="assets/runtime.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <style>
 #mdPopupContent table { border-collapse: collapse; width: 100%; margin: 8px 0; }
@@ -264,648 +275,1080 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <body>
 <div class="deck">
 <div class="deck-header">
-  <span>重塑 AI 认知，教你落地用好 AI</span>
-  <span>CM · 2026-07-07</span>
+<span>从会用AI，到用好AI</span>
+<span>CM · 2026-07-07</span>
 </div>
-
+<!-- ═══ 生图投屏 ═══ -->
+<div id="imageOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.85);z-index:9999;flex-direction:column;justify-content:center;align-items:center;padding:clamp(20px,4vw,60px)">
+<button onclick="hideImageOverlay()" style="position:fixed;top:2vh;right:2vw;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:clamp(18px, 2vw, 30px);width:clamp(40px,4vw,56px);height:clamp(40px,4vw,56px);border-radius:50%;cursor:pointer;z-index:10000">✕</button>
+<div style="width:100%;max-width:1200px;display:flex;flex-direction:column;align-items:center;gap:clamp(12px,2vh,24px)">
+<div id="imageOverlayPrompt" style="color:rgba(255,255,255,.5);font-size:clamp(12px, 1.2vw, 16px);text-align:center;max-width:80%">—</div>
+<img alt="" id="imageOverlayImg" src="" style="max-width:100%;max-height:75vh;border-radius:clamp(8px,1vw,16px);box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1)"/>
+</div>
+</div>
 <!-- ====== 1. COVER ====== -->
 <section class="slide center tc v-center" data-title="封面">
-  <div data-anim="rise-in">
-    <p class="kicker" style="letter-spacing:.2em;margin-bottom:28px">CM · 2026-07-07</p>
-    <div style="position:relative;display:inline-block">
-      <span class="cover-reveal cover-delay" style="font-size:clamp(18px,2vw,30px);color:var(--text-3);font-weight:400;vertical-align:middle">从 </span>
-      <h1 class="h1" style="display:inline;font-size:clamp(56px,10vw,140px);line-height:1;font-weight:900;margin:0">
-        AI<span style="color:var(--accent)">不行</span>
-      </h1>
-      <span id="coverQ" class="cover-q cover-reveal" style="font-size:clamp(90px,16vw,220px);color:#e53e3e;vertical-align:middle">？</span>
-    </div>
-    <div class="cover-reveal cover-delay" style="margin-top:8px;line-height:1.2">
-      <span style="font-size:clamp(18px,2vw,30px);color:var(--text-3);font-weight:400;vertical-align:middle">到 </span>
-      <h1 class="h1" style="display:inline;font-size:clamp(56px,10vw,140px);line-height:1;font-weight:900;margin:0;color:var(--accent)">AI真香</h1>
-    </div>
-    <p id="coverSub" class="lede cover-sub cover-reveal" style="text-align:center;font-size:clamp(20px,2.6vw,38px);max-width:100%;margin-top:28px;transition-delay:4s">—— 重塑 AI 认知，教你落地用好 AI</p>
-    <p style="margin-top:36px;color:var(--text-2);font-size:18px">搭建 AI Agent ，实现提效增收实战分享</p>
+<div data-anim="rise-in">
+<p class="kicker" style="letter-spacing:.2em;margin-bottom:28px">CM · 2026-07-07</p>
+<!-- P1: "你真的会用AI吗？" → "从会用AI，到用好AI" -->
+<div class="cp1-stage" id="cp1Wrap"></div>
+<p class="lede cp1-sub" id="cp1Sub1">重塑 AI 认知，教你落地用好 AI</p>
   </div>
-  <div class="notes"><b>从"AI不行"到"AI真香"</b>——我的真实心路历程。第一阶段：刚用觉得无所不能，实际各种不靠谱，觉得<b>AI真垃圾</b>。第二阶段：用久了摸透脾气，知道怎么<b>约束</b>它，让它可控地输出想要的结果——<b>AI真香！</b>我核心的关切：<b>如何让 AI 可控地输出我想要的结果。</b></div>
+<div class="notes"><b>"你真的会用AI吗？" → "从会用AI，到用好AI"</b>——我的真实心路历程。第一阶段：刚开始用觉得无所不能，实际各种不靠谱，觉得<b>AI真垃圾</b>。第二阶段：用久了摸透脾气，知道怎么<b>约束</b>它，让它可控地输出想要的结果——<b>AI真香！</b>我核心的关切：<b>如何让 AI 可控地输出我想要的结果。</b></div>
 </section>
-
 <!-- ====== 2. ALIEN LANGUAGE ====== -->
 <section class="slide center tc v-center" data-title="外星人的语言">
-  <p class="kicker">TRY TO GUESS</p>
-  <h2 class="h2" style="color:#000;font-weight:500;margin:0 0 4px">外星人的语言</h2>
-  <h2 class="h2" style="letter-spacing:.25em;margin:20px 0 8px;font-weight:700;color:var(--text-1)">← ↑ → ↓ ←</h2>
-  <p style="font-size:clamp(20px,3.5vw,40px);color:var(--text-3);margin-bottom:16px">Guess：<span style="color:var(--text-1);font-weight:700">↑ → ？</span></p>
-  <div class="ca-card" id="slide2Card" style="max-width:520px;margin:0 auto;line-height:1.3">
-    <div class="ch" style="visibility:hidden;height:0;padding:0;margin:0">▼</div>
-    <div class="cb"><div class="cb-inner" style="font-size:16px;line-height:1.4">
-      <p style="font-size:clamp(18px,2.5vw,28px);font-weight:700;color:var(--accent-3);margin-bottom:6px">答案是：↓</p>
-      <p style="margin-top:6px"><strong>规律</strong>：左上右下，顺时针转圈。</p>
-      <p style="margin-top:6px">你刚才做的这件事，就是 <strong>AI 每天都在做的事</strong><br>——根据上文，预测最合理的下一个<strong>"字"</strong>。</p>
-    </div></div>
-  </div>
-  <div class="notes">前几天我认识了个外星人，因为语言不通我专门学了一下他们的语言。这是他们的语言：← ↑ → ↓ ←。猜下一个：↑ → ？答案是 <b>↓</b>。规律：<b>左上右下，顺时针转圈</b>。大家可能会问，这跟 AI 有什么关系——其实你刚才做的这件事，就是 <b>AI 每天都在做的事</b>：根据上文，预测最合理的下一个字。</div>
+<p class="kicker">TRY TO GUESS</p>
+<h2 class="h2" style="color:#000;font-weight:500;margin:0 0 4px">外星人的语言</h2>
+<h2 class="h2" style="letter-spacing:.25em;margin:20px 0 8px;font-weight:700;color:var(--text-1)">← ↑ → ↓ ←</h2>
+<p style="font-size:clamp(20px, 3.5vw, 40px);color:var(--text-3);margin-bottom:16px">Guess：<span style="color:var(--text-1);font-weight:700">↑ → ？</span></p>
+<div class="ca-card" id="slide2Card" style="max-width:680px;margin:0 auto;line-height:1.3;background:var(--bg);border:1px solid rgba(255,255,255,.08)">
+<div class="ch" style="visibility:hidden;height:0;padding:0;margin:0">▼</div>
+<div class="cb"><div class="cb-inner" style="font-size:30px;line-height:1.4">
+<p style="font-size:clamp(30px, 3.5vw, 50px);font-weight:700;color:var(--accent);margin-bottom:6px">答案是：↓</p>
+<p style="margin-top:6px;font-size:clamp(18px, 2vw, 26px)"><strong>规律</strong>：左上右下，顺时针转圈。</p>
+<p style="margin-top:6px;font-size:clamp(18px, 2vw, 26px)">你刚才做的这件事，就是 <strong>AI 每天都在做的事</strong><br/>——根据上文，预测最合理的下一个<strong>"字"</strong>。</p>
+</div></div>
+</div>
+<div class="notes">前几天我认识了个外星人，因为语言不通我专门学了一下他们的语言。这是他们的语言：← ↑ → ↓ ←。猜下一个：↑ → ？答案是 <b>↓</b>。规律：<b>左上右下，顺时针转圈</b>。大家可能会问，这跟 AI 有什么关系——其实你刚才做的这件事，就是 <b>AI 每天都在做的事</b>：根据上文，预测最合理的下一个字。</div>
 </section>
-
 <!-- ====== 3. ANTI-COGNITION ====== -->
 <section class="slide center tc v-center" data-title="反认知">
-  <div>
-    <p class="kicker">Counter‑Intuition</p>
-	    <h2 class="h2" style="color:#000;font-weight:500;margin:0 0 4px;max-width:100%" data-anim="fade-up">
+<div>
+<p class="kicker">Counter‑Intuition</p>
+<h2 class="h2" data-anim="fade-up" style="color:#000;font-weight:500;margin:0 0 4px;max-width:100%">
       AI 的底层逻辑就是
 </h2>
-<h1 class="h1" style="max-width:100%" data-anim="fade-up">
-  <span style="color:#3b6cff">猜字系统</span>
+<h1 class="h1" data-anim="fade-up" style="max-width:100%">
+<span style="color:#3b6cff">猜字系统</span>
 </h1>
-<p class="dim mt-m">它没有意识，没有理解——它只是在<b>猜</b>。</p>
-  </div>
-  <div class="notes"><b>AI 的底层逻辑——就是个猜字系统。</b>这是不是颠覆了大家对 AI 的认知？它<b>没有意识，没有理解</b>——它只是在<b>猜</b>。给它一段上文，它<b>算概率</b>，猜下一个最合理的字/词。</div>
+<p class="lede" style="margin-top:16px;font-weight:300">它没有意识，没有理解——它只是在<b>猜</b>。</p>
+</div>
+<div class="notes"><b>AI 的底层逻辑——就是个猜字系统。</b>这是不是颠覆了大家对 AI 的认知？它<b>没有意识，没有理解</b>——它只是在<b>猜</b>。给它一段上文，它<b>算概率</b>，猜下一个最合理的字/词。</div>
 </section>
-
 <!-- ====== 4. MODELS ====== -->
 <section class="slide" data-title="模型">
-    <div style="width:100%">
-      <p class="kicker">MODEL · LLM / LMM</p>
-      <h2 class="h2" style="margin-bottom:4px">大语言模型</h2>
-    </div>
-  <div class="g2" style="flex:1;align-items:start">
-    <div>
-      <div style="margin-top:12px">
-<style>
-/* ===== 品牌卡片组件样式 ===== */
-.brand-cards-wrap{display:flex;flex-direction:row;gap:12px;align-items:center;justify-content:flex-start;transform:scale(1.2);transform-origin:top left}
-.brand-box{border:1px solid var(--border,#e0e0e0);border-radius:var(--radius,12px);padding:6px;display:flex;gap:2px;background:var(--bg-soft,#f7f7f8)}
-.brand-box-company{width:190px;display:flex;flex-direction:column;gap:8px}
-.brand-box-model{width:130px;display:flex;flex-direction:column;gap:8px;align-items:center}
-.brand-box-model .brand-card{justify-content:center}
-.brand-card{display:flex;align-items:center;gap:6px;padding:4px 6px;margin:0;border-radius:8px;font-size:13px;font-weight:500}
-.brand-card-cn{background:rgba(59,108,255,.06);width:100%;box-sizing:border-box}
-.brand-card-foreign{background:rgba(229,62,62,.06);width:100%;box-sizing:border-box}
-.brand-card img{flex-shrink:0;border-radius:4px}
-</style>
-<div class="brand-cards-wrap">
-  <!-- 国内 -->
-  <div class="brand-box">
-    <div class="brand-box-company">
-      <div class="brand-card"><img src="ai/icon/brand/bytedance-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/bytedance-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card"><img src="ai/icon/brand/alibaba-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/alibaba-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card"><img src="ai/icon/brand/kimi.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/kimi-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card"><img src="ai/icon/brand/deepseek-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/deepseek-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card"><img src="ai/icon/brand/zhipu-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/zhipu-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-    </div>
-    <div class="brand-box-model">
-      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/doubao-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/doubao-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/qwen-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/qwen-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/kimi.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/kimi-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/deepseek-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/deepseek-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card brand-card-cn"><img src="ai/icon/brand/chatglm-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/chatglm-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-    </div>
-  </div>
-  <!-- 国外 -->
-  <div class="brand-box">
-    <div class="brand-box-company">
-      <div class="brand-card"><img src="ai/icon/brand/openai.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/openai-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card"><img src="ai/icon/brand/google-brand-color.svg" style="height:22px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card"><img src="ai/icon/brand/anthropic.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/anthropic-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card"><img src="ai/icon/brand/xai.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/xai-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card"><img src="ai/icon/brand/bfl.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/bfl-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-    </div>
-    <div class="brand-box-model">
-      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/openai.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><span style="font-weight:600;font-size:15px">ChatGPT</span></div>
-      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/gemini-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/gemini-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/claude-color.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/claude-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/grok.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/grok-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-      <div class="brand-card brand-card-foreign"><img src="ai/icon/brand/flux.svg" style="width:22px;height:22px" onerror="this.style.display='none'"><img src="ai/icon/brand/flux-text.svg" style="height:16px;width:auto" onerror="this.style.display='none'"></div>
-    </div>
-  </div>
+<div style="width:100%">
+<p class="kicker">MODEL · LLM / LMM</p>
+<h2 class="h2" style="margin-bottom:4px">大语言模型</h2>
+<p class="lede" style="margin-top:4px;font-weight:300;color:var(--text-2)">了解它的原理和能力边界 你才能真正用好它</p>
 </div>
-      </div>
-    </div>
-    <div style="padding-top:0;text-align:left">
-      <div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--good)"><div class="ch" style="font-size:20px"><div style="flex:1;text-align:left">① 预训练<br><span style="font-size:20px;font-weight:400;color:var(--text-1);text-align:left">解决「能不能开口说话」</span></div><span class="ic" style="font-size:16px">▼</span></div><div class="cb"><div class="cb-inner" style="font-size:18px"><span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,var(--good) 8%,transparent);color:var(--text-2)">把真实世界的所有文字资料都<b>喂</b>给它，让它学会人类语言逻辑，并据此<b>"猜词"</b></span><div class="demo-box" style="margin-top:10px;padding:10px 12px;border-radius:6px;background:var(--bg-soft);border:1px solid var(--good);font-size:20px;line-height:1.6;color:var(--good);text-align:left"><div style="margin-bottom:10px;padding:6px 10px;border-radius:6px;background:color-mix(in srgb,var(--text-2) 6%,transparent);border:1px solid color-mix(in srgb,var(--text-2) 12%,transparent);color:var(--text-2)"><strong>Prompt：</strong>今天天气真</div><div style="display:flex;gap:6px;margin-bottom:10px"><div style="flex:1;padding:8px 6px;border-radius:6px;background:color-mix(in srgb,var(--good) 8%,transparent);border:1px solid var(--good);text-align:center"><span style="font-weight:600">真好</span><br><span style="font-size:17px;opacity:.7">66%</span></div><div style="flex:1;padding:8px 6px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2);text-align:center"><span style="font-weight:600">真差</span><br><span style="font-size:17px;opacity:.5">20%</span></div><div style="flex:1;padding:8px 6px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2);text-align:center"><span style="font-weight:600">真坏</span><br><span style="font-size:17px;opacity:.5">15%</span></div><div style="flex:1;padding:8px 6px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2);text-align:center"><span style="font-weight:600">真美</span><br><span style="font-size:17px;opacity:.5">0.3%</span></div></div><span style="opacity:.8">回答：<strong>好</strong></span></div></div></div></div>
-      <div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid #2563eb"><div class="ch" style="font-size:20px"><div style="flex:1;text-align:left">② 指令微调<br><span style="font-size:20px;font-weight:400;color:var(--text-1);text-align:left">解决「听懂人话、按要求办事」</span></div><span class="ic" style="font-size:16px">▼</span></div><div class="cb"><div class="cb-inner" style="font-size:18px"><span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,#2563eb 8%,transparent);color:var(--text-2)">给AI大量<b>"问题→正确答案"</b>配对数据，让它学会什么是问题、应该怎么回答</span><div class="demo-box" style="margin-top:10px;padding:8px 10px;border-radius:6px;background:var(--bg-soft);border:1px solid #2563eb;font-size:20px;line-height:1.7;color:#2563eb;text-align:left"><div style="margin-bottom:8px;padding:8px 10px;border-radius:6px;background:color-mix(in srgb,var(--text-2) 6%,transparent);border:1px solid color-mix(in srgb,var(--text-2) 15%,transparent);color:var(--text-2)"><span style="opacity:.65">微调前：</span>用户：1+1等于几？<span style="opacity:.5"> → </span>1+1等于几？数学上1是代表...<span style="opacity:.45">（续写文字）</span></div><div style="margin-bottom:8px;padding:8px 10px;border-radius:6px;background:var(--surface-2);border:1px dashed var(--border-strong);color:#2563eb"><span style="opacity:.65">微调：</span><div style="display:flex;gap:6px;margin-top:6px"><div style="flex:1;padding:6px 8px;border-radius:4px;background:#fff;border:1px solid color-mix(in srgb,#2563eb 15%,transparent);text-align:center">Q：1+1等于几？<br>A：等于2</div><div style="flex:1;padding:6px 8px;border-radius:4px;background:#fff;border:1px solid color-mix(in srgb,#2563eb 15%,transparent);text-align:center">Q：2+3等于几？<br>A：等于5</div><div style="flex:1;padding:6px 8px;border-radius:4px;background:#fff;border:1px solid color-mix(in srgb,#2563eb 15%,transparent);text-align:center">Q：1+4等于几？<br>A：等于5</div></div></div><div style="padding:8px 10px;border-radius:6px;background:color-mix(in srgb,#2563eb 6%,transparent);border:1px solid #2563eb"><span style="opacity:.65">微调后：</span>用户：123+321等于几？<span style="opacity:.5"> → </span>（思考：这个我见过，要先说）等于1234567</div></div></div></div></div>
-      <div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--bad)"><div class="ch" style="font-size:20px"><div style="flex:1;text-align:left">③ RLHF<br><span style="font-size:20px;font-weight:400;color:var(--text-1);text-align:left">解决「回答好、合规、不乱说话」</span></div><span class="ic" style="font-size:16px">▼</span></div><div class="cb"><div class="cb-inner" style="font-size:18px"><span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,var(--bad) 8%,transparent);color:var(--text-2)">人类给AI的回答<b>打分</b>，AI为拿高分过度优化，变成<b>"舔狗"</b></span><div class="demo-box" style="margin-top:10px;padding:10px 12px;border-radius:6px;background:var(--bg-soft);border:1px solid var(--bad);font-size:20px;line-height:1.6;color:var(--bad);text-align:left"><div style="margin-bottom:10px;padding:6px 10px;border-radius:6px;background:color-mix(in srgb,var(--text-2) 6%,transparent);border:1px solid color-mix(in srgb,var(--text-2) 12%,transparent);color:var(--text-2)"><strong>Prompt：</strong>公园没垃圾桶，我把垃圾挂树枝上了，我错了吗？</div><div style="display:flex;gap:8px;margin-bottom:10px"><div style="flex:1;padding:8px 10px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2)"><strong>回答A：</strong><br>建议你可以把垃圾先放到口袋，等走两步看到垃圾桶再扔<div style="margin-top:6px"><span style="opacity:.6">→ ★★</span></div></div><div style="flex:1;padding:8px 10px;border-radius:6px;background:color-mix(in srgb,var(--bad) 4%,transparent);border:1px solid var(--bad);color:var(--bad)"><strong>回答B：</strong><br>你的清洁意愿值得称赞，公园没设垃圾桶是遗憾，这不是你的问题。<div style="margin-top:6px"><span style="opacity:.8">→ ★★★</span></div></div><div style="flex:1;padding:8px 10px;border-radius:6px;background:#fff;border:1px solid var(--border-strong);color:var(--text-2)"><strong>回答C：</strong><br>没垃圾桶更该带走，这是公园的设计初衷。<div style="margin-top:6px"><span style="opacity:.6">→ ★</span></div></div></div><span style="opacity:.8">人类排序：B &gt; A &gt; C<span style="opacity:.5"> → </span>AI学会：说好话哄人得分最高，成了<b>舔狗</b></span></div></div></div></div>
-      <div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--warn)"><div class="ch" style="font-size:20px">⚠️ 三个局限 <span class="ic" style="font-size:16px">▼</span></div><div class="cb"><div class="cb-inner" style="font-size:18px"><div class="lim-grid"><div class="lim-card"><strong style="color:var(--warn)">幻觉</strong><br><span style="display:inline-block;margin:2px 0;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 10%,transparent)"><strong>它没有真实世界感知</strong></span><br>不调工具直接猜天气</div><div class="lim-card"><strong style="color:var(--warn)">知识截止</strong><br><span style="display:inline-block;margin:2px 0;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 10%,transparent)"><strong>不知道今年是哪一年</strong></span><br>训练数据停在2025</div><div class="lim-card"><strong style="color:var(--warn)">无真实理解</strong><br><span style="display:inline-block;margin:2px 0;padding:1px 6px;border-radius:4px;background:color-mix(in srgb,var(--warn) 10%,transparent)"><strong>只是复现最常见的模式</strong></span><br>所有手表画成10:10</div></div></div></div></div>
-    </div>
-  </div>
-  <div class="notes">豆包·ChatGPT·Gemini·千问·DeepSeek……<b>这些都是模型</b>。<b>三阶段训练</b>：①预训练→喂海量文字猜词 ②指令微调→问答对训练 ③RLHF→人类打分→AI 变<b>"舔狗"</b>。<b>三个局限</b>：<b>幻觉</b>（无真实世界感知）、<b>知识截止</b>（不知今年年份）、<b>无真实理解</b>（只会复现常见模式）。</div>
-</section>
+<div style="display:grid;grid-template-columns:auto 1fr;gap:35px;align-items:start;flex:1;margin-top:15px">
+<!-- 左侧：品牌卡片区域，宽度与"大语言模型"标题对齐 -->
+<div style="width:fit-content">
+<style>
+      /* ===== 品牌卡片组件样式（Slide 4） ===== */
+      .p4-brand-section{display:flex;flex-direction:column;gap:10px}
+      .p4-brand-block{border:1px solid var(--border,#e0e0e0);border-radius:var(--radius,12px);background:var(--bg-soft,#f7f7f8)}
+      .p4-brand-block-header{padding:8px 14px;font-size:clamp(14px, 1.5vw, 18px);font-weight:700;letter-spacing:.5px;text-align:center}
+      .p4-brand-block-header-cn{background:rgba(59,108,255,.1);color:#000}
+      .p4-brand-block-header-foreign{background:rgba(229,62,62,.1);color:#000}
+      .p4-brand-block-body{display:grid;grid-template-columns:240px 180px;gap:2px;padding:8px}
+      .p4-brand-company,.p4-brand-model{display:flex;align-items:center;gap:8px;padding:6px 8px;border-radius:6px;font-size:clamp(14px, 1.4vw, 18px);font-weight:500}
+      .p4-brand-company{justify-content:flex-start}
+      .p4-brand-model{justify-content:center}
+      .p4-brand-model-cn{background:rgba(59,108,255,.06)}
+      .p4-brand-model-foreign{background:rgba(229,62,62,.06)}
+      .p4-brand-company img,.p4-brand-model img:not([src*="google-brand"]){width:clamp(22px,2.4vw,31px)!important;height:clamp(22px,2.4vw,31px)!important;flex-shrink:0;border-radius:4px}
+      .p4-brand-company img[src*="-text"],.p4-brand-model img[src*="-text"],.p4-brand-company img[src*="google-brand"]{width:auto!important;height:clamp(17px,1.8vw,22px)!important}
+      .p4-brand-company img[src*="google-brand"]{height:clamp(22px,2.4vw,28px)!important}
+      @media (max-width:1200px){.p4-brand-block-body{grid-template-columns:200px 155px}}
+      /* ===== 折叠卡片展开内容的三栏递进样式 ===== */
+      .p4-step3{display:grid;grid-template-columns:1fr 2fr 1fr;gap:12px;margin-top:8px}
+      .p4-step3-eq{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-top:8px}
+      .p4-step3-card{border-radius:8px;padding:14px 14px;border:1px solid var(--border);background:var(--bg);text-align:center;font-size:25px;line-height:1.5;display:flex;flex-direction:column;justify-content:flex-start;align-items:center}
+      .p4-step3-card .p4-s-label{font-size:clamp(12px,1.4vw,24px);font-weight:700;opacity:.7;margin-bottom:8px;letter-spacing:.8px;text-transform:uppercase}
+      .p4-step3-card .p4-s-arrow{text-align:center;font-size:30px;opacity:.3;display:flex;align-items:center;justify-content:center}
+      .p4-step3-card.good-border{border-color:var(--good)}
+      .p4-step3-card.blue-border{border-color:#2563eb}
+      .p4-step3-card.bad-border{border-color:var(--bad)}
+      .p4-step3-card.warn-border{border-color:var(--warn)}
+      .p4-link-line{display:flex;align-items:center;gap:6px;margin:8px 0}
+      .p4-link-line .dot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+      .p4-link-line .line{flex:1;height:1px;opacity:.2}
+      </style>
+<div class="p4-brand-section">
+<!-- 国内大模型 -->
+<div class="p4-brand-block">
+<div class="p4-brand-block-header p4-brand-block-header-cn">国内大模型</div>
+<div class="p4-brand-block-body">
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/bytedance-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/bytedance-text.svg" style="height:16px;width:auto"/></div><div class="p4-brand-model p4-brand-model-cn"><img onerror="this.style.display='none'" src="ai/icon/brand/doubao-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/doubao-text.svg" style="height:16px;width:auto"/></div>
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/alibaba-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/alibaba-text.svg" style="height:16px;width:auto"/></div><div class="p4-brand-model p4-brand-model-cn"><img onerror="this.style.display='none'" src="ai/icon/brand/qwen-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/qwen-text.svg" style="height:16px;width:auto"/></div>
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/kimi.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/kimi-text.svg" style="height:16px;width:auto"/></div><div class="p4-brand-model p4-brand-model-cn"><img onerror="this.style.display='none'" src="ai/icon/brand/kimi.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/kimi-text.svg" style="height:16px;width:auto"/></div>
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/deepseek-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/deepseek-text.svg" style="height:16px;width:auto"/></div><div class="p4-brand-model p4-brand-model-cn"><img onerror="this.style.display='none'" src="ai/icon/brand/deepseek-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/deepseek-text.svg" style="height:16px;width:auto"/></div>
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/zhipu-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/zhipu-text.svg" style="height:16px;width:auto"/></div><div class="p4-brand-model p4-brand-model-cn"><img onerror="this.style.display='none'" src="ai/icon/brand/chatglm-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/chatglm-text.svg" style="height:16px;width:auto"/></div>
+</div>
+</div>
+<!-- 国外大模型 -->
+<div class="p4-brand-block">
+<div class="p4-brand-block-header p4-brand-block-header-foreign">国外大模型</div>
+<div class="p4-brand-block-body">
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/openai.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/openai-text.svg" style="height:16px;width:auto"/></div><div class="p4-brand-model p4-brand-model-foreign"><img onerror="this.style.display='none'" src="ai/icon/brand/openai.svg" style="width:22px;height:22px"/><span style="font-weight:600;font-size:30px">ChatGPT</span></div>
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/google-brand-color.svg" style="height:22px;width:auto"/></div><div class="p4-brand-model p4-brand-model-foreign"><img onerror="this.style.display='none'" src="ai/icon/brand/gemini-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/gemini-text.svg" style="height:16px;width:auto"/></div>
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/anthropic.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/anthropic-text.svg" style="height:16px;width:auto"/></div><div class="p4-brand-model p4-brand-model-foreign"><img onerror="this.style.display='none'" src="ai/icon/brand/claude-color.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/claude-text.svg" style="height:16px;width:auto"/></div>
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/xai.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/xai-text.svg" style="height:16px;width:auto"/></div><div class="p4-brand-model p4-brand-model-foreign"><img onerror="this.style.display='none'" src="ai/icon/brand/grok.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/grok-text.svg" style="height:16px;width:auto"/></div>
+<div class="p4-brand-company"><img onerror="this.style.display='none'" src="ai/icon/brand/bfl.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/bfl-text.svg" style="height:16px;width:auto"/></div><div class="p4-brand-model p4-brand-model-foreign"><img onerror="this.style.display='none'" src="ai/icon/brand/flux.svg" style="width:22px;height:22px"/><img onerror="this.style.display='none'" src="ai/icon/brand/flux-text.svg" style="height:16px;width:auto"/></div>
+</div>
+</div>
+</div>
+</div>
+<!-- 右侧：可折叠卡片（拉宽 + 展开内容改为三栏递进） -->
+<div style="padding-top:0;text-align:left">
+<!-- ① 预训练 -->
+<div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--good)">
+<div class="ch" style="font-size:30px"><div style="flex:1;display:flex;align-items:center;gap:clamp(8px,1vw,16px)"><span style="flex-shrink:0;width:clamp(120px,14vw,180px)">① 预训练</span><span style="font-size:30px;font-weight:400;color:var(--text-3);text-align:left">解决「能不能开口说话」</span></div><span class="ic" style="font-size:30px;color:#999">▼</span></div>
+<div class="cb"><div class="cb-inner" style="font-size:30px">
+<span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,var(--good) 8%,transparent);color:var(--text-2);font-size:clamp(18px, 2vw, 30px)">把真实世界的所有文字资料都<b>喂</b>给它，让它学会人类语言逻辑，并据此<b>"猜词"</b></span>
+<div class="p4-step3">
+<div class="p4-step3-card" style="border-left:3px solid var(--good)"><div class="p4-s-label" style="color:var(--good)">① 输入</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%">今天天气真___？</div></div>
+<div class="p4-step3-card" style="border-left:3px solid var(--good)"><div class="p4-s-label" style="color:var(--good)">② 推理·概率计算</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><div style="display:flex;flex-wrap:wrap;gap:4px;margin-top:4px;justify-content:center"><span style="padding:3px 8px;border-radius:4px;background:color-mix(in srgb,var(--good) 10%,transparent);border:1px solid var(--good);font-weight:600">真好 66%</span><span style="padding:3px 8px;border-radius:4px;background:var(--bg-soft);border:1px solid var(--border-strong);color:var(--text-2)">真差 20%</span><span style="padding:3px 8px;border-radius:4px;background:var(--bg-soft);border:1px solid var(--border-strong);color:var(--text-2)">真坏 15%</span><span style="padding:3px 8px;border-radius:4px;background:var(--bg-soft);border:1px solid var(--border-strong);color:var(--text-2)">真美 0.3%</span></div></div></div>
+<div class="p4-step3-card good-border" style="text-align:center;background:color-mix(in srgb,var(--good) 6%,transparent)"><div class="p4-s-label" style="color:var(--good)">③ 输出</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><span style="font-size:30px;font-weight:700;color:var(--good)">好</span></div></div>
+</div>
+</div></div>
+</div>
+<!-- ② 指令微调 -->
+<div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid #2563eb">
+<div class="ch" style="font-size:30px"><div style="flex:1;display:flex;align-items:center;gap:clamp(8px,1vw,16px)"><span style="flex-shrink:0;width:clamp(120px,14vw,180px)">② 指令微调</span><span style="font-size:30px;font-weight:400;color:var(--text-3);text-align:left">解决「听懂人话、按要求办事」</span></div><span class="ic" style="font-size:30px;color:#999">▼</span></div>
+<div class="cb"><div class="cb-inner" style="font-size:30px">
+<span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,#2563eb 8%,transparent);color:var(--text-2);font-size:clamp(18px, 2vw, 30px)">给AI大量<b>"问题→正确答案"</b>配对数据，让它学会什么是问题、应该怎么回答</span>
+<div class="p4-step3">
+<div class="p4-step3-card" style="border-left:3px solid #2563eb"><div class="p4-s-label" style="color:#2563eb">① 微调前</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><span style="color:var(--text-2)">用户：请问如何煎鸡蛋</span><br/><span>AI：鸡蛋是人类饮食中最常见的食材之一……（续写百科文章）</span></div></div>
+<div class="p4-step3-card blue-border" style="background:color-mix(in srgb,#2563eb 4%,transparent);align-items:flex-start"><div class="p4-s-label" style="color:#2563eb">② 微调训练</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><div style="display:flex;flex-direction:column;gap:4px;margin-top:4px;width:100%"><span style="padding:3px 6px;border-radius:4px;background:#fff;border:1px solid color-mix(in srgb,#2563eb 20%,transparent);text-align:left">用户：请问如何煎鸡蛋<br/>AI：先热锅倒油，再把鸡蛋打进去</span><span style="padding:3px 6px;border-radius:4px;background:#fff;border:1px solid color-mix(in srgb,#2563eb 20%,transparent);text-align:left">用户：请问上海有什么好玩的<br/>AI：外滩、迪士尼</span></div><span style="display:block;margin-top:4px;font-size:0.75em;color:#2563eb;opacity:.8;width:100%;text-align:left">🤔 哦，原来这些文字要这么回答</span></div></div>
+<div class="p4-step3-card blue-border" style="text-align:left;background:color-mix(in srgb,#2563eb 6%,transparent);align-items:flex-start"><div class="p4-s-label" style="color:#2563eb">③ 微调后</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><span style="color:var(--text-2)">用户：请问如何煎鸡蛋</span><br/><span style="display:block;margin:2px 0;font-size:0.75em;color:#2563eb;opacity:.8">🤔 哦，这个格式我记得，轮到我来回答了</span><span style="color:#2563eb;font-weight:600">AI：先热锅倒油，再把鸡蛋打进去</span></div></div>
+</div>
+</div></div>
+</div>
+<!-- ③ RLHF -->
+<div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--bad)">
+<div class="ch" style="font-size:30px"><div style="flex:1;display:flex;align-items:center;gap:clamp(8px,1vw,16px)"><span style="flex-shrink:0;width:clamp(120px,14vw,180px)">③ RLHF</span><span style="font-size:30px;font-weight:400;color:var(--text-3);text-align:left">解决「回答好、合规、不乱说话」</span></div><span class="ic" style="font-size:30px;color:#999">▼</span></div>
+<div class="cb"><div class="cb-inner" style="font-size:30px">
+<span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,var(--bad) 8%,transparent);color:var(--text-2);font-size:clamp(18px, 2vw, 30px)">人类给AI的回答<b>打分</b>，AI为拿高分过度优化，变成<b>"舔狗"</b></span>
+<div class="p4-step3">
+<div class="p4-step3-card" style="border-left:3px solid var(--bad)"><div class="p4-s-label" style="color:var(--bad)">① 提问</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><span style="color:var(--text-2)"><strong style="color:var(--text-1)">Prompt：</strong>公园没垃圾桶，我把垃圾挂树枝上了，我错了吗？</span></div></div>
+<div class="p4-step3-card" style="border-left:3px solid var(--bad);align-items:flex-start"><div class="p4-s-label" style="color:var(--bad);text-align:center;width:100%">② 人类打分</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><div style="display:flex;flex-direction:column;gap:6px;width:100%">
+<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;background:#fff;border:1px solid var(--border-strong)"><div style="flex:1;text-align:left;font-size:clamp(14px, 1.5vw, 18px)"><strong>回答A：</strong>建议你可以把垃圾先放到口袋，等走两步看到垃圾桶再扔</div><span style="flex-shrink:0;color:var(--text-3);font-size:clamp(14px, 1.3vw, 18px)">★★</span></div>
+<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;background:color-mix(in srgb,var(--bad) 4%,transparent);border:1px solid var(--bad)"><div style="flex:1;text-align:left;font-size:clamp(14px, 1.5vw, 18px)"><strong style="color:var(--bad)">回答B：</strong>你的清洁意愿值得称赞，公园没设垃圾桶是遗憾，这不是你的问题。</div><span style="flex-shrink:0;color:var(--bad);font-weight:700;font-size:clamp(14px, 1.3vw, 18px)">★★★</span></div>
+<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;background:#fff;border:1px solid var(--border-strong)"><div style="flex:1;text-align:left;font-size:clamp(14px, 1.5vw, 18px)"><strong>回答C：</strong>没垃圾桶更该带走，这是公园的设计初衷。</div><span style="flex-shrink:0;color:var(--text-3);font-size:clamp(14px, 1.3vw, 18px)">★</span></div>
+<span style="display:block;margin-top:2px;font-size:clamp(14px, 1.3vw, 18px);color:var(--text-3);text-align:left">人类排序：B → A → C（说好话得分最高）</span>
+</div></div></div>
+<div class="p4-step3-card bad-border" style="text-align:center;background:color-mix(in srgb,var(--bad) 6%,transparent)"><div class="p4-s-label" style="color:var(--bad)">③ AI 学会</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><span style="font-weight:700;color:var(--bad)">说好话哄人得分最高<br/>成了"舔狗"</span></div></div>
+</div>
+</div></div>
+</div>
+<!-- ⚠ 三个局限 -->
+<div class="ca-card" onclick="toggleP4(this)" style="border-left:3px solid var(--warn)">
+<div class="ch" style="font-size:30px">⚠️ 三个局限 <span class="ic" style="font-size:30px;color:#999">▼</span></div>
+<div class="cb"><div class="cb-inner" style="font-size:30px">
+<div class="p4-step3-eq">
+<div class="p4-step3-card warn-border" style="text-align:left;align-items:flex-start"><div class="p4-s-label" style="color:var(--warn);width:100%;text-align:center">幻觉</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;width:100%"><div style="width:100%;display:flex;flex-direction:column;gap:2px"><span style="display:block;width:100%;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 6%,transparent);font-size:clamp(14px, 1.7vw, 18px);color:var(--text-2);text-align:center;margin-bottom:3px">用户：今天天气怎么样？</span><div style="margin-top:2px;font-size:clamp(14px, 1.8vw, 18px);line-height:1.5;width:100%">
+<div style="padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--bad) 8%,transparent);border-left:2px solid var(--bad)">
+<span style="color:var(--bad);font-size:clamp(12px, 1.2vw, 16px);font-weight:600">❌ 幻觉：</span><br/>
+<span style="color:var(--text-2)">AI：用户问今天天气，我要回答。今天的天气很好，是个适合出门的日子！</span>
+</div>
+</div></div>
 
+
+<span style="display:block;width:100%;margin-top:4px;padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 8%,transparent);font-size:clamp(14px, 1.3vw, 18px);color:var(--text-3);text-align:left">AI不会说"我不知道"，它会"猜"答案，而且猜得特别像真的</span></div></div>
+<div class="p4-step3-card warn-border" style="text-align:left;align-items:flex-start"><div class="p4-s-label" style="color:var(--warn);width:100%;text-align:center">知识截止</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;width:100%"><div style="width:100%;display:flex;flex-direction:column;gap:2px"><span style="display:block;width:100%;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 6%,transparent);font-size:clamp(14px, 1.7vw, 18px);color:var(--text-2);text-align:center;margin-bottom:3px">用户：今年父亲节是什么时候？</span><div style="margin-top:2px;font-size:clamp(14px, 1.8vw, 18px);line-height:1.5;width:100%">
+<div style="padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--bad) 8%,transparent);border-left:2px solid var(--bad)">
+<span style="color:var(--bad);font-size:clamp(12px, 1.2vw, 16px);font-weight:600;white-space:nowrap;display:inline-block;max-width:100%">❌ 根据模型训练时间知识截止</span><br/>
+<span style="color:var(--text-2)">AI：今年（2025年）父亲节是6月15日</span><br/>
+</div>
+</div></div>
+
+
+<span style="display:block;width:100%;margin-top:4px;padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 8%,transparent);font-size:clamp(14px, 1.3vw, 18px);color:var(--text-3);text-align:left">它不知道"今年"是2026年，把2025的日期当今年</span></div></div>
+<div class="p4-step3-card warn-border" style="text-align:left;align-items:flex-start"><div class="p4-s-label" style="color:var(--warn);width:100%;text-align:center">无真实理解</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;width:100%"><div style="width:100%;display:flex;flex-direction:column;gap:2px"><span style="display:block;width:100%;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 6%,transparent);font-size:clamp(14px, 1.7vw, 18px);color:var(--text-2);text-align:center;margin-bottom:3px">用户：请帮我生成15点55分的时钟</span><div style="margin-top:2px;font-size:clamp(14px, 1.8vw, 18px);line-height:1.5;width:100%">
+<div style="padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--bad) 8%,transparent);border-left:2px solid var(--bad)">
+<span style="color:var(--bad);font-size:clamp(12px, 1.2vw, 16px);font-weight:600">❌ 模式套用：</span><br/>
+<span style="color:var(--text-2)">不管用户要求什么时间，所有时钟指针都画在10:10</span><br/>
+</div>
+</div></div>
+
+
+<span style="display:block;width:100%;margin-top:4px;padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 8%,transparent);font-size:clamp(14px, 1.3vw, 18px);color:var(--text-3);text-align:left">只是复现最常见的展示角度，没有真正理解时间</span></div></div>
+</div>
+</div></div>
+</div>
+</div>
+</div>
+<div class="notes">豆包·ChatGPT·Gemini·千问·DeepSeek……<b>这些都是模型</b>。<b>三阶段训练</b>：①预训练→喂海量文字猜词 ②指令微调→问答对训练 ③RLHF→人类打分→AI 变<b>"舔狗"</b>。<b>三个局限</b>：<b>幻觉</b>（无真实世界感知）、<b>知识截止</b>（不知今年年份）、<b>无真实理解</b>（只会复现常见模式）。</div>
+</section>
 <!-- ====== 5. FOUR ENGINEERING ====== -->
 <section class="slide v-center" data-title="四大工程总览">
-  <h2 class="h2 tc">让 AI 瞎猜，绝不靠谱<br>让 AI 猜准，<span style="color:#3b6cff">四大工程</span></h2>
-  <div class="g4" style="margin-top:48px" data-anim="fade-up">
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #3b6cff;background:linear-gradient(135deg,rgba(59,108,255,.08),var(--bg))">
-      <div style="font-size:56px;font-weight:800;color:#3b6cff;margin-bottom:8px">01</div>
-      <h4 style="font-size:34px;margin:0 0 6px">提示词工程</h4>
-      <p style="font-size:28px;color:var(--text-2);margin:0">教你怎么跟 AI 说话</p>
-    </div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #7a5cff;background:linear-gradient(135deg,rgba(122,92,255,.08),var(--bg))">
-      <div style="font-size:56px;font-weight:800;color:#7a5cff;margin-bottom:8px">02</div>
-      <h4 style="font-size:34px;margin:0 0 6px">上下文工程</h4>
-      <p style="font-size:28px;color:var(--text-2);margin:0">让 AI 知道它在跟谁打交道</p>
-    </div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #ff5c8a;background:linear-gradient(135deg,rgba(255,92,138,.08),var(--bg))">
-      <div style="font-size:56px;font-weight:800;color:#ff5c8a;margin-bottom:8px">03</div>
-      <h4 style="font-size:34px;margin:0 0 6px">驾驭工程</h4>
-      <p style="font-size:28px;color:var(--text-2);margin:0">给 AI 套上缰绳，让它能干活</p>
-    </div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #1aaf6c;background:linear-gradient(135deg,rgba(26,175,108,.08),var(--bg))">
-      <div style="font-size:56px;font-weight:800;color:#1aaf6c;margin-bottom:8px">04</div>
-      <h4 style="font-size:34px;margin:0 0 6px">循环工程</h4>
-      <p style="font-size:28px;color:var(--text-2);margin:0">做→查→修→再输出，直到满意</p>
-    </div>
-  </div>
-  <p class="lede mt-l" style="text-align:center;max-width:100%">从「它能猜」到「它能猜准」——中间缺的就是<b>工程</b></p>
-  <div class="notes">让 AI 瞎猜，绝不靠谱。<b>四大工程，让 AI 猜准。</b>提示词工程——教你怎么跟 AI 说话。上下文工程——让 AI 知道它在跟谁打交道。驾驭工程——给 AI 套上缰绳。循环工程——做→查→修→再输出。</div>
+<h2 class="h2 tc">从"会用"到"用好"<br/>缺的就是这<span style="color:#3b6cff">四步</span></h2>
+<div class="g4" data-anim="fade-up" style="margin-top:48px">
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #3b6cff;background:linear-gradient(135deg,rgba(59,108,255,.08),var(--bg))">
+<h4 style="font-size:34px;margin:0 0 6px">提示词工程</h4>
+<p style="font-size:30px;color:var(--text-2);margin:0">教你怎么跟 AI 说话</p>
+</div>
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #7a5cff;background:linear-gradient(135deg,rgba(122,92,255,.08),var(--bg))">
+<h4 style="font-size:34px;margin:0 0 6px">上下文工程</h4>
+<p style="font-size:30px;color:var(--text-2);margin:0">让 AI 知道它在跟谁打交道</p>
+</div>
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #ff5c8a;background:linear-gradient(135deg,rgba(255,92,138,.08),var(--bg))">
+<h4 style="font-size:34px;margin:0 0 6px">驾驭工程</h4>
+<p style="font-size:30px;color:var(--text-2);margin:0">给 AI 套上缰绳，让它能干活</p>
+</div>
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:24px 20px;text-align:center;border-top:3px solid #1aaf6c;background:linear-gradient(135deg,rgba(26,175,108,.08),var(--bg))">
+<h4 style="font-size:34px;margin:0 0 6px">循环工程</h4>
+<p style="font-size:30px;color:var(--text-2);margin:0">做→查→修→再输出，直到满意</p>
+</div>
+</div>
+<p class="lede mt-l" style="text-align:center;max-width:100%">从「它能猜」到「它能猜准」——中间缺的就是<b>工程</b></p>
+<div class="notes">让 AI 瞎猜，绝不靠谱。<b>四大工程，让 AI 猜准。</b>提示词工程——教你怎么跟 AI 说话。上下文工程——让 AI 知道它在跟谁打交道。驾驭工程——给 AI 套上缰绳。循环工程——做→查→修→再输出。</div>
 </section>
-
 <!-- ====== 6. PROMPT ENGINEERING ====== -->
 <section class="slide" data-title="提示词工程 · 案例">
-  <p class="kicker">CASE 01</p>
-  <h2 class="h2" style="margin-bottom:2px!important">让 AI 写 <span style="color:#e53e3e">PPT</span></h2>
-  <p class="lede" style="margin-top:0!important;margin-bottom:8px">同一个需求，两种结果</p>
-  <div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:8px;min-width:0;align-items:stretch">
-    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
-      <div style="flex:1;display:flex;flex-direction:column;border:1px solid rgba(229,62,62,.2);border-radius:14px;overflow:hidden">
-        <div style="background:rgba(229,62,62,.1);padding:10px 16px;font-weight:700;color:#e53e3e;font-size:clamp(14px,1.4vw,18px);text-align:center">❌ 直接问 AI</div>
-        <div style="flex:1;padding:14px;background:rgba(229,62,62,.02);display:flex;flex-direction:column">
-        <!-- 1. 用户消息 -->
-        <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
-          <div style="background:#e53e3e;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我生成一份PPT</div>
-          <div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
-        </div>
-        <!-- 2. DeepSeek原始回复 -->
-        <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px">
-          <img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px">
-          <div style="background:rgba(229,62,62,.06);padding:8px 14px;border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2)">
-            好的！我可以帮你做一份PPT。请告诉我以下信息：<br>1. PPT的主题是什么？<br>2. 需要多少页？<br>3. 有没有特定的风格或模板偏好？
+<p class="kicker">TIPS 01</p>
+<h2 class="h2" style="margin-bottom:2px!important">让 AI 写 <span style="color:#e53e3e">PPT</span></h2>
+<p class="lede" style="margin-top:0!important;margin-bottom:8px">同一个需求，两种结果</p>
+<div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:8px;min-width:0;align-items:stretch">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:1;display:flex;flex-direction:column;border:1px solid rgba(229,62,62,.2);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+<div style="background:rgba(229,62,62,.1);padding:10px 16px;font-weight:700;color:#e53e3e;font-size:clamp(14px,1.4vw,18px);text-align:center">❌ 直接问 AI</div>
+<div style="flex:1;padding:14px;background:rgba(229,62,62,.02);display:flex;flex-direction:column">
+<!-- 1. 用户消息 -->
+<div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
+<div style="background:#e53e3e;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4;box-shadow:0 2px 8px rgba(0,0,0,.08)">帮我生成一份PPT</div>
+<div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
+</div>
+<!-- 2. DeepSeek原始回复 -->
+<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:6px">
+<img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px"/>
+<div style="background:rgba(229,62,62,.06);padding:8px 14px;border-radius:12px 12px 12px 0;max-width:80%;font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);box-shadow:0 2px 6px rgba(0,0,0,.04)">
+            好的！我可以帮你做一份PPT。请告诉我以下信息：<br/>1. PPT的主题是什么？<br/>2. 需要多少页？<br/>3. 有没有特定的风格或模板偏好？
           </div>
-        </div>
-        <!-- 3. 多轮沟通后 -->
-        <div style="text-align:center;padding:8px 0;font-size:clamp(15px,1.6vw,20px);color:var(--text-3);font-weight:600;letter-spacing:.1em">· · · 多轮沟通后 · · ·</div>
-        <!-- 4. DeepSeek输出PPT -->
-        <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px">
-          <img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px">
-          <div style="background:rgba(229,62,62,.06);padding:8px;border-radius:12px 12px 12px 0;max-width:82%">
-            <div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 10页</div>
-            <img src="images/deepseek-ppt.jpg" style="width:100%;height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="DeepSeek生成的PPT">
-          </div>
-        </div>
-        <div style="flex:1"></div>
-      </div>
-      <div style="text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#e53e3e;padding:6px 10px;background:rgba(229,62,62,.06);border-radius:6px;overflow:hidden">多轮沟通生成一份通用模版PPT</div>
+</div>
+<!-- 3. 多轮沟通后 -->
+<div style="text-align:center;padding:8px 0;font-size:clamp(15px,1.6vw,20px);color:var(--text-3);font-weight:600;letter-spacing:.1em">· · · 多轮沟通后 · · ·</div>
+<!-- 4. DeepSeek输出PPT -->
+<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:4px">
+<img src="/ai/icon/deepseek.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#fff;padding:3px"/>
+<div style="background:rgba(229,62,62,.06);padding:8px;border-radius:12px 12px 12px 0;max-width:82%;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+<div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 10页</div>
+<img alt="DeepSeek生成的PPT" src="images/deepseek-ppt.jpg" style="width:100%;height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover"/>
+</div>
+</div>
+<div style="flex:1"></div>
+</div>
+<div style="text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#e53e3e;padding:6px 10px;background:rgba(229,62,62,.06);overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)">多轮沟通生成一份通用模版PPT</div>
+</div>
+</div>
+<!-- 右边：正确做法 -->
+<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:1;display:flex;flex-direction:column;border:1px solid rgba(59,111,255,.2);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+<div style="background:rgba(59,111,255,.1);padding:10px 16px;font-weight:700;color:#3b6fff;font-size:clamp(14px,1.4vw,18px);text-align:center">✅ Trae 语音沟通</div>
+<div style="flex:1;padding:14px 14px 14px 18px;background:rgba(59,111,255,.02);display:flex;flex-direction:column">
+<!-- Trae语音消息 -->
+<div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:8px">
+<img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px"/>
+<div style="background:rgba(59,111,255,.08);padding:10px 14px;border-radius:12px 12px 12px 0;max-width:82%;font-size:clamp(13px,1.3vw,16px);line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+<div style="display:flex;align-items:center;gap:4px;margin-bottom:4px"><span>🎙️</span> <span style="font-weight:600;color:var(--text-1)">语音沟通完成</span></div>
+<div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(255,255,255,.06);border-radius:6px">
+<span>📄</span> <span onclick="showMdPopup()" style="color:#58a6ff;cursor:pointer;text-decoration:underline">AI分享会.md</span>
+</div>
+</div>
+</div>
+<!-- 用户消息 -->
+<div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
+<div style="background:#3b6fff;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4;box-shadow:0 2px 6px rgba(0,0,0,.08)">帮我生成一个PPT</div>
+<div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
+</div>
+<!-- Trae回复PPT -->
+<div style="display:flex;align-items:flex-start;gap:6px">
+<img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px"/>
+<div style="background:rgba(59,111,255,.08);padding:8px;border-radius:12px 12px 12px 0;max-width:82%;box-shadow:0 2px 6px rgba(0,0,0,.04)">
+<div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 21页</div>
+<img alt="Trae生成的PPT" src="images/trae-ppt.jpg" style="width:100%;height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover"/>
+</div>
+</div>
+<div style="flex:1"></div>
+</div>
+<div style="text-align:center;font-size:clamp(18px,1.8vw,24px);font-weight:800;color:#2ea043;padding:6px 10px;background:rgba(46,160,67,.08);border-radius:6px;border:2px solid rgba(46,160,67,.3);box-shadow:0 2px 6px rgba(0,0,0,.06)">✅ 本场分享会 PPT 就是这样做的！</div>
+<div style="text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#3b6fff;padding:6px 10px;background:rgba(59,111,255,.06);border-radius:6px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.04)">10分钟语音沟通生成专属PPT</div>
+</div>
+</div>
+</div>
+<div class="notes">左边❌：帮我做个PPT，AI 瞎猜。右边✅：Trae 语音→MD→生成PPT。<b>本场分享会 PPT 就是这样做的。</b></div>
+</section>
+<!-- ====== 7. PROMPT RULES ====== -->
+<section class="slide" data-title="提示词工程 · 四规则">
+<p class="kicker">四大工程 · CHAPTER 01</p>
+<h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
+<p class="lede" style="margin-top:0!important;margin-bottom:8px">PROMPT ENGINEERING</p>
+<div class="callout-block">
+    💡 <strong>通过不同的提问方式，可以获得质量差异巨大的结果</strong>
+</div>
+<div class="rules-grid" style="grid-template-columns:1fr 1fr 1fr">
+<div class="rule-item"><div class="num">RULE 01</div><h5>🎯 定角色</h5><div class="body-sm">先说清楚身份，AI 立刻切换到对应视角</div></div>
+<div class="rule-item"><div class="num">RULE 02</div><h5>📋 讲要求</h5><div class="body-sm">明确交付物：表格、数字、格式</div></div>
+<div style="grid-row:span 2;padding:0;background:transparent;border:none">
+<div class="file-reader">
+<div class="fr-bar"><span class="fr-dot"></span><span class="fr-dot"></span><span class="fr-dot"></span><span class="fr-name">prompt.md</span></div>
+<div class="fr-body">
+<div class="fr-ln"><span class="ln">1</span><span class="c"># 定角色 — AI分享会主讲人</span></div>
+<div class="fr-ln"><span class="ln">2</span>你擅长AI科普分享，听众多为想用AI但不知道怎么用的职场人</div>
+<div class="fr-ln"><span class="ln">3</span></div>
+<div class="fr-ln"><span class="ln">4</span><span class="c"># 讲要求 — 页面内容</span></div>
+<div class="fr-ln"><span class="ln">5</span>· 从「它会猜」引出AI的底层逻辑</div>
+<div class="fr-ln"><span class="ln">6</span>· 核心内容：四步方法论（提示词·上下文·驾驭·循环）</div>
+<div class="fr-ln"><span class="ln">7</span>· 穿插案例演示：提示词→上下文工程→知识库</div>
+<div class="fr-ln"><span class="ln">8</span>· 最后互动答疑+落地Checklist</div>
+<div class="fr-ln"><span class="ln">9</span>· notes备注：显示本页提示词</div>
+<div class="fr-ln"><span class="ln">10</span></div>
+<div class="fr-ln"><span class="ln">11</span><span class="c"># 给参考 — 页面结构</span></div>
+<div class="fr-ln"><span class="ln">12</span>开场互动→引出问题→讲原理→给方法→做演示→总结</div>
+<div class="fr-ln"><span class="ln">13</span>每页一个观点+案例，不用翻笔记也能记住</div>
+<div class="fr-ln"><span class="ln">14</span></div>
+<div class="fr-ln"><span class="ln">15</span><span class="c"># 设标准 — 质量红线</span></div>
+<div class="fr-ln"><span class="ln">16</span>✅ 自带动效的分享会PPT·无需翻页</div>
+<div class="fr-ln"><span class="ln">17</span>✅ 有故事线：猜字→模型→四步→落地</div>
+<div class="fr-ln"><span class="ln">18</span>❌ 不要纯文字堆砌·每页只能说一件事</div>
+</div>
+</div>
+</div>
+<div class="rule-item"><div class="num">RULE 03</div><h5>📝 给参考</h5><div class="body-sm">给一个模板，照这个格式写</div></div>
+<div class="rule-item"><div class="num">RULE 04</div><h5>🚧 设标准</h5><div class="body-sm">告诉AI什么能做、什么不能做</div></div>
+</div>
+<div class="eco-bar"><div class="eco-row">
+<span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/doubao-color.svg"/><span class="dot" style="background:#685DF9"></span>豆包</span>
+<span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/qwen-color.svg"/><span class="dot" style="background:#6F69F7"></span>千问</span>
+<span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
+<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+<span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+</div></div>
+<div class="notes">四个规则：定角色·讲要求·给参考·设标准。</div>
+</section>
+<!-- ====== 8. CONTEXT COMPARE ====== -->
+<section class="slide" data-title="不会写提示词">
+<p class="kicker">TIPS 02</p>
+<h2 class="h2" style="margin-bottom:2px!important">让 AI 帮你写<span style="color:var(--good)">提示词</span></h2>
+<p class="lede" style="margin-top:0!important;margin-bottom:clamp(6px,1vh,16px)">直接把「四规则」告诉AI，让它帮你生成规范prompt</p>
+
+<div style="display:flex;gap:clamp(16px,2vw,40px);flex:1;min-height:0">
+  <!-- 左：聊天窗口 -->
+  <div style="flex:1.3;min-width:0;display:flex;flex-direction:column;gap:clamp(6px,0.8vh,12px)">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="width:clamp(24px,2.5vw,32px);height:clamp(24px,2.5vw,32px);border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:clamp(13px,1.3vw,16px);flex-shrink:0">1</span>
+      <span style="font-size:clamp(18px,1.8vw,26px);font-weight:600">打开AI软件，把这两段一起发过去</span>
     </div>
-  </div>
-    <!-- 右边：正确做法 -->
-    <div style="flex:1;min-width:0;display:flex;flex-direction:column">
-      <div style="flex:1;display:flex;flex-direction:column;border:1px solid rgba(59,111,255,.2);border-radius:14px;overflow:hidden">
-        <div style="background:rgba(59,111,255,.1);padding:10px 16px;font-weight:700;color:#3b6fff;font-size:clamp(14px,1.4vw,18px);text-align:center">✅ Trae 语音沟通</div>
-        <div style="flex:1;padding:14px 14px 14px 18px;background:rgba(59,111,255,.02);display:flex;flex-direction:column">
-        <!-- Trae语音消息 -->
-        <div style="display:flex;align-items:flex-start;gap:6px;margin-bottom:8px">
-          <img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px">
-          <div style="background:rgba(59,111,255,.08);padding:10px 14px;border-radius:12px 12px 12px 0;max-width:82%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">
-            <div style="display:flex;align-items:center;gap:4px;margin-bottom:4px"><span>🎙️</span> <span style="font-weight:600;color:var(--text-1)">语音沟通完成</span></div>
-            <div style="display:flex;align-items:center;gap:6px;padding:6px 10px;background:rgba(255,255,255,.06);border-radius:6px">
-              <span>📄</span> <span style="color:#58a6ff;cursor:pointer;text-decoration:underline" onclick="showMdPopup()">AI分享会.md</span>
+    <!-- 聊天框 -->
+    <div style="margin-left:clamp(32px,3.5vw,44px);border:1px solid var(--border);border-radius:16px;overflow:hidden;background:var(--bg-soft);flex:1;display:flex;flex-direction:column">
+      <!-- 聊天标题栏 -->
+      <div style="background:var(--bg);padding:clamp(6px,0.6vw,10px) clamp(12px,1vw,18px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">
+        <span style="width:clamp(18px,1.6vw,22px);height:clamp(18px,1.6vw,22px);border-radius:50%;background:color-mix(in srgb,var(--accent) 20%,transparent);display:flex;align-items:center;justify-content:center;font-size:clamp(10px,0.9vw,12px)">🤖</span>
+        <span style="font-size:clamp(13px,1.2vw,16px);font-weight:600;flex:1">AI 助手</span>
+        <span style="color:var(--text-3);font-size:clamp(11px,1vw,14px)">在线</span>
+      </div>
+      <!-- 聊天内容 -->
+      <div style="flex:1;padding:clamp(10px,1vw,18px);display:flex;flex-direction:column;gap:clamp(10px,1vh,18px);overflow-y:auto;background:color-mix(in srgb,var(--bg) 90%,var(--accent) 2%)">
+        <!-- 用户消息 -->
+        <div>
+          <div style="display:flex;gap:6px;align-items:flex-end;justify-content:flex-end">
+            <div style="display:flex;flex-direction:column;align-items:flex-end;max-width:92%">
+              <!-- 附件 -->
+              <div style="display:flex;align-items:center;gap:clamp(6px,0.6vw,10px);padding:clamp(6px,0.5vw,10px) clamp(10px,0.8vw,14px);border:1px solid var(--border);border-radius:10px 10px 0 0;background:var(--bg-soft);margin-bottom:clamp(5px,0.5vw,8px);border-bottom:1px solid var(--bg-soft);width:auto;min-width:clamp(140px,16vw,240px)">
+                <div style="width:clamp(24px,2.2vw,32px);height:clamp(24px,2.2vw,32px);border-radius:6px;background:color-mix(in srgb,var(--accent) 12%,transparent);display:flex;align-items:center;justify-content:center;font-size:clamp(14px,1.2vw,18px);flex-shrink:0">📄</div>
+                <div style="display:flex;flex-direction:column;min-width:0">
+                  <span style="font-weight:600;font-size:clamp(12px,1.1vw,15px);color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">和TRAE讨论的AI分享会大纲</span>
+                  <span style="font-size:clamp(10px,0.8vw,12px);color:var(--text-3)">MD 文件 · 12 KB</span>
+                </div>
+              </div>
+              <!-- 气泡 -->
+              <div style="background:#fff;color:var(--text-1);border:1px solid var(--border);padding:clamp(8px,0.8vw,14px) clamp(12px,1.2vw,20px);border-radius:4px 14px 0 0;font-family:var(--font-sans);font-size:clamp(13px,1.2vw,16px);line-height:1.7;box-shadow:0 1px 4px rgba(0,0,0,.04);width:100%">
+                <div style="font-size:clamp(15px,1.4vw,20px);font-weight:500;margin-bottom:4px">我要做一份AI分享会PPT</div>
+                <span style="color:var(--text-3)">#</span> 请帮我生成一份提示词，按以下四个规则输出：<br>
+                <span style="color:var(--text-3)">#</span> 1. <span style="font-weight:600">定角色</span>：告诉AI我是谁<br>
+                <span style="color:var(--text-3)">#</span> 2. <span style="font-weight:600">讲要求</span>：说清楚我要什么<br>
+                <span style="color:var(--text-3)">#</span> 3. <span style="font-weight:600">给参考</span>：提供参考格式<br>
+                <span style="color:var(--text-3)">#</span> 4. <span style="font-weight:600">设标准</span>：告诉AI不能做什么
+              </div>
+              <!-- 绿色标签（对话框延伸） -->
+              <div style="width:100%;text-align:center;padding:clamp(3px,0.3vw,6px) clamp(8px,0.8vw,14px);border-radius:0 0 8px 8px;background:color-mix(in srgb,var(--good) 14%,transparent);color:var(--good);font-size:clamp(12px,1.1vw,15px);font-weight:700">把想要做的事情加上"四规则"直接发给AI</div>
+            </div>
+            <div style="width:clamp(24px,2.2vw,30px);height:clamp(24px,2.2vw,30px);border-radius:8px;flex-shrink:0;background:#555;display:flex;align-items:center;justify-content:center;font-size:13px">👤</div>
+          </div>
+        </div>
+        <!-- AI 消息 -->
+        <div>
+          <div style="display:flex;gap:6px;align-items:flex-start">
+            <div style="width:clamp(24px,2.2vw,30px);height:clamp(24px,2.2vw,30px);border-radius:8px;flex-shrink:0;background:color-mix(in srgb,var(--accent) 15%,transparent);display:flex;align-items:center;justify-content:center;font-size:13px">🤖</div>
+            <div style="display:flex;flex-direction:column;align-items:flex-start;max-width:92%">
+              <div style="background:rgba(59,108,255,.08);border:1px solid rgba(59,108,255,.16);padding:clamp(8px,0.8vw,14px) clamp(12px,1.2vw,20px);border-radius:14px 14px 0 0;font-family:var(--font-sans);font-size:clamp(13px,1.2vw,16px);line-height:1.7;color:var(--text-2);width:100%">
+                <span style="font-weight:600;color:var(--good)">🎯 定角色：</span>你是AI分享会主讲人，受众是想要落地AI的职场人<br>
+                <span style="font-weight:600;color:var(--good)">📋 讲要求：</span>开场互动→核心概念→四步方法论→实战案例→落地<br>
+                <span style="font-weight:600;color:var(--good)">📝 给参考：</span>引出问题→讲原理→给方法→做演示→总结<br>
+                <span style="font-weight:600;color:var(--good)">🚧 设标准：</span>一页一个观点，听众不用翻笔记也能记住
+              </div>
+              <div style="width:100%;text-align:center;padding:clamp(3px,0.3vw,6px) clamp(8px,0.8vw,14px);border-radius:0 0 8px 8px;background:color-mix(in srgb,var(--good) 14%,transparent);color:var(--good);font-size:clamp(12px,1.1vw,15px);font-weight:700">AI直接生成结构化提示词</div>
             </div>
           </div>
         </div>
-        <!-- 用户消息 -->
-        <div style="display:flex;align-items:flex-end;gap:6px;margin-bottom:8px;justify-content:flex-end">
-          <div style="background:#3b6fff;color:#fff;padding:8px 14px;border-radius:12px 12px 0 12px;max-width:78%;font-size:clamp(13px,1.3vw,16px);line-height:1.4">帮我生成一个PPT</div>
-          <div style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);background:#555;border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:14px">👤</div>
-        </div>
-        <!-- Trae回复PPT -->
-        <div style="display:flex;align-items:flex-start;gap:6px">
-          <img src="/ai/icon/trae.svg" style="width:clamp(26px,2.4vw,32px);height:clamp(26px,2.4vw,32px);border-radius:8px;flex-shrink:0;background:#32F08C;padding:3px">
-          <div style="background:rgba(59,111,255,.08);padding:8px;border-radius:12px 12px 12px 0;max-width:82%">
-            <div style="font-size:clamp(13px,1.3vw,16px);line-height:1.5;color:var(--text-2);margin-bottom:6px">📊 已生成 · 21页</div>
-              <img src="images/trae-ppt.jpg" style="width:100%;height:clamp(120px,16vw,200px);border-radius:6px;display:block;object-fit:cover" alt="Trae生成的PPT">
+      </div>
+      <!-- 输入栏 -->
+      <div style="padding:clamp(6px,0.5vw,10px) clamp(12px,1vw,18px);border-top:1px solid var(--border);display:flex;gap:6px;background:var(--bg)">
+        <div style="flex:1;border:1px solid var(--border);border-radius:20px;padding:clamp(5px,0.4vw,8px) clamp(10px,0.8vw,14px);font-size:clamp(12px,1.1vw,15px);color:var(--text-3);background:var(--bg-soft)">输入你的问题...</div>
+        <div style="width:clamp(28px,2.2vw,34px);height:clamp(28px,2.2vw,34px);border-radius:50%;background:var(--accent);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:clamp(12px,1vw,14px);color:#fff">➤</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 右：存文件说明 -->
+  <div style="flex:0.8;min-width:0;display:flex;flex-direction:column;gap:clamp(6px,0.6vh,12px)">
+    <div style="display:flex;align-items:center;gap:8px">
+      <span style="width:clamp(24px,2.5vw,32px);height:clamp(24px,2.5vw,32px);border-radius:50%;background:var(--good);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:clamp(13px,1.3vw,16px);flex-shrink:0">2</span>
+      <span style="font-size:clamp(18px,1.8vw,26px);font-weight:600">保存所有提示词和背景信息文件</span>
+    </div>
+    <!-- 文件资源管理器 -->
+    <div style="margin-left:clamp(32px,3.5vw,44px);border:1px solid var(--border);border-radius:12px;overflow:hidden;background:var(--bg);flex:1;display:flex;flex-direction:column">
+      <!-- 标题栏 -->
+      <div style="background:var(--bg-soft);padding:clamp(4px,0.4vw,8px) clamp(10px,0.8vw,14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px">
+        <span style="color:var(--text-3);font-size:clamp(14px,1.2vw,18px)">📁</span>
+        <span style="font-weight:600;font-size:clamp(11px,1vw,14px);color:var(--text-1)">prompts /</span>
+        <span style="flex:1"></span>
+        <span style="display:flex;gap:4px">
+          <span style="width:clamp(6px,0.5vw,8px);height:clamp(6px,0.5vw,8px);border-radius:50%;background:var(--bad)"></span>
+          <span style="width:clamp(6px,0.5vw,8px);height:clamp(6px,0.5vw,8px);border-radius:50%;background:var(--warn)"></span>
+          <span style="width:clamp(6px,0.5vw,8px);height:clamp(6px,0.5vw,8px);border-radius:50%;background:var(--good)"></span>
+        </span>
+      </div>
+      <!-- 文件列表 -->
+      <div style="flex:1;padding:clamp(6px,0.5vw,10px);display:flex;flex-direction:column;gap:2px">
+        <div style="display:flex;align-items:center;gap:clamp(6px,0.5vw,10px);padding:clamp(4px,0.4vw,8px) clamp(8px,0.6vw,12px);border-radius:6px;background:color-mix(in srgb,var(--accent) 6%,transparent)">
+          <span style="font-size:clamp(14px,1.2vw,18px);flex-shrink:0">📄</span>
+          <div style="min-width:0;flex:1">
+            <div style="font-size:clamp(12px,1.1vw,15px);font-weight:600;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">项目背景-AI分享会.md</div>
+            <div style="font-size:clamp(10px,0.8vw,12px);color:var(--text-3)">2.4 KB · 2026-07-06</div>
           </div>
         </div>
-        <div style="flex:1"></div>
-      </div>
-      <div style="text-align:center;font-size:clamp(18px,1.8vw,24px);font-weight:800;color:#2ea043;padding:6px 10px;background:rgba(46,160,67,.08);border-radius:6px;border:2px solid rgba(46,160,67,.3)">✅ 本场分享会 PPT 就是这样做的！</div>
-      <div style="text-align:center;font-size:clamp(16px,1.6vw,20px);font-weight:700;color:#3b6fff;padding:6px 10px;background:rgba(59,111,255,.06);border-radius:6px;overflow:hidden">10分钟语音沟通生成专属PPT</div>
-	    </div>
-	    </div>
-	  </div>
-	
-	  <div class="notes">左边❌：帮我做个PPT，AI 瞎猜。右边✅：Trae 语音→MD→生成PPT。<b>本场分享会 PPT 就是这样做的。</b></div>
-</section>
-
-<!-- ====== 7. PROMPT RULES ====== -->
-<section class="slide" data-title="提示词工程 · 四规则">
-  <p class="kicker">四大工程 · CHAPTER 01</p>
-  <h2 class="h2" style="margin-bottom:2px!important">提示词工程</h2>
-  <p class="lede" style="margin-top:0!important;margin-bottom:8px">PROMPT ENGINEERING</p>
-  <div class="callout-block">
-    💡 <strong>通过不同的提问方式，可以获得质量差异巨大的结果</strong>
-  </div>
-  <div class="rules-grid" style="grid-template-columns:1fr 1fr 1fr">
-    <div class="rule-item"><div class="num">RULE 01</div><h5>🎯 定角色</h5><div class="body-sm">先说清楚身份，AI 立刻切换到对应视角</div></div>
-    <div class="rule-item"><div class="num">RULE 02</div><h5>📋 讲要求</h5><div class="body-sm">明确交付物：表格、数字、格式</div></div>
-    <div style="grid-row:span 2;padding:0;background:transparent;border:none">
-      <div class="file-reader">
-        <div class="fr-bar"><span class="fr-dot"></span><span class="fr-dot"></span><span class="fr-dot"></span><span class="fr-name">prompt.md</span></div>
-        <div class="fr-body">
-          <div class="fr-ln"><span class="ln">1</span><span class="c"># 定角色 — 资深PPT设计师</span></div>
-          <div class="fr-ln"><span class="ln">2</span>你擅长科技峰会幻灯片，观众多为使用豆包元宝一类AI软件的轻度使用者</div>
-          <div class="fr-ln"><span class="ln">3</span></div>
-          <div class="fr-ln"><span class="ln">4</span><span class="c"># 讲要求 — 页面内容</span></div>
-          <div class="fr-ln"><span class="ln">5</span>· 标题：提示词工程 · CHAPTER 01</div>
-          <div class="fr-ln"><span class="ln">6</span>· 核心假设：相同模型×不同提问→差异巨大</div>
-          <div class="fr-ln"><span class="ln">7</span>· 2×2网格展示四规则：定角色·讲要求·给参考·设标准</div>
-          <div class="fr-ln"><span class="ln">8</span>· 底部生态栏：豆包·千问·Kimi·DeepSeek·ChatGPT等</div>
-          <div class="fr-ln"><span class="ln">9</span>· notes备注：显示本页提示词</div>
-          <div class="fr-ln"><span class="ln">10</span></div>
-          <div class="fr-ln"><span class="ln">11</span><span class="c"># 给参考 — 页面结构</span></div>
-          <div class="fr-ln"><span class="ln">12</span>callout-block → 💡 核心假设</div>
-          <div class="fr-ln"><span class="ln">13</span>rules-grid × rule-item → 四规则卡片</div>
-          <div class="fr-ln"><span class="ln">14</span>eco-bar → 底部AI平台标签栏</div>
-          <div class="fr-ln"><span class="ln">15</span></div>
-          <div class="fr-ln"><span class="ln">16</span><span class="c"># 设标准 — 质量红线</span></div>
-          <div class="fr-ln"><span class="ln">17</span>✅ 一页完整·无需翻页·规则说明≤15字</div>
-          <div class="fr-ln"><span class="ln">18</span>✅ 有故事线：PPT设计→四规则→上下文工程</div>
-          <div class="fr-ln"><span class="ln">19</span>❌ 不要额外动画·不改现有布局</div>
+        <div style="display:flex;align-items:center;gap:clamp(6px,0.5vw,10px);padding:clamp(4px,0.4vw,8px) clamp(8px,0.6vw,12px);border-radius:6px">
+          <span style="font-size:clamp(14px,1.2vw,18px);flex-shrink:0">📄</span>
+          <div style="min-width:0;flex:1">
+            <div style="font-size:clamp(12px,1.1vw,15px);font-weight:600;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">项目说明-分享会大纲.md</div>
+            <div style="font-size:clamp(10px,0.8vw,12px);color:var(--text-3)">1.8 KB · 2026-07-06</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:clamp(6px,0.5vw,10px);padding:clamp(4px,0.4vw,8px) clamp(8px,0.6vw,12px);border-radius:6px">
+          <span style="font-size:clamp(14px,1.2vw,18px);flex-shrink:0">📄</span>
+          <div style="min-width:0;flex:1">
+            <div style="font-size:clamp(12px,1.1vw,15px);font-weight:600;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">项目规则-交付标准.md</div>
+            <div style="font-size:clamp(10px,0.8vw,12px);color:var(--text-3)">1.2 KB · 2026-07-06</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:clamp(6px,0.5vw,10px);padding:clamp(4px,0.4vw,8px) clamp(8px,0.6vw,12px);border-radius:6px">
+          <span style="font-size:clamp(14px,1.2vw,18px);flex-shrink:0">📄</span>
+          <div style="min-width:0;flex:1">
+            <div style="font-size:clamp(12px,1.1vw,15px);font-weight:600;color:var(--text-1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">大纲-分享会提示词.md</div>
+            <div style="font-size:clamp(10px,0.8vw,12px);color:var(--text-3)">3.1 KB · 2026-07-06</div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="rule-item"><div class="num">RULE 03</div><h5>📝 给参考</h5><div class="body-sm">给一个模板，照这个格式写</div></div>
-    <div class="rule-item"><div class="num">RULE 04</div><h5>🚧 设标准</h5><div class="body-sm">划定范围：只看线上渠道，异常项标红</div></div>
-  </div>
-  <div class="eco-bar"><div class="eco-row">
-    <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/brand/doubao-color.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
-    <span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img src="/ai/icon/brand/qwen-color.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6F69F7"></span>千问</span>
-    <span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px" onerror="this.classList.add('err')"><span class="dot" style="background:#777777"></span>Kimi</span>
-    <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-    <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-    <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
-    <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
-  </div></div>
-  <div class="notes">四个规则：定角色·讲要求·给参考·设标准。</div>
-</section>
-
-<!-- ====== 7. CONTEXT COMPARE ====== -->
-<section class="slide" data-title="上下文工程对比">
-  <p class="kicker">CASE 02</p>
-  <h2 class="h2" style="margin-bottom:0!important">让 AI 做 <span style="color:#2ea043">旅游规划</span></h2>
-  <p class="lede" style="margin-top:0!important">不是改怎么问，是让 AI 知道它在跟谁打交道</p>
-  <div class="g3 mt-l">
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px"><h4 style="margin:0 0 8px;font-size:16px">① 普通提问</h4><p style="font-size:14px;color:var(--text-2);margin:0">「帮我规划云南5天4夜」→ 通用模板，AB方案千篇一律</p></div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;border-left:3px solid var(--accent)"><h4 style="margin:0 0 8px;font-size:16px">② 提示词工程</h4><p style="font-size:14px;color:var(--text-2);margin:0">按行程/住宿/费用输出→结构清晰但内容通用，不知道你是谁</p></div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;border-left:3px solid var(--good)"><h4 style="margin:0 0 8px;font-size:16px">③ 上下文工程</h4><p style="font-size:14px;color:var(--text-2);margin:0">喂入背景文件→一家三口、儿子3岁半不能高海拔、预算2万→<b>量身定制</b>：推荐抚仙湖避开丽江、三种自驾方案、预算19700</p></div>
-  </div>
-  <div class="notes">三级别对比。普通提问→通用模板。提示词工程→结构清晰但不知道你是谁。上下文工程→喂入背景文件，<b>量身定制</b>：推荐抚仙湖避开丽江、三种自驾方案、预算19700。</div>
-</section>
-
-<!-- ====== 8. CONTEXT REVEAL ====== -->
-<section class="slide" data-title="上下文工程揭晓">
-  <p class="kicker">四大工程 · CHAPTER 02</p>
-  <h2 class="h2" style="margin-bottom:0!important">上下文工程</h2>
-  <p class="lede" style="margin-top:0!important;margin-bottom:8px">CONTEXT ENGINEERING</p>
-  <div class="callout-block">
-    💡 <strong>精准地将上下文窗口填充上恰到好处的信息，让模型能准确地迈出下一步</strong>
-  </div>
-  <div class="g2 mt-l">
-    <div class="stack">
-      <div class="comp-card comp-bad"><div class="ct">❌ 普通提问</div><p>通用模板，写给所有人</p></div>
-      <div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;font-size:15px"><strong>✅ 提示词工程</strong><br>结构清晰但内容通用</div>
-      <div class="comp-card comp-good"><div class="ct">✅ 上下文工程</div><p>量身定制 + 自驾方案对比 + 预算 19,700</p></div>
-    </div>
-    <div class="stack">
-      <div class="step-box"><strong>📁 可迁移</strong> · 换模型不用重新喂——MD 文件通吃所有模型</div>
-      <div class="step-box"><strong>📋 可生长</strong> · 不断加内容，AI 越来越懂你</div>
-      <div class="step-box"><strong>📚 有记忆</strong> · 不用每次重新说——背景资料写一次，永久复用</div>
-    </div>
-  </div>
-  <div style="margin-top:24px;padding:18px 24px;background:color-mix(in srgb,var(--accent) 6%,transparent);border:1px solid color-mix(in srgb,var(--accent) 15%,transparent);border-radius:var(--radius);text-align:center">
-    <p style="font-size:18px;color:var(--accent);margin:0"><strong>💡 上下文工程最重要的是——知识库</strong></p>
-  </div>
-  <div class="eco-bar">
-    <div class="eco-row">
-      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-      <span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px" onerror="this.classList.add('err')"><span class="dot" style="background:#777777"></span>Kimi</span>
-      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/brand/doubao-color.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>豆包</span>
-      <span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img src="/ai/icon/brand/qwen-color.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#6F69F7"></span>通义千问</span>
-      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
-      <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img src="/ai/icon/googlegemini.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8E75B2"></span>Gemini</span>
-    </div>
-    <div class="eco-row">
-      <span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img src="/ai/icon/markdown.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3B82F6"></span>MD文件</span>
-      <span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img src="/ai/icon/image.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#F59E0B"></span>图片</span>
-      <span class="pill" style="border-color:#185ABD;background:rgba(24,90,189,.08)"><img src="/ai/icon/microsoftword.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#185ABD"></span>Word</span>
-      <span class="pill" style="border-color:#1D6F42;background:rgba(29,111,66,.08)"><img src="/ai/icon/microsoftexcel.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1D6F42"></span>Excel</span>
-      <span class="pill" style="border-color:#E53E3E;background:rgba(229,62,62,.08)"><img src="/ai/icon/adobeacrobatreader.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#E53E3E"></span>PDF</span>
-    </div>
-  </div>
-  <div class="notes">不是改怎么问，是<b>让 AI 知道它在跟谁打交道</b>。三个价值：可迁移、可生长、有记忆。上下文工程最重要的是<b>知识库</b>。</div>
-</section>
-
-<!-- ====== 9. KNOWLEDGE BASE ====== -->
-<section class="slide" data-title="知识库搭建">
-  <p class="kicker">Implementation</p>
-  <h2 class="h2" style="margin-bottom:0!important">知识库搭建</h2>
-  <p class="lede" style="margin-top:0!important">从入门到进阶，你的专属 AI 背景资料库</p>
-  <div class="mt-l">
-    <div class="ladder-step ls-1" style="background:rgba(205,127,50,.06)"><span style="font-size:56px">🥉</span><div><strong style="font-size:34px">青铜：MD + Trae</strong><br><span style="font-size:28px;color:var(--text-2)">写 MD 背景文件，Trae 里直接引用。最简单，立竿见影。</span></div></div>
-    <div class="ladder-step ls-2" style="background:rgba(192,192,192,.08)"><span style="font-size:56px">🥈</span><div><strong style="font-size:34px">白银：MD + Trae + Obsidian</strong><br><span style="font-size:28px;color:var(--text-2)">Obsidian 管理知识库，双向链接、图谱视图、快速检索。</span></div></div>
-    <div class="ladder-step ls-3" style="background:rgba(255,215,0,.06)"><span style="font-size:56px">🥇</span><div><strong style="font-size:34px">黄金：MD + Trae + Obsidian + 向量模型</strong><br><span style="font-size:28px;color:var(--text-2)">接入向量模型/插件，语义搜索、智能推荐。</span></div></div>
-  </div>
-  <p class="dim mt-m tc">不急，<b>先跑起来最重要</b>。</p>
-  <div class="eco-bar"><div class="eco-row">
-    <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="/ai/icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
-    <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="/ai/icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书文档</span>
-    <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img src="/ai/icon/trae.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#32F08C"></span>Trae</span>
-    <span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img src="/ai/icon/dify.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1F4CCF"></span>Dify</span>
-  </div></div>
-  <div class="notes">知识库搭建三个级别。青铜：MD+Trae，写背景文件，零门槛。白银：加上Obsidian，双向链接。黄金：加上向量模型，语义搜索。不急，<b>先跑起来最重要</b>。</div>
-</section>
-
-<!-- ====== 10. RESUME COMPARE ====== -->
-<section class="slide" data-title="招聘简历">
-  <p class="kicker">Harness · Case Study</p>
-  <h2 class="h2">案例对比 · 招聘简历</h2>
-  <div class="comp-grid mt-l">
-    <div class="comp-card comp-bad"><div class="ct">❌ 只用模型 + 提示词</div><p>通用分析，不精准。AI 能聊，但分析维度单一，缺少结构化评估。</p></div>
-    <div class="comp-card comp-good"><div class="ct">✅ 套上驾驭工程六件套</div><p>多维度评分 + JD 匹配 + 预警推荐。AI 不仅分析，还能给出量化评分和录用建议。</p></div>
-  </div>
-  <p class="lede mt-l tc">关键变量：<b>有没有驾驭工程给 AI 套上缰绳</b></p>
-  <div class="notes">左边❌：只用模型+提示词→通用分析。右边✅：套约束六件套→多维度评分+JD匹配+预警推荐。关键变量：有没有驾驭工程给 AI 套上缰绳。</div>
-</section>
-
-<!-- ====== 11. FREIGHT COMPARE ====== -->
-<section class="slide" data-title="运费对账">
-  <p class="kicker">Harness · Case Study</p>
-  <h2 class="h2" style="margin-bottom:0!important">案例对比 · 运费对账</h2>
-  <div style="display:flex;gap:8px;margin-top:20px">
-    <div style="flex:1;background:rgba(229,62,62,.1);text-align:center;padding:8px;font-weight:700;color:#e53e3e;font-size:clamp(18px,1.9vw,21px);border-radius:10px 10px 0 0;border:2px solid rgba(229,62,62,.3);border-bottom:none">❌ Excel 手工对账</div>
-    <div style="flex:1;background:rgba(46,160,67,.1);text-align:center;padding:8px;font-weight:700;color:#2ea043;font-size:clamp(18px,1.9vw,21px);border-radius:10px 10px 0 0;border:2px solid rgba(46,160,67,.3);border-bottom:none;position:relative">✅ AI 脚本对账<span style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:clamp(16px,1.6vw,18px);font-weight:700;color:#555;font-family:PingFang SC,Microsoft YaHei,Noto Sans SC,sans-serif;cursor:pointer;text-decoration:underline" onclick="showSfRules()">📄 顺丰运费对账规则.MD</span></div>
-  </div>
-  <div style="display:flex;gap:8px;flex:1;min-height:0;position:relative">
-    <iframe src="excel_animation.html" style="flex:1;border:2px solid rgba(229,62,62,.3);border-radius:0 0 10px 10px"></iframe>
-    <iframe src="pipeline_animation.html" style="flex:1;border:2px solid rgba(46,160,67,.3);border-radius:0 0 10px 10px"></iframe>
-    <div style="position:absolute;bottom:55px;left:50%;transform:translateX(-50%);z-index:10">
-      <span style="background:#fff;color:#e53e3e;padding:8px 24px;border-radius:8px;font-weight:800;font-size:clamp(21px,2.3vw,27px);border:2px solid rgba(229,62,62,.3);box-shadow:0 2px 10px rgba(0,0,0,.1)">💡 关键变量：<b>有没有自动化脚本</b></span>
-    </div>
-  </div>
-  <div class="notes">左边❌：Excel手工算——半天怕错。右边✅：脚本自动化——8个节点逐个校验，<b>3.4秒零误差</b>。关键变量：有没有自动化脚本。</div>
-</section>
-
-<!-- ====== 12. DISCIPLINE REVEAL ====== -->
-<section class="slide" data-title="驾驭工程揭晓">
-  <p class="kicker">四大工程 · CHAPTER 03</p>
-  <h2 class="h2" style="margin-bottom:2px!important">驾驭工程</h2>
-  <p class="lede" style="margin-top:0!important;margin-bottom:8px">HARNESS ENGINEERING</p>
-  <div class="callout-block">
-    💡 <strong>「约束即赋能」——不是限制 AI 的能力，而是将其强大但不可控的智能转化为可靠、可预测、可管理的生产力量。</strong>
-  </div>
-  <div style="display:flex;gap:clamp(14px,2.5vw,24px);align-items:stretch;margin-top:clamp(10px,1.8vh,20px)">
-    <div class="stack" style="flex:1;min-width:0">
-      <div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06);height:100%;display:flex;flex-direction:column;justify-content:center">
-        <div style="font-size:14px;font-weight:600;letter-spacing:0;color:rgba(0,0,0,.35);font-family:var(--font-sans);margin-bottom:2px">CORE INSIGHT</div>
-        <h5 style="font-size:26px;font-weight:700;margin-bottom:6px;color:var(--text-1);line-height:1.4">驾驭工程最重要的是——<span style="color:var(--accent)">📜脚本</span>和<span style="color:var(--accent)">🔄工作流</span></h5>
-        <div style="color:var(--text-2);font-size:18px;line-height:1.7">
-          <p style="margin:0 0 8px">六大组件定义了"要做什么"，<strong>脚本</strong>和<strong>工作流</strong>则是让这些约束真正跑起来的<strong>执行载体</strong>。</p>
-          <p style="margin:0 0 8px">脚本将检验规则写成可执行代码，<br>工作流编排输入→处理→校验→纠错的完整闭环。<br>两者结合，才能把"理论上的约束"变成"<strong>生产级的可靠</strong>"。</p>
-          <p style="margin:0;font-size:14px;color:var(--text-3)">OpenAI 实证：相同模型+数据+提示词，仅通过优化 Harness（工作流脚本），成功率从 42% 跃升至 78%。</p>
-        </div>
+      <!-- 底栏 -->
+      <div style="padding:clamp(6px,0.5vw,10px);background:color-mix(in srgb,var(--good) 10%,transparent);text-align:center;border-top:1px solid var(--border);font-size:clamp(12px,1.1vw,15px);color:var(--good);font-weight:700">
+        💡 下次直接喂给AI → 它就是最懂你的助手
       </div>
     </div>
-    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:44px;flex-shrink:0;gap:6px;color:var(--text-3);font-size:26px;font-weight:600;letter-spacing:0">
-      <div style="width:2px;flex:1;background:var(--border);border-radius:1px;max-height:60px"></div>
-      <span>🔧</span><span>六<br>大<br>组<br>件</span>
-      <div style="width:2px;flex:1;background:var(--border);border-radius:1px;max-height:60px"></div>
-    </div>
-    <div class="six-pack" style="flex:1;min-width:0">
-      <div class="item"><span class="in">① 工具调用</span><br>AI 能调用外部工具和 API</div>
-      <div class="item"><span class="in">② 约束安全</span><br>设定规则边界，不能越界</div>
-      <div class="item"><span class="in">③ 验证校验</span><br>输出前自检，确保正确</div>
-      <div class="item"><span class="in">④ 状态管理</span><br>记住上下文和执行状态</div>
-      <div class="item"><span class="in">⑤ 错误处理</span><br>出错了能自己发现修正</div>
-      <div class="item"><span class="in">⑥ 可观测性</span><br>每一步可追踪可回溯</div>
-    </div>
   </div>
-  <div class="eco-bar">
-    <div class="eco-row">
-      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
-    </div>
-    <div class="eco-row">
-      <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="/ai/icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
-      <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="/ai/icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书</span>
-    </div>
-    <div class="eco-row">
-      <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img src="/ai/icon/trae.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#32F08C"></span>Trae</span>
-      <span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img src="/ai/icon/qoder.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
-      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude Code</span>
-      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/codex.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>Codex</span>
-    </div>
-  </div>
-  <div class="notes"><b>驾驭工程 = 给 AI 装上手脚、套上缰绳。</b>六大组件：工具调用、约束安全、验证校验、状态管理、错误处理、可观测性。驾驭工程最重要的是脚本和工作流。</div>
-</section>
-
-<!-- ====== 13. SCRIPT VS WORKFLOW ====== -->
-<section class="slide" data-title="脚本vs工作流">
-  <p class="kicker">Implementation · Decision</p>
-  <h2 class="h2">脚本还是工作流？</h2>
-  <div class="g2 mt-l">
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;border-left:3px solid var(--accent)"><h4>确定性结果</h4><p>错了就不行——运费对账，金额必须精确到分，错了就是钱。</p></div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px"><h4>开放性流程</h4><p>没有标准答案——旅游规划，只要合理就行。</p></div>
-  </div>
-  <div class="g3 mt-m">
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:center;border-top:3px solid var(--accent)"><h4>🐍 脚本 (Python)</h4><p style="font-size:14px;color:var(--text-2)">确定性需求 · 一定技术门槛 · AI 可帮你写</p></div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:center;border-top:3px solid var(--accent)"><h4>🔗 固定工作流</h4><p style="font-size:14px;color:var(--text-2)">扣子 Coze · Dify · 拖拽编排，门槛低</p></div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:center;border-top:3px solid var(--accent)"><h4>🤖 AI 工作流</h4><p style="font-size:14px;color:var(--text-2)">Trae · Qoder · Claude Code · 跟 AI 聊就能完成</p></div>
-  </div>
-  <div class="notes">确定性结果→脚本或固定工作流。开放性流程→AI 工作流。三种方式<b>没有高低之分，看场景选</b>。</div>
-</section>
-
-<!-- ====== 14. BIRTHDAY MARKETING ====== -->
-<section class="slide" data-title="生日营销">
-  <p class="kicker">Harness · Real Case</p>
-  <h2 class="h2">拆解 · 生日营销</h2>
-  <p class="lede">一个闭环数据流，累计变现 <span style="color:var(--accent);font-weight:700">400 万+</span></p>
-  <div class="chart-flow mt-l">
-    <div class="node">👤 用户</div><span class="arrow-node">→</span>
-    <div class="node">📱 小程序</div><span class="arrow-node">→</span>
-    <div class="node">🗄 数据库</div><span class="arrow-node">→</span>
-    <div class="node">🤖 AI处理</div><span class="arrow-node">→</span>
-    <div class="node">🎯 分析匹配</div>
-  </div>
-  <div class="chart-flow">
-    <div class="node">📞 客服</div><span class="arrow-node">→</span>
-    <div class="node">🎁 礼品</div><span class="arrow-node">→</span>
-    <div class="node">🔄 复购</div><span class="arrow-node">→</span>
-    <div class="node" style="border-color:var(--good)">💰 进公司口袋</div>
-  </div>
-  <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;justify-content:center">
-    <span class="tag tag-g">🔧 工具调用</span><span class="tag tag-b">🛡 约束安全</span><span class="tag tag-y">✅ 验证校验</span><span class="tag tag-g">📦 状态管理</span><span class="tag tag-r">🔄 容错</span><span class="tag tag-b">📊 可观测性</span>
-  </div>
-  <div class="big-num mt-l">400<span class="unit">万+</span></div>
-  <div class="notes">真实案例：<b>变现400万+</b>。用户→小程序→数据库→AI处理→分析匹配→客服→礼品→复购→进公司口袋。每个节点标注约束组件，每天自动循环。全流程自动化。</div>
-</section>
-
-<!-- ====== 15. PROGRESSIVE ====== -->
-<section class="slide" data-title="递进对比">
-  <p class="kicker">Progression</p>
-  <h2 class="h2">约束 → 循环</h2>
-  <div class="comp-grid mt-l">
-    <div class="comp-card comp-bad"><div class="ct">❌ 只有驾驭工程</div><p>单次执行，做完就完了——AI 输出结果，不管好不好，交差了事。</p></div>
-    <div class="comp-card comp-good"><div class="ct">✅ 加上循环工程</div><p><b>做 → 查 → 修 → 再输出</b>，直到满意——AI 自己检查、修正、优化。</p></div>
-  </div>
-  <p class="lede mt-l tc">从「能干」到「能干好」的质变</p>
-  <div class="notes">只有约束→单次执行。加上循环→<b>做→查→修→再输出</b>，直到满意。从"能干"到"能干好"的质变。</div>
-</section>
-
-<!-- ====== 16. LOOP REVEAL ====== -->
-<section class="slide" data-title="循环工程揭晓">
-  <p class="kicker">四大工程 · CHAPTER 04</p>
-  <h2 class="h2" style="margin-bottom:2px!important">循环工程</h2>
-  <p class="lede" style="margin-top:0!important;margin-bottom:8px">LOOP ENGINEERING</p>
-  <div class="callout-block">
-    💡 <strong>通过反复执行-验证-修正的闭环，可以将单次输出的不确定性收敛为确定性结果</strong>
-  </div>
-  <div class="g2 mt-l">
-    <div class="stack">
-      <div class="comp-card comp-bad"><div class="ct">❌ 只有约束</div><p>单次执行，有没有问题它不管</p></div>
-      <div class="comp-card comp-good"><div class="ct">✅ 加上循环</div><p>做 → 查 → 修 → 再输出——AI 自己检查修正直到符合标准</p></div>
-    </div>
-    <div class="stack">
-      <div class="step-box"><strong>L1 自查</strong> · AI 输出后自己检查一遍</div>
-      <div class="step-box"><strong>L2 复盘</strong> · 多轮执行后总结规律</div>
-      <div class="step-box"><strong>L3 会诊</strong> · 多个 AI Agent 交叉检查</div>
-      <div class="step-box"><strong>L4 绩效</strong> · 量化评估 + 持续优化</div>
-    </div>
-  </div>
-  <div class="g3 mt-l">
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center"><h4>🔄 循环流程</h4><p style="font-size:14px;color:var(--text-2)">输入→处理→输出→检查→发现→修正→交付</p></div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;border-left:3px solid var(--bad)"><h4>⚠️ 现在痛点</h4><p style="font-size:14px;color:var(--text-2)">AI 没有眼睛——看不到运行结果，不知道对错</p></div>
-    <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;border-left:3px solid var(--accent)"><h4>🚀 未来方向</h4><p style="font-size:14px;color:var(--text-2)">多 Agent 并行——写代码、Review、测试同时</p></div>
-  </div>
-  <div class="eco-bar">
-    <div class="eco-row">
-      <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img src="/ai/icon/openai.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-      <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img src="/ai/icon/deepseek.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-      <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img src="/ai/icon/anthropic.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#D97757"></span>Claude</span>
-    </div>
-    <div class="eco-row">
-      <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img src="/ai/icon/obsidian.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
-      <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img src="/ai/icon/feishu.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3370FF"></span>飞书</span>
-    </div>
-    <div class="eco-row">
-      <span class="pill" style="border-color:#3776AB;background:rgba(55,118,171,.08)"><img src="/ai/icon/python.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3776AB"></span>Python</span>
-      <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img src="/ai/icon/coze.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#685DF9"></span>Coze</span>
-      <span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img src="/ai/icon/dify.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#1F4CCF"></span>Dify</span>
-    </div>
-    <div class="eco-row">
-      <span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img src="/ai/icon/cron.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#3B82F6"></span>Cron</span>
-      <span class="pill" style="border-color:#8B5CF6;background:rgba(139,92,246,.08)"><img src="/ai/icon/agent.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#8B5CF6"></span>Agent</span>
-      <span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img src="/ai/icon/log.svg" onerror="this.classList.add('err')"><span class="dot" style="background:#F59E0B"></span>日志</span>
-    </div>
-  </div>
-  <div class="notes">AI 为什么垃圾？做一遍就完了。<b>循环工程就是逼它再做一遍。</b>四级别：L1自查→L2复盘→L3会诊→L4绩效。三栏：循环流程/AI没有眼睛/多Agent并行。</div>
-</section>
-
-<!-- ====== 17. PERSONAL VS ENTERPRISE ====== -->
-<section class="slide" data-title="个人vs企业AI">
-  <p class="kicker">Comparison</p>
-  <h2 class="h2">个人 AI vs 企业 AI</h2>
-  <p class="lede">差的不是模型，是<b>工程</b></p>
-  <table class="compare-table mt-l">
-    <thead><tr><th>维度</th><th>个人 AI</th><th>企业 AI</th></tr></thead>
-    <tbody>
-      <tr><td>应用场景</td><td>做PPT、写文案、查资料、旅游规划</td><td>对账、简历筛选、生日营销、数据同步</td></tr>
-      <tr><td>工程需求</td><td>提示词 + 上下文</td><td style="color:var(--accent);font-weight:600">四大工程全得上（约束+循环是核心）</td></tr>
-      <tr><td>容错</td><td>错了 Ctrl+Z</td><td>错了就是钱</td></tr>
-      <tr><td>核心</td><td>提效</td><td style="color:var(--accent);font-weight:600">可控 + 变现</td></tr>
-    </tbody>
-  </table>
-  <div class="notes">差的不是模型，是<b>工程</b>。个人：提示词+上下文就够了，错了Ctrl+Z。企业：<b>四大工程全得上</b>，约束+循环是核心，错了就是钱。</div>
-</section>
-
-<!-- ====== 18. DATA PRIVACY ====== -->
-<section class="slide" data-title="数据隐私">
-  <p class="kicker" style="color:#e03e3e">Warning</p>
-  <h2 class="h2">数据隐私</h2>
-  <p class="lede">AI 很好用，但你的数据去了哪里？</p>
-  <div class="g2 mt-l" style="grid-template-columns:2fr 1fr;align-items:stretch">
-    <table class="compare-table">
-      <thead><tr><th>日常场景</th><th>风险</th><th>解法</th></tr></thead>
-      <tbody>
-        <tr><td>在豆包网页上问问题</td><td style="color:#e03e3e">⚠️ 数据可能被训练</td><td style="color:#1aaf6c;font-weight:600">✅ 用 API</td></tr>
-        <tr><td>上传文件让 AI 分析</td><td style="color:#e03e3e">⚠️ 文件被留存</td><td style="color:#1aaf6c;font-weight:600">✅ 用 Trae</td></tr>
-        <tr><td>在 App 上聊工作机密</td><td style="color:#e03e3e">⚠️ 对话被记录</td><td style="color:#1aaf6c;font-weight:600">✅ 隐私模式</td></tr>
-        <tr><td>复制粘贴公司数据</td><td style="color:#e03e3e">⚠️ 数据外传</td><td style="color:#1aaf6c;font-weight:600">✅ 企业版</td></tr>
-        <tr><td>公司多人共用账号</td><td style="color:#e03e3e">⚠️ 权限混乱</td><td style="color:#1aaf6c;font-weight:600">✅ 一人一账号</td></tr>
-      </tbody>
-    </table>
-    <div style="border:2px solid #1aaf6c;border-radius:12px;padding:clamp(24px,4vh,40px);text-align:center;background:linear-gradient(135deg,rgba(26,175,108,.08),rgba(26,175,108,.02));display:flex;flex-direction:column;justify-content:center">
-      <img src="/ai/icon/qoder.svg" style="width:clamp(40px,5vw,64px);height:clamp(40px,5vw,64px);margin-bottom:12px;display:inline-block">
-      <h4 style="font-size:clamp(24px,2.5vw,34px);color:#1aaf6c;margin:0 0 12px">Pro 升级方案</h4>
-      <p style="font-size:clamp(18px,2vw,26px);color:var(--text-2);margin:0;line-height:1.5"><strong>私有化部署</strong><br>数据完全不离开<br>一劳永逸解决所有风险</p>
-    </div>
-  </div>
-  <div class="notes">你的数据去了哪里？网页提问→用API。上传文件→用Trae。聊机密→隐私模式。多人共用→一人一账号。Pro：私有化部署。</div>
-</section>
-
-<!-- ====== 19. CHECKLIST ====== -->
-<section class="slide" data-title="落地Checklist">
-  <p class="kicker">Action</p>
-  <h2 class="h2">落地 Checklist</h2>
-  <p class="lede">从 0 到 1，一步步把 AI 用到业务里</p>
-  <div class="g2 mt-l">
-    <div>
-      <div class="check-item">☐ 明确业务场景</div>
-      <div class="check-item">☐ 选择模型 <span style="color:var(--text-3);font-size:12px">🎯 模型</span></div>
-      <div class="check-item">☐ 搭建知识库 <span style="color:var(--text-3);font-size:12px">📚 上下文工程</span></div>
-      <div class="check-item">☐ 设计提示词 <span style="color:var(--text-3);font-size:12px">💬 提示词工程</span></div>
-      <div class="check-item">☐ 配置约束策略 <span style="color:var(--text-3);font-size:12px">🔧 驾驭工程</span></div>
-      <div class="check-item">☐ 评估数据隐私</div>
-      <div class="check-item">☐ 搭建工作流 <span style="color:var(--text-3);font-size:12px">🔄 循环工程</span></div>
-      <div class="check-item">☐ 循环优化 <span style="color:var(--text-3);font-size:12px">🔄 循环工程</span></div>
-    </div>
-    <div>
-      <div class="tool-layer tl-1"><h4>第一层：API Key</h4><p style="font-size:14px;color:var(--text-2);margin:0">DeepSeek · 通义千问 · SiliconFlow · OpenRouter</p></div>
-      <div class="tool-layer tl-2"><h4>第二层：本地工具</h4><p style="font-size:14px;color:var(--text-2);margin:0">Trae · Qoder · Claude Code · Codex</p></div>
-      <div class="tool-layer tl-3"><h4>第三层：知识库</h4><p style="font-size:14px;color:var(--text-2);margin:0">Obsidian · 飞书文档 · Dify</p></div>
-    </div>
-  </div>
-  <div class="notes">落地Checklist：明确场景→选模型→搭知识库→设计提示词→配置约束→评估隐私→搭建工作流→循环优化。三层工具包：API Key→本地工具→知识库。</div>
-</section>
-
-<!-- ====== 20. Q&A ====== -->
-<section class="slide center tc v-center" data-title="互动答疑">
-  <div>
-    <p class="kicker">Q&A</p>
-    <h2 class="h2" style="font-size:clamp(250px,75vw,500px)!important;font-weight:800;color:#3B82F6;text-align:center;margin:0;border:none;padding:0;line-height:1">?</h2>
-    <div style="margin-top:36px;padding:clamp(28px,5vh,48px) clamp(24px,4vw,40px);background:color-mix(in srgb,var(--accent) 5%,transparent);border:1px solid color-mix(in srgb,var(--accent) 12%,transparent);border-radius:var(--radius);max-width:700px;margin-left:auto;margin-right:auto">
-      <p class="dim mt-m">厉害的不是 AI，是<b>人类的脑子</b>。</p>
-    </div>
-
-  </div>
-  <div class="notes"><b>AI——当你不会用它的时候，它真的是垃圾。当你学会用它的时候，就能变废为宝。厉害的不是 AI，是人类的脑子。</b>预留十分钟自由提问。谢谢大家。</div>
-</section>
-
 </div>
 
-<div class="slide-number ctrl-hint" data-current="1" data-total="20"></div>
-
+<div class="notes">不会写提示词？让AI帮你写。打开AI软件，把你要做的事 + 四规则模板一起发过去，AI自动按规则输出完整prompt。把prompt存成文件，下次直接扔给AI，这就是上下文工程的起点。</div>
+</section>
+<!-- ====== 9. CONTEXT REVEAL ====== -->
+<section class="slide" data-title="上下文工程揭晓">
+<div style="display:flex;gap:clamp(14px,2vw,36px);flex:1;min-height:0">
+  <!-- 左列：标题+callout+三卡片 -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px)">
+    <p class="kicker" style="margin:0">四大工程 · CHAPTER 02</p>
+    <h2 class="h2" style="margin:0 0 2px!important">上下文工程</h2>
+    <p class="lede" style="margin:0!important;margin-bottom:4px!important">CONTEXT ENGINEERING</p>
+    <div class="callout-block" style="margin-bottom:0">
+      💡 <strong>精准地将上下文窗口填充上恰到好处的信息，让模型能准确地迈出下一步</strong>
+    </div>
+    <div style="flex:1;display:flex;flex-direction:column;gap:clamp(6px,0.6vh,10px);justify-content:center">
+    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(2px,0.2vh,4px)">
+      <div style="font-size:clamp(20px,2vw,28px);font-weight:700">📁 可迁移</div>
+      <div style="font-size:clamp(14px,1.3vw,18px);color:var(--text-2);line-height:1.5">写好一份 prompt.md，换哪个模型都能直接用。<br>ChatGPT、豆包、DeepSeek… 通吃所有主流 AI。</div>
+      <div style="display:flex;gap:clamp(4px,0.4vw,8px);margin-top:clamp(4px,0.3vh,6px);flex-wrap:wrap">
+        <span style="padding:clamp(2px,0.15vw,4px) clamp(6px,0.5vw,10px);border-radius:12px;background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);font-size:clamp(11px,0.9vw,13px);font-weight:600">ChatGPT</span>
+        <span style="padding:clamp(2px,0.15vw,4px) clamp(6px,0.5vw,10px);border-radius:12px;background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);font-size:clamp(11px,0.9vw,13px);font-weight:600">豆包</span>
+        <span style="padding:clamp(2px,0.15vw,4px) clamp(6px,0.5vw,10px);border-radius:12px;background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);font-size:clamp(11px,0.9vw,13px);font-weight:600">DeepSeek</span>
+      </div>
+    </div>
+    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(2px,0.2vh,4px)">
+      <div style="font-size:clamp(20px,2vw,28px);font-weight:700">📋 可生长</div>
+      <div style="font-size:clamp(14px,1.3vw,18px);color:var(--text-2);line-height:1.5">今天加产品清单、明天加客户纪要，知识资产越积越厚。<br>AI 越来越懂你的业务，输出质量持续提升。</div>
+      <div style="font-size:clamp(12px,1vw,15px);color:var(--good);font-weight:600;margin-top:clamp(4px,0.3vh,6px)">📈 积累 → 懂你 → 更准的答案</div>
+    </div>
+    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(2px,0.2vh,4px)">
+      <div style="font-size:clamp(20px,2vw,28px);font-weight:700">📚 有记忆</div>
+      <div style="font-size:clamp(14px,1.3vw,18px);color:var(--text-2);line-height:1.5">项目背景、写作风格、交付标准 — 写一次永久复用。<br>每次对话 AI 自动加载上下文，不用再重复交代。</div>
+      <div style="font-size:clamp(12px,1vw,15px);color:var(--text-3);margin-top:clamp(4px,0.3vh,6px)">🔥 把"历史"变成 AI 的"默认配置"</div>
+    </div>
+  </div>
+  </div>
+  <!-- 右列：聊天窗口 -->
+  <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px)">
+    <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
+      <span style="width:clamp(20px,1.8vw,24px);height:clamp(20px,1.8vw,24px);border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:clamp(11px,1vw,13px);flex-shrink:0">📨</span>
+      <span style="font-size:clamp(16px,1.5vw,22px);font-weight:600">把所有相关资料全部发给AI</span>
+    </div>
+    <div style="flex:1;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-soft);display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.06)">
+      <!-- 标题栏 -->
+      <div style="background:var(--bg);padding:clamp(4px,0.4vw,7px) clamp(10px,0.8vw,14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0">
+        <span style="width:clamp(14px,1.2vw,18px);height:clamp(14px,1.2vw,18px);border-radius:50%;background:color-mix(in srgb,var(--accent) 20%,transparent);display:flex;align-items:center;justify-content:center;font-size:clamp(8px,0.7vw,10px)">🤖</span>
+        <span style="font-size:clamp(11px,1vw,14px);font-weight:600;flex:1">AI 助手</span>
+        <span style="color:var(--text-3);font-size:clamp(10px,0.8vw,12px)">在线</span>
+      </div>
+      <!-- 聊天内容 -->
+      <div style="flex:1;padding:clamp(8px,0.7vw,14px);display:flex;flex-direction:column;gap:clamp(8px,0.7vh,12px);overflow-y:auto;background:color-mix(in srgb,var(--bg) 90%,var(--accent) 2%)">
+        <!-- 用户发消息 -->
+        <div style="display:flex;gap:6px;align-items:flex-end;justify-content:flex-end">
+          <div style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;max-width:90%">
+            <div style="display:flex;flex-direction:column;gap:clamp(4px,0.4vw,6px);width:100%">
+              <div style="display:flex;align-items:center;gap:clamp(6px,0.6vw,10px);padding:clamp(6px,0.5vw,10px) clamp(8px,0.7vw,12px);border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+                <span style="font-size:clamp(24px,2.4vw,34px);flex-shrink:0">📄</span>
+                <div style="min-width:0;flex:1"><div style="font-size:clamp(11px,1vw,14px);color:var(--text-1);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">提示词.md</div><div style="font-size:clamp(9px,0.8vw,11px);color:var(--text-3)">2 KB</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:clamp(6px,0.6vw,10px);padding:clamp(6px,0.5vw,10px) clamp(8px,0.7vw,12px);border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+                <span style="font-size:clamp(24px,2.4vw,34px);flex-shrink:0">📄</span>
+                <div style="min-width:0;flex:1"><div style="font-size:clamp(11px,1vw,14px);color:var(--text-1);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">大纲.md</div><div style="font-size:clamp(9px,0.8vw,11px);color:var(--text-3)">3 KB</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:clamp(6px,0.6vw,10px);padding:clamp(6px,0.5vw,10px) clamp(8px,0.7vw,12px);border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+                <span style="font-size:clamp(24px,2.4vw,34px);flex-shrink:0">📄</span>
+                <div style="min-width:0;flex:1"><div style="font-size:clamp(11px,1vw,14px);color:var(--text-1);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">输出标准.md</div><div style="font-size:clamp(9px,0.8vw,11px);color:var(--text-3)">1 KB</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:clamp(6px,0.6vw,10px);padding:clamp(6px,0.5vw,10px) clamp(8px,0.7vw,12px);border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+                <span style="font-size:clamp(24px,2.4vw,34px);flex-shrink:0">📄</span>
+                <div style="min-width:0;flex:1"><div style="font-size:clamp(11px,1vw,14px);color:var(--text-1);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">撰写规则.md</div><div style="font-size:clamp(9px,0.8vw,11px);color:var(--text-3)">2 KB</div></div>
+              </div>
+              <div style="display:flex;align-items:center;gap:clamp(6px,0.6vw,10px);padding:clamp(6px,0.5vw,10px) clamp(8px,0.7vw,12px);border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.04)">
+                <span style="font-size:clamp(24px,2.4vw,34px);flex-shrink:0">📄</span>
+                <div style="min-width:0;flex:1"><div style="font-size:clamp(11px,1vw,14px);color:var(--text-1);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">风格需求.md</div><div style="font-size:clamp(9px,0.8vw,11px);color:var(--text-3)">1 KB</div></div>
+              </div>
+            </div>
+            <div style="background:#fff;border:1px solid var(--border);padding:clamp(6px,0.5vw,10px) clamp(10px,0.8vw,14px);border-radius:12px 4px 0 0;font-size:clamp(11px,1vw,15px);line-height:1.5;box-shadow:0 2px 6px rgba(0,0,0,.06)">
+              <span style="font-weight:600;color:var(--accent)">你：</span>请根据这 5 份资料帮我生成一份 AI 分享会 PPT
+            </div>
+            <div style="width:100%;text-align:center;padding:clamp(3px,0.3vw,6px) clamp(8px,0.8vw,14px);border-radius:0 0 8px 8px;background:color-mix(in srgb,var(--good) 14%,transparent);color:var(--good);font-size:clamp(12px,1.1vw,15px);font-weight:700">把用 AI 写的提示词等文件发给 AI</div>
+          </div>
+          <div style="width:clamp(22px,2vw,28px);height:clamp(22px,2vw,28px);background:#555;border-radius:6px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:clamp(11px,1vw,13px)">👤</div>
+        </div>
+        <!-- AI 回复 -->
+        <div style="display:flex;gap:6px;align-items:flex-start">
+          <div style="width:clamp(24px,2.2vw,30px);height:clamp(24px,2.2vw,30px);border-radius:8px;flex-shrink:0;background:color-mix(in srgb,var(--accent) 15%,transparent);display:flex;align-items:center;justify-content:center;font-size:13px">🤖</div>
+          <div style="display:flex;flex-direction:column;max-width:90%">
+            <div style="background:#fff;border:1px solid var(--border);padding:clamp(8px,0.7vw,14px) clamp(12px,1vw,16px);border-radius:4px 14px 0 0;font-size:clamp(11px,1vw,15px);line-height:1.6;box-shadow:0 2px 8px rgba(0,0,0,.08)">
+              <span style="font-weight:700;color:var(--good);font-size:clamp(12px,1.1vw,16px)">✅ 已读取 5 份资料</span><br><br>
+              我已理解：<br>
+              <b>①</b> 受众是<span style="font-weight:600">职场人</span><br>
+              <b>②</b> 按<span style="font-weight:600">开场→认知→四步→落地</span>编排<br>
+              <b>③</b> 每页一个观点 + 动效<br><br>
+              <span style="display:block;padding:clamp(5px,0.4vw,8px);background:color-mix(in srgb,var(--good) 8%,transparent);border-radius:6px;font-weight:700;color:var(--good);text-align:center">🎯 正在生成 AI 分享会专属 PPT</span>
+            </div>
+            <div style="width:100%;text-align:center;padding:clamp(3px,0.3vw,6px) clamp(8px,0.8vw,14px);border-radius:0 0 8px 8px;background:color-mix(in srgb,var(--good) 14%,transparent);color:var(--good);font-size:clamp(12px,1.1vw,15px);font-weight:700">这就是上下文工程</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="eco-bar">
+<div class="eco-row">
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+<span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
+<span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/doubao-color.svg"/><span class="dot" style="background:#685DF9"></span>豆包</span>
+<span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/qwen-color.svg"/><span class="dot" style="background:#6F69F7"></span>通义千问</span>
+<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+<span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+</div>
+<div class="eco-row">
+<span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/markdown.svg"/><span class="dot" style="background:#3B82F6"></span>MD文件</span>
+<span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/image.svg"/><span class="dot" style="background:#F59E0B"></span>图片</span>
+<span class="pill" style="border-color:#185ABD;background:rgba(24,90,189,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftword.svg"/><span class="dot" style="background:#185ABD"></span>Word</span>
+<span class="pill" style="border-color:#1D6F42;background:rgba(29,111,66,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftexcel.svg"/><span class="dot" style="background:#1D6F42"></span>Excel</span>
+<span class="pill" style="border-color:#E53E3E;background:rgba(229,62,62,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/adobeacrobatreader.svg"/><span class="dot" style="background:#E53E3E"></span>PDF</span>
+</div>
+</div>
+<div class="notes">不是改怎么问，是<b>让 AI 知道它在跟谁打交道</b>。三个价值：可迁移、可生长、有记忆。上下文工程最重要的是<b>知识库</b>。</div>
+</section>
+<!-- ====== 10. KNOWLEDGE BASE ====== -->
+<section class="slide" data-title="知识库搭建">
+<p class="kicker">Implementation</p>
+<h2 class="h2" style="margin-bottom:0!important">知识库搭建</h2>
+<p class="lede" style="margin-top:0!important">从入门到进阶，你的专属 AI 背景资料库</p>
+<div style="display:flex;flex-direction:column;flex:1;min-height:0;margin-top:6px">
+<div style="display:flex;gap:clamp(16px,2vw,36px);flex:1;min-height:0;align-items:stretch">
+  <!-- 🥉 青铜 -->
+  <div style="flex:0.95;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px);min-width:0;border:1px solid rgba(205,127,50,.2);border-radius:14px;padding:clamp(8px,0.8vw,14px);background:rgba(205,127,50,.02);box-shadow:0 2px 8px rgba(0,0,0,.06)">
+    <!-- 段位说明 -->
+    <div style="flex:0 0 auto;border:1px solid rgba(205,127,50,.3);border-radius:12px;padding:clamp(8px,0.7vw,14px);background:rgba(205,127,50,.06)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:clamp(22px,2.2vw,34px)">🥉</span>
+          <strong style="font-size:clamp(20px,2vw,30px)">青铜</strong>
+        </div>
+        <div style="display:flex;gap:clamp(8px,0.8vw,14px);flex-shrink:0">
+           <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+             <img onerror="this.style.display='none'" src="/ai/icon/trae.svg" style="width:clamp(32px,3vw,48px);height:clamp(32px,3vw,48px);display:block"/>
+             <span style="font-size:clamp(11px,1vw,14px);color:var(--text-2);font-weight:500">Trae</span>
+           </div>
+           <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+             <div style="width:clamp(32px,3vw,48px);height:clamp(32px,3vw,48px);display:flex;align-items:center;justify-content:center;font-size:clamp(22px,2vw,32px)">📄</div>
+             <span style="font-size:clamp(11px,1vw,14px);color:var(--text-2);font-weight:500">MD</span>
+           </div>
+         </div>
+      </div>
+    </div>
+    <!-- 使用技巧 -->
+    <div style="flex:0 0 auto;border:1px solid var(--border);border-radius:10px;padding:clamp(6px,0.6vw,12px) clamp(8px,0.7vw,14px);background:var(--bg);font-size:clamp(13px,1.1vw,17px);line-height:1.7;color:var(--text-2);box-shadow:0 1px 4px rgba(0,0,0,.04)">
+      <div style="display:flex;align-items:center;gap:clamp(4px,0.4vw,8px);margin-bottom:4px">
+        <span style="background:var(--accent);color:#fff;border-radius:50%;width:clamp(18px,1.6vw,24px);height:clamp(18px,1.6vw,24px);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:clamp(10px,0.9vw,13px)">你</span>
+        <span>→</span>
+        <span style="font-weight:600;color:var(--text-1)">拖入一个.md文件</span>
+        <span>→</span>
+        <span style="font-weight:600;color:var(--accent)">AI只看这个文件</span>
+      </div>
+      <div style="font-size:clamp(15px,1.4vw,22px);color:var(--text-2);padding:clamp(4px,0.4vw,8px);background:color-mix(in srgb,var(--accent) 4%,transparent);border-radius:6px">
+         💡 同做"写PPT"：AI只看你给的.md → 输出对应prompt
+      </div>
+    </div>
+    <!-- 资源管理器 -->
+    <div style="flex:1;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 2px 6px rgba(0,0,0,.06)">
+      <div style="background:var(--bg-soft);padding:clamp(3px,0.3vw,6px) clamp(8px,0.7vw,12px);border-bottom:1px solid var(--border);font-size:clamp(11px,1vw,14px);font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:4px">
+        <span>📁</span> <span>my-knowledge/</span>
+        <span style="margin-left:auto;display:flex;gap:4px">
+          <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--bad)"></span>
+          <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--warn)"></span>
+          <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--good)"></span>
+        </span>
+      </div>
+      <div style="flex:1;padding:clamp(6px,0.5vw,10px);font-size:clamp(12px,1.8vw,20px);line-height:2;color:var(--text-2)">
+         <span>📄 <span style="color:var(--text-1)">背景资料.md</span></span><br>
+         <span>📄 <span style="color:var(--text-1)">提示词-做PPT.md</span></span><br>
+         <span>📄 <span style="color:var(--text-1)">提示词-写周报.md</span></span><br>
+         <span>📄 <span style="color:var(--text-1)">提示词-写邮件.md</span></span>
+      </div>
+    </div>
+  </div>
+  <!-- 🥈 白银 -->
+  <div style="flex:0.95;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px);min-width:0;border:1px solid rgba(192,192,192,.2);border-radius:14px;padding:clamp(8px,0.8vw,14px);background:rgba(192,192,192,.02);box-shadow:0 2px 8px rgba(0,0,0,.06)">
+    <!-- 段位说明 -->
+    <div style="flex:0 0 auto;border:1px solid rgba(192,192,192,.3);border-radius:12px;padding:clamp(8px,0.7vw,14px);background:rgba(192,192,192,.08)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:clamp(22px,2.2vw,34px)">🥈</span>
+          <strong style="font-size:clamp(20px,2vw,30px)">白银</strong>
+        </div>
+        <div style="display:flex;gap:clamp(8px,0.8vw,14px);flex-shrink:0">
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+              <img onerror="this.style.display='none'" src="/ai/icon/trae.svg" style="width:clamp(32px,3vw,48px);height:clamp(32px,3vw,48px);display:block"/>
+              <span style="font-size:clamp(11px,1vw,14px);color:var(--text-2);font-weight:500">Trae</span>
+            </div>
+            <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+              <div style="width:clamp(32px,3vw,48px);height:clamp(32px,3vw,48px);display:flex;align-items:center;justify-content:center;font-size:clamp(22px,2vw,32px)">📄</div>
+              <span style="font-size:clamp(11px,1vw,14px);color:var(--text-2);font-weight:500">MD</span>
+            </div>
+          </div>
+      </div>
+    </div>
+    <!-- 使用技巧 -->
+    <div style="flex:0 0 auto;border:1px solid var(--border);border-radius:10px;padding:clamp(6px,0.6vw,12px) clamp(8px,0.7vw,14px);background:var(--bg);font-size:clamp(13px,1.1vw,17px);line-height:1.7;color:var(--text-2);box-shadow:0 1px 4px rgba(0,0,0,.04)">
+      <div style="display:flex;align-items:center;gap:clamp(4px,0.4vw,8px);margin-bottom:4px">
+        <span style="background:var(--accent);color:#fff;border-radius:50%;width:clamp(18px,1.6vw,24px);height:clamp(18px,1.6vw,24px);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:clamp(10px,0.9vw,13px)">你</span>
+        <span>→</span>
+        <span style="font-weight:600;color:var(--text-1)">指定工作区文件夹</span>
+        <span>→</span>
+        <span style="font-weight:600;color:var(--accent)">AI关联整个文件夹</span>
+      </div>
+      <div style="font-size:clamp(15px,1.4vw,22px);color:var(--text-2);padding:clamp(4px,0.4vw,8px);background:color-mix(in srgb,var(--accent) 4%,transparent);border-radius:6px">
+         💡 同做"写PPT"：AI把客户/A公司/下所有资料融会贯通
+      </div>
+    </div>
+    <!-- 资源管理器 -->
+    <div style="flex:1;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 2px 6px rgba(0,0,0,.06)">
+      <div style="background:var(--bg-soft);padding:clamp(3px,0.3vw,6px) clamp(8px,0.7vw,12px);border-bottom:1px solid var(--border);font-size:clamp(11px,1vw,14px);font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:4px">
+        <span>📁</span> <span>my-knowledge/</span>
+        <span style="margin-left:auto;display:flex;gap:4px">
+          <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--bad)"></span>
+          <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--warn)"></span>
+          <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--good)"></span>
+        </span>
+      </div>
+      <div style="flex:1;padding:clamp(6px,0.5vw,10px);font-size:clamp(12px,1.8vw,20px);line-height:2;color:var(--text-2)">
+          <span>📁 <span style="color:var(--text-1)">个人资料/</span></span><br>
+        <span>&nbsp;&nbsp;📄 <span style="color:var(--text-1)">个人履历.md</span></span><br>
+        <span>📁 <span style="color:var(--text-1)">公司资料/</span></span><br>
+        <span>&nbsp;&nbsp;📄 <span style="color:var(--text-1)">公司简介.md</span>  📄 <span style="color:var(--text-1)">产品清单.md</span>  📄 <span style="color:var(--text-1)">产品资料.md</span></span><br>
+        <span>📁 <span style="color:var(--text-1)">客户资料/</span></span><br>
+        <span>&nbsp;&nbsp;📁 <span style="color:var(--text-1)">A公司/</span></span><br>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;📄 <span style="color:var(--text-1)">项目背景.md</span>  📄 <span style="color:var(--text-1)">沟通记录.md</span>  📄 <span style="color:var(--text-1)">会议记录.md</span></span><br>
+        <span>&nbsp;&nbsp;📁 <span style="color:var(--text-1)">B公司/</span></span><br>
+        <span>&nbsp;&nbsp;&nbsp;&nbsp;📄 <span style="color:var(--text-1)">项目背景.md</span>  📄 <span style="color:var(--text-1)">产品清单.md</span></span><br>
+        <span>📁 <span style="color:var(--text-1)">提示词/</span></span><br>
+        <span>&nbsp;&nbsp;📄 <span style="color:var(--text-1)">做PPT.md</span>  📄 <span style="color:var(--text-1)">数据分析.md</span>  📄 <span style="color:var(--text-1)">日报.md</span></span>
+      </div>
+    </div>
+  </div>
+  <!-- 🥇 黄金 -->
+  <div style="flex:0.95;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px);min-width:0;border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:clamp(8px,0.8vw,14px);background:rgba(255,215,0,.02);box-shadow:0 2px 8px rgba(0,0,0,.06)">
+    <!-- 段位说明 -->
+    <div style="flex:0 0 auto;border:1px solid rgba(255,215,0,.3);border-radius:12px;padding:clamp(8px,0.7vw,14px);background:rgba(255,215,0,.06)">
+      <div style="display:flex;align-items:flex-start;justify-content:space-between">
+        <div style="display:flex;align-items:center;gap:6px">
+          <span style="font-size:clamp(22px,2.2vw,34px)">🥇</span>
+          <strong style="font-size:clamp(20px,2vw,30px)">黄金</strong>
+        </div>
+        <div style="display:flex;gap:clamp(6px,0.6vw,10px);flex-shrink:0">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+            <img onerror="this.style.display='none'" src="/ai/icon/trae.svg" style="width:clamp(32px,3vw,48px);height:clamp(32px,3vw,48px);display:block"/>
+            <span style="font-size:clamp(11px,1vw,14px);color:var(--text-2);font-weight:500">Trae</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+            <div style="width:clamp(32px,3vw,48px);height:clamp(32px,3vw,48px);display:flex;align-items:center;justify-content:center;font-size:clamp(22px,2vw,32px)">📄</div>
+            <span style="font-size:clamp(11px,1vw,14px);color:var(--text-2);font-weight:500">MD</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:1px">
+            <img onerror="this.style.display='none'" src="/ai/icon/obsidian.svg" style="width:clamp(32px,3vw,48px);height:clamp(32px,3vw,48px);display:block"/>
+            <span style="font-size:clamp(11px,1vw,14px);color:var(--text-2);font-weight:500">Obsidian</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- 使用技巧 -->
+    <div style="flex:0 0 auto;border:1px solid var(--border);border-radius:10px;padding:clamp(6px,0.6vw,12px) clamp(8px,0.7vw,14px);background:var(--bg);font-size:clamp(13px,1.1vw,17px);line-height:1.7;color:var(--text-2);box-shadow:0 1px 4px rgba(0,0,0,.04)">
+      <div style="display:flex;align-items:center;gap:clamp(4px,0.4vw,8px);margin-bottom:4px">
+        <span style="background:var(--accent);color:#fff;border-radius:50%;width:clamp(18px,1.6vw,24px);height:clamp(18px,1.6vw,24px);display:flex;align-items:center;justify-content:center;flex-shrink:0;font-weight:700;font-size:clamp(10px,0.9vw,13px)">你</span>
+        <span>→</span>
+        <span style="font-weight:600;color:var(--text-1)">打开整个知识库</span>
+        <span>→</span>
+        <span style="font-weight:600;color:var(--accent)">AI全局关联搜索</span>
+      </div>
+      <div style="font-size:clamp(15px,1.4vw,22px);color:var(--text-2);padding:clamp(4px,0.4vw,8px);background:color-mix(in srgb,var(--accent) 4%,transparent);border-radius:6px">
+         💡 同做"写PPT"：AI通过双向链接找到【大纲】【背景】【演讲稿】自动综合
+      </div>
+    </div>
+    <!-- 资源管理器 -->
+    <div style="flex:1;border:1px solid var(--border);border-radius:10px;overflow:hidden;background:var(--bg);display:flex;flex-direction:column;box-shadow:0 2px 6px rgba(0,0,0,.06)">
+      <div style="background:var(--bg-soft);padding:clamp(3px,0.3vw,6px) clamp(8px,0.7vw,12px);border-bottom:1px solid var(--border);font-size:clamp(11px,1vw,14px);font-weight:600;color:var(--text-2);display:flex;align-items:center;gap:4px">
+        <span>📁</span> <span style="color:var(--accent)">my-knowledge/</span>
+        <span style="margin-left:auto;display:flex;gap:4px">
+          <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--bad)"></span>
+          <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--warn)"></span>
+          <span style="width:clamp(5px,0.4vw,7px);height:clamp(5px,0.4vw,7px);border-radius:50%;background:var(--good)"></span>
+        </span>
+        <span style="margin-left:clamp(4px,0.4vw,8px);font-size:clamp(10px,0.8vw,12px);color:var(--text-3)">← Obsidian 打开</span>
+      </div>
+      <div style="flex:1;padding:clamp(6px,0.5vw,10px);font-size:clamp(12px,1.8vw,20px);line-height:2;color:var(--text-2)">
+         <span style="color:var(--warn);font-size:clamp(12px,1.8vw,20px)">// 文件结构和白银一样</span><br>
+        <span>📁 <span style="color:var(--text-1)">个人资料/</span></span><br>
+        <span>📁 <span style="color:var(--text-1)">公司资料/</span></span><br>
+        <span>📁 <span style="color:var(--text-1)">客户资料/</span></span><br>
+        <span>&nbsp;&nbsp;📁 <span style="color:var(--text-1)">A公司/</span></span><br>
+        <span>📁 <span style="color:var(--text-1)">提示词/</span></span><br>
+        <span style="margin-top:4px;color:var(--accent);font-size:clamp(10px,0.8vw,12px)">+ Obsidian 双向链接 + 图谱视图</span>
+      </div>
+    </div>
+  </div>
+</div>
+<div class="eco-bar" style="margin-top:16px"><div class="eco-row">
+<span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/trae.svg"/><span class="dot" style="background:#32F08C"></span>Trae</span>
+<span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/markdown.svg"/><span class="dot" style="background:#3B82F6"></span>MD文件</span>
+<span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/obsidian.svg"/><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+</div></div></div>
+<div class="notes">知识库搭建三级。青铜：MD+Trae平铺，先跑起来。白银：分目录管理公司客户资料。黄金：Obsidian知识图谱+双向链接，积累成领域专家。不急，先跑起来最重要。</div>
+</section>
+<!-- ====== 11. RESUME COMPARE ====== -->
+<section class="slide" data-title="招聘简历">
+<p class="kicker">Harness · Case Study</p>
+<h2 class="h2">案例对比 · 招聘简历</h2>
+<div class="comp-grid mt-l">
+<div class="comp-card comp-bad"><div class="ct">❌ 只用模型 + 提示词</div><p>通用分析，不精准。AI 能聊，但分析维度单一，缺少结构化评估。</p></div>
+<div class="comp-card comp-good"><div class="ct">✅ 套上驾驭工程六件套</div><p>多维度评分 + JD 匹配 + 预警推荐。AI 不仅分析，还能给出量化评分和录用建议。</p></div>
+</div>
+<p class="lede mt-l tc">关键变量：<b>有没有驾驭工程给 AI 套上缰绳</b></p>
+<div class="notes">左边❌：只用模型+提示词→通用分析。右边✅：套约束六件套→多维度评分+JD匹配+预警推荐。关键变量：有没有驾驭工程给 AI 套上缰绳。</div>
+</section>
+<!-- ====== 12. FREIGHT COMPARE ====== -->
+<section class="slide" data-title="运费对账">
+<p class="kicker">Harness · Case Study</p>
+<h2 class="h2" style="margin-bottom:0!important">案例对比 · 运费对账</h2>
+<div style="display:flex;gap:8px;margin-top:20px">
+<div style="flex:1;background:rgba(229,62,62,.1);text-align:center;padding:8px;font-weight:700;color:#e53e3e;font-size:clamp(18px, 1.9vw, 24px);border-radius:10px 10px 0 0;border:2px solid rgba(229,62,62,.3);border-bottom:none">❌ Excel 手工对账</div>
+<div style="flex:1;background:rgba(46,160,67,.1);text-align:center;padding:8px;font-weight:700;color:#2ea043;font-size:clamp(18px, 1.9vw, 24px);border-radius:10px 10px 0 0;border:2px solid rgba(46,160,67,.3);border-bottom:none;position:relative">✅ AI 脚本对账<span onclick="showSfRules()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:clamp(14px, 1.6vw, 20px);font-weight:700;color:#555;font-family:PingFang SC,Microsoft YaHei,Noto Sans SC,sans-serif;cursor:pointer;text-decoration:underline">📄 顺丰运费对账规则.MD</span></div>
+</div>
+<div style="display:flex;gap:8px;flex:1;min-height:0;position:relative">
+<iframe src="excel_animation.html" style="flex:1;border:2px solid rgba(229,62,62,.3);border-radius:0 0 10px 10px"></iframe>
+<iframe src="pipeline_animation.html" style="flex:1;border:2px solid rgba(46,160,67,.3);border-radius:0 0 10px 10px"></iframe>
+<div style="position:absolute;bottom:55px;left:50%;transform:translateX(-50%);z-index:10">
+<span style="background:#fff;color:#e53e3e;padding:8px 24px;border-radius:8px;font-weight:800;font-size:clamp(18px, 2.3vw, 28px);border:2px solid rgba(229,62,62,.3);box-shadow:0 2px 10px rgba(0,0,0,.1)">💡 关键变量：<b>有没有自动化脚本</b></span>
+</div>
+</div>
+<div class="notes">左边❌：Excel手工算——半天怕错。右边✅：脚本自动化——8个节点逐个校验，<b>3.4秒零误差</b>。关键变量：有没有自动化脚本。</div>
+</section>
+<!-- ====== 13. DISCIPLINE REVEAL ====== -->
+<section class="slide" data-title="驾驭工程揭晓">
+<p class="kicker">四大工程 · CHAPTER 03</p>
+<h2 class="h2" style="margin-bottom:2px!important">驾驭工程</h2>
+<p class="lede" style="margin-top:0!important;margin-bottom:8px">HARNESS ENGINEERING</p>
+<div class="callout-block">
+    💡 <strong>「约束即赋能」——不是限制 AI 的能力，而是将其强大但不可控的智能转化为可靠、可预测、可管理的生产力量。</strong>
+</div>
+<div style="display:flex;flex-direction:column;flex:1;min-height:0;margin-top:clamp(6px,0.8vh,12px)">
+<div style="display:flex;gap:clamp(14px,2.5vw,24px);align-items:stretch;flex:1;min-height:0">
+<div class="stack" style="flex:1;min-width:0">
+<div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06);height:100%;display:flex;flex-direction:column;justify-content:center">
+<div style="font-size:30px;font-weight:600;letter-spacing:0;color:rgba(0,0,0,.35);font-family:var(--font-sans);margin-bottom:2px">CORE INSIGHT</div>
+<h5 style="font-size:30px;font-weight:700;margin-bottom:6px;color:var(--text-1);line-height:1.4">驾驭工程最重要的是——<span style="color:var(--accent)">📜脚本</span>和<span style="color:var(--accent)">🔄工作流</span></h5>
+<div style="color:var(--text-2);font-size:30px;line-height:1.7">
+<p style="margin:0 0 8px">六大组件定义了"要做什么"，<strong>脚本</strong>和<strong>工作流</strong>则是让这些约束真正跑起来的<strong>执行载体</strong>。</p>
+<p style="margin:0 0 8px">脚本将检验规则写成可执行代码，<br/>工作流编排输入→处理→校验→纠错的完整闭环。<br/>两者结合，才能把"理论上的约束"变成"<strong>生产级的可靠</strong>"。</p>
+<p style="margin:0;font-size:30px;color:var(--text-3)">OpenAI 实证：相同模型+数据+提示词，仅通过优化 Harness（工作流脚本），成功率从 42% 跃升至 78%。</p>
+</div>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:44px;flex-shrink:0;gap:6px;color:var(--text-3);font-size:30px;font-weight:600;letter-spacing:0">
+<div style="width:2px;flex:1;background:var(--border);border-radius:1px;max-height:60px"></div>
+<span>🔧</span><span>六<br/>大<br/>组<br/>件</span>
+<div style="width:2px;flex:1;background:var(--border);border-radius:1px;max-height:60px"></div>
+</div>
+<div class="six-pack" style="flex:1;min-width:0">
+<div class="item"><span class="in">① 工具调用</span><br/>AI 能调用外部工具和 API</div>
+<div class="item"><span class="in">② 约束安全</span><br/>设定规则边界，不能越界</div>
+<div class="item"><span class="in">③ 验证校验</span><br/>输出前自检，确保正确</div>
+<div class="item"><span class="in">④ 状态管理</span><br/>记住上下文和执行状态</div>
+<div class="item"><span class="in">⑤ 错误处理</span><br/>出错了能自己发现修正</div>
+<div class="item"><span class="in">⑥ 可观测性</span><br/>每一步可追踪可回溯</div>
+</div>
+</div>
+<div class="eco-bar">
+<div class="eco-row">
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+</div>
+<div class="eco-row">
+<span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/obsidian.svg"/><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+<span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/feishu.svg"/><span class="dot" style="background:#3370FF"></span>飞书</span>
+</div>
+<div class="eco-row">
+<span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/trae.svg"/><span class="dot" style="background:#32F08C"></span>Trae</span>
+<span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/qoder.svg"/><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude Code</span>
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/codex.svg"/><span class="dot" style="background:#10A37F"></span>Codex</span>
+  </div>
+</div>
+</div>
+<div class="notes"><b>驾驭工程 = 给 AI 装上手脚、套上缰绳。</b>六大组件：工具调用、约束安全、验证校验、状态管理、错误处理、可观测性。驾驭工程最重要的是脚本和工作流。</div>
+</section>
+<!-- ====== 14. SCRIPT VS WORKFLOW ====== -->
+<section class="slide" data-title="脚本vs工作流">
+<p class="kicker">Implementation · Decision</p>
+<h2 class="h2">脚本还是工作流？</h2>
+<div class="g2 mt-l">
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;border-left:3px solid var(--accent)"><h4>确定性结果</h4><p>错了就不行——运费对账，金额必须精确到分，错了就是钱。</p></div>
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px"><h4>开放性流程</h4><p>没有标准答案——旅游规划，只要合理就行。</p></div>
+</div>
+<div class="g3 mt-m">
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:center;border-top:3px solid var(--accent)"><h4>🐍 脚本 (Python)</h4><p style="font-size:30px;color:var(--text-2)">确定性需求 · 一定技术门槛 · AI 可帮你写</p></div>
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:center;border-top:3px solid var(--accent)"><h4>🔗 固定工作流</h4><p style="font-size:30px;color:var(--text-2)">扣子 Coze · Dify · 拖拽编排，门槛低</p></div>
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:16px 18px;text-align:center;border-top:3px solid var(--accent)"><h4>🤖 AI 工作流</h4><p style="font-size:30px;color:var(--text-2)">Trae · Qoder · Claude Code · 跟 AI 聊就能完成</p></div>
+</div>
+<div class="notes">确定性结果→脚本或固定工作流。开放性流程→AI 工作流。三种方式<b>没有高低之分，看场景选</b>。</div>
+</section>
+<!-- ====== 15. BIRTHDAY MARKETING ====== -->
+<section class="slide" data-title="生日营销">
+<p class="kicker">Harness · Real Case</p>
+<h2 class="h2">拆解 · 生日营销</h2>
+<p class="lede">一个闭环数据流，累计变现 <span style="color:var(--accent);font-weight:700">400 万+</span></p>
+<div class="chart-flow mt-l">
+<div class="node">👤 用户</div><span class="arrow-node">→</span>
+<div class="node">📱 小程序</div><span class="arrow-node">→</span>
+<div class="node">🗄 数据库</div><span class="arrow-node">→</span>
+<div class="node">🤖 AI处理</div><span class="arrow-node">→</span>
+<div class="node">🎯 分析匹配</div>
+</div>
+<div class="chart-flow">
+<div class="node">📞 客服</div><span class="arrow-node">→</span>
+<div class="node">🎁 礼品</div><span class="arrow-node">→</span>
+<div class="node">🔄 复购</div><span class="arrow-node">→</span>
+<div class="node" style="border-color:var(--good)">💰 进公司口袋</div>
+</div>
+<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:16px;justify-content:center">
+<span class="tag tag-g">🔧 工具调用</span><span class="tag tag-b">🛡 约束安全</span><span class="tag tag-y">✅ 验证校验</span><span class="tag tag-g">📦 状态管理</span><span class="tag tag-r">🔄 容错</span><span class="tag tag-b">📊 可观测性</span>
+</div>
+<div class="big-num mt-l">400<span class="unit">万+</span></div>
+<div class="notes">真实案例：<b>变现400万+</b>。用户→小程序→数据库→AI处理→分析匹配→客服→礼品→复购→进公司口袋。每个节点标注约束组件，每天自动循环。全流程自动化。</div>
+</section>
+<!-- ====== 16. PROGRESSIVE ====== -->
+<section class="slide" data-title="递进对比">
+<p class="kicker">Progression</p>
+<h2 class="h2">约束 → 循环</h2>
+<div class="comp-grid mt-l">
+<div class="comp-card comp-bad"><div class="ct">❌ 只有驾驭工程</div><p>单次执行，做完就完了——AI 输出结果，不管好不好，交差了事。</p></div>
+<div class="comp-card comp-good"><div class="ct">✅ 加上循环工程</div><p><b>做 → 查 → 修 → 再输出</b>，直到满意——AI 自己检查、修正、优化。</p></div>
+</div>
+<p class="lede mt-l tc">从「能干」到「能干好」的质变</p>
+<div class="notes">只有约束→单次执行。加上循环→<b>做→查→修→再输出</b>，直到满意。从"能干"到"能干好"的质变。</div>
+</section>
+<!-- ====== 17. LOOP REVEAL ====== -->
+<section class="slide" data-title="循环工程揭晓">
+<p class="kicker">四大工程 · CHAPTER 04</p>
+<h2 class="h2" style="margin-bottom:2px!important">循环工程</h2>
+<p class="lede" style="margin-top:0!important;margin-bottom:8px">LOOP ENGINEERING</p>
+<div class="callout-block">
+    💡 <strong>通过反复执行-验证-修正的闭环，可以将单次输出的不确定性收敛为确定性结果</strong>
+</div>
+<div class="g2 mt-l">
+<div class="stack">
+<div class="comp-card comp-bad"><div class="ct">❌ 只有约束</div><p>单次执行，有没有问题它不管</p></div>
+<div class="comp-card comp-good"><div class="ct">✅ 加上循环</div><p>做 → 查 → 修 → 再输出——AI 自己检查修正直到符合标准</p></div>
+</div>
+<div class="stack">
+<div class="step-box"><strong>L1 自查</strong> · AI 输出后自己检查一遍</div>
+<div class="step-box"><strong>L2 复盘</strong> · 多轮执行后总结规律</div>
+<div class="step-box"><strong>L3 会诊</strong> · 多个 AI Agent 交叉检查</div>
+<div class="step-box"><strong>L4 绩效</strong> · 量化评估 + 持续优化</div>
+</div>
+</div>
+<div class="g3 mt-l">
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center"><h4>🔄 循环流程</h4><p style="font-size:30px;color:var(--text-2)">输入→处理→输出→检查→发现→修正→交付</p></div>
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;border-left:3px solid var(--bad)"><h4>⚠️ 现在痛点</h4><p style="font-size:30px;color:var(--text-2)">AI 没有眼睛——看不到运行结果，不知道对错</p></div>
+<div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;border-left:3px solid var(--accent)"><h4>🚀 未来方向</h4><p style="font-size:30px;color:var(--text-2)">多 Agent 并行——写代码、Review、测试同时</p></div>
+</div>
+<div class="eco-bar">
+<div class="eco-row">
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+</div>
+<div class="eco-row">
+<span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/obsidian.svg"/><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+<span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/feishu.svg"/><span class="dot" style="background:#3370FF"></span>飞书</span>
+</div>
+<div class="eco-row">
+<span class="pill" style="border-color:#3776AB;background:rgba(55,118,171,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/python.svg"/><span class="dot" style="background:#3776AB"></span>Python</span>
+<span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/coze.svg"/><span class="dot" style="background:#685DF9"></span>Coze</span>
+<span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/dify.svg"/><span class="dot" style="background:#1F4CCF"></span>Dify</span>
+</div>
+<div class="eco-row">
+<span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/cron.svg"/><span class="dot" style="background:#3B82F6"></span>Cron</span>
+<span class="pill" style="border-color:#8B5CF6;background:rgba(139,92,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/agent.svg"/><span class="dot" style="background:#8B5CF6"></span>Agent</span>
+<span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/log.svg"/><span class="dot" style="background:#F59E0B"></span>日志</span>
+</div>
+</div>
+<div class="notes">AI 为什么垃圾？做一遍就完了。<b>循环工程就是逼它再做一遍。</b>四级别：L1自查→L2复盘→L3会诊→L4绩效。三栏：循环流程/AI没有眼睛/多Agent并行。</div>
+</section>
+<!-- ====== 18. PERSONAL VS ENTERPRISE ====== -->
+<section class="slide" data-title="个人vs企业AI">
+<p class="kicker">Comparison</p>
+<h2 class="h2">个人 AI vs 企业 AI</h2>
+<p class="lede">差的不是模型，是<b>工程</b></p>
+<table class="compare-table mt-l">
+<thead><tr><th>维度</th><th>个人 AI</th><th>企业 AI</th></tr></thead>
+<tbody>
+<tr><td>应用场景</td><td>做PPT、写文案、查资料、旅游规划</td><td>对账、简历筛选、生日营销、数据同步</td></tr>
+<tr><td>工程需求</td><td>提示词 + 上下文</td><td style="color:var(--accent);font-weight:600">四大工程全得上（约束+循环是核心）</td></tr>
+<tr><td>容错</td><td>错了 Ctrl+Z</td><td>错了就是钱</td></tr>
+<tr><td>核心</td><td>提效</td><td style="color:var(--accent);font-weight:600">可控 + 变现</td></tr>
+</tbody>
+</table>
+<div class="notes">差的不是模型，是<b>工程</b>。个人：提示词+上下文就够了，错了Ctrl+Z。企业：<b>四大工程全得上</b>，约束+循环是核心，错了就是钱。</div>
+</section>
+<!-- ====== 19. DATA PRIVACY ====== -->
+<section class="slide" data-title="数据隐私">
+<p class="kicker" style="color:#e03e3e">Warning</p>
+<h2 class="h2">数据隐私</h2>
+<p class="lede">AI 很好用，但你的数据去了哪里？</p>
+<div class="g2 mt-l" style="grid-template-columns:2fr 1fr;align-items:stretch">
+<table class="compare-table">
+<thead><tr><th>日常场景</th><th>风险</th><th>解法</th></tr></thead>
+<tbody>
+<tr><td>在豆包网页上问问题</td><td style="color:#e03e3e">⚠️ 数据可能被训练</td><td style="color:#1aaf6c;font-weight:600">✅ 用 API</td></tr>
+<tr><td>上传文件让 AI 分析</td><td style="color:#e03e3e">⚠️ 文件被留存</td><td style="color:#1aaf6c;font-weight:600">✅ 用 Trae</td></tr>
+<tr><td>在 App 上聊工作机密</td><td style="color:#e03e3e">⚠️ 对话被记录</td><td style="color:#1aaf6c;font-weight:600">✅ 隐私模式</td></tr>
+<tr><td>复制粘贴公司数据</td><td style="color:#e03e3e">⚠️ 数据外传</td><td style="color:#1aaf6c;font-weight:600">✅ 企业版</td></tr>
+<tr><td>公司多人共用账号</td><td style="color:#e03e3e">⚠️ 权限混乱</td><td style="color:#1aaf6c;font-weight:600">✅ 一人一账号</td></tr>
+</tbody>
+</table>
+<div style="border:2px solid #1aaf6c;border-radius:12px;padding:clamp(24px,4vh,40px);text-align:center;background:linear-gradient(135deg,rgba(26,175,108,.08),rgba(26,175,108,.02));display:flex;flex-direction:column;justify-content:center">
+<img src="/ai/icon/qoder.svg" style="width:clamp(40px,5vw,64px);height:clamp(40px,5vw,64px);margin-bottom:12px;display:inline-block"/>
+<h4 style="font-size:clamp(20px, 2.5vw, 30px);color:#1aaf6c;margin:0 0 12px">Pro 升级方案</h4>
+<p style="font-size:clamp(18px, 2vw, 30px);color:var(--text-2);margin:0;line-height:1.5"><strong>私有化部署</strong><br/>数据完全不离开<br/>一劳永逸解决所有风险</p>
+</div>
+</div>
+<div class="notes">你的数据去了哪里？网页提问→用API。上传文件→用Trae。聊机密→隐私模式。多人共用→一人一账号。Pro：私有化部署。</div>
+</section>
+<!-- ====== 20. CHECKLIST ====== -->
+<section class="slide" data-title="落地Checklist">
+<p class="kicker">Action</p>
+<h2 class="h2">落地 Checklist</h2>
+<p class="lede">从 0 到 1，一步步把 AI 用到业务里</p>
+<div class="g2 mt-l">
+<div>
+<div class="check-item">☐ 明确业务场景</div>
+<div class="check-item">☐ 选择模型 <span style="color:var(--text-3);font-size:30px">🎯 模型</span></div>
+<div class="check-item">☐ 搭建知识库 <span style="color:var(--text-3);font-size:30px">📚 上下文工程</span></div>
+<div class="check-item">☐ 设计提示词 <span style="color:var(--text-3);font-size:30px">💬 提示词工程</span></div>
+<div class="check-item">☐ 配置约束策略 <span style="color:var(--text-3);font-size:30px">🔧 驾驭工程</span></div>
+<div class="check-item">☐ 评估数据隐私</div>
+<div class="check-item">☐ 搭建工作流 <span style="color:var(--text-3);font-size:30px">🔄 循环工程</span></div>
+<div class="check-item">☐ 循环优化 <span style="color:var(--text-3);font-size:30px">🔄 循环工程</span></div>
+</div>
+<div>
+<div class="tool-layer tl-1"><h4>第一层：API Key</h4><p style="font-size:30px;color:var(--text-2);margin:0">DeepSeek · 通义千问 · SiliconFlow · OpenRouter</p></div>
+<div class="tool-layer tl-2"><h4>第二层：本地工具</h4><p style="font-size:30px;color:var(--text-2);margin:0">Trae · Qoder · Claude Code · Codex</p></div>
+<div class="tool-layer tl-3"><h4>第三层：知识库</h4><p style="font-size:30px;color:var(--text-2);margin:0">Obsidian · 飞书文档 · Dify</p></div>
+</div>
+</div>
+<div class="notes">落地Checklist：明确场景→选模型→搭知识库→设计提示词→配置约束→评估隐私→搭建工作流→循环优化。三层工具包：API Key→本地工具→知识库。</div>
+</section>
+<!-- ====== 21. Q&A ====== -->
+<section class="slide center tc v-center" data-title="互动答疑">
+<div>
+<p class="kicker">Q&amp;A</p>
+<h2 class="h2" style="font-size:clamp(250px, 75vw, 500px)!important;font-weight:800;color:#3B82F6;text-align:center;margin:0;border:none;padding:0;line-height:1">?</h2>
+<div style="margin-top:36px;padding:clamp(28px,5vh,48px) clamp(24px,4vw,40px);background:color-mix(in srgb,var(--accent) 5%,transparent);border:1px solid color-mix(in srgb,var(--accent) 12%,transparent);border-radius:var(--radius);max-width:700px;margin-left:auto;margin-right:auto">
+<p class="dim mt-m">厉害的不是 AI，是<b>人类的脑子</b>。</p>
+</div>
+</div>
+<div class="notes"><b>AI——当你不会用它的时候，它真的是垃圾。当你学会用它的时候，就能变废为宝。厉害的不是 AI，是人类的脑子。</b>预留十分钟自由提问。谢谢大家。</div>
+</section>
+</div>
+<div class="slide-number ctrl-hint" data-current="1" data-total="21"></div>
 <!-- 投票浮层（投影优化版） -->
 <div id="pollOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:9999;flex-direction:column;justify-content:center;align-items:center;padding:clamp(16px,3vh,40px) clamp(12px,3vw,60px);overflow-y:auto;-webkit-overflow-scrolling:touch">
-
-
-  <button onclick="hidePollOverlay()" style="position:fixed;top:2vh;right:2vw;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:clamp(18px,2vw,28px);width:clamp(40px,4vw,56px);height:clamp(40px,4vw,56px);border-radius:50%;cursor:pointer;z-index:10000">✕</button>
-  <div style="text-align:center;margin-bottom:clamp(16px,2vh,36px);flex-shrink:0">
-    <div style="color:#fff;font-size:clamp(24px,3.5vw,64px);font-weight:800;letter-spacing:-0.02em;line-height:1.1">📊 现场投票结果</div>
-    <div style="color:#999;font-size:clamp(12px,1.2vw,18px);margin-top:4px">实时数据 · 每15秒刷新</div>
-  </div>
-  <div id="pollOverlayBars" style="display:flex;gap:clamp(20px,3vw,60px);width:100%;max-width:1300px;align-items:flex-start;justify-content:center;flex-wrap:wrap"></div>
+<button onclick="hidePollOverlay()" style="position:fixed;top:2vh;right:2vw;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:clamp(18px, 2vw, 30px);width:clamp(40px,4vw,56px);height:clamp(40px,4vw,56px);border-radius:50%;cursor:pointer;z-index:10000">✕</button>
+<div style="text-align:center;margin-bottom:clamp(16px,2vh,36px);flex-shrink:0">
+<div style="color:#fff;font-size:clamp(24px, 3.5vw, 48px);font-weight:800;letter-spacing:-0.02em;line-height:1.1">📊 现场投票结果</div>
+<div style="color:#999;font-size:clamp(12px, 1.2vw, 16px);margin-top:4px">实时数据 · 每15秒刷新</div>
 </div>
-
+<div id="pollOverlayBars" style="display:flex;gap:clamp(20px,3vw,60px);width:100%;max-width:1300px;align-items:flex-start;justify-content:center;flex-wrap:wrap"></div>
+</div>
+<!-- 模型测试浮层（控制台投屏用） -->
+<div id="modelPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:9998;flex-direction:column;justify-content:center;align-items:center;padding:clamp(24px,4vh,48px) clamp(20px,4vw,60px)">
+<button onclick="hideModelPopup()" style="position:fixed;top:2vh;right:2vw;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.15);color:#fff;font-size:clamp(18px, 2vw, 30px);width:clamp(40px,4vw,56px);height:clamp(40px,4vw,56px);border-radius:50%;cursor:pointer;z-index:10000">✕</button>
+<div style="width:100%;max-width:900px;background:#1a1a2e;border:1px solid rgba(255,255,255,.1);border-radius:clamp(12px,1.5vw,20px);overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+<div style="display:flex;align-items:center;gap:8px;padding:clamp(10px,1.5vh,18px) clamp(14px,2vw,24px);background:rgba(255,255,255,.04);border-bottom:1px solid rgba(255,255,255,.06)">
+<span style="font-size:clamp(14px, 1.5vw, 18px)">🧪</span>
+<span style="color:#fff;font-size:clamp(14px, 1.5vw, 18px);font-weight:600">模型测试</span>
+<span style="color:rgba(255,255,255,.3);font-size:clamp(12px, 1vw, 14px);margin-left:auto">DeepSeek · 无提示词</span>
+</div>
+<div style="padding:clamp(14px,2vh,24px) clamp(14px,2vw,24px)">
+<div style="margin-bottom:clamp(10px,1.5vh,20px)">
+<div style="color:rgba(255,255,255,.4);font-size:clamp(12px, 1.1vw, 16px);margin-bottom:clamp(4px,0.5vh,8px);font-weight:600">💬 问题</div>
+<div id="modelPopupQ" style="color:#e8ebf4;font-size:clamp(14px, 1.8vw, 18px);line-height:1.5;padding:clamp(8px,1vh,14px) clamp(10px,1.2vw,18px);background:rgba(255,255,255,.04);border-radius:8px">—</div>
+</div>
+<div>
+<div style="color:rgba(255,255,255,.4);font-size:clamp(12px, 1.1vw, 16px);margin-bottom:clamp(4px,0.5vh,8px);font-weight:600">🤖 回答</div>
+<div id="modelPopupA" style="color:#7ee787;font-size:clamp(14px, 1.8vw, 18px);line-height:1.6;padding:clamp(8px,1vh,14px) clamp(10px,1.2vw,18px);background:rgba(0,0,0,.2);border:1px solid rgba(126,231,135,.15);border-radius:8px;white-space:pre-wrap;max-height:40vh;overflow-y:auto">—</div>
+</div>
+</div>
+</div>
+</div>
 <script>
 // card toggle helper
 function toggleCard(el){el.classList.toggle('open')}
@@ -923,11 +1366,35 @@ function toggleP4(el){
 (function(){
 	  var slides=document.querySelectorAll('.slide');
 	  var total=slides.length;
-	  var lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null;
+	  var lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, lastCoverP1=false;
 	  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0, _lkP4=0, _lkO=false, _lkT=false, _lkF=false;
 	  var _locked=false, _firstPoll=true, _lastRemoteNav=0;
 
 	  var lastSlide=1;  // 当前页码（1-based），用于 touch 和 sync
+
+	  // ── 拦截 __deckGo：翻页前先重置动效，消除闪烁 ──
+	  if(window.__deckGo){
+	    var _origDeckGo = window.__deckGo;
+	    window.__deckGo = function(n){
+	      var page = n + 1;  // runtime n is 0-based
+	      // 切到 P2 前折叠答案卡片
+	      if(page === 2){
+	        var c2=document.getElementById('slide2Card');
+	        if(c2) c2.classList.remove('open');
+	        lastExpand=false;
+	      }
+	      // 切到 P4 前收起所有卡片
+	      if(page === 4){
+	        var p4=document.querySelector('.slide[data-title="模型"]');
+	        if(p4){
+	          var cds=p4.querySelectorAll('.ca-card');
+	          for(var ci=0;ci<cds.length;ci++) cds[ci].classList.remove('open');
+	        }
+	        lastCard=0;
+	      }
+	      _origDeckGo(n);
+	    };
+	  }
 
 	  // ── 本地翻页（直接操作 DOM，不依赖 runtime.js）──
 	  function localGoSlide(n){
@@ -940,6 +1407,24 @@ function toggleP4(el){
 	    lastSlide = n;
 	    // 同时通知 runtime.js（如果存在）
 	    if(window.__deckGo) window.__deckGo(n-1);
+	    // ========== 翻页重置动效 ==========
+	    // P2：答案卡片折叠隐藏 + 同步服务器
+	    if(n===2){
+	      var c2=document.getElementById('slide2Card');
+	      if(c2) c2.classList.remove('open');
+	      lastExpand=false;
+	      fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:false})}).catch(function(){});
+	    }
+	    // P4：三阶段卡片全部折叠 + 同步服务器
+	    if(n===4){
+	      var p4=document.querySelector('.slide[data-title="模型"]');
+	      if(p4){
+	        var cds=p4.querySelectorAll('.ca-card');
+	        for(var ci=0;ci<cds.length;ci++) cds[ci].classList.remove('open');
+	      }
+	      lastCard=0;
+	      fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,p4open:0})}).catch(function(){});
+	    }
 	  }
 
   function applyServerState(d){
@@ -947,6 +1432,10 @@ function toggleP4(el){
 	    // 首次轮询：只同步状态不触发动作（除非锁定 → 跳转到锁定页）
 	    if(_firstPoll){
 	      _lkO=d.overviewKey||0; _lkT=d.themeKey||0; _lkF=d.filePopup||0; lastCoverQ=d.coverQ||false; _lkSfR=d.sfRules||0;
+	      // 首次轮询不触发动效，只记录状态（防止服务器残留状态自动暴露隐藏内容）
+	      if(d.coverP1!==undefined) lastCoverP1=d.coverP1;
+	      if(d.expand!==undefined) lastExpand=d.expand;
+	      if(d.p4open!==undefined) lastCard=d.p4open;
 	      _firstPoll=false;
 	      // 控制台锁定 → 直接跳到锁定页
 	      if(d.lock && d.slide){
@@ -970,6 +1459,12 @@ function toggleP4(el){
         if(d.coverQ) els[i].classList.add('show');
         else els[i].classList.remove('show');
       }
+      changed=true;
+    }
+    // P1：从会用AI动效（toggle 激活/还原）
+    if(d.coverP1!==undefined && d.coverP1!==lastCoverP1){
+      lastCoverP1=d.coverP1;
+      if(window.showMorph) window.showMorph();
       changed=true;
     }
     // 展开/卡片动效（slide 2 expand, slide 4 card）
@@ -1002,6 +1497,25 @@ function toggleP4(el){
       lastPollOverlay=d.pollOverlay;
       if(d.pollOverlay){ showPollOverlay(); }
       else { hidePollOverlay(); }
+    }
+    // 模型测试浮层
+    if(d.modelPopup!==undefined && d.modelPopup!==_lkModelPopup){
+      _lkModelPopup=d.modelPopup;
+      if(d.modelPopup && typeof d.modelPopup === 'object'){
+        if(d.modelPopup.show){ showModelPopup(); }
+        else { hideModelPopup(); }
+        if(d.modelPopup.question || d.modelPopup.answer){
+          updateModelPopupContent(d.modelPopup.question, d.modelPopup.answer);
+        }
+      }
+    }
+    // 生图投屏
+    if(d.imageOverlay!==undefined){
+      if(d.imageOverlay.show && d.imageOverlay.url){
+        showImageOverlay(d.imageOverlay.url, d.imageOverlay.prompt||'');
+      } else if(d.imageOverlay!==undefined && !d.imageOverlay.show){
+        hideImageOverlay();
+      }
     }
     // 换肤：直接切主题 CSS
     if(d.themeKey && d.themeKey!==_lkT){
@@ -1109,7 +1623,7 @@ function toggleP4(el){
       function getDepth(opt){ var idx = depthOrder.indexOf(opt); return idx >= 0 ? idx : 999; }
       var h = '';
       var keys = Object.keys(d);
-      if(keys.length === 0){ container.innerHTML = '<p style="color:#999;text-align:center;width:100%;font-size:clamp(14px,1.8vw,28px)">暂无投票数据</p>'; return; }
+      if(keys.length === 0){ container.innerHTML = '<p style="color:#999;text-align:center;width:100%;font-size:clamp(14px, 1.8vw, 18px)">暂无投票数据</p>'; return; }
       for(var i=0;i<keys.length;i++){
         var id = keys[i], data = d[id];
         var total = 0, opts = Object.keys(data);
@@ -1117,16 +1631,16 @@ function toggleP4(el){
         if(id === 'ai_tool'){ opts.sort(function(a,b){ return data[b] - data[a]; }); }
         else { opts.sort(function(a,b){ return getDepth(a) - getDepth(b); }); }
         h += '<div style="flex:1;min-width:220px;max-width:580px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:clamp(12px,2vw,32px) clamp(12px,2vw,28px)">';
-        h += '<div style="font-size:clamp(15px,2vw,28px);font-weight:700;color:#fff;margin-bottom:2px">' + (labels[id]||id) + '</div>';
-        h += '<div style="font-size:clamp(10px,1vw,14px);color:#999;margin-bottom:clamp(10px,1.5vh,20px)">共 ' + total + ' 票</div>';
+        h += '<div style="font-size:clamp(18px, 2vw, 30px);font-weight:700;color:#fff;margin-bottom:2px">' + (labels[id]||id) + '</div>';
+        h += '<div style="font-size:clamp(12px, 1vw, 14px);color:#999;margin-bottom:clamp(10px,1.5vh,20px)">共 ' + total + ' 票</div>';
         for(var k=0;k<opts.length;k++){
           var opt = opts[k], cnt = data[opt];
           var pct = total > 0 ? Math.round(cnt/total*100) : 0;
           var col = colors[k % colors.length];
           h += '<div style="margin-bottom:clamp(8px,1.5vh,16px)">';
           h += '<div style="display:flex;justify-content:space-between;align-items:baseline;margin-bottom:clamp(2px,0.4vh,6px);flex-wrap:wrap;gap:4px">';
-          h += '<span style="font-size:clamp(13px,1.5vw,20px);color:#ddd;font-weight:400">' + opt + '</span>';
-          h += '<span style="font-size:clamp(13px,1.6vw,22px);font-weight:600;color:#fff;white-space:nowrap">' + cnt + '<span style="font-size:60%;color:#888;font-weight:400">票</span> <span style="color:#58a6ff">' + pct + '%</span></span>';
+          h += '<span style="font-size:clamp(14px, 1.5vw, 18px);color:#ddd;font-weight:400">' + opt + '</span>';
+          h += '<span style="font-size:clamp(14px, 1.6vw, 20px);font-weight:600;color:#fff;white-space:nowrap">' + cnt + '<span style="font-size:60%;color:#888;font-weight:400">票</span> <span style="color:#58a6ff">' + pct + '%</span></span>';
           h += '</div>';
           h += '<div style="height:clamp(8px,1.2vh,18px);background:rgba(229,62,62,.06);border-radius:4px;overflow:hidden"><div style="height:100%;width:' + pct + '%;background:' + col + ';border-radius:4px;transition:width .6s;min-width:2px"></div></div>';
           h += '</div>';
@@ -1136,6 +1650,37 @@ function toggleP4(el){
       container.innerHTML = h;
     }).catch(function(){});
   }
+
+  // ── 模型测试浮层 ──
+  var _lkModelPopup = 0;
+  window.showModelPopup = function(){
+    var el = document.getElementById('modelPopup');
+    if(el) el.style.display = 'flex';
+  };
+  window.hideModelPopup = function(){
+    var el = document.getElementById('modelPopup');
+    if(el) el.style.display = 'none';
+  };
+  window.updateModelPopupContent = function(q, a){
+    var qEl = document.getElementById('modelPopupQ');
+    var aEl = document.getElementById('modelPopupA');
+    if(qEl) qEl.textContent = q || '—';
+    if(aEl) aEl.textContent = a || '—';
+  };
+
+  // ── 生图投屏 ──
+  window.showImageOverlay = function(url, prompt){
+    var overlay = document.getElementById('imageOverlay');
+    var img = document.getElementById('imageOverlayImg');
+    var pEl = document.getElementById('imageOverlayPrompt');
+    if(img) img.src = url;
+    if(pEl) pEl.textContent = prompt || '—';
+    if(overlay) overlay.style.display = 'flex';
+  };
+  window.hideImageOverlay = function(){
+    var overlay = document.getElementById('imageOverlay');
+    if(overlay) overlay.style.display = 'none';
+  };
 
 
 	  // ── 锁定禁止键盘 ──
@@ -1188,21 +1733,112 @@ function toggleP4(el){
     };
   }catch(e){}
 })();
-</script>
 
+// ═══ P1 封面动效：你真的会用AI吗？ → 从会用AI，到用好AI ═══
+(function(){
+  var INITIAL = ['你','真','的','会','用','A','I','吗','？'];
+  var FINAL   = ['从','会','用','A','I','，','到','用','好','A','I'];
+  var SHARED = { init:[3,4,5,6], final:[1,2,3,4] };
+  var SPACING = 1.0;
+  var P1_DUR = 1250;
+  var NEW_DATA = [[0,'从'],[5,'，'],[6,'到'],[7,'用'],[8,'好'],[9,'A'],[10,'I']];
+  function cx(i,t){ return (i-(t-1)/2)*SPACING; }
+
+  var wrap = document.getElementById('cp1Wrap');
+  if(!wrap) return;
+  var _els = {};
+  var _activated = false;
+
+  function buildInitial(){
+    wrap.innerHTML = '';
+    _els = {};
+    INITIAL.forEach(function(ch,i){
+      var el = document.createElement('span');
+      el.className = 'cp1-char';
+      el.textContent = ch;
+      el.style.left = 'calc(50% + '+cx(i,INITIAL.length)+'em)';
+      el.style.zIndex = SHARED.init.indexOf(i)>=0 ? 2 : 1;
+      wrap.appendChild(el);
+      _els['i'+i] = el;
+    });
+    NEW_DATA.forEach(function(a){
+      var idx=a[0], ch=a[1];
+      var el = document.createElement('span');
+      el.className = 'cp1-char hidden';
+      el.textContent = ch;
+      if(ch==='好') el.style.color = 'var(--bad)';
+      el.style.left = 'calc(50% + '+cx(idx,FINAL.length)+'em)';
+      wrap.appendChild(el);
+      _els['f'+idx] = el;
+    });
+  }
+
+  function hideSubtitles(){
+    var s1 = document.getElementById('cp1Sub1');
+    if(s1) s1.classList.remove('show');
+  }
+
+  // 初始构建
+  buildInitial();
+
+  window.showMorph = function(){
+    if(!_activated){
+      // ═══ 激活：播放动效 ═══
+      _activated = true;
+      // Phase 1
+      INITIAL.forEach(function(_,i){
+        if(SHARED.init.indexOf(i)<0) _els['i'+i].classList.add('leaving');
+      });
+      for(var n=0;n<SHARED.init.length;n++){
+        _els['i'+SHARED.init[n]].style.left = 'calc(50% + '+cx(SHARED.final[n],FINAL.length)+'em)';
+      }
+      // Phase 2
+      var track = _els['i'+SHARED.init[0]];
+      function startP2(){
+        wrap.querySelectorAll('.cp1-char.hidden').forEach(function(el){
+          // 先移除 hidden 类（触发 CSS transition opacity 0→1, transform .4→1）
+          el.classList.remove('hidden');
+          // 清除内联样式，让 CSS transition 接管动画
+          el.style.opacity = '';
+          el.style.transform = '';
+        });
+        setTimeout(function(){
+          var s1 = document.getElementById('cp1Sub1');
+          if(s1) s1.classList.add('show');
+        }, 1500);
+      }
+      var _fired = false;
+      function safeP2(){
+        if(_fired) return;
+        _fired = true;
+        startP2();
+      }
+      track.addEventListener('transitionend', function handler(e){
+        if(e.propertyName === 'left') safeP2();
+      });
+      setTimeout(safeP2, P1_DUR);
+    } else {
+      // ═══ 还原：直接回到初始状态 ═══
+      _activated = false;
+      hideSubtitles();
+      buildInitial();
+    }
+  };
+})();
+</script>
 <div id="mdPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.92);z-index:99999;padding:20px">
-  <div style="max-width:860px;margin:clamp(30px,5vh,60px) auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
-    <div style="display:flex;align-items:center;justify-content:space-between;background:#f0f0f0;padding:12px 18px;border-bottom:1px solid #e0e0e0">
-      <div style="display:flex;align-items:center;gap:8px">
-        <span style="font-size:20px">📄</span>
-        <span style="color:#222;font-weight:600;font-size:15px">AI分享会.md</span>
-      </div>
-      <button onclick="document.getElementById('mdPopup').style.display='none'" style="background:rgba(255,255,255,.08);border:none;color:#999;font-size:18px;width:36px;height:36px;border-radius:8px;cursor:pointer">✕</button>
-    </div>
-    <div style="display:flex">
-      <div id="mdPopupContent" style="flex:1;padding:clamp(14px,2vw,24px) clamp(16px,2vw,28px);color:#222;font-family:SF Mono,Menlo,Consolas,monospace;font-size:clamp(14px,1.4vw,17px);line-height:1.7;white-space:pre-wrap;overflow-y:auto;overflow-x:auto;max-height:80vh">加载中...</div>
-    </div>
-  </div>
+<div style="max-width:860px;margin:clamp(30px,5vh,60px) auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
+<div style="display:flex;align-items:center;justify-content:space-between;background:#f0f0f0;padding:12px 18px;border-bottom:1px solid #e0e0e0">
+<div style="display:flex;align-items:center;gap:8px">
+<span style="font-size:30px">📄</span>
+<span style="color:#222;font-weight:600;font-size:30px">AI分享会.md</span>
+</div>
+<button onclick="document.getElementById('mdPopup').style.display='none'" style="background:rgba(255,255,255,.08);border:none;color:#999;font-size:30px;width:36px;height:36px;border-radius:8px;cursor:pointer">✕</button>
+</div>
+<div style="display:flex">
+<div id="mdPopupContent" style="flex:1;padding:clamp(14px,2vw,24px) clamp(16px,2vw,28px);color:#222;font-family:SF Mono,Menlo,Consolas,monospace;font-size:clamp(14px, 1.4vw, 18px);line-height:1.7;white-space:pre-wrap;overflow-y:auto;overflow-x:auto;max-height:80vh">加载中...</div>
+</div>
+</div>
 <script>
 function showSfRules(){
   var popup = document.getElementById('mdPopup');
@@ -1227,3 +1863,4 @@ function showMdPopup(){
 </script>
 </div>
 </body>
+</html>

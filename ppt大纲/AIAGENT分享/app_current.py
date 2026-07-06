@@ -1936,7 +1936,7 @@ setInterval(load,30000);
 </body>
 </html>'''
 # ── 控制页状态 ─────────────────────────────────────
-CONTROL_STATE = {"slide": 1, "lock": False, "coverQ": False, "expand": False, "card": 0, "pollOverlay": False, "themeKey": 0, "overviewKey": 0, "filePopup": 0, "popupScroll": 0, "autoScroll": 0, "sfRules": 0, "sfScroll": 0, "p4open": 0}
+CONTROL_STATE = {"slide": 1, "lock": False, "coverQ": False, "coverP1": False, "expand": False, "card": 0, "pollOverlay": False, "themeKey": 0, "overviewKey": 0, "filePopup": 0, "popupScroll": 0, "autoScroll": 0, "sfRules": 0, "sfScroll": 0, "p4open": 0}
 
 QA_OVERLAY = {}
 
