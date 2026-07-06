@@ -132,7 +132,6 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
     <button class="tab-btn" data-tab="questions" style="font-size:12px">💬 提问</button>
     <button class="tab-btn" data-tab="poll" style="font-size:12px">📊 投票</button>
     <button class="tab-btn" data-tab="model" style="font-size:12px">🧪 模型</button>
-    <button class="tab-btn" data-tab="image" style="font-size:12px">🎨 生图</button>
   </div>
 </div>
 <div class="scroll">
@@ -157,22 +156,6 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
     <div class="next-prev">
       <div class="nl">⏭ 下一页</div>
       <div class="nc" id="nc">—</div>
-    </div>
-  </div>
-  <div class="tab-content" id="tabImage" style="display:none">
-    <div style="display:flex;gap:6px;align-items:center;margin-bottom:10px;flex-wrap:wrap">
-      <span style="font-size:13px;color:#777;font-weight:600">🎨 豆包生图</span>
-      <span style="font-size:10px;color:#999;padding:2px 8px;background:rgba(0,0,0,.05);border-radius:8px">Seedream 4.5 · 2K</span>
-      <button class="btn small" id="imagePopupBtn" onclick="toggleImagePopup()" style="margin-left:4px;font-size:11px">📺 投屏显示</button>
-    </div>
-    <div style="font-size:10px;color:#aaa;margin-bottom:8px;line-height:1.5">输入描述 → 点击生图 → 豆包 Seedream 生成图片。Key在服务端，不暴露到浏览器。</div>
-    <div id="imageResultArea" style="background:rgba(0,0,0,.02);border:1px solid rgba(0,0,0,.08);border-radius:10px;padding:10px;min-height:320px;max-height:480px;overflow-y:auto;margin-bottom:8px;display:flex;flex-direction:column;align-items:center;justify-content:center">
-      <div id="imagePlaceholder" style="text-align:center;padding:30px;color:#999;font-size:13px">输入提示词，点击"生成图片"</div>
-      <img id="imageResult" style="max-width:100%;max-height:400px;border-radius:8px;display:none" alt="生成的图片">
-    </div>
-    <div style="display:flex;gap:4px;align-items:stretch">
-      <textarea id="imagePrompt" style="flex:1;padding:8px 10px;border-radius:8px;border:1px solid rgba(0,0,0,.1);font-size:13px;background:#fff;font-family:inherit;resize:none;min-height:36px;line-height:1.5" placeholder="描述你想生成的图片..." rows="2"></textarea>
-      <button class="btn on" id="imageGenerateBtn" onclick="generateImage()" style="font-size:12px;padding:8px 16px;white-space:nowrap">🖼 生图</button>
     </div>
   </div>
 
@@ -722,80 +705,6 @@ function toggleModelPopup(){
     if(m.role === 'user' && !lastQ) lastQ = m.content;
   }
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,modelPopup:{show:_modelPopupOn,question:lastQ,answer:lastA}})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
-}
-
-// ── 生图模块 ──
-var _imagePopupOn = false;
-var _imageGenerating = false;
-
-function generateImage(){
-  if(_imageGenerating) return;
-  var prompt = document.getElementById('imagePrompt').value.trim();
-  if(!prompt){ alert('请输入图片描述'); return; }
-  _imageGenerating = true;
-  var btn = document.getElementById('imageGenerateBtn');
-  btn.textContent = '⏳ 生成中...';
-  btn.disabled = true;
-  document.getElementById('imagePlaceholder').style.display = 'none';
-  document.getElementById('imageResult').style.display = 'none';
-  fetch('/api/doubao/generate-image', {
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({prompt:prompt})
-  }).then(function(r){return r.json();}).then(function(d){
-    if(d.ok && d.url){
-      var img = document.getElementById('imageResult');
-      img.src = d.url;
-      img.style.display = 'block';
-      // 如果投屏开启，发送到大屏
-      if(_imagePopupOn){
-        syncImageToProjector(d.url, prompt);
-      }
-    } else {
-      alert('生图失败: ' + (d.error||'未知错误'));
-      document.getElementById('imagePlaceholder').style.display = 'block';
-    }
-    _imageGenerating = false;
-    btn.textContent = '🖼 生图';
-    btn.disabled = false;
-  }).catch(function(err){
-    alert('网络错误');
-    _imageGenerating = false;
-    btn.textContent = '🖼 生图';
-    btn.disabled = false;
-    document.getElementById('imagePlaceholder').style.display = 'block';
-  });
-}
-
-function toggleImagePopup(){
-  _imagePopupOn = !_imagePopupOn;
-  var btn = document.getElementById('imagePopupBtn');
-  if(_imagePopupOn){
-    btn.className = 'btn small on';
-    btn.textContent = '📺 投屏中...';
-    // 同步当前图片到大屏
-    var img = document.getElementById('imageResult');
-    if(img.style.display !== 'none' && img.src){
-      syncImageToProjector(img.src, document.getElementById('imagePrompt').value);
-    }
-  } else {
-    btn.className = 'btn small';
-    btn.textContent = '📺 投屏显示';
-    // 关闭大屏图片
-    fetch('/api/control/image-overlay',{
-      method:'POST',
-      headers:{'Content-Type':'application/json'},
-      body:JSON.stringify({show:false})
-    }).catch(function(e){console.warn('[控制] 指令失败:',e);});
-  }
-}
-
-function syncImageToProjector(url, prompt){
-  fetch('/api/control/image-overlay',{
-    method:'POST',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify({show:true, url:url, prompt:prompt})
-  }).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 
 function initModelKey(){
