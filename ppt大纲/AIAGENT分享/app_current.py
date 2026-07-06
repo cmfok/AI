@@ -46,7 +46,6 @@ SLIDES = [
     {"page": 16, "title": "个人AI vs 企业AI",            "tags": "个人 企业 效率 可控 容错 生产环境"},
     {"page": 17, "title": "数据隐私",                     "tags": "隐私 数据 泄露 加密 私有化 本地化"},
     {"page": 18, "title": "落地Checklist",               "tags": "Checklist 落地 场景 模型 提示词 约束 监控"},
-    {"page": 19, "title": "互动答疑",                     "tags": "答疑 互动 问题 自由 讨论 QA"},
 ]
 
 # 不展示问题的封面/过渡页（不参与 AI 分类，已有问题强制迁移）
@@ -522,12 +521,7 @@ def cc_page():
 
 @app.route('/api/questions', methods=['POST'])
 def submit_question():
-    import sys, traceback
-    print('[DEBUG] POST /api/questions START', flush=True)
-    sys.stdout.flush()
     data = request.get_json(force=True)
-    print(f'[DEBUG] JSON parsed: {data.get("question","")[:30]}...', flush=True)
-    sys.stdout.flush()
     name = data.get('name', '').strip() or '匿名'
     question = data.get('question', '').strip()
     if not question:
@@ -536,11 +530,7 @@ def submit_question():
         return jsonify({'ok': False, 'error': '内容不能超过500字'}), 400
 
     with _questions_lock:
-        print(f'[DEBUG] GOT LOCK', flush=True)
-        sys.stdout.flush()
         questions = load_questions()
-        print(f'[DEBUG] loaded {len(questions)} questions', flush=True)
-        sys.stdout.flush()
         qid = len(questions) + 1
         entry = {
             'id': qid,
@@ -557,33 +547,19 @@ def submit_question():
         }
         questions.append(entry)
         save_questions(questions)
-    print(f'[DEBUG] saved question #{qid}', flush=True)
-    sys.stdout.flush()
 
-    # 立即尝试分类，返回置信度和候选页
+    # 立即尝试分类（同步，简单场景）
     try:
-        print(f'[DEBUG] before classify...', flush=True)
-        sys.stdout.flush()
         page, score = classifier.classify(question)
-        print(f'[DEBUG] after classify: page={page}, score={score}', flush=True)
-        sys.stdout.flush()
         entry['page'] = page
         entry['score'] = round(score, 3)
         entry['classified_at'] = datetime.now().isoformat()
         save_questions(questions)
-        print(f'[DEBUG] saved with page', flush=True)
-        sys.stdout.flush()
-    except Exception as e:
-        print(f'[DEBUG] classify error: {e}', flush=True)
-        traceback.print_exc()
-        sys.stdout.flush()
+    except:
         page = None
-        score = 0
+        pass  # 后台线程会处理
 
-    # 置信度判断：TF-IDF cosine < 0.15 时需要追问
-    confidence = round(score, 3) if score else 0
-    needs_followup = (confidence < 0.15)
-    return jsonify({'ok': True, 'id': qid, 'page': page, 'confidence': confidence, 'needs_followup': needs_followup, 'message': '谢谢！你的内容已提交'})
+    return jsonify({'ok': True, 'id': qid, 'page': page, 'message': '谢谢！你的内容已提交'})
 
 @app.route('/api/questions', methods=['GET'])
 def get_questions():
@@ -837,7 +813,7 @@ def vote_extra_poll():
 # ── 反问环节 API ──────────────────────────────────────
 @app.route('/api/followup', methods=['POST'])
 def generate_followup():
-    """根据已提交的问题，生成反问选项（完全由LLM驱动）"""
+    """根据已提交的问题，生成反问选项"""
     data = request.get_json(force=True)
     qid = data.get('id')
     question_text = data.get('question', '')
@@ -845,35 +821,14 @@ def generate_followup():
         return jsonify({'ok': False, 'error': '缺少问题'}), 400
 
     try:
-        # 构建幻灯片信息
-        slides_info = "\n".join([
-            f"第{s['page']}页「{s['title']}」：{s['tags']}"
-            for s in SLIDES if s['page'] not in COVER_PAGES
-        ])
+        prompt = f"""你是一个AI分享会的助手。听众提了一个问题，现需通过反问更准确理解他的真实需求。
 
-        prompt = f"""你是一个AI分享会的助手，需要帮一个听众把问题归类到正确的PPT幻灯片。
+听众问题：{question_text}
 
-当前PPT的幻灯片列表如下：
-{slides_info}
+请生成2个选择题，每个3-4个选项，选项要贴合AI在企业应用的实际场景。
 
-听众提交了以下内容："{question_text}"
-
-请判断能否直接归类到某页。如果不能（内容太模糊、场景不清楚、可能属于多页），则需要生成追问来帮助定位。
-
-请严格按以下JSON返回：
-{{
-  "needs_followup": true或false,
-  "questions": [
-    {{"q": "基于用户内容设计的反问", "options": ["选项A", "选项B", "选项C", "其他（请填写）"]}},
-    {{"q": "基于用户内容设计的反问2", "options": ["选项A", "选项B", "选项C", "其他（请填写）"]}}
-  ]
-}}
-
-注意：
-- 每个选择题的最后一个选项必须是"其他（请填写）"
-- 如果用户内容已经足够清楚，needs_followup=false，questions=[]
-- 不要问与AI分享会无关的问题"""
-
+请严格按以下JSON格式返回（不要任何多余文字）：
+{{"questions":[{{"q":"反问问题","options":["选项1","选项2","选项3"]}},{{"q":"反问问题2","options":["选项1","选项2","选项3"]}}]}}"""
         with httpx.Client(timeout=30) as client:
             resp = client.post(
                 f'{DEEPSEEK_BASE_URL}/chat/completions',
@@ -883,27 +838,28 @@ def generate_followup():
             if resp.status_code == 200:
                 content = resp.json()['choices'][0]['message']['content']
                 print(f'[反问] DeepSeek返回: {content[:200]}')
-                match = re.search(r'\{.*\}', content, re.DOTALL)
+                # 查找最外层的大括号块
+                match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
+                # 如果没找到简单json，尝试找嵌套的
+                if not match:
+                    match = re.search(r'\{.*\}', content, re.DOTALL)
                 if match:
                     result = json.loads(match.group())
-                    needs_followup = result.get('needs_followup', False)
                     questions = result.get('questions', [])
-                    
-                    if not needs_followup or not questions:
-                        # LLM判断不需要追问，或返回空questions
-                        return jsonify({'ok': True, 'needs_followup': False, 'questions': []})
-                    
-                    return jsonify({'ok': True, 'needs_followup': True, 'questions': questions})
-                
+                    if questions:
+                        for q in questions:
+                            q['options'] = q.get('options', []) + ['其他（请填写）']
+                        return jsonify({'ok': True, 'questions': questions})
+                # JSON解析失败，用原始内容作为问题（可能DeepSeek返回了文字描述）
                 print(f'[反问] JSON解析失败, 原始内容: {content[:300]}')
-            
-            # LLM返回非200状态码
-            print(f'[反问] DeepSeek返回非200: {resp.status_code} {resp.text[:200]}')
     except Exception as e:
         print(f'[反问] 异常: {e}')
 
-    # LLM调用失败，直接返回错误
-    return jsonify({'ok': False, 'error': 'LLM调用失败，请稍后重试'}), 500
+    # 降级：返回默认反问
+    return jsonify({'ok': True, 'questions': [
+        {'q': '你提到的场景，目前是手工操作还是已经有系统支持？', 'options': ['纯手工', '有系统但不完善', '有系统但不好用', '其他（请填写）'], 'type': 'choice'},
+        {'q': '你希望AI在这件事上做到什么程度？', 'options': ['完全自动，不用人管', '辅助决策，人来确认', '先跑通一个试点看看', '其他（请填写）'], 'type': 'choice'},
+    ]})
 
 @app.route('/api/followup/answer', methods=['POST'])
 def submit_followup():

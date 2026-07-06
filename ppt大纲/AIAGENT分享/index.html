@@ -126,6 +126,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .eco-bar .pill{font-size:clamp(11px,1.28vw,18px);opacity:.85;padding:3px 10px;border-radius:6px;border:2px solid var(--border);white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
 .eco-bar .pill .ic{display:inline-block;width:clamp(14px,1.6vw,22px);height:clamp(14px,1.6vw,22px);flex-shrink:0;border-radius:6px}
 .eco-bar .pill img{width:clamp(11px,1.28vw,18px);height:clamp(11px,1.28vw,18px);flex-shrink:0;border-radius:6px;object-fit:contain}
+.eco-bar .pill img.err{display:none}
 .eco-bar .pill img.err+.dot{display:inline-block;width:clamp(10px,1.12vw,14px);height:clamp(10px,1.12vw,14px);border-radius:6px;flex-shrink:0}
 .eco-row{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
 
@@ -227,6 +228,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cover-reveal{opacity:0;transition:opacity 1.5s ease}
 .cover-reveal.show{opacity:1}
 .cover-delay{transition-delay:2s}
+/* ── P10 段位切换标签：桌面隐藏，手机显示 ── */
+[data-title="知识库搭建"] .p10-tabs{display:none!important}
 
 /* ── P1 从会用AI动效（两句话交叉渐变）── */
   .cp1-stage{position:relative;display:flex;justify-content:center;align-items:center;height:clamp(80px,14vw,180px)}
@@ -448,12 +451,15 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
  	  [data-title="模型"] .p4-step3,
  	  [data-title="模型"] .p4-step3-eq{grid-template-columns:1fr!important;gap:10px!important}
  	  [data-title="模型"] .p4-brand-block-body{grid-template-columns:1fr!important}
- 	  /* ── P13：驾驭工程主布局转竖向 ── */
- 	  [data-title="驾驭工程揭晓"] > div[style*="display:flex"]{flex-direction:column!important;gap:12px!important}
- 	  [data-title="驾驭工程揭晓"] > div[style*="display:flex"] > div[style*="width:44px"]{width:100%!important;height:auto!important;flex-direction:row!important;padding:4px 0!important;gap:4px!important}
- 	  [data-title="驾驭工程揭晓"] > div[style*="display:flex"] > div[style*="width:44px"] > span:last-child{display:inline!important}
- 	  [data-title="驾驭工程揭晓"] .six-pack{grid-template-columns:1fr 1fr!important;gap:6px!important}
- 	  [data-title="驾驭工程揭晓"] .six-pack .item{padding:10px 12px!important;font-size:13px!important}
+ 	   	  /* ── P13：驾驭工程手机适配 ── */
+ 	  [data-title="驾驭工程"] .p13-body{grid-template-columns:1fr!important;gap:12px!important}
+ 	  [data-title="驾驭工程"] .p13-cards{gap:6px!important}
+ 	  [data-title="驾驭工程"] .p13-card{padding:10px 12px!important}
+ 	  [data-title="驾驭工程"] .p13-card h4{font-size:16px!important;margin-bottom:2px!important}
+ 	  [data-title="驾驭工程"] .p13-card p{font-size:12px!important}
+ 	  [data-title="驾驭工程"] .p13-dialog{flex:0 1 auto!important}
+ 	  [data-title="驾驭工程"] .p13-ftree{width:100%!important;max-height:80px!important}
+ 	  [data-title="驾驭工程"] .p13-ftbody{max-height:60px!important;overflow-y:auto!important}
  	  /* ── P12 Apple分段控件 + P18表格padding ── */
  	  .compare-table th,.compare-table td{padding:10px 8px!important;font-size:13px!important}
  	  /* ── P6 手机端标签切换 ── */
@@ -502,6 +508,138 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <img alt="" id="imageOverlayImg" src="" style="max-width:100%;max-height:75vh;border-radius:clamp(8px,1vw,16px);box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.1)"/>
 </div>
 </div>
+<!-- ====== 0. OLLAMA LAUNCH SCREEN ====== -->
+<section class="slide v-center" data-title="ollama启动" style="background:#0d1117;color:#e6edf3;overflow:hidden;padding:clamp(16px,2vw,36px)">
+<style>
+.oterm{font-family:'JetBrains Mono','SF Mono','Cascadia Code','Consolas',monospace;font-size:clamp(12px,1.4vw,18px);line-height:1.75;color:#e6edf3;width:100%;max-width:920px;margin:0 auto}
+.oterm-pr{color:#58a6ff;font-weight:600}
+.oterm-di{color:#8b949e}
+.oterm-ok{color:#3fb950}
+.oterm-usr{color:#ffa657}
+.oterm-ai{color:#79c0ff}
+.oterm-b{color:#e6edf3;font-weight:600}
+.oterm-cur{display:inline-block;width:.55em;height:1.15em;background:#58a6ff;animation:oblk 1s step-end infinite;vertical-align:text-bottom;margin-left:1px}
+@keyframes oblk{0%,100%{opacity:1}50%{opacity:0}}
+.oterm-l{min-height:1.75em;opacity:0}
+.oterm-l.show{opacity:1;transition:opacity .1s}
+.oterm-bar{display:inline-block;width:clamp(60px,8vw,130px);height:7px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden;vertical-align:middle}
+.oterm-bar-in{height:100%;width:0%;background:#3fb950;border-radius:3px}
+.oterm-pct{color:#8b949e;min-width:2.2em;text-align:right;display:inline-block}
+.oterm-lk{display:flex;align-items:center;gap:18px;margin-top:10px;opacity:0;transition:opacity .6s}
+.oterm-lk.show{opacity:1}
+.oterm-ascii{font-family:'JetBrains Mono','SF Mono','Consolas',monospace;font-size:clamp(5px,.6vw,8.5px);line-height:1.05;white-space:pre;color:#3fb950;flex-shrink:0}
+.oterm-lk-r{flex:1;min-width:0}
+.oterm-lk-r a{color:#58a6ff;font-size:clamp(14px,1.5vw,22px);font-weight:600;text-decoration:none}
+.oterm-lk-r a:hover{text-decoration:underline}
+.oterm-lk-r .h{color:#8b949e;font-size:clamp(11px,1vw,14px);margin-top:3px}
+@media(max-width:768px){.oterm{font-size:clamp(10px,2.5vw,14px)}.oterm-lk{flex-direction:column;text-align:center}}
+@media(max-width:480px){.oterm{font-size:clamp(9px,2.2vw,12px)}}
+</style>
+<div class="oterm">
+  <div class="oterm-l show"><span class="oterm-pr">$</span> <span class="oterm-b">ollama run deepseek-r1:7b</span><span class="oterm-cur"></span></div>
+  <div id="otL"></div>
+</div>
+<script>
+(function(){
+  var C = document.getElementById('otL');
+  if(!C) return;
+  var seq = [
+    {h:'<span class="oterm-di">pulling manifest</span>', d:400},
+    {h:'<span class="oterm-di">pulling 8c19c5b0e1c5...</span> <span class="oterm-bar"><span class="oterm-bar-in" id="pb1"></span></span><span class="oterm-pct" id="pc1">0%</span>', d:200},
+    {h:'', d:100},{h:'', d:100},{h:'', d:100},{h:'', d:100},{h:'', d:100},
+    {h:'<span class="oterm-di">pulling 8c19c5b0e1c5... </span><span class="oterm-ok">100% █████████████████████████████████ 4.7GB</span>', d:300},
+    {h:'<span class="oterm-di">pulling 9b6e3b8a9c2d...</span> <span class="oterm-bar"><span class="oterm-bar-in" id="pb2"></span></span><span class="oterm-pct" id="pc2">0%</span>', d:200},
+    {h:'', d:100},{h:'', d:100},{h:'', d:100},{h:'', d:100},{h:'', d:100},
+    {h:'<span class="oterm-di">pulling 9b6e3b8a9c2d... </span><span class="oterm-ok">100% █████████████████████████████████ 2.1GB</span>', d:300},
+    {h:'<span class="oterm-di">verifying sha256 digest</span>', d:500},
+    {h:'<span class="oterm-di">writing manifest</span>', d:400},
+    {h:'<span class="oterm-di">removing any unused layers</span>', d:300},
+    {h:'<span class="oterm-ok">success</span>', d:500},
+    {h:'', d:300},
+    {h:'<span class="oterm-usr">>>> </span><span class="oterm-b">今天分享的主题是什么？</span>', d:600},
+    {h:'', d:400},
+    {h:'<span class="oterm-ai">从会用AI，到用好AI</span>', d:300},
+    {h:'<span class="oterm-di">重塑 AI 认知，教你落地用好 AI</span>', d:250},
+    {h:'<span class="oterm-di">分享人：CM ｜ 2026-07-07</span>', d:250},
+    {h:'', d:300},
+    {h:'<span class="oterm-usr">>>> </span><span class="oterm-b">如何参与现场互动？</span>', d:500},
+    {h:'', d:350},
+    {h:'<span class="oterm-ai">扫码或访问下方链接提交你的问题</span>', d:300},
+    {h:'<span class="oterm-ai">分享人会在对应环节实时回应</span>', d:300},
+  ];
+  var idx = 0;
+  function animP(id, pc, t){
+    var b = document.getElementById(id), p = document.getElementById(pc);
+    if(!b||!p) return;
+    var c = 0;
+    var s = 5 + Math.random()*12;
+    (function tick(){
+      c = Math.min(c+s, t);
+      b.style.width = c+'%';
+      p.textContent = Math.round(c)+'%';
+      if(c < t) setTimeout(tick, 60+Math.random()*40);
+    })();
+  }
+  function nx(){
+    if(idx >= seq.length){
+      var q = document.getElementById('otLk');
+      if(q) q.classList.add('show');
+      return;
+    }
+    var d = seq[idx];
+    var ln = document.createElement('div');
+    ln.className = 'oterm-l';
+    ln.innerHTML = d.h || '<br>';
+    C.appendChild(ln);
+    ln.offsetHeight;
+    ln.classList.add('show');
+    if(d.h&&d.h.indexOf('pb1')>=0) animP('pb1','pc1',100);
+    if(d.h&&d.h.indexOf('pb2')>=0) animP('pb2','pc2',100);
+    idx++;
+    setTimeout(nx, d.d);
+  }
+  var lk = document.createElement('div');
+  lk.id = 'otLk';
+  lk.className = 'oterm-lk';
+  lk.innerHTML =
+    '<div class="oterm-ascii">' +
+    ' ██████████████   ██████ ██ ██████ ██████████████\n' +
+    ' ██          ██   ██ ██   ████     ██          ██\n' +
+    ' ██ ██████ ██   ██ ████ ████ ██ ██ ██ ██████ ██\n' +
+    ' ██ ██████ ██   ██████ ██  ██ ██   ██ ██████ ██\n' +
+    ' ██ ██████ ██   ██ ██      ████   ██ ██████ ██\n' +
+    ' ██          ██ ██████████ ██████████ ██          ██\n' +
+    ' ██████████████ ██ ██ ██ ██ ██ ██ ██ ██████████████\n' +
+    '                 ██ ██ ██ ██████ ████\n' +
+    ' ██ ██ ████ ████ ██ ██ ██ ██ ██ ██\n' +
+    '   ██       ██ ██████ ██████ ██████ ██ ██\n' +
+    ' ████ ████ ██ ████████████   ██ ████ ████████\n' +
+    '         ██ ████   ██ ██ ██ ██ ████ ██ ████\n' +
+    ' ██ ██████ ██████ ██ ████ ████████████ ██ ████\n' +
+    '   ██ ████         ██████████ ██████ ██\n' +
+    ' ██ ████ ████ ████ ██████           ████████████\n' +
+    ' ██             ████   ██ ████ ██ ████ ██ ██\n' +
+    ' ████   ██ ██   ████   ██ ████ ██   ██\n' +
+    ' ██             █████████████  ██████ ██ ██\n' +
+    ' ██ ██ ████ ██ ██████ ██████ ██ ██ ██ ████\n' +
+    '   ████ ██ ██ ████████ ██ ██████ ████   ████\n' +
+    ' ██ ████ ████   ██ ██ ██   ████████████ ██\n' +
+    '               ██████████ ████ ████████ ██ ██████\n' +
+    ' ██████████████     ██     ██████ ██ ██ ██ ██\n' +
+    ' ██          ██ ██████████ ████ ██ ██   ██████\n' +
+    ' ██ ██████ ██ ██ ████   ████ ██████████ ██\n' +
+    ' ██ ██████ ██ ██ ████████ ██   ████ ██ ██████ ██\n' +
+    ' ██ ██████ ██ ████     ████ ██████ ████████ ██\n' +
+    ' ██          ██ ████   ██ ██████████ ██ ██ ██\n' +
+    ' ██████████████ ██ ██████████ ██ ██ ██     ██\n' +
+    '</div>' +
+    '<div class="oterm-lk-r"><a href="https://8008.cmfok.online/ask" target="_blank">8008.cmfok.online/ask</a>' +
+    '<div class="h">📱 扫码提问 或 点击链接 · 分享人实时回应</div></div>';
+  C.parentNode.appendChild(lk);
+  setTimeout(nx, 500);
+})();
+</script>
+</section>
 <!-- ====== 1. COVER ====== -->
 <section class="slide center tc v-center" data-title="封面">
 <div data-anim="rise-in">
@@ -1405,44 +1543,188 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div class="notes">左边❌：Excel手工算——半天怕错。右边✅：脚本自动化——8个节点逐个校验，<b>3.4秒零误差</b>。关键变量：有没有自动化脚本。</div>
 </section>
 <!-- ====== 13. DISCIPLINE REVEAL ====== -->
-<section class="slide" data-title="驾驭工程揭晓">
-<p class="kicker">四大工程 · CHAPTER 03</p>
-<h2 class="h2" style="margin-bottom:2px!important">驾驭工程</h2>
-<p class="lede" style="margin-top:0!important;margin-bottom:8px">HARNESS ENGINEERING</p>
-<div class="callout-block">
-    💡 <strong>「约束即赋能」——不是限制 AI 的能力，而是将其强大但不可控的智能转化为可靠、可预测、可管理的生产力量。</strong>
+<section class="slide" data-title="驾驭工程">
+<style>
+.p13-body{display:grid;grid-template-columns:1fr 1fr;gap:clamp(20px,2.5vw,36px);flex:1;min-height:0;margin-top:clamp(6px,0.8vh,12px)}
+.p13-left{display:flex;flex-direction:column;gap:clamp(8px,1.2vh,16px)}
+.p13-right{display:flex;flex-direction:column;gap:clamp(10px,1.6vh,20px);justify-content:center;align-self:stretch}
+.p13-cards{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1vw,14px)}
+.p13-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:clamp(12px,1.4vh,20px) clamp(14px,1.2vw,22px);transition:all .3s ease;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:default}
+.p13-card:hover{border-color:#e53e3e;box-shadow:0 4px 16px rgba(229,62,62,.15);transform:translateY(-2px)}
+.p13-card h4{font-size:clamp(18px,1.6vw,30px);font-weight:600;margin-bottom:clamp(2px,.3vh,6px);color:var(--text-1)}
+.p13-card p{font-size:clamp(14px,1.05vw,20px);color:var(--text-2);line-height:1.6;margin:0}
+.p13-dialog{display:flex;flex-direction:column;flex:0 0 85%;min-height:0;max-height:100%;border:1px solid var(--border);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.p13-dtopbar{background:var(--bg);padding:clamp(4px,.4vw,7px) clamp(10px,.8vw,14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0}
+.p13-davatar{width:clamp(14px,1.2vw,18px);height:clamp(14px,1.2vw,18px);border-radius:50%;background:color-mix(in srgb,var(--accent) 20%,transparent);display:flex;align-items:center;justify-content:center;font-size:clamp(8px,.7vw,10px)}
+.p13-dname{font-size:clamp(11px,1vw,14px);font-weight:600;flex:1}
+.p13-dstatus{color:var(--text-3);font-size:clamp(10px,.8vw,12px)}
+.p13-dsubbar{display:flex;align-items:center;flex-shrink:0;background:var(--bg-soft);border-bottom:1px solid var(--border);padding:clamp(3px,.3vh,6px) 0;font-size:clamp(11px,.9vw,14px);font-weight:600}
+.p13-subleft{width:clamp(120px,12vw,200px);padding-left:clamp(10px,.8vw,14px);color:var(--text-2);flex-shrink:0}
+.p13-subright{flex:1;padding-left:clamp(10px,.8vw,14px);border-left:1px solid var(--border);color:var(--text-1)}
+.p13-dbody{display:flex;flex:1;min-height:0}
+.p13-ftree{width:clamp(120px,12vw,200px);flex-shrink:0;background:#fff;display:flex;flex-direction:column;border-right:1px solid var(--border)}
+.p13-ftbody{padding:clamp(4px,.3vh,8px) 0;flex:1;overflow-y:auto}
+.p13-ftlabel{padding:clamp(4px,.3vh,7px) clamp(10px,.8vw,14px);font-size:clamp(11px,.9vw,14px);font-weight:600;cursor:default;display:flex;align-items:center;gap:4px;color:var(--text-1)}
+.p13-ftlabel:hover{background:var(--bg-soft)}
+.p13-ftarrow{font-size:clamp(8px,.6vw,10px);color:var(--text-3)}
+.p13-ftchildren{padding-left:clamp(14px,1.2vw,22px)}
+.p13-ftfile{padding:clamp(2px,.2vh,5px) clamp(10px,.8vw,14px);font-size:clamp(10px,.82vw,13px);color:var(--text-2);cursor:default;display:flex;align-items:center;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.p13-ftfile:hover{background:var(--bg-soft);color:var(--text-1)}
+.p13-ftfile.active{background:color-mix(in srgb,var(--good) 8%,transparent);color:var(--good);font-weight:600}
+.p13-chat{flex:1;min-width:0;background:var(--bg-soft);display:flex;flex-direction:column}
+.p13-chatbody{flex:1;padding:clamp(6px,.6vw,12px);display:flex;flex-direction:column;gap:clamp(6px,.5vh,10px);overflow-y:auto;background:color-mix(in srgb,var(--bg) 90%,var(--accent) 2%)}
+.p13-uwrap{display:flex;align-items:flex-end;gap:6px;justify-content:flex-end;margin-bottom:2px}
+.p13-ububble{background:#fff;color:var(--text-1);padding:clamp(6px,.5vw,10px) clamp(10px,.8vw,14px);border-radius:12px 12px 0 12px;max-width:82%;font-size:clamp(12px,1vw,15px);line-height:1.5;border:1px solid var(--border);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.p13-uavatar{width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:#555;overflow:hidden;font-size:clamp(13px,1.2vw,16px)}
+.p13-uchip{display:flex;align-items:center;gap:clamp(6px,.6vw,10px);padding:clamp(5px,.4vw,8px) clamp(8px,.7vw,12px);border:1px solid var(--border);border-radius:10px;background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.04);max-width:70%}
+.p13-awrap{display:flex;align-items:flex-start;gap:6px;margin-bottom:2px;max-width:90%}
+.p13-aavatar{width:clamp(24px,2vw,30px);height:clamp(24px,2vw,30px);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;background:color-mix(in srgb,var(--accent) 15%,transparent);font-size:clamp(13px,1.2vw,16px)}
+.p13-abubble{background:#fafafa;padding:clamp(6px,.5vw,10px) clamp(10px,.8vw,14px);border-radius:12px 12px 12px 0;max-width:85%;font-size:clamp(12px,1vw,15px);line-height:1.5;color:var(--text-2);border:1px solid var(--border);box-shadow:0 1px 4px rgba(0,0,0,.04)}
+.p13-abubble .step-title{color:var(--text-3);font-weight:400;display:block;margin-bottom:2px}
+.p13-abubble .step-detail{color:#3b6cff;font-weight:700;display:block;margin-bottom:2px}
+.p13-abubble .step-result{color:var(--text-1);font-weight:700;display:block}
+.p13-step-green{color:var(--good);font-weight:700}
+.p13-step-red{color:var(--bad);font-weight:700}
+.p13-footer{text-align:center;font-size:clamp(11px,.9vw,15px);color:var(--good);background:color-mix(in srgb,var(--good) 12%,transparent);font-weight:700;padding:clamp(4px,.3vh,8px);border-radius:6px;border:2px solid rgba(46,160,67,.25);box-shadow:0 2px 6px rgba(0,0,0,.06);margin-top:clamp(4px,.3vh,6px)}
+.p13-input{border-top:1px solid var(--border);padding:clamp(4px,.4vw,8px) clamp(8px,.7vw,12px);background:var(--bg);display:flex;align-items:center;gap:clamp(4px,.4vw,8px);flex-shrink:0}
+.p13-input span{font-size:clamp(12px,1vw,16px);flex-shrink:0;cursor:default}
+.p13-ifield{flex:1;border:1px solid var(--border);border-radius:20px;padding:clamp(4px,.3vw,6px) clamp(8px,.7vw,12px);background:var(--bg-soft);font-size:clamp(10px,.85vw,14px);color:var(--text-3)}
+@media(max-width:768px){.p13-body{grid-template-columns:1fr!important}.p13-cards{gap:1.5vw}.p13-dialog{flex:0 1 auto}.p13-ftree{width:100%;max-height:clamp(80px,12vh,140px)}.p13-ftbody{max-height:clamp(60px,8vh,100px)}}
+</style>
+<div class="p13-body">
+  <!-- LEFT -->
+  <div class="p13-left">
+    <p class="kicker">四大工程 · CHAPTER 03</p>
+    <h2 class="h2" style="margin-bottom:2px!important">驾驭工程</h2>
+    <p class="lede" style="margin-top:0!important;margin-bottom:8px">HARNESS ENGINEERING</p>
+    <div class="callout-block">
+        💡 <strong>「约束即赋能」——不是限制 AI 的能力，而是将其强大但不可控的智能转化为可靠、可预测、可管理的生产力量。</strong>
+    </div>
+    <div class="p13-cards">
+      <div class="p13-card"><h4>🔧 工具调用</h4><p>AI 能调用外部工具和 API，扩展能力边界</p></div>
+      <div class="p13-card"><h4>🛡️ 约束安全</h4><p>设定规则边界，确保 AI 不能越界操作</p></div>
+      <div class="p13-card"><h4>✅ 验证校验</h4><p>输出前自检，确保结果正确可靠</p></div>
+      <div class="p13-card"><h4>📦 状态管理</h4><p>记住上下文和执行状态，保持连续性</p></div>
+      <div class="p13-card"><h4>🔄 错误处理</h4><p>出错了能自己发现并自动修正</p></div>
+      <div class="p13-card"><h4>📊 可观测性</h4><p>每一步可追踪、可回溯、可审计</p></div>
+    </div>
+  </div>
+  <!-- RIGHT -->
+  <div class="p13-right">
+    <div class="p13-dialog">
+      <div class="p13-dtopbar">
+        <span class="p13-davatar">🤖</span>
+        <span class="p13-dname">驾驭工程助手</span>
+        <span class="p13-dstatus">在线</span>
+      </div>
+      <div class="p13-dsubbar">
+        <span class="p13-subleft">📁 项目文件</span>
+        <span class="p13-subright">📋 G5-人事管理 / 01-简历分析</span>
+      </div>
+      <div class="p13-dbody">
+        <div class="p13-ftree">
+          <div class="p13-ftbody">
+            <div class="tree-folder open">
+              <div class="p13-ftlabel"><span class="p13-ftarrow">▼</span> 📂 01-简历分析</div>
+              <div class="p13-ftchildren">
+                <div class="tree-folder open">
+                  <div class="p13-ftlabel"><span class="p13-ftarrow">▼</span> 📂 _archive</div>
+                  <div class="p13-ftchildren">
+                    <div class="tree-folder"><div class="p13-ftlabel"><span class="p13-ftarrow">▶</span> 📂 old_scripts</div></div>
+                    <div class="p13-ftfile">📄 feishu_card_template.json</div>
+                    <div class="p13-ftfile">📄 通用评分标准.md</div>
+                  </div>
+                </div>
+                <div class="tree-folder"><div class="p13-ftlabel"><span class="p13-ftarrow">▶</span> 📂 docs</div></div>
+                <div class="tree-folder"><div class="p13-ftlabel"><span class="p13-ftarrow">▶</span> 📂 会话记录</div></div>
+                <div class="tree-folder open">
+                  <div class="p13-ftlabel"><span class="p13-ftarrow">▼</span> 📂 岗位评分标准</div>
+                  <div class="p13-ftchildren">
+                    <div class="p13-ftfile">📄 01_小红书平台运营_评分标准.md</div>
+                    <div class="p13-ftfile">📄 02_新媒体运营主管_评分标准.md</div>
+                    <div class="p13-ftfile active">📄 15_AI智能体开发工程师_评分标准.md</div>
+                    <div class="p13-ftfile">📄 输出模板.md</div>
+                  </div>
+                </div>
+                <div class="tree-folder"><div class="p13-ftlabel"><span class="p13-ftarrow">▶</span> 📂 scripts</div></div>
+                <div class="p13-ftfile">📄 全局评分标准.md</div>
+                <div class="p13-ftfile">📄 评分标准.json</div>
+                <div class="p13-ftfile">📄 项目规则.md</div>
+                <div class="p13-ftfile">📄 项目手册.md</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="p13-chat">
+          <div class="p13-chatbody">
+            <div class="p13-uwrap">
+              <div class="p13-ububble">帮我分析这份简历，看是否匹配岗位要求</div>
+              <div class="p13-uavatar">👤</div>
+            </div>
+            <div class="p13-uwrap">
+              <div class="p13-uchip">
+                <span style="font-size:clamp(20px,1.8vw,28px);flex-shrink:0">📄</span>
+                <div style="min-width:0;flex:1"><div style="font-size:clamp(11px,.9vw,14px);color:var(--text-1);font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">候选人A简历.pdf</div><div style="font-size:clamp(9px,.7vw,11px);color:var(--text-3)">2.4 MB</div></div>
+              </div>
+              <div class="p13-uavatar" style="opacity:0">👤</div>
+            </div>
+            <div class="p13-awrap">
+              <div class="p13-aavatar">🤖</div>
+              <div class="p13-abubble">
+                <span class="step-title">正在运行 <b>fetch_positions()</b>…</span>
+                <span class="step-detail">➜ 调用飞书多维表格 API，拉取在招岗位列表</span>
+                <span class="step-result">✅ 获取到 <span class="p13-step-green">3 个在招岗位</span>：产品经理 · 前端开发 · 数据分析师</span>
+              </div>
+            </div>
+            <div class="p13-awrap">
+              <div class="p13-aavatar">🤖</div>
+              <div class="p13-abubble">
+                <span class="step-title">正在运行 <b>_analyze()</b> — MiMo 多模态…</span>
+                <span class="step-detail">➜ 将简历 PDF 直接传给多模态模型，一次性完成：岗位匹配 + 深度分析 + 评分 + 出题</span>
+                <span class="step-result">✅ 智能匹配：<span class="p13-step-green">前端开发（匹配度 92%）</span>，已完成 10 个维度评估</span>
+              </div>
+            </div>
+            <div class="p13-awrap">
+              <div class="p13-aavatar">🤖</div>
+              <div class="p13-abubble">
+                <span class="step-title">正在运行 <b>validate_name()</b> + <b>scoring_engine</b> 后处理…</span>
+                <span class="step-detail">➜ 姓名校验通过 | 学历/年限/分数确定性纠偏 | 核心能力加权打分</span>
+                <span class="step-result">✅ 技术 88 · 项目 90 · 素养 82 · 团队 85 → 综合<span class="p13-step-green">86 分</span></span>
+              </div>
+            </div>
+            <div class="p13-awrap">
+              <div class="p13-aavatar">🤖</div>
+              <div class="p13-abubble">
+                <span class="step-title">正在运行 <b>risk_check</b> + <b>DB 写入</b>…</span>
+                <span class="step-detail">➜ 扫描简历预警点：空窗期、跳槽频率、竞业风险 | 写入 MySQL biz_G5_resume_analysis</span>
+                <span class="step-result">⚠️ <span class="p13-step-red">预警：跳槽频率偏高（3 年 4 家）、有 6 个月空窗期</span></span>
+              </div>
+            </div>
+            <div class="p13-awrap">
+              <div class="p13-aavatar">🤖</div>
+              <div class="p13-abubble">
+                <span class="step-title">正在运行 <b>send_card()</b>…</span>
+                <span class="step-detail">➜ 拼装飞书卡片：基础信息 · JD对照 · 综合评分 · 简历解读 · 核心亮点 · 预警 · 录用建议 · 初审试题</span>
+                <span class="step-result">✅ 卡片已发送 | ID:008 | 前端开发 | <span class="p13-step-green">状态：通过</span></span>
+              </div>
+            </div>
+          </div>
+          <div class="p13-input">
+            <span>📎</span>
+            <div class="p13-ifield">输入消息...</div>
+            <span>➤</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="p13-footer">驾驭工程 · 全流程自动化</div>
+  </div>
 </div>
-<div style="display:flex;flex-direction:column;flex:1;min-height:0;margin-top:clamp(6px,0.8vh,12px)">
-<div style="display:flex;gap:clamp(14px,2.5vw,24px);align-items:stretch;flex:1;min-height:0">
-<div class="stack" style="flex:1;min-width:0">
-<div style="background:#fff;border:1px solid var(--border);border-radius:12px;padding:18px 20px;box-shadow:0 2px 8px rgba(0,0,0,.06);height:100%;display:flex;flex-direction:column;justify-content:center">
-<div style="font-size:30px;font-weight:600;letter-spacing:0;color:rgba(0,0,0,.35);font-family:var(--font-sans);margin-bottom:2px">CORE INSIGHT</div>
-<h5 style="font-size:30px;font-weight:700;margin-bottom:6px;color:var(--text-1);line-height:1.4">驾驭工程最重要的是——<span style="color:var(--accent)">📜脚本</span>和<span style="color:var(--accent)">🔄工作流</span></h5>
-<div style="color:var(--text-2);font-size:30px;line-height:1.7">
-<p style="margin:0 0 8px">六大组件定义了"要做什么"，<strong>脚本</strong>和<strong>工作流</strong>则是让这些约束真正跑起来的<strong>执行载体</strong>。</p>
-<p style="margin:0 0 8px">脚本将检验规则写成可执行代码，<br/>工作流编排输入→处理→校验→纠错的完整闭环。<br/>两者结合，才能把"理论上的约束"变成"<strong>生产级的可靠</strong>"。</p>
-<p style="margin:0;font-size:30px;color:var(--text-3)">OpenAI 实证：相同模型+数据+提示词，仅通过优化 Harness（工作流脚本），成功率从 42% 跃升至 78%。</p>
-</div>
-</div>
-</div>
-<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;width:44px;flex-shrink:0;gap:6px;color:var(--text-3);font-size:30px;font-weight:600;letter-spacing:0">
-<div style="width:2px;flex:1;background:var(--border);border-radius:1px;max-height:60px"></div>
-<span>🔧</span><span>六<br/>大<br/>组<br/>件</span>
-<div style="width:2px;flex:1;background:var(--border);border-radius:1px;max-height:60px"></div>
-</div>
-<div class="six-pack" style="flex:1;min-width:0">
-<div class="item"><span class="in">① 工具调用</span><br/>AI 能调用外部工具和 API</div>
-<div class="item"><span class="in">② 约束安全</span><br/>设定规则边界，不能越界</div>
-<div class="item"><span class="in">③ 验证校验</span><br/>输出前自检，确保正确</div>
-<div class="item"><span class="in">④ 状态管理</span><br/>记住上下文和执行状态</div>
-<div class="item"><span class="in">⑤ 错误处理</span><br/>出错了能自己发现修正</div>
-<div class="item"><span class="in">⑥ 可观测性</span><br/>每一步可追踪可回溯</div>
-</div>
-</div>
+
 <div class="eco-data" style="display:none">
 <div class="eco-row">
 <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/trae.svg"/><span class="dot" style="background:#32F08C"></span>Trae</span>
-<span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/qoder.svg"/><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
+<span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/qoder.png"/><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
 <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude Code</span>
 <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/codex.svg"/><span class="dot" style="background:#10A37F"></span>Codex</span>
 </div>
@@ -1465,7 +1747,6 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
 <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
 </div></div>
-</div>
 <div class="notes"><b>驾驭工程 = 给 AI 装上手脚、套上缰绳。</b>六大组件：工具调用、约束安全、验证校验、状态管理、错误处理、可观测性。驾驭工程最重要的是脚本和工作流。</div>
 </section>
 <!-- ====== 14. SCRIPT VS WORKFLOW ====== -->
@@ -1552,7 +1833,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 </div>
 <div class="eco-row">
 <span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/trae.svg"/><span class="dot" style="background:#32F08C"></span>Trae</span>
-<span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/qoder.svg"/><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
+<span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/qoder.png"/><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
 <span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude Code</span>
 <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/codex.svg"/><span class="dot" style="background:#10A37F"></span>Codex</span>
 </div>
@@ -1644,7 +1925,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <section class="slide center tc v-center" data-title="互动答疑" style="background:#0d1117;overflow:hidden">
 <div id="qnaCodeBg" style="position:absolute;top:0;left:0;width:100%;height:100%;z-index:0;font-family:SF Mono,Consolas,monospace;font-size:13px;line-height:1.6;color:rgba(255,255,255,.12);overflow:hidden;text-align:left;padding:20px;pointer-events:none;opacity:0.9"></div>
 <div style="position:relative;z-index:1">
-<p class="kicker" style="color:rgba(255,255,255,.6);margin-top:5%">Q&amp;A</p>
+<p class="kicker" style="color:rgba(255,255,255,.6);margin-top:5%"></p>
 <h2 class="h2" style="font-size:clamp(250px, 75vw, 500px)!important;font-weight:800;color:#fff;text-align:center;margin:0;border:none;padding:0;line-height:1;transform:translateY(-15%)">?</h2>
 </div>
 <div style="position:absolute;bottom:20%;left:0;right:0;background:rgba(0,0,0,.85);padding:clamp(20px,4vh,40px) clamp(16px,4vw,40px);text-align:center;z-index:2">
@@ -2056,7 +2337,7 @@ function toggleP4(el){
 		    if(cur) cur.classList.remove('is-active');
 		    if(slides[n-1]){ slides[n-1].classList.add('is-active'); slides[n-1].scrollTop = 0; }
 		    var sn = document.querySelector('.slide-number');
-		    if(sn) sn.setAttribute('data-current', n);
+		    if(sn){ sn.setAttribute('data-current', n); }
 		    lastSlide = n;
 		    // 同时通知 runtime.js（如果存在）
 		    if(window.__deckGo) window.__deckGo(n-1);
@@ -2253,6 +2534,18 @@ function toggleP4(el){
   poll();
   // 初始加载时更新生态栏
   updateEcoBar();
+  // ── 封面/末页隐藏页码——监听 class 变化实时更新 ──
+  function updatePageNumber(){
+    var sn = document.querySelector('.slide-number');
+    if(!sn) return;
+    var active = document.querySelector('.slide.is-active');
+    if(!active){ sn.style.display=''; return; }
+    var title = active.getAttribute('data-title');
+    sn.style.display = (title==='封面'||title==='互动答疑') ? 'none' : '';
+  }
+  updatePageNumber();
+  var _pnObserver = new MutationObserver(updatePageNumber);
+  document.querySelectorAll('.slide').forEach(function(s){ _pnObserver.observe(s, {attributes:true, attributeFilter:['class']}); });
   // ── MutationObserver 监听翻页（无论点击/键盘/触控/远程）──
   var _ecoObserver = new MutationObserver(function(muts){
     for(var i=0;i<muts.length;i++){
