@@ -28,30 +28,31 @@ DB_NAME = 'ecommerce_db'
 
 # ── 幻灯片主题定义（用于 AI 分类）────────────────────
 SLIDES = [
-    {"page": 1,  "title": "封面",                        "tags": "封面 AI 真垃圾 分享会 开场 青骏会"},
-    {"page": 2,  "title": "外星人的语言",                "tags": "互动 猜字 规律 LLM 预测 下一个词 模式"},
-    {"page": 3,  "title": "训练三阶段/RLHF",             "tags": "训练 预训练 指令微调 RLHF 评分 有用性 真实性 安全性 诚实性 语气"},
-    {"page": 4,  "title": "核心能力&局限",               "tags": "能力 局限 语言理解 逻辑推理 知识召回 代码生成 幻觉 知识截止"},
-    {"page": 5,  "title": "Token概念&费用",              "tags": "Token 费用 成本 运营商 套餐 按量付费 未来判断"},
-    {"page": 6,  "title": "模型对比",                    "tags": "模型 对比 DeepSeek 通义千问 Kimi GLM 豆包 擅长 场景"},
-    {"page": 7,  "title": "案例·语音→PPT",              "tags": "案例 语音 PPT 提示词 输出结构 模板"},
-    {"page": 8,  "title": "提示词工程",                   "tags": "提示词 工程 Prompt 角色 要求 参考 标准 派活"},
-    {"page": 9,  "title": "案例·约会翻车",               "tags": "案例 约会 知识库 背景 信息 适配度"},
-    {"page": 10, "title": "上下文工程",                   "tags": "上下文 知识库 RAG 历史数据 参考模板 业务规则"},
-    {"page": 11, "title": "知识库搭建",                   "tags": "知识库 搭建 Trae Obsidian 向量 语义搜索 入门 进阶"},
-    {"page": 12, "title": "案例·运费+招聘",              "tags": "案例 运费 对账 招聘 简历 约束 脚本 工作流 校验 工具"},
-    {"page": 13, "title": "约束工程",                     "tags": "约束 工具调用 约束 验证 状态 错误处理 可观测 缰绳 MCP"},
-    {"page": 14, "title": "案例·生日营销",               "tags": "案例 生日 营销 循环 自动 扫描 通知 回写"},
-    {"page": 15, "title": "循环工程",                     "tags": "循环 自查 复盘 会诊 绩效 反馈 多Agent 并行 通讯"},
-    {"page": 16, "title": "个人AI vs 企业AI",            "tags": "个人 企业 效率 可控 容错 生产环境"},
-    {"page": 17, "title": "数据隐私",                     "tags": "隐私 数据 泄露 加密 私有化 本地化"},
-    {"page": 18, "title": "落地Checklist",               "tags": "Checklist 落地 场景 模型 提示词 约束 监控"},
+    {"page": 1,  "title": "【新插入页标题待填写】",           "tags": "新插入页"},
+    {"page": 2,  "title": "封面",                        "tags": "封面 AI 真垃圾 分享会 开场 青骏会"},
+    {"page": 3,  "title": "外星人的语言",                "tags": "互动 猜字 规律 LLM 预测 下一个词 模式"},
+    {"page": 4,  "title": "训练三阶段/RLHF",             "tags": "训练 预训练 指令微调 RLHF 评分 有用性 真实性 安全性 诚实性 语气"},
+    {"page": 5,  "title": "核心能力&局限",               "tags": "能力 局限 语言理解 逻辑推理 知识召回 代码生成 幻觉 知识截止"},
+    {"page": 6,  "title": "Token概念&费用",              "tags": "Token 费用 成本 运营商 套餐 按量付费 未来判断"},
+    {"page": 7,  "title": "模型对比",                    "tags": "模型 对比 DeepSeek 通义千问 Kimi GLM 豆包 擅长 场景"},
+    {"page": 8,  "title": "案例·语音→PPT",              "tags": "案例 语音 PPT 提示词 输出结构 模板"},
+    {"page": 9,  "title": "提示词工程",                   "tags": "提示词 工程 Prompt 角色 要求 参考 标准 派活"},
+    {"page": 10, "title": "案例·约会翻车",               "tags": "案例 约会 知识库 背景 信息 适配度"},
+    {"page": 11, "title": "上下文工程",                   "tags": "上下文 知识库 RAG 历史数据 参考模板 业务规则"},
+    {"page": 12, "title": "知识库搭建",                   "tags": "知识库 搭建 Trae Obsidian 向量 语义搜索 入门 进阶"},
+    {"page": 13, "title": "案例·运费+招聘",              "tags": "案例 运费 对账 招聘 简历 约束 脚本 工作流 校验 工具"},
+    {"page": 14, "title": "约束工程",                     "tags": "约束 工具调用 约束 验证 状态 错误处理 可观测 缰绳 MCP"},
+    {"page": 15, "title": "案例·生日营销",               "tags": "案例 生日 营销 循环 自动 扫描 通知 回写"},
+    {"page": 16, "title": "循环工程",                     "tags": "循环 自查 复盘 会诊 绩效 反馈 多Agent 并行 通讯"},
+    {"page": 17, "title": "个人AI vs 企业AI",            "tags": "个人 企业 效率 可控 容错 生产环境"},
+    {"page": 18, "title": "数据隐私",                     "tags": "隐私 数据 泄露 加密 私有化 本地化"},
+    {"page": 19, "title": "落地Checklist",               "tags": "Checklist 落地 场景 模型 提示词 约束 监控"},
 ]
 
 # 不展示问题的封面/过渡页（不参与 AI 分类，已有问题强制迁移）
-COVER_PAGES = {1, 3, 6}
+COVER_PAGES = {2, 4, 7}
 # 无法归类的问题统一放到此页
-FALLBACK_PAGE = 19
+FALLBACK_PAGE = 20
 
 app = Flask(__name__, static_folder=PPT_DIR, static_url_path='')
 
@@ -2148,7 +2149,7 @@ def slides_total():
         count = content.count('<section class="slide')
         return jsonify({"total": max(count, 1)})
     except Exception:
-        return jsonify({"total": 21})  # 降级默认值
+        return jsonify({"total": 22})  # 降级默认值
 
 # ── 演讲稿保存 ─────────────────────────────────────────
 SPEECH_FILE = os.path.join(PPT_DIR, 'speech.md')

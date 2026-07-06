@@ -57,7 +57,7 @@ body{display:flex;flex-direction:column;padding:2vh 3vw}
   <div class="header-actions">
     <span id="fileStatus" style="font-size:max(11px,.65vw);color:var(--text-helper)">未选文件</span>
     <label class="file-upload">📎 选择简历文件<input type="file" id="resumeFile" accept=".pdf"></label>
-	    <a href="http://106.53.168.220:8008/?slide=11">← 返回PPT</a>
+	    <a href="http://106.53.168.220:8008/?slide=12" id="backLink" style="font-size:max(13px,.8vw);color:var(--accent);font-weight:500;text-decoration:none">← 返回PPT</a>
   </div>
 </div>
 <div class="main">
@@ -88,6 +88,8 @@ document.getElementById('resumeFile').addEventListener('change',async function(e
   if(resumeFileBlobUrl)URL.revokeObjectURL(resumeFileBlobUrl);
   resumeFileBlobUrl=URL.createObjectURL(file);
   document.getElementById('fileStatus').innerHTML='📄 <a href="'+resumeFileBlobUrl+'" target="_blank" style="color:var(--accent);text-decoration:underline">'+file.name+'</a>';
+  // embed 模式隐藏返回按钮
+  if(window.location.search.indexOf('embed=1')>-1){var bl=document.getElementById('backLink');if(bl)bl.style.display='none'}
   try{
     const b64=await new Promise((resolve,reject)=>{
       const r=new FileReader();

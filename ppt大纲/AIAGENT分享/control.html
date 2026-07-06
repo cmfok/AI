@@ -461,7 +461,7 @@ function toggleFilter(){
   var btn = document.getElementById('filterBtn');
   if(_filterPage){
     btn.className = 'btn small on';
-    btn.textContent = '📌 仅 P' + (cur>21?'附':(cur===5?'转':(cur>5?cur-1:cur)));
+    btn.textContent = '📌 仅 P' + (cur>22?'附':(cur===6?'转':(cur>6?cur-1:cur)));
   } else {
     btn.className = 'btn small';
     btn.textContent = '📄 当前页';
@@ -838,7 +838,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 
 <script>
-var TOTAL=21,cur=1;
+var TOTAL=22,cur=1;
 // BroadcastChannel 单例（用于同设备控制台 ↔ 大屏同步）
 var _bc = null;
 try{ _bc = new BroadcastChannel('ppt-ctrl'); }catch(e){}
@@ -862,12 +862,12 @@ fetch('/api/control/current',{cache:'no-cache'}).then(function(r){if(!r.ok)throw
   // 必须在 syncState 之后执行，确保按钮恢复正常
   if(st && st.coverP1){
     st.coverP1 = false;  // 先修正传入数据，下次轮询自动同步服务器
-    fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverP1:false})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
+    fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,coverP1:false})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
     var aBtn = document.getElementById('aBtn');
     if(aBtn){ aBtn.classList.remove('on'); aBtn.textContent='\u25B6 '+ACT[1].l; }
   }
   // 动态获取 PPT 实际页数
-  fetch('/api/slides/total',{cache:'no-cache'}).then(function(r2){return r2.json();}).then(function(d){TOTAL = d.total||21;document.getElementById('tp').textContent=TOTAL;buildPageGrid();}).catch(function(e){console.warn('[控制] 指令失败:',e);});
+  fetch('/api/slides/total',{cache:'no-cache'}).then(function(r2){return r2.json();}).then(function(d){TOTAL = d.total||22;document.getElementById('tp').textContent=TOTAL;buildPageGrid();}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }).catch(function(){
   go(1);
 });
@@ -876,11 +876,11 @@ var ACT={1:{l:'揭示主题',s:'揭示主题',h:'重置问句'},2:{l:'展开答�
 // ── 动效按钮栏配置（按页码添加按钮，注释好哪一页显示什么）──
 // 格式：ACTIONS[页码] = ['<button ...>', '<button ...>']
 var ACTIONS = {
-  1: ['<button class="btn" id="aBtn">▶ '+ACT[1].l+'</button>'],                                        // P1：从会用AI动效
-  2: ['<button class="btn" id="aBtn">▶ '+ACT[2].l+'</button>'],                                        // P2：展开答案
-  4: ['<button class="act-btn btn" id="p4b1">① 预训练</button>', '<button class="act-btn btn" id="p4b2">② 指令微调</button>', '<button class="act-btn btn" id="p4b3">③ RLHF</button>', '<button class="act-btn btn" id="p4b4">⚠️ 局限</button>'],
-  6: ['<button class="btn" onclick="toggleFilePopup()">📄 大纲</button><button class="btn" onclick="stopScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startScroll()" style="font-size:16px">⬇</button>'],
-  12: ['<button class="btn" onclick="showSfRulesPopup()">📄 规则</button><button class="btn" onclick="stopSfScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startSfScroll()" style="font-size:16px">⬇</button>'],                             // P6：显示大纲
+  2: ['<button class="btn" id="aBtn">▶ '+ACT[1].l+'</button>'],                                        // P2：从会用AI动效
+  3: ['<button class="btn" id="aBtn">▶ '+ACT[2].l+'</button>'],                                        // P3：展开答案
+  5: ['<button class="act-btn btn" id="p4b1">① 预训练</button>', '<button class="act-btn btn" id="p4b2">② 指令微调</button>', '<button class="act-btn btn" id="p4b3">③ RLHF</button>', '<button class="act-btn btn" id="p4b4">⚠️ 局限</button>'],
+  7: ['<button class="btn" onclick="toggleFilePopup()">📄 大纲</button><button class="btn" onclick="stopScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startScroll()" style="font-size:16px">⬇</button>'],
+  13: ['<button class="btn" onclick="showSfRulesPopup()">📄 规则</button><button class="btn" onclick="stopSfScroll()" style="font-size:16px">⏹</button><button class="btn" onclick="startSfScroll()" style="font-size:16px">⬇</button>'],                             // P13：显示对账规则
 };
 var CC=0;
 var _p4open=0;
@@ -1074,25 +1074,25 @@ function go(n){
   // 或直接用 onclick 在 html 里写死简单动作
   // 复杂动作（如 toggle）在 bindActionEvents 里处理
   function bindActionEvents(n){
-    if(n===1){  // P1：从会用AI动效
+    if(n===2){  // P2：从会用AI动效
       var b = document.getElementById('aBtn');
       if(b) b.onclick = function(){
         var isOn = b.classList.contains('on');
         if(isOn){ b.classList.remove('on'); b.textContent='▶ '+ACT[1].l; }
         else { b.classList.add('on'); b.textContent=ACT[1].h; }
-        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverP1:!isOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,coverP1:!isOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
       };
     }
-    if(n===2){  // P2：展开答案
+    if(n===3){  // P3：展开答案
       var b = document.getElementById('aBtn');
       if(b) b.onclick = function(){
         var isOn = b.classList.contains('on');
         if(isOn){ b.classList.remove('on'); b.textContent='▶ '+ACT[2].l; }
         else { b.classList.add('on'); b.textContent=ACT[2].h; }
-        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:!isOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:3,expand:!isOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
       };
     }
-    if(n===4){  // P4：四张卡片互斥展开
+    if(n===5){  // P5：四张卡片互斥展开
       // 先查服务器当前展开的是哪张，恢复按钮状态
       fetch('/api/control/current',{cache:'no-store'}).then(function(r){return r.json();}).then(function(st){
         if(st && st.p4open && st.p4open>0){
@@ -1109,9 +1109,9 @@ function go(n){
             document.querySelectorAll('#actBox .act-btn').forEach(function(bb){bb.classList.remove('on');});
             if(!nowOn){
               b.classList.add('on');
-              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,p4open:idx})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
+              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:5,p4open:idx})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
             } else {
-              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,p4open:0})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
+              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:5,p4open:0})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
             }
           };
         })(_pi);
@@ -1127,7 +1127,7 @@ function upd(n){
   document.getElementById('sc').innerHTML = s.c;
   var nx=_speechData[n+1];
   if(nx){
-    document.getElementById('nc').innerHTML='<strong>'+(n+1>21?'附':(n+1===5?'转':'P'+(n+1>5?n:n+1)))+' · '+nx.t+'</strong><br>'+nx.c.substring(0,100).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'…';
+    document.getElementById('nc').innerHTML='<strong>'+(n+1>22?'附':(n+1===6?'转':'P'+(n+1>6?n:n+1)))+' · '+nx.t+'</strong><br>'+nx.c.substring(0,100).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'…';
   }else{
     document.getElementById('nc').innerHTML='— 结束 —';
   }
