@@ -141,6 +141,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cover-q{position:absolute;right:-1em;top:50%;transform:translateY(-50%);font-size:1em;font-weight:900;line-height:1;opacity:0;pointer-events:none;transition:opacity .3s}
 .cover-q.show{opacity:1;animation:q-pop 1s cubic-bezier(.34,1.56,.64,1) forwards}
 @keyframes q-pop{0%{opacity:0;transform:translateY(-50%) translateX(60px) scale(0) rotate(-20deg);color:#fff}60%{opacity:1;transform:translateY(-50%) translateX(-5px) scale(1.15) rotate(5deg)}100%{opacity:1;transform:translateY(-50%) translateX(0) scale(1) rotate(0deg);color:#e03e3e}}
+@keyframes p12M_blink{0%,100%{opacity:1}50%{opacity:0}}
 .cover-sub{opacity:0;transition:opacity .8s ease .8s}
 .cover-sub.show{opacity:1}
 .cover-reveal{opacity:0;transition:opacity 1.5s ease}
@@ -155,10 +156,19 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cp1-sub{opacity:0;transition:opacity .8s ease;margin-top:clamp(20px,2.5vw,36px)}
 .cp1-sub.show{opacity:1}
 
+/* ── P6 手机端标签切换（桌面隐藏，手机显示）── */
+.p6-tabs{display:none!important}
+
+/* ── P12 Apple 风格分段控件（桌面隐藏，手机显示）── */
+.p12-segmented{display:none!important}
+/* ── P12 动画容器：桌面端两者都显示，JS 通过 .hidden 类控制切换 ── */
+.p12-anim-wrap{display:flex;flex-direction:column}
+.p12-anim-wrap.hidden{display:none!important}
+
 	@media(max-width:768px){
 	  .deck{height:auto;overflow:visible}
 	  .deck-header{top:12px!important;left:20px!important;right:20px!important;font-size:11px!important}
-	  .slide{overflow-y:auto;min-height:100vh;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px) clamp(90px,10vw,120px)}
+	  .slide{overflow-y:auto;min-height:100vh;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px) clamp(130px,15vw,160px);scroll-padding-bottom:130px}
 	  .g2,.g3,.g4,.comp-grid,.six-pack,.rules-grid{grid-template-columns:1fr}
 	  .mt-l{margin-top:14px!important}.mt-m{margin-top:8px!important}
 	  .file-reader{min-height:200px}
@@ -188,14 +198,20 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  .slide .h1{line-height:1.15!important}
 	  .slide .h2{line-height:1.2!important}
 	  /* ── flex 竖排 ── */
-	  [data-title*="运费"] [style*="display:flex"],
+	  [data-title="运费对账"] .p12-body{flex-direction:column!important;gap:8px!important}
+	  [data-title="运费对账"] .p12-tip{position:static!important;transform:none!important;margin-top:6px!important;text-align:center!important}
 	  [data-title*="驾驭工程"] [style*="display:flex"][style*="gap:clamp(14px"]{flex-direction:column!important;gap:12px!important}
-	  [data-title*="运费"] [style*="flex:1"]{flex:auto!important;width:100%!important}
+	  [data-title="封面"] .cp1-stage{overflow:visible}
+  	  /* ── P8/P10 手机上下排列 ── */
+  	  [data-title="不会写提示词"] > div[style*="display:flex"]{flex-direction:column!important}
+  	  [data-title="知识库搭建"] > div[style*="display:flex"] > div[style*="display:flex"]{flex-direction:column!important}
+  	  /* ── 页码移到顶部 ── */
+  	  .slide-number.ctrl-hint{bottom:auto!important;top:8px!important;left:50%!important;transform:translateX(-50%)!important;z-index:50!important;font-size:10px!important;padding:2px 12px!important}
 	}
 	@media(max-width:480px){
 	  /* ── 基础间距 ── */
 	  .deck-header{top:8px!important;left:14px!important;right:14px!important;font-size:10px!important}
-	  .slide{padding:clamp(22px,4vw,32px) clamp(12px,4vw,20px) clamp(90px,12vw,100px);min-height:100vh;overflow-x:hidden}
+	  .slide{padding:clamp(22px,4vw,32px) clamp(12px,4vw,20px) clamp(130px,16vw,150px);min-height:100vh;overflow-x:hidden;scroll-padding-bottom:130px}
 	  .mt-l{margin-top:12px!important}.mt-m{margin-top:6px!important}
 	  /* ── 标题字号 ── */
 	  body .h1{font-size:clamp(40px,11vw,64px)!important}
@@ -220,9 +236,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  /* ── flex 布局 → 竖排 ── */
 	  .slide [style*="display:flex"][style*="gap:clamp(20px"],
 	  .slide [style*="display:flex"][style*="gap:20px"],
-	  [data-title*="运费"] [style*="display:flex"],
-	  [data-title*="驾驭工程"] [style*="display:flex"][style*="gap:clamp(14px"]{flex-direction:column!important;gap:10px!important}
-	  [data-title*="运费"] [style*="flex:1"]{flex:auto!important;width:100%!important}
+	  [data-title*="驾驭工程"] [style*="display:flex"][style*="gap:clamp(14px"],
+	  [data-title="上下文工程揭晓"] > div[style*="display:flex"]{flex-direction:column!important;gap:10px!important}
 	  /* ── P4 grid 双列 → 单列 ── */
 	  [data-title="模型"] > div[style*="display:grid"][style*="grid-template-columns:auto"]{grid-template-columns:1fr!important;gap:12px!important}
 	  [data-title="模型"] > div[style*="display:grid"] > div[style*="width:fit-content"]{width:100%!important}
@@ -259,11 +274,42 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  .tool-layer h4{font-size:16px!important}
 	  /* ── 生态栏（手机仅显示图标）── */
 	  .eco-bar .pill{font-size:0!important;padding:3px!important;border:none!important;background:none!important;gap:0!important}
-	  .eco-bar .pill img,.eco-bar .pill .ic{font-size:12px!important;width:14px!important;height:14px!important}
+	  .eco-bar .pill img,.eco-bar .pill .ic{font-size:18px!important;width:21px!important;height:21px!important}
 	  .eco-row{gap:4px}
-	  /* ── 绝对定位元素防重叠 ── */
-	  [data-title*="运费"] [style*="position:absolute"]{position:static!important;transform:none!important;margin:6px auto;text-align:center;display:block}
-	}
+	  /* ── P1 封面标题防溢出 ── */
+ 	  [data-title="封面"] .cp1-stage{overflow:visible;max-width:90vw}
+ 	  /* ── 页码移到顶部 ── */
+ 	  .slide-number.ctrl-hint{bottom:auto!important;top:8px!important;left:50%!important;transform:translateX(-50%)!important;z-index:50!important;font-size:10px!important;padding:2px 12px!important}
+ 	  /* ── P12 Apple 分段控件 ── */
+ 	  .p12-segmented{display:inline-flex!important;background:rgba(255,255,255,.1);border-radius:10px;padding:3px;gap:2px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);margin-bottom:8px;width:100%;box-shadow:inset 0 1px 2px rgba(0,0,0,.08)}
+ 	  .p12-seg{flex:1;text-align:center;padding:8px 6px;border-radius:7px;font-weight:600;font-size:clamp(13px,3vw,16px);color:var(--text-2);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);user-select:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ 	  .p12-seg.active{background:rgba(255,255,255,.95);color:var(--text-1);box-shadow:0 1px 4px rgba(0,0,0,.12)}
+ 	  .p12-body{flex-direction:column!important;gap:6px!important;position:relative!important}
+ 	  .p12-anim-wrap{min-height:320px!important;max-height:480px!important}
+ 	  .p12-body > .p12-tip{position:static!important;transform:none!important;margin-top:6px!important;text-align:center!important}
+ 	  /* ── P7 手机：4 框 2×2 在上，提示词浏览器在下 ── */
+ 	  [data-title="提示词工程 · 四规则"] .rules-grid{grid-template-columns:1fr 1fr!important;grid-auto-rows:auto!important}
+ 	  [data-title="提示词工程 · 四规则"] .rules-grid > div[style*="grid-row:span 2"]{grid-column:1/-1!important;grid-row:auto!important;order:1!important;max-height:260px!important;min-height:160px!important}
+ 	  [data-title="提示词工程 · 四规则"] .rules-grid > .rule-item{order:0!important}
+ 	  /* ── P4：三栏网格转单列 ── */
+ 	  [data-title="模型"] .p4-step3,
+ 	  [data-title="模型"] .p4-step3-eq{grid-template-columns:1fr!important;gap:10px!important}
+ 	  [data-title="模型"] .p4-brand-block-body{grid-template-columns:1fr!important}
+ 	  /* ── P13：驾驭工程主布局转竖向 ── */
+ 	  [data-title="驾驭工程揭晓"] > div[style*="display:flex"]{flex-direction:column!important;gap:12px!important}
+ 	  [data-title="驾驭工程揭晓"] > div[style*="display:flex"] > div[style*="width:44px"]{width:100%!important;height:auto!important;flex-direction:row!important;padding:4px 0!important;gap:4px!important}
+ 	  [data-title="驾驭工程揭晓"] > div[style*="display:flex"] > div[style*="width:44px"] > span:last-child{display:inline!important}
+ 	  [data-title="驾驭工程揭晓"] .six-pack{grid-template-columns:1fr 1fr!important;gap:6px!important}
+ 	  [data-title="驾驭工程揭晓"] .six-pack .item{padding:10px 12px!important;font-size:13px!important}
+ 	  /* ── P12 Apple分段控件 + P18表格padding ── */
+ 	  .compare-table th,.compare-table td{padding:10px 8px!important;font-size:13px!important}
+ 	  /* ── P6 手机端标签切换 ── */
+ 	  [data-title="提示词工程 · 案例"] .p6-tabs{display:flex!important;gap:6px;margin-bottom:6px}
+ 	  [data-title="提示词工程 · 案例"] .p6-tab{flex:1;text-align:center;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,16px);font-weight:700;font-size:clamp(14px,3.5vw,18px);border-radius:8px;cursor:pointer;background:var(--bg-soft);color:var(--text-2);border:1.5px solid var(--border);transition:all .2s}
+ 	  [data-title="提示词工程 · 案例"] .p6-tab.active{background:rgba(229,62,62,.1);color:#e53e3e;border-color:rgba(229,62,62,.3)}
+ 	  [data-title="提示词工程 · 案例"] .p6-tab[data-p6="good"].active{background:rgba(59,111,255,.1);color:#3b6fff;border-color:rgba(59,111,255,.3)}
+ 	  [data-title="提示词工程 · 案例"] [data-p6-side]:not(.active){display:none!important}
+ 	}
 </style>
 <script defer="" src="assets/runtime.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -506,8 +552,9 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <p class="kicker">TIPS 01</p>
 <h2 class="h2" style="margin-bottom:2px!important">让 AI 写 <span style="color:#e53e3e">PPT</span></h2>
 <p class="lede" style="margin-top:0!important;margin-bottom:8px">同一个需求，两种结果</p>
+<div class="p6-tabs"><span class="p6-tab active" data-p6="bad">❌ 直接问 AI</span><span class="p6-tab" data-p6="good">✅ Trae 语音沟通</span></div>
 <div style="display:flex;gap:clamp(20px,4vw,50px);margin-top:8px;min-width:0;align-items:stretch">
-<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column" data-p6-side="bad" class="active">
 <div style="flex:1;display:flex;flex-direction:column;border:1px solid rgba(229,62,62,.2);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">
 <div style="background:rgba(229,62,62,.1);padding:10px 16px;font-weight:700;color:#e53e3e;font-size:clamp(14px,1.4vw,18px);text-align:center">❌ 直接问 AI</div>
 <div style="flex:1;padding:14px;background:rgba(229,62,62,.02);display:flex;flex-direction:column">
@@ -539,7 +586,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 </div>
 </div>
 <!-- 右边：正确做法 -->
-<div style="flex:1;min-width:0;display:flex;flex-direction:column">
+<div style="flex:1;min-width:0;display:flex;flex-direction:column" data-p6-side="good">
 <div style="flex:1;display:flex;flex-direction:column;border:1px solid rgba(59,111,255,.2);border-radius:14px;overflow:hidden;box-shadow:0 2px 8px rgba(0,0,0,.06)">
 <div style="background:rgba(59,111,255,.1);padding:10px 16px;font-weight:700;color:#3b6fff;font-size:clamp(14px,1.4vw,18px);text-align:center">✅ Trae 语音沟通</div>
 <div style="flex:1;padding:14px 14px 14px 18px;background:rgba(59,111,255,.02);display:flex;flex-direction:column">
@@ -1081,16 +1128,73 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <section class="slide" data-title="运费对账">
 <p class="kicker">Harness · Case Study</p>
 <h2 class="h2" style="margin-bottom:0!important">案例对比 · 运费对账</h2>
-<div style="display:flex;gap:8px;margin-top:20px">
-<div style="flex:1;background:rgba(229,62,62,.1);text-align:center;padding:8px;font-weight:700;color:#e53e3e;font-size:clamp(18px, 1.9vw, 24px);border-radius:10px 10px 0 0;border:2px solid rgba(229,62,62,.3);border-bottom:none">❌ Excel 手工对账</div>
-<div style="flex:1;background:rgba(46,160,67,.1);text-align:center;padding:8px;font-weight:700;color:#2ea043;font-size:clamp(18px, 1.9vw, 24px);border-radius:10px 10px 0 0;border:2px solid rgba(46,160,67,.3);border-bottom:none;position:relative">✅ AI 脚本对账<span onclick="showSfRules()" style="position:absolute;right:12px;top:50%;transform:translateY(-50%);font-size:clamp(14px, 1.6vw, 20px);font-weight:700;color:#555;font-family:PingFang SC,Microsoft YaHei,Noto Sans SC,sans-serif;cursor:pointer;text-decoration:underline">📄 顺丰运费对账规则.MD</span></div>
+<!-- Apple 风格分段控件（手机端显示） -->
+<div class="p12-segmented">
+  <div class="p12-seg active" data-p12="manual">❌ Excel 手工对账</div>
+  <div class="p12-seg" data-p12="auto">✅ AI 脚本对账</div>
 </div>
-<div style="display:flex;gap:8px;flex:1;min-height:0;position:relative">
-<iframe src="excel_animation.html" style="flex:1;border:2px solid rgba(229,62,62,.3);border-radius:0 0 10px 10px"></iframe>
-<iframe src="pipeline_animation.html" style="flex:1;border:2px solid rgba(46,160,67,.3);border-radius:0 0 10px 10px"></iframe>
-<div style="position:absolute;bottom:55px;left:50%;transform:translateX(-50%);z-index:10">
-<span style="background:#fff;color:#e53e3e;padding:8px 24px;border-radius:8px;font-weight:800;font-size:clamp(18px, 2.3vw, 28px);border:2px solid rgba(229,62,62,.3);box-shadow:0 2px 10px rgba(0,0,0,.1)">💡 关键变量：<b>有没有自动化脚本</b></span>
-</div>
+<div class="p12-body" style="display:flex;gap:8px;flex:1;min-height:0;position:relative">
+  <!-- 手动对账动画（内联） -->
+  <div class="p12-anim-wrap p12-anim-manual" id="p12ManualWrap" style="flex:1;min-width:0;flex-direction:column;border-radius:10px;overflow:hidden;border:2px solid rgba(229,62,62,.3)">
+    <div style="background:#1a1a2e;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;padding:14px;position:relative;min-height:360px">
+      <div class="p12M-paintags" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:30">
+        <div class="p12M-pain p12M-p1" style="position:absolute;top:2%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 漏算风险高</div>
+        <div class="p12M-pain p12M-p2" style="position:absolute;top:16%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 容易算错</div>
+        <div class="p12M-pain p12M-p3" style="position:absolute;top:30%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.3);color:#ff6b35">⚠ 公式易出错</div>
+        <div class="p12M-pain p12M-p4" style="position:absolute;top:44%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 数据量大卡顿</div>
+        <div class="p12M-pain p12M-p5" style="position:absolute;top:58%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.3);color:#ffc107">⚠ 眼睛看花</div>
+        <div class="p12M-pain p12M-p6" style="position:absolute;top:72%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 核对耗时</div>
+        <div class="p12M-pain p12M-p7" style="position:absolute;top:8%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 前后不一致</div>
+        <div class="p12M-pain p12M-p8" style="position:absolute;top:22%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.3);color:#ff6b35">⚠ 重复劳动</div>
+        <div class="p12M-pain p12M-p9" style="position:absolute;top:36%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 容易漏行</div>
+        <div class="p12M-pain p12M-p10" style="position:absolute;top:50%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.3);color:#ffc107">⚠ 加班核对</div>
+        <div class="p12M-pain p12M-p11" style="position:absolute;top:64%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 电脑死机</div>
+      </div>
+      <!-- Excel 窗口 -->
+      <div style="width:100%;max-width:480px;border-radius:8px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);position:relative;z-index:1">
+        <div style="background:#f0f0f0;padding:4px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #d0d0d0">
+          <div style="display:flex;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#ff5f56"></span><span style="width:8px;height:8px;border-radius:50%;background:#ffbd2e"></span><span style="width:8px;height:8px;border-radius:50%;background:#27c93f"></span></div>
+          <span style="font-size:11px;color:#555;font-weight:500">📊 运费对账表 - Excel</span>
+        </div>
+        <div style="background:#f8f8f8;padding:2px 6px;display:flex;gap:8px;font-size:10px;color:#666;border-bottom:1px solid #e0e0e0;flex-wrap:wrap"><span style="background:#fff;padding:1px 6px;border-radius:2px;border:1px solid #ddd">文件</span><span style="background:#fff;padding:1px 6px;border-radius:2px;border:1px solid #ddd">开始</span><span style="background:#fff;padding:1px 6px;border-radius:2px;border:1px solid #ddd">公式</span><span style="background:#fff;padding:1px 6px;border-radius:2px;border:1px solid #ddd">数据</span></div>
+        <div style="background:#fff;padding:2px 6px;display:flex;align-items:center;gap:4px;border-bottom:1px solid #e0e0e0;font-size:11px">
+          <span id="p12M_cellRef" style="background:#f0f0f0;padding:1px 6px;border-radius:2px;font-weight:600;min-width:30px;text-align:center;color:#333;font-size:10px">E5</span>
+          <span style="color:#333;flex:1;font-family:Consolas,monospace;font-size:11px;display:flex;align-items:center">=<span id="p12M_formulaText"></span><span style="display:inline-block;width:1.5px;height:14px;background:#333;animation:p12M_blink 1s step-end infinite;margin-left:1px"></span></span>
+        </div>
+        <div style="display:flex;background:#f8f8f8;border-bottom:1px solid #e0e0e0"><div style="width:30px;min-width:30px;border-right:1px solid #e0e0e0;height:16px"></div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">A<br>单号</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">B<br>重量kg</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">C<br>首重</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">D<br>续重</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">E<br>运费</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;font-weight:500">F<br>核对</div></div>
+        <div id="p12M_grid" style="background:#fff;position:relative;height:300px;overflow:hidden"></div>
+        <div id="p12M_cursor" style="position:absolute;width:88px;height:18px;border:2px solid #28a745;border-radius:2px;pointer-events:none;transition:all .5s cubic-bezier(.25,.46,.45,.94);z-index:10;display:none"></div>
+      </div>
+      <!-- 计时 -->
+      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(255,107,53,.04);border:1px solid rgba(255,107,53,.12);border-radius:10px;padding:8px 16px 8px 20px;flex-shrink:0">
+        <div style="font-family:JetBrains Mono,Consolas,monospace;text-align:right;padding-right:12px;border-right:1px solid rgba(255,107,53,.1)">
+          <span style="font-size:36px;font-weight:800;color:#ff6b35;letter-spacing:-.03em" id="p12M_timerNum">0</span><span style="font-size:18px;font-weight:700;color:#ff6b35;margin-left:2px"> 天</span>
+        </div>
+        <div style="text-align:left">
+          <div style="font-size:16px;font-weight:700;color:#ff6b35" id="p12M_resultBig">⏳ 核对中...</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.25)" id="p12M_resultSub">人工逐行比对</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- AI 自动对账动画（内联） -->
+  <div class="p12-anim-wrap p12-anim-auto" id="p12AutoWrap" style="flex:1;min-width:0;flex-direction:column;border-radius:10px;overflow:hidden;border:2px solid rgba(46,160,67,.3)">
+    <div style="background:#0d0d0d;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:14px;min-height:360px">
+      <div id="p12A_pipeline" style="width:100%;max-width:480px;display:flex;flex-direction:column;gap:6px;margin-bottom:6px"></div>
+      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(76,175,80,.04);border:1px solid rgba(76,175,80,.12);border-radius:10px;padding:8px 16px 8px 20px">
+        <div style="font-family:JetBrains Mono,Consolas,monospace;text-align:right;padding-right:12px;border-right:1px solid rgba(255,255,255,.06)">
+          <span style="font-size:36px;font-weight:800;color:#4caf50;letter-spacing:-.03em" id="p12A_timerNum">0.0</span><span style="font-size:18px;font-weight:700;color:#4caf50;margin-left:2px"> 秒</span>
+        </div>
+        <div style="text-align:left">
+          <div style="font-size:16px;font-weight:700;color:#4caf50" id="p12A_resultBig">⏳ 执行中...</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.25)" id="p12A_resultSub">全自动运行中</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="p12-tip" style="position:absolute;bottom:clamp(40px,6vh,55px);left:50%;transform:translateX(-50%);z-index:10">
+    <span style="background:#fff;color:#e53e3e;padding:6px 18px;border-radius:8px;font-weight:800;font-size:clamp(14px,1.8vw,22px);border:2px solid rgba(229,62,62,.3);box-shadow:0 2px 10px rgba(0,0,0,.1);white-space:nowrap">💡 关键变量：<b>有没有自动化脚本</b></span>
+  </div>
 </div>
 <div class="notes">左边❌：Excel手工算——半天怕错。右边✅：脚本自动化——8个节点逐个校验，<b>3.4秒零误差</b>。关键变量：有没有自动化脚本。</div>
 </section>
@@ -1722,10 +1826,10 @@ function toggleP4(el){
 	  document.addEventListener('keydown', _kbBlock, true);
 
 	  // ── 移动端触屏滑动翻页 ──
-	  var _tx = 0, _ty = 0;
+	  var _tx = 0, _ty = 0, _tscroll = 0;
 	  document.addEventListener('touchstart', function(e){
 	    var t = e.touches && e.touches[0];
-	    if(t){ _tx = t.clientX; _ty = t.clientY; }
+	    if(t){ _tx = t.clientX; _ty = t.clientY; _tscroll = window.scrollY || document.documentElement.scrollTop || 0; }
 	  }, {passive:true});
 	  document.addEventListener('touchend', function(e){
 	    if(_locked) return;
@@ -1733,7 +1837,10 @@ function toggleP4(el){
 	    if(!t) return;
 	    var dx = t.clientX - _tx, dy = t.clientY - _ty;
 	    var absDx = Math.abs(dx), absDy = Math.abs(dy);
-	    if(absDx < 30 || absDy > absDx * 1.5) return;
+	    var scrolled = Math.abs((window.scrollY||document.documentElement.scrollTop||0) - _tscroll);
+	    // ── 手机翻页防误触：拇指上下滚动时难免有左右偏移 ──
+	    // 要求：水平滑动必须 >50px 且横向距离 > 纵向距离，才判定为有意翻页
+	    if(absDx < 50 || absDy >= absDx || scrolled > 10) return;
 	    var target = dx < 0 ? lastSlide + 1 : lastSlide - 1;
 	    _lastRemoteNav = Date.now();
 	    localGoSlide(target);
@@ -1770,7 +1877,7 @@ function toggleP4(el){
   var SPACING = 1.0;
   var P1_DUR = 1250;
   var NEW_DATA = [[0,'从'],[5,'，'],[6,'到'],[7,'用'],[8,'好'],[9,'A'],[10,'I']];
-  function cx(i,t){ return (i-(t-1)/2)*SPACING; }
+  function cx(i,t){ var sp = window.innerWidth < 500 ? 0.65 : SPACING; return (i-(t-1)/2)*sp; }
 
   var wrap = document.getElementById('cp1Wrap');
   if(!wrap) return;
@@ -1877,6 +1984,42 @@ function showSfRules(){
     document.getElementById('mdPopupContent').innerHTML = marked.parse(t);
   });
 }
+// ═══ P12 Apple 分段控件切换（手机版）═══
+function p12TabInit(){
+  if(window.innerWidth < 768){
+    var auto = document.getElementById('p12AutoWrap');
+    var manual = document.getElementById('p12ManualWrap');
+    if(manual) manual.classList.remove('hidden');
+    if(auto) auto.classList.add('hidden');
+  }
+}
+p12TabInit();
+document.addEventListener('click', function(e){
+  var seg = e.target.closest('.p12-seg');
+  if(!seg) return;
+  var type = seg.getAttribute('data-p12');
+  if(!type) return;
+  document.querySelectorAll('.p12-seg').forEach(function(s){ s.classList.remove('active'); });
+  seg.classList.add('active');
+  var manual = document.getElementById('p12ManualWrap');
+  var auto = document.getElementById('p12AutoWrap');
+  if(manual && auto){
+    if(type === 'manual'){ manual.classList.remove('hidden'); auto.classList.add('hidden'); }
+    else { manual.classList.add('hidden'); auto.classList.remove('hidden'); }
+  }
+});
+// ═══ P6 标签切换（手机版）═══
+document.addEventListener('click', function(e){
+  var tab = e.target.closest('.p6-tab');
+  if(!tab) return;
+  var side = tab.getAttribute('data-p6');
+  if(!side) return;
+  document.querySelectorAll('.p6-tab').forEach(function(t){ t.classList.remove('active'); });
+  tab.classList.add('active');
+  document.querySelectorAll('[data-p6-side]').forEach(function(s){ s.classList.remove('active'); });
+  var target = document.querySelector('[data-p6-side="'+side+'"]');
+  if(target) target.classList.add('active');
+});
 function showMdPopup(){
   var popup = document.getElementById('mdPopup');
   if(!popup) return;
@@ -1888,6 +2031,126 @@ function showMdPopup(){
     document.getElementById('mdPopupContent').innerHTML = '加载失败: ' + e.message;
   });
 }
+// ═══ P12 手工对账动画 ═══
+(function(){
+  var grid = document.getElementById('p12M_grid');
+  if(!grid) return;
+  var cellRef = document.getElementById('p12M_cellRef');
+  var formulaText = document.getElementById('p12M_formulaText');
+  var timerNum = document.getElementById('p12M_timerNum');
+  var resultBig = document.getElementById('p12M_resultBig');
+  var resultSub = document.getElementById('p12M_resultSub');
+  var cursorEl = document.getElementById('p12M_cursor');
+  var data = [['SF001','3.2','12','5','',''],['SF002','5.8','12','5','',''],['SF003','1.5','12','5','',''],['SF004','8.0','12','5','',''],['SF005','2.1','12','5','',''],['SF006','6.5','12','5','',''],['SF007','4.0','12','5','',''],['SF008','9.5','12','5','',''],['SF009','3.0','12','5','',''],['SF010','7.2','12','5','','']];
+  data.forEach(function(r,i){
+    var row=document.createElement('div');row.style.cssText='display:flex;border-bottom:1px solid #f0f0f0';
+    var rn=document.createElement('div');rn.style.cssText='width:30px;min-width:30px;background:#f8f8f8;border-right:1px solid #e0e0e0;text-align:center;font-size:9px;color:#888;padding:2px 0';rn.textContent=i+1;row.appendChild(rn);
+    r.forEach(function(c,j){
+      var cell=document.createElement('div');cell.style.cssText='flex:1;border-right:1px solid #f0f0f0;padding:2px 4px;font-size:10px;color:#333;font-family:Consolas,monospace;min-height:24px;display:flex;align-items:center';cell.textContent=c;cell.dataset.row=i;cell.dataset.col=j;cell.id='p12M_cell_'+i+'_'+j;row.appendChild(cell);
+    });grid.appendChild(row);
+  });
+  var timerInterval;
+  function getCellPos(r,c){
+    var el=document.getElementById('p12M_cell_'+r+'_'+c);if(!el) return {x:0,y:0,w:0,h:0};
+    var rect=el.getBoundingClientRect(),gRect=grid.getBoundingClientRect();
+    return {x:rect.left-gRect.left,y:rect.top-gRect.top,w:rect.width,h:rect.height};
+  }
+  function typeFormula(text,cb){
+    var idx=0;formulaText.textContent='';
+    var iv=setInterval(function(){if(idx<text.length){formulaText.textContent+=text[idx];idx++}else{clearInterval(iv);if(cb) setTimeout(cb,200)}},40);
+  }
+  function setCell(r,c,val,cls){
+    var el=document.getElementById('p12M_cell_'+r+'_'+c);if(el){el.textContent=val;if(cls) el.className='';el.style.cssText='flex:1;border-right:1px solid #f0f0f0;padding:2px 4px;font-size:10px;color:#333;font-family:Consolas,monospace;min-height:24px;display:flex;align-items:center;'+(cls==='filled'?'background:#e8f5e9':'')+(cls==='error'?'background:#f8d7da;color:#dc3545':'')}
+  }
+  function clearHL(){
+    grid.querySelectorAll('[style*="background:#fff3cd"]').forEach(function(e){e.style.background='transparent'});
+  }
+  function moveCursor(r,c,cb){
+    var pos=getCellPos(r,c);
+    if(cursorEl){cursorEl.style.display='block';cursorEl.style.left=pos.x+'px';cursorEl.style.top=pos.y+'px';cursorEl.style.width=pos.w+'px';cursorEl.style.height=pos.h+'px'}
+    clearHL();
+    var el=document.getElementById('p12M_cell_'+r+'_'+c);if(el) el.style.background='#fff3cd';
+    cellRef.textContent=String.fromCharCode(69+c)+(r+1);
+    if(cb) setTimeout(cb,150);
+  }
+  function startTimer(){
+    var elapsed=0;timerInterval=setInterval(function(){elapsed+=0.08;timerNum.textContent=elapsed.toFixed(1)},80);
+  }
+  setTimeout(function(){
+    startTimer();
+    moveCursor(2,4,function(){typeFormula('=C3+D3*ROUNDUP(B3-1,0)',function(){setCell(2,4,'22','filled');
+      setTimeout(function(){moveCursor(4,4,function(){typeFormula('=C5+D5*ROUNDUP(B5-1,0)',function(){setCell(4,4,'47','filled');
+        setTimeout(function(){moveCursor(5,4,function(){typeFormula('=C6+D6*ROUNDUP(B6-1,0)',function(){setCell(5,4,'32','filled');
+          setTimeout(function(){moveCursor(7,5);setCell(7,5,'❌ 不符','error');
+            setTimeout(function(){moveCursor(1,4,function(){typeFormula('=C2+D2*ROUNDUP(B2-1,0)',function(){setCell(1,4,'27','filled');
+              clearInterval(timerInterval);timerNum.textContent='15.0';resultBig.textContent='⚠️ 效率低 · 易出错';resultBig.style.color='#ff6b6b';resultSub.textContent='手工核对 · 周期 3~15 天';resultSub.style.color='#ff6b35'
+            })})},600)},800)},600)},800)},600)},1000)})})})})})})},400);
+  // 警示标签动画
+  var pains=document.querySelectorAll('.p12M-pain');
+  pains.forEach(function(p,i){setTimeout(function(){p.style.opacity='1'},600+i*250)});
+})();
+
+// ═══ P12 AI 自动对账动画 ═══
+(function(){
+  var container=document.getElementById('p12A_pipeline');
+  if(!container) return;
+  var timerNum=document.getElementById('p12A_timerNum');
+  var resultBig=document.getElementById('p12A_resultBig');
+  var resultSub=document.getElementById('p12A_resultSub');
+  var steps=[
+    {icon:'📦',title:'读取ERP发货数据',dim:'全部发货单',target:21530,suffix:'条'},
+    {icon:'📋',title:'包装方案核对',dim:'匹配产品→冰袋→箱子规格',target:21530,suffix:'条已匹配'},
+    {icon:'⚖️',title:'计算产品重量',dim:'产品+冰袋+箱子总重',target:21530,suffix:'条已处理'},
+    {icon:'🧊',title:'冰袋/箱子配置',dim:'按温区匹配保温方案',target:3,suffix:'温区全部匹配'},
+    {icon:'📍',title:'地址城市等级映射',dim:'362城市已分级',target:362,suffix:'城市'},
+    {icon:'💰',title:'首重续重计算',dim:'12档计费规则',target:12,suffix:'档全部计算'},
+    {icon:'📊',title:'出库费核算',dim:'出库+打包',target:21530,suffix:'条已核算'},
+    {icon:'🚚',title:'总运费汇总',dim:'最终金额',target:827381.50,suffix:'',isMoney:true}
+  ];
+  steps.forEach(function(s,i){
+    var div=document.createElement('div');
+    div.id='p12A_step_'+i;
+    div.style.cssText='display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:10px 12px;opacity:0;transform:translateX(-16px);transition:all .4s cubic-bezier(.25,.46,.45,.94)';
+    var displayTarget=s.isMoney?'¥ '+s.target.toLocaleString():s.target.toLocaleString()+' '+s.suffix;
+    div.innerHTML='<div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,.3);font-weight:600;flex-shrink:0">'+(i+1)+'</div><div style="font-size:16px;flex-shrink:0">'+s.icon+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#f5f5f7">'+s.title+'<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.35);margin-left:4px">'+s.dim+'</span></div></div><div id="p12A_counter_'+i+'" style="font-family:JetBrains Mono,Consolas,monospace;font-size:15px;font-weight:700;color:#4A90D9;min-width:80px;text-align:right">0 '+s.suffix+'</div><div style="font-size:14px;opacity:0;transition:opacity .3s;flex-shrink:0;display:none">✅</div>';
+    container.appendChild(div);
+  });
+  var timerInterval,startTime;
+  function animateCounter(idx,target,isMoney,suffix,duration,cb){
+    var el=document.getElementById('p12A_counter_'+idx);
+    if(!el) return;
+    var start=performance.now();
+    function update(now){
+      var progress=Math.min((now-start)/duration,1),eased=1-Math.pow(1-progress,2),current=Math.round(target*eased);
+      el.textContent=isMoney?'¥ '+current.toLocaleString():current.toLocaleString()+' '+suffix;
+      if(progress<1) requestAnimationFrame(update);
+      else{el.textContent=isMoney?'¥ '+target.toLocaleString():target.toLocaleString()+' '+suffix;if(cb) setTimeout(cb,80)}
+    }
+    requestAnimationFrame(update);
+  }
+  function showStep(i){
+    if(i>=steps.length){
+      clearInterval(timerInterval);
+      resultBig.textContent='✅ 零误差';resultBig.style.color='#4caf50';
+      resultSub.textContent='全自动完成 · 无需人工核对';resultSub.style.color='#4caf50';
+      return;
+    }
+    var el=document.getElementById('p12A_step_'+i);
+    if(!el) return;
+    el.style.opacity='1';el.style.transform='translateX(0)';el.style.borderColor='#4A90D9';el.style.background='rgba(74,144,217,.08)';
+    var s=steps[i];
+    animateCounter(i,s.target,s.isMoney,s.suffix,300);
+    if(i>0){
+      var prev=document.getElementById('p12A_step_'+(i-1));
+      if(prev){prev.style.borderColor='rgba(76,175,80,.2)';prev.style.background='rgba(76,175,80,.04)'}
+    }
+    setTimeout(function(){showStep(i+1)},400);
+  }
+  function startTimer(){
+    startTime=Date.now();timerInterval=setInterval(function(){var elapsed=(Date.now()-startTime)/1000;timerNum.textContent=elapsed.toFixed(1)},50);
+  }
+  setTimeout(function(){startTimer();showStep(0)},200);
+})();
 </script>
 </div>
 </body>
