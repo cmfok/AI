@@ -3,7 +3,7 @@
 <html data-themes="minimal-white,editorial-serif,swiss-grid,japanese-minimal,pitch-deck-vc" lang="zh-CN">
 <head>
 <meta charset="utf-8"/><meta content="width=device-width,initial-scale=1" name="viewport"/>
-<title>从AI不行到AI真香 · 分享会</title>
+<title>从会用AI，到用好AI · 分享会</title>
 <link href="assets/fonts.css" rel="stylesheet"/>
 <link href="assets/base.css" rel="stylesheet"/>
 <link href="assets/animations/animations.css" rel="stylesheet"/>
@@ -142,19 +142,99 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cover-q.show{opacity:1;animation:q-pop 1s cubic-bezier(.34,1.56,.64,1) forwards}
 @keyframes q-pop{0%{opacity:0;transform:translateY(-50%) translateX(60px) scale(0) rotate(-20deg);color:#fff}60%{opacity:1;transform:translateY(-50%) translateX(-5px) scale(1.15) rotate(5deg)}100%{opacity:1;transform:translateY(-50%) translateX(0) scale(1) rotate(0deg);color:#e03e3e}}
 @keyframes p12M_blink{0%,100%{opacity:1}50%{opacity:0}}
+/* ── P12 手工对账样式（匹配 excel_animation.html 原版）── */
+.excel-pain{position:absolute;padding:4px 10px;border-radius:6px;font-size:15px;font-weight:600;letter-spacing:.5px;opacity:0;transition:all .6s cubic-bezier(.25,.46,.45,.94);white-space:nowrap;z-index:30}
+.excel-pain.show{opacity:1}
+.excel-pain.orange{background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.3);color:#ff6b35}
+.excel-pain.red{background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b}
+.excel-pain.amber{background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.3);color:#ffc107}
+.ep1{top:2%;left:-140px}.ep2{top:16%;left:-140px}.ep3{top:30%;left:-140px}
+.ep4{top:44%;left:-140px}.ep5{top:58%;left:-140px}.ep6{top:72%;left:-140px}
+.ep7{right:-140px;top:8%}.ep8{right:-140px;top:22%}
+.ep9{right:-140px;top:36%}.ep10{right:-140px;top:50%}.ep11{right:-140px;top:64%}
+.excel-window{width:100%;max-width:540px;border-radius:10px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);z-index:1}
+.excel-title{background:#f0f0f0;padding:6px 12px;display:flex;align-items:center;gap:10px;border-bottom:1px solid #d0d0d0}
+.excel-title .dots{display:flex;gap:5px}
+.excel-title .dot{width:10px;height:10px;border-radius:50%}
+.excel-title .dot.r{background:#ff5f56}
+.excel-title .dot.y{background:#ffbd2e}
+.excel-title .dot.g{background:#27c93f}
+.excel-title .name{font-size:12px;color:#555;font-weight:500}
+.excel-toolbar{background:#f8f8f8;padding:3px 8px;display:flex;gap:10px;font-size:11px;color:#666;border-bottom:1px solid #e0e0e0;flex-wrap:wrap}
+.excel-toolbar span{background:#fff;padding:2px 8px;border-radius:3px;border:1px solid #ddd;font-size:11px}
+.excel-fbar{background:#fff;padding:3px 8px;display:flex;align-items:center;gap:6px;border-bottom:1px solid #e0e0e0;font-size:12px}
+.excel-fbar .ref{background:#f0f0f0;padding:2px 8px;border-radius:3px;font-weight:600;min-width:40px;text-align:center;color:#333;font-size:11px}
+.excel-fbar .formula{color:#333;flex:1;font-family:Consolas,Courier New,monospace;min-height:20px;display:flex;align-items:center;font-size:12px}
+.excel-fbar .blink{display:inline-block;width:2px;height:16px;background:#333;animation:p12M_blink 1s step-end infinite;margin-left:1px}
+.excel-ch{display:flex;background:#f8f8f8;border-bottom:1px solid #e0e0e0}
+.excel-ch .corner{width:40px;min-width:40px;border-right:1px solid #e0e0e0;height:20px}
+.excel-ch .col{flex:1;text-align:center;font-size:10px;color:#666;padding:2px 0;border-right:1px solid #e0e0e0;font-weight:500}
+.excel-grid{background:#fff;position:relative;overflow:hidden;height:440px}
+.excel-grid .row{display:flex;border-bottom:1px solid #f0f0f0;gap:0;align-items:stretch}
+.excel-grid .row .rn{width:40px;min-width:40px;background:#f8f8f8;border-right:1px solid #e0e0e0;text-align:center;font-size:10px;color:#888;padding:4px 0}
+.excel-grid .row .cell{flex:1;border-right:1px solid #f0f0f0;padding:3px 6px;font-size:11px;color:#333;font-family:Consolas,Courier New,monospace;min-height:28px;display:flex;align-items:center}
+.excel-grid .row .cell.highlight{background:#fff3cd!important}
+.excel-grid .row .cell.filled{background:#e8f5e9!important}
+.excel-grid .row .cell.error{background:#f8d7da!important;color:#dc3545!important}
+.excel-cursor{position:absolute;border:2px solid #28a745;border-radius:2px;pointer-events:none;transition:all .5s cubic-bezier(.25,.46,.45,.94);z-index:10;display:none;box-sizing:border-box}
+.excel-cursor::after{content:"🖱";position:absolute;left:-16px;top:-8px;font-size:14px;opacity:.8}
+.excel-timer{display:inline-flex;align-items:center;gap:16px;background:rgba(255,107,53,.04);border:1px solid rgba(255,107,53,.12);border-radius:12px;padding:12px 20px 12px 24px;flex-shrink:0;white-space:nowrap}
+.excel-timer .tnum{font-family:JetBrains Mono,Consolas,monospace;text-align:right;padding-right:16px;border-right:1px solid rgba(255,107,53,.1)}
+.excel-timer .tnum .num{font-size:50px;font-weight:800;color:#ff6b35;letter-spacing:-.03em}
+.excel-timer .tnum .unit{font-size:22px;font-weight:700;color:#ff6b35;margin-left:2px}
+.excel-timer .tres{text-align:left}
+.excel-timer .tres .big{font-size:20px;font-weight:700;color:#ff6b35}
+.excel-timer .tres .sub{font-size:12px;color:rgba(255,255,255,.25)}
+.pipeline-timer{display:inline-flex;align-items:center;gap:16px;background:rgba(76,175,80,.04);border:1px solid rgba(76,175,80,.12);border-radius:12px;padding:12px 20px 12px 24px;flex-shrink:0;white-space:nowrap}
+.pipeline-timer .tnum{font-family:JetBrains Mono,Consolas,monospace;text-align:right;padding-right:16px;border-right:1px solid rgba(255,255,255,.06)}
+.pipeline-timer .tnum .num{font-size:50px;font-weight:800;color:#4caf50;letter-spacing:-.03em}
+.pipeline-timer .tnum .unit{font-size:22px;font-weight:700;color:#4caf50;margin-left:2px}
+.pipeline-timer .tres{text-align:left}
+.pipeline-timer .tres .big{font-size:20px;font-weight:700;color:#4caf50}
+.pipeline-timer .tres .sub{font-size:12px;color:rgba(255,255,255,.25)}
+.pipeline-timer .tres .sub.done{color:#4caf50}
+/* ── P12 原版 AI Pipeline 动画样式 ── */
+.p12-pipeline-wrap{width:100%;max-width:640px;position:relative;height:100%;display:flex;flex-direction:column}
+.p12-pipeline{display:flex;flex-direction:column;gap:8px;position:relative;z-index:1;margin-bottom:8px}
+.p12-step{display:flex;align-items:center;gap:12px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:15px 14px;opacity:0;transform:translateX(-20px);transition:all .4s cubic-bezier(.25,.46,.45,.94)}
+.p12-step.visible{opacity:1;transform:translateX(0)}
+.p12-step.active{border-color:#4A90D9;background:rgba(74,144,217,.08)}
+.p12-step.done{border-color:rgba(76,175,80,.2);background:rgba(76,175,80,.04)}
+.p12-step .order{width:28px;height:28px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:11px;color:rgba(255,255,255,.3);font-weight:600;flex-shrink:0}
+.p12-step.active .order{background:#4A90D9;color:#fff}
+.p12-step.done .order{background:#4caf50;color:#fff}
+.p12-step .icon{font-size:20px;flex-shrink:0}
+.p12-step .info{flex:1;min-width:0}
+.p12-step .label{font-size:9px;color:rgba(255,255,255,.2);letter-spacing:.5px;text-transform:uppercase}
+.p12-step .title{font-size:16px;font-weight:600;color:#f5f5f7}
+.p12-step .title .dim{font-size:13px;font-weight:400;color:rgba(255,255,255,.35);margin-left:6px;white-space:nowrap}
+.p12-step .desc{font-size:12px;color:rgba(255,255,255,.35)}
+.p12-step .status-icon{font-size:16px;opacity:0;transition:opacity .3s;flex-shrink:0}
+.p12-step.done .status-icon{opacity:1}
+.p12-step .counter{font-family:JetBrains Mono,Consolas,monospace;font-size:18px;font-weight:700;color:#4A90D9;min-width:90px;text-align:right;transition:color .3s}
+.p12-step.done .counter{color:#4caf50}
+.p12-step .counter .unit-sm{font-size:11px;font-weight:400;color:rgba(255,255,255,.2);margin-left:2px}
+.p12-pipeline-timer{display:inline-flex;align-items:center;gap:16px;background:rgba(76,175,80,.04);border:1px solid rgba(76,175,80,.12);border-radius:12px;padding:12px 20px 12px 24px}
+.p12-pipeline-timer .ptnum{font-family:JetBrains Mono,Consolas,monospace;text-align:right;padding-right:16px;border-right:1px solid rgba(255,255,255,.06)}
+.p12-pipeline-timer .ptnum .num{font-size:50px;font-weight:800;color:#4caf50;letter-spacing:-.03em}
+.p12-pipeline-timer .ptnum .unit{font-size:22px;font-weight:700;color:#4caf50;margin-left:2px}
+.p12-pipeline-timer .ptres{text-align:left}
+.p12-pipeline-timer .ptres .big{font-size:20px;font-weight:700;color:#4caf50}
+.p12-pipeline-timer .ptres .sub{font-size:12px;color:rgba(255,255,255,.25);transition:color .4s}
+.p12-pipeline-timer .ptres .sub.done{color:#4caf50}
 .cover-sub{opacity:0;transition:opacity .8s ease .8s}
 .cover-sub.show{opacity:1}
 .cover-reveal{opacity:0;transition:opacity 1.5s ease}
 .cover-reveal.show{opacity:1}
 .cover-delay{transition-delay:2s}
 
-/* ── P1 从会用AI动效（字符精确位移）── */
-.cp1-stage{position:relative;display:flex;justify-content:center;align-items:center;height:clamp(80px,14vw,180px);min-width:clamp(360px,60vw,1000px)}
-.cp1-char{position:absolute;font-size:clamp(56px, 10vw, 140px);font-weight:900;line-height:1;letter-spacing:var(--letter-tight);color:var(--text-1);transition:left 1.2s cubic-bezier(.34,1.56,.64,1),opacity 1s ease,transform .9s ease;will-change:left,opacity}
-.cp1-char.leaving{opacity:0;transform:scale(.3);pointer-events:none}
-.cp1-char.hidden{opacity:0;transform:scale(.4)}
-.cp1-sub{opacity:0;transition:opacity .8s ease;margin-top:clamp(20px,2.5vw,36px)}
-.cp1-sub.show{opacity:1}
+/* ── P1 从会用AI动效（两句话交叉渐变）── */
+  .cp1-stage{position:relative;display:flex;justify-content:center;align-items:center;height:clamp(80px,14vw,180px)}
+  .cp1-sentence{position:absolute;white-space:nowrap;font-size:clamp(56px,10vw,140px);font-weight:900;line-height:1;color:var(--text-1);transition:opacity .6s ease}
+  .cp1-char{display:inline-block;transition:all .6s ease}
+  .cp1-fade{opacity:0}
+  .cp1-sub{opacity:0;transition:opacity .8s ease .8s;margin-top:clamp(20px,2.5vw,36px)}
+  .cp1-sub.show{opacity:1}
 
 /* ── P6 手机端标签切换（桌面隐藏，手机显示）── */
 .p6-tabs{display:none!important}
@@ -164,11 +244,17 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 /* ── P12 动画容器：桌面端两者都显示，JS 通过 .hidden 类控制切换 ── */
 .p12-anim-wrap{display:flex;flex-direction:column}
 .p12-anim-wrap.hidden{display:none!important}
+/* ── P12 允许 pain tags 溢出 ── */
+[data-title="运费对账"]{overflow:visible!important}
+[data-title="运费对账"] .p12-anim-wrap .excel-grid{overflow:hidden}
 
 	@media(max-width:768px){
-	  .deck{height:auto;overflow:visible}
+	  html,body{overflow-x:hidden;width:100%}
+	  .deck{overflow-x:hidden;overflow-y:visible}
 	  .deck-header{top:12px!important;left:20px!important;right:20px!important;font-size:11px!important}
-	  .slide{overflow-y:auto;min-height:100vh;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px) clamp(130px,15vw,160px);scroll-padding-bottom:130px}
+	  .slide{overflow-x:hidden;overflow-y:auto;min-height:100vh;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px) clamp(130px,15vw,160px);scroll-padding-bottom:130px}
+	  .ep1,.ep2,.ep3,.ep4,.ep5,.ep6{left:-20px!important}
+	  .ep7,.ep8,.ep9,.ep10,.ep11{right:-20px!important}
 	  .g2,.g3,.g4,.comp-grid,.six-pack,.rules-grid{grid-template-columns:1fr}
 	  .mt-l{margin-top:14px!important}.mt-m{margin-top:8px!important}
 	  .file-reader{min-height:200px}
@@ -177,11 +263,11 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  body .h2{font-size:clamp(28px,7vw,56px)!important}
 	  body .lede{font-size:clamp(18px,4.5vw,32px)!important}
 	  .dim{font-size:clamp(16px,3.5vw,24px)}
-	  .cp1-char{font-size:clamp(36px,10vw,64px)!important}
-	  .kicker{font-size:clamp(11px,2.5vw,14px)}
-	  /* ── 覆盖内联大字 ── */
-	  .slide [style*="font-size:56px"]{font-size:42px!important}
-	  .slide [style*="font-size:34px"]{font-size:26px!important}
+  .cp1-char{font-size:clamp(36px,10vw,64px)!important}
+  .kicker{font-size:clamp(11px,2.5vw,14px)}
+  /* ── 覆盖内联大字 ── */
+  .slide [style*="font-size:56px"]{font-size:42px!important}
+  .slide [style*="font-size:34px"]{font-size:26px!important}
 	  .rule-item h5{font-size:24px!important}
 	  .rule-item .body-sm{font-size:18px!important}
 	  .six-pack .item{font-size:16px;padding:12px 14px}
@@ -198,20 +284,29 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  .slide .h1{line-height:1.15!important}
 	  .slide .h2{line-height:1.2!important}
 	  /* ── flex 竖排 ── */
-	  [data-title="运费对账"] .p12-body{flex-direction:column!important;gap:8px!important}
-	  [data-title="运费对账"] .p12-tip{position:static!important;transform:none!important;margin-top:6px!important;text-align:center!important}
+ 	  [data-title="运费对账"] .p12-body{flex-direction:column!important;gap:8px!important}
+ 	  [data-title="运费对账"] .p12-tip{position:static!important;transform:none!important;margin-top:6px!important;text-align:center!important}
+	 	  /* ── P12 手机端两栏竖排 ── */
+	 	  [data-title="运费对账"] .p12-anim-wrap{min-height:280px!important;max-height:none!important}
+	 	  [data-title="运费对账"] .p12-anim-wrap:not(.hidden){display:flex!important}
+	 	  [data-title="运费对账"] .p12-anim-wrap .excel-grid{height:200px!important}
+	 	  /* 关键变量移到动画下方 */
+	 	  [data-title="运费对账"] .p12-tip{position:static!important;transform:none!important;margin-top:8px!important;text-align:center!important}
+	 	  /* 浮层标签不透明 */
+	 	  .excel-pain{font-size:12px!important;padding:4px 10px!important;opacity:1!important;background:#fff!important;border:1px solid rgba(0,0,0,.15)!important;box-shadow:0 2px 6px rgba(0,0,0,.1)!important}
 	  [data-title*="驾驭工程"] [style*="display:flex"][style*="gap:clamp(14px"]{flex-direction:column!important;gap:12px!important}
 	  [data-title="封面"] .cp1-stage{overflow:visible}
   	  /* ── P8/P10 手机上下排列 ── */
   	  [data-title="不会写提示词"] > div[style*="display:flex"]{flex-direction:column!important}
   	  [data-title="知识库搭建"] > div[style*="display:flex"] > div[style*="display:flex"]{flex-direction:column!important}
   	  /* ── 页码移到顶部 ── */
-  	  .slide-number.ctrl-hint{bottom:auto!important;top:8px!important;left:50%!important;transform:translateX(-50%)!important;z-index:50!important;font-size:10px!important;padding:2px 12px!important}
+  	  .slide-number.ctrl-hint{bottom:auto!important;top:6px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;z-index:9999!important;font-size:10px!important;padding:2px 8px!important;border-radius:4px;background:#fff!important;color:#333!important;position:fixed!important}
 	}
 	@media(max-width:480px){
+	  html,body{overflow-x:hidden;width:100%}
 	  /* ── 基础间距 ── */
-	  .deck-header{top:8px!important;left:14px!important;right:14px!important;font-size:10px!important}
-	  .slide{padding:clamp(22px,4vw,32px) clamp(12px,4vw,20px) clamp(130px,16vw,150px);min-height:100vh;overflow-x:hidden;scroll-padding-bottom:130px}
+	  .deck-header{position:fixed!important;top:0!important;left:0!important;right:0!important;font-size:10px!important;background:#fff;padding:8px 16px;box-shadow:0 1px 6px rgba(0,0,0,.1);z-index:100;border-radius:0!important}
+	  .slide{padding:clamp(54px,4vw,64px) clamp(12px,4vw,20px) clamp(130px,16vw,150px);min-height:100vh;overflow-x:hidden;scroll-padding-bottom:130px}
 	  .mt-l{margin-top:12px!important}.mt-m{margin-top:6px!important}
 	  /* ── 标题字号 ── */
 	  body .h1{font-size:clamp(40px,11vw,64px)!important}
@@ -238,6 +333,27 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  .slide [style*="display:flex"][style*="gap:20px"],
 	  [data-title*="驾驭工程"] [style*="display:flex"][style*="gap:clamp(14px"],
 	  [data-title="上下文工程揭晓"] > div[style*="display:flex"]{flex-direction:column!important;gap:10px!important}
+		  /* ── P12 极窄屏：动画适配 ── */
+		  [data-title="运费对账"] .p12-anim-wrap{min-height:240px!important;max-height:none!important}
+		  [data-title="运费对账"] .p12-anim-wrap:not(.hidden){display:flex!important}
+		  [data-title="运费对账"] .p12-anim-wrap .excel-grid{height:200px!important}
+		  .excel-pain{font-size:11px!important;padding:3px 8px!important;opacity:1!important;background:#fff!important;border:1px solid rgba(0,0,0,.15)!important;box-shadow:0 1px 4px rgba(0,0,0,.1)!important}
+		  .ep1{top:2%;left:-10px!important}.ep2{top:16%;left:-10px!important}.ep3{top:30%;left:-10px!important}
+		  .ep4{top:44%;left:-10px!important}.ep5{top:58%;left:-10px!important}.ep6{top:72%;left:-10px!important}
+		  .ep7{right:-10px!important;top:8%}.ep8{right:-10px!important;top:22%}
+		  .ep9{right:-10px!important;top:36%}.ep10{right:-10px!important;top:50%}.ep11{right:-10px!important;top:64%}
+	  [data-title="运费对账"] .p12-step .counter{font-size:12px!important;min-width:60px!important}
+	  [data-title="运费对账"] .p12-step{padding:8px 8px!important;gap:6px!important}
+		  [data-title="运费对账"] .p12-step .title{font-size:12px!important}
+		  [data-title="运费对账"] .p12-step{padding:8px 10px!important;gap:6px!important}
+		  [data-title="运费对账"] .p12-pipeline{gap:4px!important}
+		  [data-title="运费对账"] .p12-step .label{display:none!important}
+		  [data-title="运费对账"] .p12-step .title .dim{display:none!important}
+		  [data-title="运费对账"] .p12-step .desc{display:none!important}
+		  [data-title="运费对账"] .p12-step .label{display:none!important}
+	  [data-title="运费对账"] .p12-step .title .dim{font-size:10px!important;white-space:nowrap!important}
+	  [data-title="运费对账"] .p12-step .order{width:20px!important;height:20px!important;font-size:8px!important}
+	  [data-title="运费对账"] .p12-step .icon{font-size:14px!important}
 	  /* ── P4 grid 双列 → 单列 ── */
 	  [data-title="模型"] > div[style*="display:grid"][style*="grid-template-columns:auto"]{grid-template-columns:1fr!important;gap:12px!important}
 	  [data-title="模型"] > div[style*="display:grid"] > div[style*="width:fit-content"]{width:100%!important}
@@ -246,24 +362,46 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  .rule-item .body-sm{font-size:15px!important}
 	  .six-pack .item{font-size:16px;padding:12px 14px}
 	  .comp-card{padding:12px 14px;font-size:16px}
-	  .brand-cards-wrap{transform:none!important;gap:6px;width:100%}
-	  .brand-box{flex:1!important;min-width:0!important}
-	  .brand-box-company{display:none!important}
-	  .brand-box-model{width:100%!important;align-items:stretch!important}
-	  .brand-card{font-size:13px!important;padding:4px 6px!important;gap:4px!important}
-	  .brand-card img{width:18px!important;height:18px!important;flex-shrink:0}
-	  .brand-card img[style*="auto"],
-	  .brand-card img[style*="height:16px"]{width:auto!important;height:14px!important}
-	  .brand-card span{font-size:13px!important}
-	  /* 训练卡片紧贴模型卡片 */
-	  [data-title="模型"] .g2{gap:4px!important}
-	  /* 第5页：2×2 卡片布局 */
-	  [data-title="四大工程总览"] .h2{font-size:clamp(24px,7vw,36px)!important;margin-bottom:8px!important}
-	  [data-title="四大工程总览"] .g4{grid-template-columns:1fr 1fr!important;margin-top:10px!important;gap:6px!important}
-	  [data-title="四大工程总览"] .g4>div{padding:10px 8px!important;border-radius:10px!important}
-	  [data-title="四大工程总览"] .g4>div>div:first-child{font-size:32px!important;margin-bottom:2px!important}
-	  [data-title="四大工程总览"] .g4 h4{font-size:17px!important;margin:0!important}
-	  [data-title="四大工程总览"] .g4 p{font-size:13px!important;margin:0!important}
+	  /* 第4页：全局手机适配 */
+	  [data-title="模型"] {overflow-x:hidden!important}
+	  [data-title="模型"] * {max-width:100vw!important}
+	  /* 品牌区 —— 隐藏公司列，只显示模型，防溢出 */
+	  .brand-cards-wrap{display:none!important}
+	  .p4-brand-section{flex-direction:row!important;gap:4px!important;overflow:hidden;width:100%!important}
+	  .p4-brand-block{flex:1!important;min-width:0!important;overflow:hidden}
+	  .p4-brand-block-header{font-size:11px!important;padding:4px 8px!important}
+	  .p4-brand-block-body{grid-template-columns:1fr!important;padding:3px!important;overflow:hidden}
+	  .p4-brand-company{display:none!important}
+		  .p4-brand-model{justify-content:center!important;text-align:center!important;font-size:11px!important;padding:2px 4px!important;gap:2px!important;overflow:hidden}
+	  .p4-brand-model img{width:14px!important;height:14px!important;flex-shrink:0}
+	  .p4-brand-model img[style*="auto"],
+	  .p4-brand-model img[style*="height:16px"]{width:auto!important;height:11px!important;max-width:50px!important}
+	  /* 训练卡片 —— 统一字号 */
+	  [data-title="模型"] .ca-card{padding:8px!important}
+	  [data-title="模型"] .ca-card .ch{gap:4px!important;font-size:16px!important;font-weight:700!important}
+	  [data-title="模型"] .ca-card .ch span[style*="font-weight:400"],
+	  [data-title="模型"] .ca-card .ch span[style*="color:var(--text-3)"]{font-size:13px!important;font-weight:400!important}
+	  [data-title="模型"] .ca-card .ic{font-size:10px!important;flex-shrink:0}
+	  [data-title="模型"] .ca-card .cb-inner,
+	  [data-title="模型"] .ca-card .cb-inner *{font-size:12px!important}
+	  [data-title="模型"] .demo-box,
+	  [data-title="模型"] .demo-box *{font-size:11px!important}
+	  [data-title="模型"] .lim-card,
+	  [data-title="模型"] .lim-card *{font-size:11px!important}
+	  /* 概率推算/微调演示 保持紧凑 */
+	  [data-title="模型"] .p4-step3-card [style*="flex-wrap:wrap"]{flex-wrap:nowrap!important;gap:2px!important}
+	  [data-title="模型"] .p4-step3-card [style*="flex-wrap:wrap"] span{padding:2px 5px!important;font-size:11px!important}
+	  [data-title="模型"] .p4-body,
+	  [data-title="模型"] .p4-body *{font-size:11px!important}
+		  [data-title="模型"] .g2{gap:4px!important}
+		  /* 第5页：上中下布局 */
+		  [data-title="四大工程总览"]{justify-content:flex-start!important;padding-top:15vh!important}
+		  [data-title="四大工程总览"] .h2{font-size:clamp(36px,10vw,56px)!important;font-weight:800!important;margin-bottom:6vh!important}
+		  [data-title="四大工程总览"] .g4{grid-template-columns:1fr 1fr!important;margin-top:0!important;gap:6px!important;margin-bottom:4vh!important}
+		  [data-title="四大工程总览"] .g4>div{padding:12px 10px!important;border-radius:10px!important}
+		  [data-title="四大工程总览"] .g4 h4{font-size:16px!important;margin:0 0 2px!important}
+		  [data-title="四大工程总览"] .g4 p{font-size:12px!important;margin:0!important}
+		  [data-title="四大工程总览"] .lede{margin:0!important;font-size:clamp(16px,4vw,20px)!important}
 	  .comp-card .ct{font-size:16px}
 	  .callout-block{font-size:clamp(14px,4vw,17px)!important;padding:10px 14px}
 	  .step-box,.ladder-step,.check-item,.tool-layer{font-size:15px;padding:12px 14px;gap:6px}
@@ -279,16 +417,23 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  /* ── P1 封面标题防溢出 ── */
  	  [data-title="封面"] .cp1-stage{overflow:visible;max-width:90vw}
  	  /* ── 页码移到顶部 ── */
- 	  .slide-number.ctrl-hint{bottom:auto!important;top:8px!important;left:50%!important;transform:translateX(-50%)!important;z-index:50!important;font-size:10px!important;padding:2px 12px!important}
+ 	  .slide-number.ctrl-hint{bottom:auto!important;top:6px!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;z-index:9999!important;font-size:10px!important;padding:2px 8px!important;border-radius:4px;background:#fff!important;color:#333!important;position:fixed!important}
  	  /* ── P12 Apple 分段控件 ── */
  	  .p12-segmented{display:inline-flex!important;background:rgba(255,255,255,.1);border-radius:10px;padding:3px;gap:2px;backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);margin-bottom:8px;width:100%;box-shadow:inset 0 1px 2px rgba(0,0,0,.08)}
  	  .p12-seg{flex:1;text-align:center;padding:8px 6px;border-radius:7px;font-weight:600;font-size:clamp(13px,3vw,16px);color:var(--text-2);cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);user-select:none;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
  	  .p12-seg.active{background:rgba(255,255,255,.95);color:var(--text-1);box-shadow:0 1px 4px rgba(0,0,0,.12)}
  	  .p12-body{flex-direction:column!important;gap:6px!important;position:relative!important}
- 	  .p12-anim-wrap{min-height:320px!important;max-height:480px!important}
  	  .p12-body > .p12-tip{position:static!important;transform:none!important;margin-top:6px!important;text-align:center!important}
+ 	  /* ── P12 手机标题栏缩小 ── */
+ 	  [data-title="运费对账"] .p12-anim-wrap [style*="padding:10px 14px"]{padding:6px 10px!important}
+ 	  [data-title="运费对账"] .p12-anim-wrap [style*="font-size:18px"][style*="font-weight:600"]{font-size:15px!important}
+ 	  [data-title="运费对账"] .p12-anim-wrap [style*="font-size:13px"][style*="font-weight:600"]{font-size:11px!important;padding:2px 8px!important}
+ 	  [data-title="运费对账"] .p12-anim-wrap [style*="font-size:14px"][style*="color:#000"]{font-size:12px!important}
  	  /* ── P7 手机：4 框 2×2 在上，提示词浏览器在下 ── */
- 	  [data-title="提示词工程 · 四规则"] .rules-grid{grid-template-columns:1fr 1fr!important;grid-auto-rows:auto!important}
+ 	  [data-title="提示词工程 · 四规则"] .callout-block{margin-bottom:6px!important;padding:10px 14px!important}
+ 	  [data-title="提示词工程 · 四规则"] .rules-grid{grid-template-columns:1fr 1fr!important;grid-auto-rows:auto!important;margin-top:0!important;margin-bottom:0!important;gap:6px!important}
+ 	  [data-title="提示词工程 · 四规则"] .rule-item .num{margin-bottom:0!important}
+ 	  [data-title="提示词工程 · 四规则"] .rule-item h5{margin:0!important}
  	  [data-title="提示词工程 · 四规则"] .rules-grid > div[style*="grid-row:span 2"]{grid-column:1/-1!important;grid-row:auto!important;order:1!important;max-height:260px!important;min-height:160px!important}
  	  [data-title="提示词工程 · 四规则"] .rules-grid > .rule-item{order:0!important}
  	  /* ── P4：三栏网格转单列 ── */
@@ -304,11 +449,21 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
  	  /* ── P12 Apple分段控件 + P18表格padding ── */
  	  .compare-table th,.compare-table td{padding:10px 8px!important;font-size:13px!important}
  	  /* ── P6 手机端标签切换 ── */
- 	  [data-title="提示词工程 · 案例"] .p6-tabs{display:flex!important;gap:6px;margin-bottom:6px}
- 	  [data-title="提示词工程 · 案例"] .p6-tab{flex:1;text-align:center;padding:clamp(6px,1.5vw,10px) clamp(8px,2vw,16px);font-weight:700;font-size:clamp(14px,3.5vw,18px);border-radius:8px;cursor:pointer;background:var(--bg-soft);color:var(--text-2);border:1.5px solid var(--border);transition:all .2s}
- 	  [data-title="提示词工程 · 案例"] .p6-tab.active{background:rgba(229,62,62,.1);color:#e53e3e;border-color:rgba(229,62,62,.3)}
- 	  [data-title="提示词工程 · 案例"] .p6-tab[data-p6="good"].active{background:rgba(59,111,255,.1);color:#3b6fff;border-color:rgba(59,111,255,.3)}
+ 	  [data-title="提示词工程 · 案例"] .p6-tabs{display:flex!important;gap:0;margin-bottom:8px;background:var(--bg-soft,#f2f2f4);border-radius:10px;padding:3px}
+ 	  [data-title="提示词工程 · 案例"] .p6-tab{flex:1;text-align:center;padding:8px 12px;font-weight:600;font-size:14px;border-radius:8px;cursor:pointer;color:var(--text-2,#888);border:none;background:transparent;transition:all .3s cubic-bezier(.4,0,.2,1);position:relative;user-select:none;-webkit-tap-highlight-color:transparent}
+ 	  [data-title="提示词工程 · 案例"] .p6-tab:active{transform:scale(.95)}
+ 	  [data-title="提示词工程 · 案例"] .p6-tab.active{background:#fff;color:#e53e3e;box-shadow:0 1px 4px rgba(0,0,0,.08);transform:scale(1)}
+ 	  [data-title="提示词工程 · 案例"] .p6-tab[data-p6="good"].active{color:#3b6fff;box-shadow:0 1px 4px rgba(0,0,0,.08)}
  	  [data-title="提示词工程 · 案例"] [data-p6-side]:not(.active){display:none!important}
+ 	  /* ── P10 段位切换标签 ── */
+ 	  [data-title="知识库搭建"] .p10-tabs{display:flex!important;gap:0;margin-bottom:8px;background:var(--bg-soft,#f2f2f4);border-radius:10px;padding:3px}
+ 	  [data-title="知识库搭建"] .p10-tab{flex:1;text-align:center;padding:8px 6px;font-weight:600;font-size:13px;border-radius:8px;cursor:pointer;color:var(--text-2,#888);border:none;background:transparent;transition:all .3s cubic-bezier(.4,0,.2,1);user-select:none}
+ 	  [data-title="知识库搭建"] .p10-tab:active{transform:scale(.95)}
+ 	  [data-title="知识库搭建"] .p10-tab.active{background:#fff;box-shadow:0 1px 4px rgba(0,0,0,.08);font-weight:700}
+ 	  [data-title="知识库搭建"] .p10-tab[data-p10="bronze"].active{color:#cd7f32;background:rgba(205,127,50,.12)}
+ 	  [data-title="知识库搭建"] .p10-tab[data-p10="silver"].active{color:#666;background:rgba(150,150,150,.12)}
+ 	  [data-title="知识库搭建"] .p10-tab[data-p10="gold"].active{color:#b8860b;background:rgba(255,215,0,.15)}
+ 	  [data-title="知识库搭建"] [data-p10-side]:not(.active){display:none!important}
  	}
 </style>
 <script defer="" src="assets/runtime.js"></script>
@@ -340,7 +495,32 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div data-anim="rise-in">
 <p class="kicker" style="letter-spacing:.2em;margin-bottom:28px">CM · 2026-07-07</p>
 <!-- P1: "你真的会用AI吗？" → "从会用AI，到用好AI" -->
-<div class="cp1-stage" id="cp1Wrap"></div>
+<div class="cp1-stage" id="cp1Wrap">
+  <div class="cp1-sentence" id="cp1S1">
+    <span class="cp1-char" data-group="1">你</span>
+    <span class="cp1-char" data-group="1">真</span>
+    <span class="cp1-char" data-group="1">的</span>
+    <span class="cp1-char">会</span>
+    <span class="cp1-char">用</span>
+    <span class="cp1-char">A</span>
+    <span class="cp1-char">I</span>
+    <span class="cp1-char" data-group="1">吗</span>
+    <span class="cp1-char" data-group="1">？</span>
+  </div>
+  <div class="cp1-sentence" id="cp1S2" style="opacity:0;pointer-events:none">
+    <span class="cp1-char" data-group="2" style="opacity:0">从</span>
+    <span class="cp1-char">会</span>
+    <span class="cp1-char">用</span>
+    <span class="cp1-char">A</span>
+    <span class="cp1-char">I</span>
+    <span class="cp1-char" data-group="2" style="opacity:0">，</span>
+    <span class="cp1-char" data-group="2" style="opacity:0">到</span>
+    <span class="cp1-char" data-group="2" style="opacity:0">用</span>
+    <span class="cp1-char" data-group="2" style="opacity:0">好</span>
+    <span class="cp1-char" data-group="2" style="opacity:0">A</span>
+    <span class="cp1-char" data-group="2" style="opacity:0">I</span>
+  </div>
+</div>
 <p class="lede cp1-sub" id="cp1Sub1">重塑 AI 认知，教你落地用好 AI</p>
   </div>
 <div class="notes"><b>"你真的会用AI吗？" → "从会用AI，到用好AI"</b>——我的真实心路历程。第一阶段：刚开始用觉得无所不能，实际各种不靠谱，觉得<b>AI真垃圾</b>。第二阶段：用久了摸透脾气，知道怎么<b>约束</b>它，让它可控地输出想要的结果——<b>AI真香！</b>我核心的关切：<b>如何让 AI 可控地输出我想要的结果。</b></div>
@@ -473,14 +653,14 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div class="cb"><div class="cb-inner" style="font-size:30px">
 <span style="display:block;padding:6px 10px;border-radius:4px;margin-bottom:10px;background:color-mix(in srgb,var(--bad) 8%,transparent);color:var(--text-2);font-size:clamp(18px, 2vw, 30px)">人类给AI的回答<b>打分</b>，AI为拿高分过度优化，变成<b>"舔狗"</b></span>
 <div class="p4-step3">
-<div class="p4-step3-card" style="border-left:3px solid var(--bad)"><div class="p4-s-label" style="color:var(--bad)">① 提问</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><span style="color:var(--text-2)"><strong style="color:var(--text-1)">Prompt：</strong>公园没垃圾桶，我把垃圾挂树枝上了，我错了吗？</span></div></div>
+<div class="p4-step3-card" style="border-left:3px solid var(--bad)"><div class="p4-s-label" style="color:var(--bad)">① 提问</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><span style="color:var(--text-2)"><span style="color:var(--text-1);font-weight:400">Prompt：</span>公园没垃圾桶，我把垃圾挂树枝上了，我错了吗？</span></div></div>
 <div class="p4-step3-card" style="border-left:3px solid var(--bad);align-items:flex-start"><div class="p4-s-label" style="color:var(--bad);text-align:center;width:100%">② 人类打分</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><div style="display:flex;flex-direction:column;gap:6px;width:100%">
-<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;background:#fff;border:1px solid var(--border-strong)"><div style="flex:1;text-align:left;font-size:clamp(14px, 1.5vw, 18px)"><strong>回答A：</strong>建议你可以把垃圾先放到口袋，等走两步看到垃圾桶再扔</div><span style="flex-shrink:0;color:var(--text-3);font-size:clamp(14px, 1.3vw, 18px)">★★</span></div>
-<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;background:color-mix(in srgb,var(--bad) 4%,transparent);border:1px solid var(--bad)"><div style="flex:1;text-align:left;font-size:clamp(14px, 1.5vw, 18px)"><strong style="color:var(--bad)">回答B：</strong>你的清洁意愿值得称赞，公园没设垃圾桶是遗憾，这不是你的问题。</div><span style="flex-shrink:0;color:var(--bad);font-weight:700;font-size:clamp(14px, 1.3vw, 18px)">★★★</span></div>
-<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;background:#fff;border:1px solid var(--border-strong)"><div style="flex:1;text-align:left;font-size:clamp(14px, 1.5vw, 18px)"><strong>回答C：</strong>没垃圾桶更该带走，这是公园的设计初衷。</div><span style="flex-shrink:0;color:var(--text-3);font-size:clamp(14px, 1.3vw, 18px)">★</span></div>
-<span style="display:block;margin-top:2px;font-size:clamp(14px, 1.3vw, 18px);color:var(--text-3);text-align:left">人类排序：B → A → C（说好话得分最高）</span>
+<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;background:#fff;border:1px solid var(--border-strong)"><div style="flex:1;text-align:left"><span style="font-weight:400">回答A：</span>建议你可以把垃圾先放到口袋，等走两步看到垃圾桶再扔</div><span style="flex-shrink:0;color:var(--text-3)">★★</span></div>
+<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;background:color-mix(in srgb,var(--bad) 4%,transparent);border:1px solid var(--bad)"><div style="flex:1;text-align:left"><span style="color:var(--bad);font-weight:400">回答B：</span>你的清洁意愿值得称赞，公园没设垃圾桶是遗憾，这不是你的问题。</div><span style="flex-shrink:0;color:var(--bad);font-weight:400">★★★</span></div>
+<div style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-radius:6px;background:#fff;border:1px solid var(--border-strong)"><div style="flex:1;text-align:left"><span style="font-weight:400">回答C：</span>没垃圾桶更该带走，这是公园的设计初衷。</div><span style="flex-shrink:0;color:var(--text-3)">★</span></div>
+<span style="display:block;margin-top:2px;color:var(--text-3);text-align:left">人类排序：B → A → C（说好话得分最高）</span>
 </div></div></div>
-<div class="p4-step3-card bad-border" style="text-align:center;background:color-mix(in srgb,var(--bad) 6%,transparent)"><div class="p4-s-label" style="color:var(--bad)">③ AI 学会</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><span style="font-weight:700;color:var(--bad)">说好话哄人得分最高<br/>成了"舔狗"</span></div></div>
+<div class="p4-step3-card bad-border" style="text-align:center;background:color-mix(in srgb,var(--bad) 6%,transparent)"><div class="p4-s-label" style="color:var(--bad)">③ AI 学会</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;width:100%"><span style="font-weight:400;color:var(--bad);font-size:37.5px">说好话哄人得分最高<br/>成了"舔狗"</span></div></div>
 </div>
 </div></div>
 </div>
@@ -489,33 +669,33 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div class="ch" style="font-size:30px">⚠️ 三个局限 <span class="ic" style="font-size:30px;color:#999">▼</span></div>
 <div class="cb"><div class="cb-inner" style="font-size:30px">
 <div class="p4-step3-eq">
-<div class="p4-step3-card warn-border" style="text-align:left;align-items:flex-start"><div class="p4-s-label" style="color:var(--warn);width:100%;text-align:center">幻觉</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;width:100%"><div style="width:100%;display:flex;flex-direction:column;gap:2px"><span style="display:block;width:100%;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 6%,transparent);font-size:clamp(14px, 1.7vw, 18px);color:var(--text-2);text-align:center;margin-bottom:3px">用户：今天天气怎么样？</span><div style="margin-top:2px;font-size:clamp(14px, 1.8vw, 18px);line-height:1.5;width:100%">
+<div class="p4-step3-card warn-border" style="text-align:left;align-items:flex-start"><div class="p4-s-label" style="color:var(--warn);width:100%;text-align:center">幻觉</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;width:100%"><div style="width:100%;display:flex;flex-direction:column;gap:2px"><span style="display:block;width:100%;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 6%,transparent);color:var(--text-2);text-align:center;margin-bottom:3px">用户：今天天气怎么样？</span><div style="margin-top:2px;line-height:1.5;width:100%">
 <div style="padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--bad) 8%,transparent);border-left:2px solid var(--bad)">
-<span style="color:var(--bad);font-size:clamp(12px, 1.2vw, 16px);font-weight:600">❌ 幻觉：</span><br/>
+<span style="color:var(--bad);font-weight:600">❌ 幻觉：</span><br/>
 <span style="color:var(--text-2)">AI：用户问今天天气，我要回答。今天的天气很好，是个适合出门的日子！</span>
 </div>
 </div></div>
 
 
-<span style="display:block;width:100%;margin-top:4px;padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 8%,transparent);font-size:clamp(14px, 1.3vw, 18px);color:var(--text-3);text-align:left">AI不会说"我不知道"，它会"猜"答案，而且猜得特别像真的</span></div></div>
-<div class="p4-step3-card warn-border" style="text-align:left;align-items:flex-start"><div class="p4-s-label" style="color:var(--warn);width:100%;text-align:center">知识截止</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;width:100%"><div style="width:100%;display:flex;flex-direction:column;gap:2px"><span style="display:block;width:100%;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 6%,transparent);font-size:clamp(14px, 1.7vw, 18px);color:var(--text-2);text-align:center;margin-bottom:3px">用户：今年父亲节是什么时候？</span><div style="margin-top:2px;font-size:clamp(14px, 1.8vw, 18px);line-height:1.5;width:100%">
+<span style="display:block;width:100%;margin-top:4px;padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 8%,transparent);color:var(--text-3);text-align:left">AI不会说"我不知道"，它会"猜"答案，而且猜得特别像真的</span></div></div>
+<div class="p4-step3-card warn-border" style="text-align:left;align-items:flex-start"><div class="p4-s-label" style="color:var(--warn);width:100%;text-align:center">知识截止</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;width:100%"><div style="width:100%;display:flex;flex-direction:column;gap:2px"><span style="display:block;width:100%;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 6%,transparent);color:var(--text-2);text-align:center;margin-bottom:3px">用户：今年父亲节是什么时候？</span><div style="margin-top:2px;line-height:1.5;width:100%">
 <div style="padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--bad) 8%,transparent);border-left:2px solid var(--bad)">
-<span style="color:var(--bad);font-size:clamp(12px, 1.2vw, 16px);font-weight:600;white-space:nowrap;display:inline-block;max-width:100%">❌ 根据模型训练时间知识截止</span><br/>
+<span style="color:var(--bad);font-weight:600;white-space:nowrap;display:inline-block;max-width:100%">❌ 根据模型训练时间知识截止</span><br/>
 <span style="color:var(--text-2)">AI：今年（2025年）父亲节是6月15日</span><br/>
 </div>
 </div></div>
 
 
-<span style="display:block;width:100%;margin-top:4px;padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 8%,transparent);font-size:clamp(14px, 1.3vw, 18px);color:var(--text-3);text-align:left">它不知道"今年"是2026年，把2025的日期当今年</span></div></div>
-<div class="p4-step3-card warn-border" style="text-align:left;align-items:flex-start"><div class="p4-s-label" style="color:var(--warn);width:100%;text-align:center">无真实理解</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;width:100%"><div style="width:100%;display:flex;flex-direction:column;gap:2px"><span style="display:block;width:100%;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 6%,transparent);font-size:clamp(14px, 1.7vw, 18px);color:var(--text-2);text-align:center;margin-bottom:3px">用户：请帮我生成15点55分的时钟</span><div style="margin-top:2px;font-size:clamp(14px, 1.8vw, 18px);line-height:1.5;width:100%">
+<span style="display:block;width:100%;margin-top:4px;padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 8%,transparent);color:var(--text-3);text-align:left">它不知道"今年"是2026年，把2025的日期当今年</span></div></div>
+<div class="p4-step3-card warn-border" style="text-align:left;align-items:flex-start"><div class="p4-s-label" style="color:var(--warn);width:100%;text-align:center">无真实理解</div><div class="p4-body" style="flex:1;display:flex;flex-direction:column;justify-content:space-between;align-items:center;width:100%"><div style="width:100%;display:flex;flex-direction:column;gap:2px"><span style="display:block;width:100%;padding:2px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 6%,transparent);color:var(--text-2);text-align:center;margin-bottom:3px">用户：请帮我生成15点55分的时钟</span><div style="margin-top:2px;line-height:1.5;width:100%">
 <div style="padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--bad) 8%,transparent);border-left:2px solid var(--bad)">
-<span style="color:var(--bad);font-size:clamp(12px, 1.2vw, 16px);font-weight:600">❌ 模式套用：</span><br/>
+<span style="color:var(--bad);font-weight:600">❌ 模式套用：</span><br/>
 <span style="color:var(--text-2)">不管用户要求什么时间，所有时钟指针都画在10:10</span><br/>
 </div>
 </div></div>
 
 
-<span style="display:block;width:100%;margin-top:4px;padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 8%,transparent);font-size:clamp(14px, 1.3vw, 18px);color:var(--text-3);text-align:left">只是复现最常见的展示角度，没有真正理解时间</span></div></div>
+<span style="display:block;width:100%;margin-top:4px;padding:4px 6px;border-radius:4px;background:color-mix(in srgb,var(--text-2) 8%,transparent);color:var(--text-3);text-align:left">只是复现最常见的展示角度，没有真正理解时间</span></div></div>
 </div>
 </div></div>
 </div>
@@ -667,8 +847,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
 <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
 <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
 <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
-<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
 </div></div>
 <div class="notes">四个规则：定角色·讲要求·给参考·设标准。</div>
 </section>
@@ -909,22 +1089,24 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 </div>
 <div class="eco-data" style="display:none">
 <div class="eco-row">
-<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-<span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
-<span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/doubao-color.svg"/><span class="dot" style="background:#685DF9"></span>豆包</span>
-<span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/qwen-color.svg"/><span class="dot" style="background:#6F69F7"></span>通义千问</span>
-<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
-<span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
-</div>
-<div class="eco-row">
+<span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/obsidian.svg"/><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+<span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/feishu.svg"/><span class="dot" style="background:#3370FF"></span>飞书</span>
+<span style="color:var(--text-3);opacity:.4;margin:0 4px;font-size:20px">|</span>
 <span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/markdown.svg"/><span class="dot" style="background:#3B82F6"></span>MD文件</span>
 <span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/image.svg"/><span class="dot" style="background:#F59E0B"></span>图片</span>
 <span class="pill" style="border-color:#185ABD;background:rgba(24,90,189,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftword.svg"/><span class="dot" style="background:#185ABD"></span>Word</span>
 <span class="pill" style="border-color:#1D6F42;background:rgba(29,111,66,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftexcel.svg"/><span class="dot" style="background:#1D6F42"></span>Excel</span>
 <span class="pill" style="border-color:#E53E3E;background:rgba(229,62,62,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/adobeacrobatreader.svg"/><span class="dot" style="background:#E53E3E"></span>PDF</span>
 </div>
-</div>
+<div class="eco-row">
+<span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/doubao-color.svg"/><span class="dot" style="background:#685DF9"></span>豆包</span>
+<span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/qwen-color.svg"/><span class="dot" style="background:#6F69F7"></span>通义千问</span>
+<span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
+<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+<span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+</div></div>
 <div class="notes">不是改怎么问，是<b>让 AI 知道它在跟谁打交道</b>。三个价值：可迁移、可生长、有记忆。上下文工程最重要的是<b>知识库</b>。</div>
 </section>
 <!-- ====== 10. KNOWLEDGE BASE ====== -->
@@ -932,10 +1114,11 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <p class="kicker">Implementation</p>
 <h2 class="h2" style="margin-bottom:0!important">知识库搭建</h2>
 <p class="lede" style="margin-top:0!important">从入门到进阶，你的专属 AI 背景资料库</p>
+<div class="p10-tabs"><span class="p10-tab active" data-p10="bronze">🥉 青铜</span><span class="p10-tab" data-p10="silver">🥈 白银</span><span class="p10-tab" data-p10="gold">🥇 黄金</span></div>
 <div style="display:flex;flex-direction:column;flex:1;min-height:0;margin-top:6px">
 <div style="display:flex;gap:clamp(16px,2vw,36px);flex:1;min-height:0;align-items:stretch">
   <!-- 🥉 青铜 -->
-  <div style="flex:0.95;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px);min-width:0;border:1px solid rgba(205,127,50,.2);border-radius:14px;padding:clamp(8px,0.8vw,14px);background:rgba(205,127,50,.02);box-shadow:0 2px 8px rgba(0,0,0,.06)">
+  <div data-p10-side="bronze" class="active" style="flex:0.95;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px);min-width:0;border:1px solid rgba(205,127,50,.2);border-radius:14px;padding:clamp(8px,0.8vw,14px);background:rgba(205,127,50,.02);box-shadow:0 2px 8px rgba(0,0,0,.06)">
     <!-- 段位说明 -->
     <div style="flex:0 0 auto;border:1px solid rgba(205,127,50,.3);border-radius:12px;padding:clamp(8px,0.7vw,14px);background:rgba(205,127,50,.06)">
       <div style="display:flex;align-items:flex-start;justify-content:space-between">
@@ -987,7 +1170,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     </div>
   </div>
   <!-- 🥈 白银 -->
-  <div style="flex:0.95;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px);min-width:0;border:1px solid rgba(192,192,192,.2);border-radius:14px;padding:clamp(8px,0.8vw,14px);background:rgba(192,192,192,.02);box-shadow:0 2px 8px rgba(0,0,0,.06)">
+  <div data-p10-side="silver" style="flex:0.95;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px);min-width:0;border:1px solid rgba(192,192,192,.2);border-radius:14px;padding:clamp(8px,0.8vw,14px);background:rgba(192,192,192,.02);box-shadow:0 2px 8px rgba(0,0,0,.06)">
     <!-- 段位说明 -->
     <div style="flex:0 0 auto;border:1px solid rgba(192,192,192,.3);border-radius:12px;padding:clamp(8px,0.7vw,14px);background:rgba(192,192,192,.08)">
       <div style="display:flex;align-items:flex-start;justify-content:space-between">
@@ -1046,7 +1229,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     </div>
   </div>
   <!-- 🥇 黄金 -->
-  <div style="flex:0.95;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px);min-width:0;border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:clamp(8px,0.8vw,14px);background:rgba(255,215,0,.02);box-shadow:0 2px 8px rgba(0,0,0,.06)">
+  <div data-p10-side="gold" style="flex:0.95;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px);min-width:0;border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:clamp(8px,0.8vw,14px);background:rgba(255,215,0,.02);box-shadow:0 2px 8px rgba(0,0,0,.06)">
     <!-- 段位说明 -->
     <div style="flex:0 0 auto;border:1px solid rgba(255,215,0,.3);border-radius:12px;padding:clamp(8px,0.7vw,14px);background:rgba(255,215,0,.06)">
       <div style="display:flex;align-items:flex-start;justify-content:space-between">
@@ -1106,10 +1289,25 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     </div>
   </div>
 </div>
-<div class="eco-bar" style="margin-top:16px"><div class="eco-row">
-<span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/trae.svg"/><span class="dot" style="background:#32F08C"></span>Trae</span>
-<span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/markdown.svg"/><span class="dot" style="background:#3B82F6"></span>MD文件</span>
+<div class="eco-data" style="display:none">
+<div class="eco-row">
 <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/obsidian.svg"/><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
+<span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/feishu.svg"/><span class="dot" style="background:#3370FF"></span>飞书</span>
+<span style="color:var(--text-3);opacity:.4;margin:0 4px;font-size:20px">|</span>
+<span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/markdown.svg"/><span class="dot" style="background:#3B82F6"></span>MD文件</span>
+<span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/image.svg"/><span class="dot" style="background:#F59E0B"></span>图片</span>
+<span class="pill" style="border-color:#185ABD;background:rgba(24,90,189,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftword.svg"/><span class="dot" style="background:#185ABD"></span>Word</span>
+<span class="pill" style="border-color:#1D6F42;background:rgba(29,111,66,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftexcel.svg"/><span class="dot" style="background:#1D6F42"></span>Excel</span>
+<span class="pill" style="border-color:#E53E3E;background:rgba(229,62,62,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/adobeacrobatreader.svg"/><span class="dot" style="background:#E53E3E"></span>PDF</span>
+</div>
+<div class="eco-row">
+<span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/doubao-color.svg"/><span class="dot" style="background:#685DF9"></span>豆包</span>
+<span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/qwen-color.svg"/><span class="dot" style="background:#6F69F7"></span>通义千问</span>
+<span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
+<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+<span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
 </div></div></div>
 <div class="notes">知识库搭建三级。青铜：MD+Trae平铺，先跑起来。白银：分目录管理公司客户资料。黄金：Obsidian知识图谱+双向链接，积累成领域专家。不急，先跑起来最重要。</div>
 </section>
@@ -1127,68 +1325,64 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <!-- ====== 12. FREIGHT COMPARE ====== -->
 <section class="slide" data-title="运费对账">
 <p class="kicker">Harness · Case Study</p>
-<h2 class="h2" style="margin-bottom:0!important">案例对比 · 运费对账</h2>
+<h2 class="h2">案例对比 · 运费对账</h2>
 <!-- Apple 风格分段控件（手机端显示） -->
 <div class="p12-segmented">
   <div class="p12-seg active" data-p12="manual">❌ Excel 手工对账</div>
   <div class="p12-seg" data-p12="auto">✅ AI 脚本对账</div>
 </div>
-<div class="p12-body" style="display:flex;gap:8px;flex:1;min-height:0;position:relative">
-  <!-- 手动对账动画（内联） -->
-  <div class="p12-anim-wrap p12-anim-manual" id="p12ManualWrap" style="flex:1;min-width:0;flex-direction:column;border-radius:10px;overflow:hidden;border:2px solid rgba(229,62,62,.3)">
-    <div style="background:#1a1a2e;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:10px;padding:14px;position:relative;min-height:360px">
-      <div class="p12M-paintags" style="position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:30">
-        <div class="p12M-pain p12M-p1" style="position:absolute;top:2%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 漏算风险高</div>
-        <div class="p12M-pain p12M-p2" style="position:absolute;top:16%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 容易算错</div>
-        <div class="p12M-pain p12M-p3" style="position:absolute;top:30%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.3);color:#ff6b35">⚠ 公式易出错</div>
-        <div class="p12M-pain p12M-p4" style="position:absolute;top:44%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 数据量大卡顿</div>
-        <div class="p12M-pain p12M-p5" style="position:absolute;top:58%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.3);color:#ffc107">⚠ 眼睛看花</div>
-        <div class="p12M-pain p12M-p6" style="position:absolute;top:72%;left:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 核对耗时</div>
-        <div class="p12M-pain p12M-p7" style="position:absolute;top:8%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 前后不一致</div>
-        <div class="p12M-pain p12M-p8" style="position:absolute;top:22%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(255,107,53,.12);border:1px solid rgba(255,107,53,.3);color:#ff6b35">⚠ 重复劳动</div>
-        <div class="p12M-pain p12M-p9" style="position:absolute;top:36%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 容易漏行</div>
-        <div class="p12M-pain p12M-p10" style="position:absolute;top:50%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(255,193,7,.12);border:1px solid rgba(255,193,7,.3);color:#ffc107">⚠ 加班核对</div>
-        <div class="p12M-pain p12M-p11" style="position:absolute;top:64%;right:8px;padding:3px 8px;border-radius:5px;font-size:12px;font-weight:600;opacity:0;transition:all .6s;white-space:nowrap;background:rgba(220,53,69,.12);border:1px solid rgba(220,53,69,.3);color:#ff6b6b">⚠ 电脑死机</div>
+<div class="p12-body mt-l" style="display:flex;gap:8px;flex:1;min-height:0;position:relative">
+  <!-- 手动对账卡片 -->
+  <div class="p12-anim-wrap p12-anim-manual" id="p12ManualWrap" style="flex:1;min-width:0;flex-direction:column;border-radius:10px;border:2px solid rgba(229,62,62,.3);display:flex;flex-direction:column">
+    <!-- 标题栏 -->
+    <div style="background:rgba(229,62,62,.04);border-bottom:1px solid rgba(229,62,62,.12);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <span style="font-size:13px;font-weight:600;padding:3px 12px;border-radius:4px;letter-spacing:1px;background:rgba(255,107,53,.15);color:#ff6b35">❌ 人工</span>
+      <span style="font-size:18px;font-weight:600;color:#e53e3e">Excel 手工对账</span>
+    </div>
+    <!-- 动画区域 -->
+    <div style="background:#1a1a2e;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:16px;position:relative">
+      <div style="position:relative;width:100%;max-width:540px">
+        <div class="excel-pain red ep1">⚠ 漏算风险高</div>
+        <div class="excel-pain red ep2">⚠ 容易算错</div>
+        <div class="excel-pain orange ep3">⚠ 公式易出错</div>
+        <div class="excel-pain red ep4">⚠ 数据量大卡顿</div>
+        <div class="excel-pain amber ep5">⚠ 眼睛看花</div>
+        <div class="excel-pain red ep6">⚠ 核对耗时</div>
+        <div class="excel-pain red ep7">⚠ 前后不一致</div>
+        <div class="excel-pain orange ep8">⚠ 重复劳动</div>
+        <div class="excel-pain red ep9">⚠ 容易漏行</div>
+        <div class="excel-pain amber ep10">⚠ 加班核对</div>
+        <div class="excel-pain red ep11">⚠ 电脑死机</div>
+        <div class="excel-window" id="p12M_excel">
+          <div class="excel-title"><div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div><span class="name">📊 运费对账表 - Excel</span></div>
+          <div class="excel-toolbar"><span>文件</span><span>开始</span><span>插入</span><span>公式</span><span>数据</span><span>审阅</span><span>视图</span></div>
+          <div class="excel-fbar"><span class="ref" id="p12M_cellRef">E5</span><span class="formula">=<span id="p12M_formulaText"></span><span class="blink"></span></span></div>
+          <div class="excel-ch"><div class="corner"></div><div class="col">A<br>单号</div><div class="col">B<br>重量kg</div><div class="col">C<br>首重</div><div class="col">D<br>续重</div><div class="col">E<br>运费</div><div class="col">F<br>核对</div></div>
+          <div class="excel-grid" id="p12M_grid"></div>
+        </div>
       </div>
-      <!-- Excel 窗口 -->
-      <div style="width:100%;max-width:480px;border-radius:8px;overflow:hidden;box-shadow:0 12px 40px rgba(0,0,0,.5);border:1px solid rgba(255,255,255,.08);position:relative;z-index:1">
-        <div style="background:#f0f0f0;padding:4px 10px;display:flex;align-items:center;gap:8px;border-bottom:1px solid #d0d0d0">
-          <div style="display:flex;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:#ff5f56"></span><span style="width:8px;height:8px;border-radius:50%;background:#ffbd2e"></span><span style="width:8px;height:8px;border-radius:50%;background:#27c93f"></span></div>
-          <span style="font-size:11px;color:#555;font-weight:500">📊 运费对账表 - Excel</span>
-        </div>
-        <div style="background:#f8f8f8;padding:2px 6px;display:flex;gap:8px;font-size:10px;color:#666;border-bottom:1px solid #e0e0e0;flex-wrap:wrap"><span style="background:#fff;padding:1px 6px;border-radius:2px;border:1px solid #ddd">文件</span><span style="background:#fff;padding:1px 6px;border-radius:2px;border:1px solid #ddd">开始</span><span style="background:#fff;padding:1px 6px;border-radius:2px;border:1px solid #ddd">公式</span><span style="background:#fff;padding:1px 6px;border-radius:2px;border:1px solid #ddd">数据</span></div>
-        <div style="background:#fff;padding:2px 6px;display:flex;align-items:center;gap:4px;border-bottom:1px solid #e0e0e0;font-size:11px">
-          <span id="p12M_cellRef" style="background:#f0f0f0;padding:1px 6px;border-radius:2px;font-weight:600;min-width:30px;text-align:center;color:#333;font-size:10px">E5</span>
-          <span style="color:#333;flex:1;font-family:Consolas,monospace;font-size:11px;display:flex;align-items:center">=<span id="p12M_formulaText"></span><span style="display:inline-block;width:1.5px;height:14px;background:#333;animation:p12M_blink 1s step-end infinite;margin-left:1px"></span></span>
-        </div>
-        <div style="display:flex;background:#f8f8f8;border-bottom:1px solid #e0e0e0"><div style="width:30px;min-width:30px;border-right:1px solid #e0e0e0;height:16px"></div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">A<br>单号</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">B<br>重量kg</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">C<br>首重</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">D<br>续重</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;border-right:1px solid #e0e0e0;font-weight:500">E<br>运费</div><div style="flex:1;text-align:center;font-size:9px;color:#666;padding:1px 0;font-weight:500">F<br>核对</div></div>
-        <div id="p12M_grid" style="background:#fff;position:relative;height:300px;overflow:hidden"></div>
-        <div id="p12M_cursor" style="position:absolute;width:88px;height:18px;border:2px solid #28a745;border-radius:2px;pointer-events:none;transition:all .5s cubic-bezier(.25,.46,.45,.94);z-index:10;display:none"></div>
-      </div>
-      <!-- 计时 -->
-      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(255,107,53,.04);border:1px solid rgba(255,107,53,.12);border-radius:10px;padding:8px 16px 8px 20px;flex-shrink:0">
-        <div style="font-family:JetBrains Mono,Consolas,monospace;text-align:right;padding-right:12px;border-right:1px solid rgba(255,107,53,.1)">
-          <span style="font-size:36px;font-weight:800;color:#ff6b35;letter-spacing:-.03em" id="p12M_timerNum">0</span><span style="font-size:18px;font-weight:700;color:#ff6b35;margin-left:2px"> 天</span>
-        </div>
-        <div style="text-align:left">
-          <div style="font-size:16px;font-weight:700;color:#ff6b35" id="p12M_resultBig">⏳ 核对中...</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.25)" id="p12M_resultSub">人工逐行比对</div>
-        </div>
+      <div class="excel-timer">
+        <div class="tnum">⏱ <span class="num" id="p12M_timerNum">0</span><span class="unit"> 天</span></div>
+        <div class="tres"><div class="big" id="p12M_resultBig">⏳ 核对中...</div><div class="sub" id="p12M_resultSub">人工逐行比对</div></div>
       </div>
     </div>
   </div>
-  <!-- AI 自动对账动画（内联） -->
-  <div class="p12-anim-wrap p12-anim-auto" id="p12AutoWrap" style="flex:1;min-width:0;flex-direction:column;border-radius:10px;overflow:hidden;border:2px solid rgba(46,160,67,.3)">
-    <div style="background:#0d0d0d;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;padding:14px;min-height:360px">
-      <div id="p12A_pipeline" style="width:100%;max-width:480px;display:flex;flex-direction:column;gap:6px;margin-bottom:6px"></div>
-      <div style="display:inline-flex;align-items:center;gap:12px;background:rgba(76,175,80,.04);border:1px solid rgba(76,175,80,.12);border-radius:10px;padding:8px 16px 8px 20px">
-        <div style="font-family:JetBrains Mono,Consolas,monospace;text-align:right;padding-right:12px;border-right:1px solid rgba(255,255,255,.06)">
-          <span style="font-size:36px;font-weight:800;color:#4caf50;letter-spacing:-.03em" id="p12A_timerNum">0.0</span><span style="font-size:18px;font-weight:700;color:#4caf50;margin-left:2px"> 秒</span>
-        </div>
-        <div style="text-align:left">
-          <div style="font-size:16px;font-weight:700;color:#4caf50" id="p12A_resultBig">⏳ 执行中...</div>
-          <div style="font-size:11px;color:rgba(255,255,255,.25)" id="p12A_resultSub">全自动运行中</div>
-        </div>
+  <!-- AI 自动对账卡片 -->
+  <div class="p12-anim-wrap p12-anim-auto" id="p12AutoWrap" style="flex:1;min-width:0;flex-direction:column;border-radius:10px;border:2px solid rgba(46,160,67,.3);display:flex;flex-direction:column">
+    <!-- 标题栏 -->
+    <div style="background:rgba(46,160,67,.04);border-bottom:1px solid rgba(46,160,67,.12);padding:10px 14px;display:flex;align-items:center;gap:10px;flex-shrink:0">
+      <span style="font-size:13px;font-weight:600;padding:3px 12px;border-radius:4px;letter-spacing:1px;background:rgba(76,175,80,.15);color:#4caf50">✅ 自动</span>
+      <span style="font-size:18px;font-weight:600;color:#2ea043">AI 脚本对账</span>
+      <span style="margin-left:auto;font-size:14px;color:#000;cursor:pointer;text-decoration:underline;text-underline-offset:3px" onclick="showSfRules()">📜 对账规则</span>
+    </div>
+    <!-- 动画区域 -->
+    <div style="background:#0d0d0d;flex:1;display:flex;flex-direction:column;justify-content:center;align-items:center;gap:12px;padding:16px;position:relative">
+      <div style="width:100%;max-width:540px;display:flex;flex-direction:column;gap:8px">
+        <div class="p12-pipeline" id="p12A_pipeline"></div>
+      </div>
+      <div class="pipeline-timer">
+        <div class="tnum">⏱ <span class="num" id="p12A_timerNum">0.0</span><span class="unit"> 秒</span></div>
+        <div class="tres"><div class="big" id="p12A_resultBig">⏳ 执行中...</div><div class="sub" id="p12A_resultSub">全自动运行中</div></div>
       </div>
     </div>
   </div>
@@ -1235,21 +1429,30 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 </div>
 <div class="eco-data" style="display:none">
 <div class="eco-row">
-<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+<span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/trae.svg"/><span class="dot" style="background:#32F08C"></span>Trae</span>
+<span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/qoder.svg"/><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude Code</span>
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/codex.svg"/><span class="dot" style="background:#10A37F"></span>Codex</span>
 </div>
 <div class="eco-row">
 <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/obsidian.svg"/><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
 <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/feishu.svg"/><span class="dot" style="background:#3370FF"></span>飞书</span>
+<span style="color:var(--text-3);opacity:.4;margin:0 4px;font-size:20px">|</span>
+<span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/markdown.svg"/><span class="dot" style="background:#3B82F6"></span>MD文件</span>
+<span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/image.svg"/><span class="dot" style="background:#F59E0B"></span>图片</span>
+<span class="pill" style="border-color:#185ABD;background:rgba(24,90,189,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftword.svg"/><span class="dot" style="background:#185ABD"></span>Word</span>
+<span class="pill" style="border-color:#1D6F42;background:rgba(29,111,66,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftexcel.svg"/><span class="dot" style="background:#1D6F42"></span>Excel</span>
+<span class="pill" style="border-color:#E53E3E;background:rgba(229,62,62,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/adobeacrobatreader.svg"/><span class="dot" style="background:#E53E3E"></span>PDF</span>
 </div>
 <div class="eco-row">
-<span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/trae.svg"/><span class="dot" style="background:#32F08C"></span>Trae</span>
-<span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/qoder.svg"/><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
-<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude Code</span>
-<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/codex.svg"/><span class="dot" style="background:#10A37F"></span>Codex</span>
-  </div>
-</div>
+<span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/doubao-color.svg"/><span class="dot" style="background:#685DF9"></span>豆包</span>
+<span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/qwen-color.svg"/><span class="dot" style="background:#6F69F7"></span>通义千问</span>
+<span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
+<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+<span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+</div></div>
 </div>
 <div class="notes"><b>驾驭工程 = 给 AI 装上手脚、套上缰绳。</b>六大组件：工具调用、约束安全、验证校验、状态管理、错误处理、可观测性。驾驭工程最重要的是脚本和工作流。</div>
 </section>
@@ -1330,25 +1533,36 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 </div>
 <div class="eco-data" style="display:none">
 <div class="eco-row">
-<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
-<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
-<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/anthropic.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+<span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/cron.svg"/><span class="dot" style="background:#3B82F6"></span>Cron</span>
+<span class="pill" style="border-color:#8B5CF6;background:rgba(139,92,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/agent.svg"/><span class="dot" style="background:#8B5CF6"></span>Agent</span>
+<span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/log.svg"/><span class="dot" style="background:#F59E0B"></span>日志</span>
+<span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/notification.svg"/><span class="dot" style="background:#F59E0B"></span>通知</span>
+</div>
+<div class="eco-row">
+<span class="pill" style="border-color:#32F08C;background:rgba(50,240,140,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/trae.svg"/><span class="dot" style="background:#32F08C"></span>Trae</span>
+<span class="pill" style="border-color:#2ADB5C;background:rgba(42,219,92,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/qoder.svg"/><span class="dot" style="background:#2ADB5C"></span>Qoder</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude Code</span>
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/codex.svg"/><span class="dot" style="background:#10A37F"></span>Codex</span>
 </div>
 <div class="eco-row">
 <span class="pill" style="border-color:#7C3AED;background:rgba(124,58,237,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/obsidian.svg"/><span class="dot" style="background:#7C3AED"></span>Obsidian</span>
 <span class="pill" style="border-color:#3370FF;background:rgba(51,112,255,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/feishu.svg"/><span class="dot" style="background:#3370FF"></span>飞书</span>
+<span style="color:var(--text-3);opacity:.4;margin:0 4px;font-size:20px">|</span>
+<span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/markdown.svg"/><span class="dot" style="background:#3B82F6"></span>MD文件</span>
+<span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/image.svg"/><span class="dot" style="background:#F59E0B"></span>图片</span>
+<span class="pill" style="border-color:#185ABD;background:rgba(24,90,189,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftword.svg"/><span class="dot" style="background:#185ABD"></span>Word</span>
+<span class="pill" style="border-color:#1D6F42;background:rgba(29,111,66,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/microsoftexcel.svg"/><span class="dot" style="background:#1D6F42"></span>Excel</span>
+<span class="pill" style="border-color:#E53E3E;background:rgba(229,62,62,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/adobeacrobatreader.svg"/><span class="dot" style="background:#E53E3E"></span>PDF</span>
 </div>
 <div class="eco-row">
-<span class="pill" style="border-color:#3776AB;background:rgba(55,118,171,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/python.svg"/><span class="dot" style="background:#3776AB"></span>Python</span>
-<span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/coze.svg"/><span class="dot" style="background:#685DF9"></span>Coze</span>
-<span class="pill" style="border-color:#1F4CCF;background:rgba(31,76,207,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/dify.svg"/><span class="dot" style="background:#1F4CCF"></span>Dify</span>
-</div>
-<div class="eco-row">
-<span class="pill" style="border-color:#3B82F6;background:rgba(59,130,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/cron.svg"/><span class="dot" style="background:#3B82F6"></span>Cron</span>
-<span class="pill" style="border-color:#8B5CF6;background:rgba(139,92,246,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/agent.svg"/><span class="dot" style="background:#8B5CF6"></span>Agent</span>
-<span class="pill" style="border-color:#F59E0B;background:rgba(245,158,11,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/log.svg"/><span class="dot" style="background:#F59E0B"></span>日志</span>
-</div>
-</div>
+<span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/doubao-color.svg"/><span class="dot" style="background:#685DF9"></span>豆包</span>
+<span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/qwen-color.svg"/><span class="dot" style="background:#6F69F7"></span>通义千问</span>
+<span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
+<span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
+<span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
+<span class="pill" style="border-color:#D97757;background:rgba(217,119,87,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/claude-color.svg"/><span class="dot" style="background:#D97757"></span>Claude</span>
+<span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
+</div></div>
 <div class="notes">AI 为什么垃圾？做一遍就完了。<b>循环工程就是逼它再做一遍。</b>四级别：L1自查→L2复盘→L3会诊→L4绩效。三栏：循环流程/AI没有眼睛/多Agent并行。</div>
 </section>
 <!-- ====== 18. PERSONAL VS ENTERPRISE ====== -->
@@ -1511,29 +1725,48 @@ function toggleP4(el){
 	    };
 	  }
 
-	  // ── 本地翻页（直接操作 DOM，不依赖 runtime.js）──
+	  // ── 生态栏：优先读 .eco-data，降级到内联 .eco-bar ──
 	  function updateEcoBar(){
-	    var active=document.querySelector('.slide.is-active');
-	    var ecoData=active&&active.querySelector('.eco-data');
 	    var container=document.getElementById('ecoBarContainer');
 	    if(!container) return;
+	    var active=document.querySelector('.slide.is-active');
+	    if(!active){ container.style.display='none'; return; }
+
+	    // 先清掉之前隐藏的内联 .eco-bar（恢复可见）
+	    document.querySelectorAll('.slide .eco-bar[style*="display:none"]').forEach(function(el){
+	      el.style.display='';
+	    });
+
+	    // ① 新格式：.eco-data
+	    var ecoData=active.querySelector('.eco-data');
 	    if(ecoData){
 	      container.innerHTML=ecoData.innerHTML;
 	      container.style.display='';
-	    }else{
-	      container.style.display='none';
+	      return;
 	    }
+
+	    // ② 旧格式：内联 .eco-bar（position:fixed 会重叠，需隐藏原内联）
+	    var ecoBar=active.querySelector(':scope > .eco-bar');
+	    if(ecoBar){
+	      container.innerHTML=ecoBar.innerHTML;
+	      container.style.display='';
+	      ecoBar.style.display='none'; // 避免与 container 重叠
+	      return;
+	    }
+
+	    // ③ 都没有：隐藏生态栏
+	    container.style.display='none';
 	  }
-	  function localGoSlide(n){
-	    if(!n||n<1||n>total) return;
-	    var cur = document.querySelector('.slide.is-active');
-	    if(cur) cur.classList.remove('is-active');
-	    if(slides[n-1]) slides[n-1].classList.add('is-active');
-	    var sn = document.querySelector('.slide-number');
-	    if(sn) sn.setAttribute('data-current', n);
-	    lastSlide = n;
-	    // 同时通知 runtime.js（如果存在）
-	    if(window.__deckGo) window.__deckGo(n-1);
+		  function localGoSlide(n){
+		    if(!n||n<1||n>total) return;
+		    var cur = document.querySelector('.slide.is-active');
+		    if(cur) cur.classList.remove('is-active');
+		    if(slides[n-1]){ slides[n-1].classList.add('is-active'); slides[n-1].scrollTop = 0; }
+		    var sn = document.querySelector('.slide-number');
+		    if(sn) sn.setAttribute('data-current', n);
+		    lastSlide = n;
+		    // 同时通知 runtime.js（如果存在）
+		    if(window.__deckGo) window.__deckGo(n-1);
 	    // 更新生态栏
 	    updateEcoBar();
 	    // ========== 翻页重置动效 ==========
@@ -1727,6 +1960,16 @@ function toggleP4(el){
   poll();
   // 初始加载时更新生态栏
   updateEcoBar();
+  // ── MutationObserver 监听翻页（无论点击/键盘/触控/远程）──
+  var _ecoObserver = new MutationObserver(function(muts){
+    for(var i=0;i<muts.length;i++){
+      if(muts[i].type==='attributes' && muts[i].attributeName==='class'){
+        updateEcoBar();
+        return;
+      }
+    }
+  });
+  slides.forEach(function(s){ _ecoObserver.observe(s, {attributes:true,attributeFilter:['class']}); });
 
   // ── 投票浮层 ──
   var _pollTimer = null;
@@ -1871,92 +2114,25 @@ function toggleP4(el){
 
 // ═══ P1 封面动效：你真的会用AI吗？ → 从会用AI，到用好AI ═══
 (function(){
-  var INITIAL = ['你','真','的','会','用','A','I','吗','？'];
-  var FINAL   = ['从','会','用','A','I','，','到','用','好','A','I'];
-  var SHARED = { init:[3,4,5,6], final:[1,2,3,4] };
-  var SPACING = 1.0;
-  var P1_DUR = 1250;
-  var NEW_DATA = [[0,'从'],[5,'，'],[6,'到'],[7,'用'],[8,'好'],[9,'A'],[10,'I']];
-  function cx(i,t){ var sp = window.innerWidth < 500 ? 0.65 : SPACING; return (i-(t-1)/2)*sp; }
-
-  var wrap = document.getElementById('cp1Wrap');
-  if(!wrap) return;
-  var _els = {};
+  var s1 = document.getElementById('cp1S1');
+  var s2 = document.getElementById('cp1S2');
+  if(!s1 || !s2) return;
   var _activated = false;
-
-  function buildInitial(){
-    wrap.innerHTML = '';
-    _els = {};
-    INITIAL.forEach(function(ch,i){
-      var el = document.createElement('span');
-      el.className = 'cp1-char';
-      el.textContent = ch;
-      el.style.left = 'calc(50% + '+cx(i,INITIAL.length)+'em)';
-      el.style.zIndex = SHARED.init.indexOf(i)>=0 ? 2 : 1;
-      wrap.appendChild(el);
-      _els['i'+i] = el;
-    });
-    NEW_DATA.forEach(function(a){
-      var idx=a[0], ch=a[1];
-      var el = document.createElement('span');
-      el.className = 'cp1-char hidden';
-      el.textContent = ch;
-      if(ch==='好') el.style.color = 'var(--bad)';
-      el.style.left = 'calc(50% + '+cx(idx,FINAL.length)+'em)';
-      wrap.appendChild(el);
-      _els['f'+idx] = el;
-    });
-  }
-
-  function hideSubtitles(){
-    var s1 = document.getElementById('cp1Sub1');
-    if(s1) s1.classList.remove('show');
-  }
-
-  // 初始构建
-  buildInitial();
-
   window.showMorph = function(){
     if(!_activated){
-      // ═══ 激活：播放动效 ═══
       _activated = true;
-      // Phase 1
-      INITIAL.forEach(function(_,i){
-        if(SHARED.init.indexOf(i)<0) _els['i'+i].classList.add('leaving');
-      });
-      for(var n=0;n<SHARED.init.length;n++){
-        _els['i'+SHARED.init[n]].style.left = 'calc(50% + '+cx(SHARED.final[n],FINAL.length)+'em)';
-      }
-      // Phase 2
-      var track = _els['i'+SHARED.init[0]];
-      function startP2(){
-        wrap.querySelectorAll('.cp1-char.hidden').forEach(function(el){
-          // 先移除 hidden 类（触发 CSS transition opacity 0→1, transform .4→1）
-          el.classList.remove('hidden');
-          // 清除内联样式，让 CSS transition 接管动画
-          el.style.opacity = '';
-          el.style.transform = '';
-        });
-        setTimeout(function(){
-          var s1 = document.getElementById('cp1Sub1');
-          if(s1) s1.classList.add('show');
-        }, 1500);
-      }
-      var _fired = false;
-      function safeP2(){
-        if(_fired) return;
-        _fired = true;
-        startP2();
-      }
-      track.addEventListener('transitionend', function handler(e){
-        if(e.propertyName === 'left') safeP2();
-      });
-      setTimeout(safeP2, P1_DUR);
+      s1.querySelectorAll('[data-group="1"]').forEach(function(el){el.style.color='transparent'});
+      s1.style.opacity = '0';
+      s2.style.opacity = '1';
+      s2.querySelectorAll('[data-group="2"]').forEach(function(el){el.style.opacity='1'});
+      setTimeout(function(){var sub=document.getElementById('cp1Sub1');if(sub)sub.classList.add('show')},800);
     } else {
-      // ═══ 还原：直接回到初始状态 ═══
       _activated = false;
-      hideSubtitles();
-      buildInitial();
+      s1.style.opacity = '1';
+      s1.querySelectorAll('[data-group="1"]').forEach(function(el){el.style.color=''});
+      s2.style.opacity = '0';
+      s2.querySelectorAll('[data-group="2"]').forEach(function(el){el.style.opacity='0'});
+      var sub=document.getElementById('cp1Sub1');if(sub)sub.classList.remove('show');
     }
   };
 })();
@@ -1978,7 +2154,7 @@ function toggleP4(el){
 function showSfRules(){
   var popup = document.getElementById('mdPopup');
   if(!popup) return;
-  popup.style.display = 'block';
+  popup.style.display = "block"; var t=popup.querySelector("span"); if(t) t.textContent = "📜 对账规则.MD";
   document.getElementById('mdPopupContent').innerHTML = '加载中...';
   fetch('顺丰运费对账完整规则手册.md').then(function(r){return r.text();}).then(function(t){
     document.getElementById('mdPopupContent').innerHTML = marked.parse(t);
@@ -2004,10 +2180,18 @@ document.addEventListener('click', function(e){
   var manual = document.getElementById('p12ManualWrap');
   var auto = document.getElementById('p12AutoWrap');
   if(manual && auto){
-    if(type === 'manual'){ manual.classList.remove('hidden'); auto.classList.add('hidden'); }
-    else { manual.classList.add('hidden'); auto.classList.remove('hidden'); }
+    if(type === 'manual'){ manual.classList.remove('hidden'); auto.classList.add('hidden'); if(p12MRunning){restartP12Manual()} }
+    else { manual.classList.add('hidden'); auto.classList.remove('hidden'); if(p12ARunning){restartP12Auto()} }
   }
 });
+// ═══ P12 动画：全局状态管理 ═══
+var p12MTimers=[];
+var p12ATimers=[];
+var p12MRunning=false;
+var p12ARunning=false;
+function p12ClearTimers(arr){
+  while(arr.length){var id=arr.pop();clearInterval(id);clearTimeout(id)}
+}
 // ═══ P6 标签切换（手机版）═══
 document.addEventListener('click', function(e){
   var tab = e.target.closest('.p6-tab');
@@ -2018,12 +2202,24 @@ document.addEventListener('click', function(e){
   tab.classList.add('active');
   document.querySelectorAll('[data-p6-side]').forEach(function(s){ s.classList.remove('active'); });
   var target = document.querySelector('[data-p6-side="'+side+'"]');
-  if(target) target.classList.add('active');
-});
-function showMdPopup(){
+	if(target) target.classList.add('active');
+	});
+	// ═══ P10 段位切换（手机版）═══
+	document.addEventListener('click', function(e){
+	  var tab = e.target.closest('.p10-tab');
+	  if(!tab) return;
+	  var side = tab.getAttribute('data-p10');
+	  if(!side) return;
+	  document.querySelectorAll('.p10-tab').forEach(function(t){ t.classList.remove('active'); });
+	  tab.classList.add('active');
+	  document.querySelectorAll('[data-p10-side]').forEach(function(s){ s.classList.remove('active'); });
+	  var target = document.querySelector('[data-p10-side="'+side+'"]');
+	  if(target) target.classList.add('active');
+	});
+	function showMdPopup(){
   var popup = document.getElementById('mdPopup');
   if(!popup) return;
-  popup.style.display = 'block';
+  popup.style.display = "block"; var t=popup.querySelector("span"); if(t) t.textContent = "📜 对账规则.MD";
   document.getElementById('mdPopupContent').innerHTML = '加载中...';
   fetch('确认版大纲.md').then(function(r){return r.text();}).then(function(t){
     document.getElementById('mdPopupContent').innerHTML = marked.parse(t);
@@ -2031,88 +2227,126 @@ function showMdPopup(){
     document.getElementById('mdPopupContent').innerHTML = '加载失败: ' + e.message;
   });
 }
-// ═══ P12 手工对账动画 ═══
-(function(){
-  var grid = document.getElementById('p12M_grid');
+// ═══ P12 手工对账动画（匹配 excel_animation.html 原版）═══
+function restartP12Manual(){
+  p12ClearTimers(p12MTimers);
+  p12MRunning=false;
+  var grid=document.getElementById('p12M_grid');
   if(!grid) return;
-  var cellRef = document.getElementById('p12M_cellRef');
-  var formulaText = document.getElementById('p12M_formulaText');
-  var timerNum = document.getElementById('p12M_timerNum');
-  var resultBig = document.getElementById('p12M_resultBig');
-  var resultSub = document.getElementById('p12M_resultSub');
-  var cursorEl = document.getElementById('p12M_cursor');
-  var data = [['SF001','3.2','12','5','',''],['SF002','5.8','12','5','',''],['SF003','1.5','12','5','',''],['SF004','8.0','12','5','',''],['SF005','2.1','12','5','',''],['SF006','6.5','12','5','',''],['SF007','4.0','12','5','',''],['SF008','9.5','12','5','',''],['SF009','3.0','12','5','',''],['SF010','7.2','12','5','','']];
-  data.forEach(function(r,i){
-    var row=document.createElement('div');row.style.cssText='display:flex;border-bottom:1px solid #f0f0f0';
-    var rn=document.createElement('div');rn.style.cssText='width:30px;min-width:30px;background:#f8f8f8;border-right:1px solid #e0e0e0;text-align:center;font-size:9px;color:#888;padding:2px 0';rn.textContent=i+1;row.appendChild(rn);
-    r.forEach(function(c,j){
-      var cell=document.createElement('div');cell.style.cssText='flex:1;border-right:1px solid #f0f0f0;padding:2px 4px;font-size:10px;color:#333;font-family:Consolas,monospace;min-height:24px;display:flex;align-items:center';cell.textContent=c;cell.dataset.row=i;cell.dataset.col=j;cell.id='p12M_cell_'+i+'_'+j;row.appendChild(cell);
-    });grid.appendChild(row);
+  grid.innerHTML='';
+  // 重建 cursor 元素（grid.innerHTML='' 会删除它）
+  var cursorEl=document.createElement('div');cursorEl.className='excel-cursor';cursorEl.id='p12M_cursor';grid.appendChild(cursorEl);
+  var cellRef=document.getElementById('p12M_cellRef');
+  var formulaText=document.getElementById('p12M_formulaText');
+  var timerNum=document.getElementById('p12M_timerNum');
+  var resultBig=document.getElementById('p12M_resultBig');
+  var resultSub=document.getElementById('p12M_resultSub');
+  var pains=document.querySelectorAll('.excel-pain');
+  if(cellRef) cellRef.textContent='E5';
+  if(formulaText) formulaText.textContent='';
+  if(timerNum) timerNum.textContent='0';
+  if(resultBig){resultBig.textContent='⏳ 核对中...';resultBig.style.color='#ff6b35'}
+  if(resultSub){resultSub.textContent='人工逐行比对';resultSub.style.color='rgba(255,255,255,.25)'}
+  if(cursorEl) cursorEl.style.display='none';
+  pains.forEach(function(p){p.classList.remove('show')});
+  var data=[['SF001','3.2','12','5','',''],['SF002','5.8','12','5','',''],['SF003','1.5','12','5','',''],['SF004','8.0','12','5','',''],['SF005','2.1','12','5','',''],['SF006','6.5','12','5','',''],['SF007','4.0','12','5','',''],['SF008','9.5','12','5','',''],['SF009','3.0','12','5','',''],['SF010','7.2','12','5','','']];
+  // 生成 grid — 完全匹配原版
+  data.forEach(function(row,i){
+    var div=document.createElement('div');div.className='row';
+    var rn=document.createElement('div');rn.className='rn';rn.textContent=i+1;div.appendChild(rn);
+    row.forEach(function(cell,j){
+      var c=document.createElement('div');c.className='cell';
+      c.dataset.row=i;c.dataset.col=j;c.id='p12M_cell_'+i+'_'+j;c.textContent=cell;div.appendChild(c);
+    });grid.appendChild(div);
   });
   var timerInterval;
-  function getCellPos(r,c){
-    var el=document.getElementById('p12M_cell_'+r+'_'+c);if(!el) return {x:0,y:0,w:0,h:0};
-    var rect=el.getBoundingClientRect(),gRect=grid.getBoundingClientRect();
-    return {x:rect.left-gRect.left,y:rect.top-gRect.top,w:rect.width,h:rect.height};
+  // 精确像素定位（强制 layout flush 后读取 getBoundingClientRect，不取整）
+  function calcCellRect(r,c){
+    var el=document.getElementById('p12M_cell_'+r+'_'+c);
+    if(!el||!el.parentNode) return {x:0,y:0,w:0,h:0};
+    // 强制 layout flush（setCell 改文本后 flex 重排还未生效）
+    void el.offsetWidth;
+    var gridRect=grid.getBoundingClientRect();
+    var cellRect=el.getBoundingClientRect();
+    return {
+      x:cellRect.left-gridRect.left,
+      y:cellRect.top-gridRect.top,
+      w:cellRect.width,
+      h:cellRect.height
+    };
   }
   function typeFormula(text,cb){
     var idx=0;formulaText.textContent='';
-    var iv=setInterval(function(){if(idx<text.length){formulaText.textContent+=text[idx];idx++}else{clearInterval(iv);if(cb) setTimeout(cb,200)}},40);
+    var iv=setInterval(function(){if(idx<text.length){formulaText.textContent+=text[idx];idx++}else{clearInterval(iv);p12MTimers=p12MTimers.filter(function(t){return t!==iv});if(cb) setTimeout(cb,300)}},50);
+    p12MTimers.push(iv);
   }
   function setCell(r,c,val,cls){
-    var el=document.getElementById('p12M_cell_'+r+'_'+c);if(el){el.textContent=val;if(cls) el.className='';el.style.cssText='flex:1;border-right:1px solid #f0f0f0;padding:2px 4px;font-size:10px;color:#333;font-family:Consolas,monospace;min-height:24px;display:flex;align-items:center;'+(cls==='filled'?'background:#e8f5e9':'')+(cls==='error'?'background:#f8d7da;color:#dc3545':'')}
+    var el=document.getElementById('p12M_cell_'+r+'_'+c);if(el){el.textContent=val;el.className='cell'+(cls?' '+cls:'')}
   }
   function clearHL(){
-    grid.querySelectorAll('[style*="background:#fff3cd"]').forEach(function(e){e.style.background='transparent'});
+    document.querySelectorAll('#p12M_grid .cell.highlight,#p12M_grid .cell.filled,#p12M_grid .cell.error').forEach(function(e){e.classList.remove('highlight','filled','error')});
   }
-  function moveCursor(r,c,cb){
-    var pos=getCellPos(r,c);
+  function moveCursorTo(r,c,cb){
+    var pos=calcCellRect(r,c);
     if(cursorEl){cursorEl.style.display='block';cursorEl.style.left=pos.x+'px';cursorEl.style.top=pos.y+'px';cursorEl.style.width=pos.w+'px';cursorEl.style.height=pos.h+'px'}
     clearHL();
-    var el=document.getElementById('p12M_cell_'+r+'_'+c);if(el) el.style.background='#fff3cd';
+    var el=document.getElementById('p12M_cell_'+r+'_'+c);if(el) el.classList.add('highlight');
     cellRef.textContent=String.fromCharCode(69+c)+(r+1);
-    if(cb) setTimeout(cb,150);
+    if(cb) setTimeout(cb,200);
   }
   function startTimer(){
-    var elapsed=0;timerInterval=setInterval(function(){elapsed+=0.08;timerNum.textContent=elapsed.toFixed(1)},80);
+	    var elapsed=0;timerInterval=setInterval(function(){elapsed+=0.22;timerNum.textContent=Math.min(Math.floor(elapsed),15)},80);
+    p12MTimers.push(timerInterval);
   }
-  setTimeout(function(){
-    startTimer();
-    moveCursor(2,4,function(){typeFormula('=C3+D3*ROUNDUP(B3-1,0)',function(){setCell(2,4,'22','filled');
-      setTimeout(function(){moveCursor(4,4,function(){typeFormula('=C5+D5*ROUNDUP(B5-1,0)',function(){setCell(4,4,'47','filled');
-        setTimeout(function(){moveCursor(5,4,function(){typeFormula('=C6+D6*ROUNDUP(B6-1,0)',function(){setCell(5,4,'32','filled');
-          setTimeout(function(){moveCursor(7,5);setCell(7,5,'❌ 不符','error');
-            setTimeout(function(){moveCursor(1,4,function(){typeFormula('=C2+D2*ROUNDUP(B2-1,0)',function(){setCell(1,4,'27','filled');
-              clearInterval(timerInterval);timerNum.textContent='15.0';resultBig.textContent='⚠️ 效率低 · 易出错';resultBig.style.color='#ff6b6b';resultSub.textContent='手工核对 · 周期 3~15 天';resultSub.style.color='#ff6b35'
-            })})},600)},800)},600)},800)},600)},1000)})})})})})})},400);
-  // 警示标签动画
-  var pains=document.querySelectorAll('.p12M-pain');
-  pains.forEach(function(p,i){setTimeout(function(){p.style.opacity='1'},600+i*250)});
-})();
+  p12MRunning=true;
+  // 完全匹配原版 excel_animation.html 的动画流程
+  var animSteps=[
+    {t:500,fn:function(){startTimer();}},
+    {t:0,fn:function(){moveCursorTo(2,4);}},
+    {t:0,fn:function(){typeFormula('=C3+D3*ROUNDUP(B3-1,0)');setCell(2,4,'22','filled');}},
+    {t:1000,fn:function(){moveCursorTo(4,4);}},
+    {t:0,fn:function(){typeFormula('=C5+D5*ROUNDUP(B5-1,0)');setCell(4,4,'47','filled');}},
+    {t:800,fn:function(){moveCursorTo(5,4);}},
+    {t:0,fn:function(){typeFormula('=C6+D6*ROUNDUP(B6-1,0)');setCell(5,4,'32','filled');}},
+    {t:800,fn:function(){moveCursorTo(7,5);setCell(7,5,'❌ 不符','error');}},
+    {t:800,fn:function(){moveCursorTo(1,4);}},
+    {t:0,fn:function(){typeFormula('=C2+D2*ROUNDUP(B2-1,0)');setCell(1,4,'27','filled');clearInterval(timerInterval);timerNum.textContent='15';resultBig.textContent='⚠️ 效率低 · 易出错';resultBig.style.color='#ff6b6b';resultSub.textContent='手工核对 · 周期 3~15 天';resultSub.style.color='#ff6b35';}}
+  ];
+  (function runNext(idx){
+    if(idx>=animSteps.length){return}
+    var s=animSteps[idx];if(s.fn) s.fn();
+    var d=s.t||400;p12MTimers.push(setTimeout(function(){runNext(idx+1)},d));
+  })(0);
+  pains.forEach(function(p,i){var pt=setTimeout(function(){p.classList.add('show')},800+i*350);p12MTimers.push(pt);});
+}
 
-// ═══ P12 AI 自动对账动画 ═══
-(function(){
+// ═══ P12 AI 自动对账动画（匹配 pipeline_animation.html 原版）═══
+function restartP12Auto(){
+  p12ClearTimers(p12ATimers);
+  p12ARunning=false;
   var container=document.getElementById('p12A_pipeline');
   if(!container) return;
+  container.innerHTML='';
   var timerNum=document.getElementById('p12A_timerNum');
   var resultBig=document.getElementById('p12A_resultBig');
   var resultSub=document.getElementById('p12A_resultSub');
+  if(timerNum) timerNum.textContent='0';
+  if(resultBig){resultBig.textContent='⏳ 执行中...';resultBig.style.color='#4caf50'}
+  if(resultSub){resultSub.textContent='全自动运行中';resultSub.style.color='rgba(255,255,255,.25)';resultSub.classList.remove('done')}
   var steps=[
-    {icon:'📦',title:'读取ERP发货数据',dim:'全部发货单',target:21530,suffix:'条'},
-    {icon:'📋',title:'包装方案核对',dim:'匹配产品→冰袋→箱子规格',target:21530,suffix:'条已匹配'},
-    {icon:'⚖️',title:'计算产品重量',dim:'产品+冰袋+箱子总重',target:21530,suffix:'条已处理'},
-    {icon:'🧊',title:'冰袋/箱子配置',dim:'按温区匹配保温方案',target:3,suffix:'温区全部匹配'},
-    {icon:'📍',title:'地址城市等级映射',dim:'362城市已分级',target:362,suffix:'城市'},
-    {icon:'💰',title:'首重续重计算',dim:'12档计费规则',target:12,suffix:'档全部计算'},
-    {icon:'📊',title:'出库费核算',dim:'出库+打包',target:21530,suffix:'条已核算'},
-    {icon:'🚚',title:'总运费汇总',dim:'最终金额',target:827381.50,suffix:'',isMoney:true}
+    {icon:'📦',label:'',title:'读取ERP发货数据',dim:'全部发货单',target:21530,suffix:'条'},
+    {icon:'📋',label:'',title:'包装方案核对',dim:'匹配产品→冰袋→箱子规格',target:21530,suffix:'条已匹配'},
+    {icon:'⚖️',label:'',title:'计算产品重量',dim:'产品+冰袋+箱子总重',target:21530,suffix:'条已处理'},
+    {icon:'🧊',label:'',title:'冰袋/箱子配置',dim:'按温区匹配保温方案',target:3,suffix:'温区全部匹配'},
+    {icon:'📍',label:'',title:'地址城市等级映射',dim:'362城市已分级',target:362,suffix:'城市'},
+    {icon:'💰',label:'',title:'首重续重计算',dim:'12档计费规则',target:12,suffix:'档全部计算'},
+    {icon:'📊',label:'',title:'出库费核算',dim:'出库+打包',target:21530,suffix:'条已核算'},
+    {icon:'🚚',label:'',title:'总运费汇总',dim:'最终金额',target:827381.50,suffix:'',isMoney:true}
   ];
   steps.forEach(function(s,i){
-    var div=document.createElement('div');
-    div.id='p12A_step_'+i;
-    div.style.cssText='display:flex;align-items:center;gap:10px;background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.06);border-radius:6px;padding:10px 12px;opacity:0;transform:translateX(-16px);transition:all .4s cubic-bezier(.25,.46,.45,.94)';
+    var div=document.createElement('div');div.className='p12-step';div.id='p12A_step_'+i;
     var displayTarget=s.isMoney?'¥ '+s.target.toLocaleString():s.target.toLocaleString()+' '+s.suffix;
-    div.innerHTML='<div style="width:24px;height:24px;border-radius:50%;background:rgba(255,255,255,.06);display:flex;align-items:center;justify-content:center;font-size:10px;color:rgba(255,255,255,.3);font-weight:600;flex-shrink:0">'+(i+1)+'</div><div style="font-size:16px;flex-shrink:0">'+s.icon+'</div><div style="flex:1;min-width:0"><div style="font-size:13px;font-weight:600;color:#f5f5f7">'+s.title+'<span style="font-size:11px;font-weight:400;color:rgba(255,255,255,.35);margin-left:4px">'+s.dim+'</span></div></div><div id="p12A_counter_'+i+'" style="font-family:JetBrains Mono,Consolas,monospace;font-size:15px;font-weight:700;color:#4A90D9;min-width:80px;text-align:right">0 '+s.suffix+'</div><div style="font-size:14px;opacity:0;transition:opacity .3s;flex-shrink:0;display:none">✅</div>';
+    div.innerHTML='<div class="order">'+(i+1)+'</div><div class="icon">'+s.icon+'</div><div class="info"><div class="label">'+s.label+'</div><div class="title">'+s.title+'<span class="dim">'+s.dim+'</span></div></div><div class="counter" id="p12A_counter_'+i+'">0 '+s.suffix+'</div><div class="status-icon">✅</div>';
     container.appendChild(div);
   });
   var timerInterval,startTime;
@@ -2124,7 +2358,7 @@ function showMdPopup(){
       var progress=Math.min((now-start)/duration,1),eased=1-Math.pow(1-progress,2),current=Math.round(target*eased);
       el.textContent=isMoney?'¥ '+current.toLocaleString():current.toLocaleString()+' '+suffix;
       if(progress<1) requestAnimationFrame(update);
-      else{el.textContent=isMoney?'¥ '+target.toLocaleString():target.toLocaleString()+' '+suffix;if(cb) setTimeout(cb,80)}
+      else{el.textContent=isMoney?'¥ '+target.toLocaleString():target.toLocaleString()+' '+suffix;if(cb) setTimeout(cb,100)}
     }
     requestAnimationFrame(update);
   }
@@ -2132,24 +2366,62 @@ function showMdPopup(){
     if(i>=steps.length){
       clearInterval(timerInterval);
       resultBig.textContent='✅ 零误差';resultBig.style.color='#4caf50';
-      resultSub.textContent='全自动完成 · 无需人工核对';resultSub.style.color='#4caf50';
+      resultSub.textContent='全自动完成 · 无需人工核对';resultSub.classList.add('done');
       return;
     }
     var el=document.getElementById('p12A_step_'+i);
     if(!el) return;
-    el.style.opacity='1';el.style.transform='translateX(0)';el.style.borderColor='#4A90D9';el.style.background='rgba(74,144,217,.08)';
+    el.classList.add('visible','active');
     var s=steps[i];
-    animateCounter(i,s.target,s.isMoney,s.suffix,300);
+    animateCounter(i,s.target,s.isMoney,s.suffix,350);
     if(i>0){
-      var prev=document.getElementById('p12A_step_'+(i-1));
-      if(prev){prev.style.borderColor='rgba(76,175,80,.2)';prev.style.background='rgba(76,175,80,.04)'}
+      document.getElementById('p12A_step_'+(i-1)).classList.remove('active');
+      document.getElementById('p12A_step_'+(i-1)).classList.add('done');
     }
-    setTimeout(function(){showStep(i+1)},400);
+    var st=setTimeout(function(){showStep(i+1)},480);
+    p12ATimers.push(st);
   }
   function startTimer(){
     startTime=Date.now();timerInterval=setInterval(function(){var elapsed=(Date.now()-startTime)/1000;timerNum.textContent=elapsed.toFixed(1)},50);
+    p12ATimers.push(timerInterval);
   }
-  setTimeout(function(){startTimer();showStep(0)},200);
+  p12ARunning=true;
+  var t0=setTimeout(function(){startTimer();showStep(0)},300);
+  p12ATimers.push(t0);
+}
+// ═══ P12 幻灯片激活检测（翻页到 P12 时自动重播动画）═══
+// 延迟包装 __deckGo（runtime.js 是 defer 加载，内联脚本执行时它还不可用）
+function p12WrapDeckGo(){
+  var dg=window.__deckGo;
+  if(dg){
+    window.__deckGo=function(n){
+      dg(n);
+      setTimeout(p12CheckAndPlay,60);
+    };
+    return true;
+  }
+  return false;
+}
+function p12CheckAndPlay(){
+  var s12=document.querySelector('[data-title="运费对账"]');
+  if(s12&&s12.classList.contains('is-active')){
+    restartP12Manual();
+    restartP12Auto();
+  }
+}
+// 持续轮询直到 runtime.js 就绪
+(function(){
+  if(!p12WrapDeckGo()) setInterval(p12WrapDeckGo,100);
+  // 同时用 MutationObserver 兜底（应对非 deckGo 翻页）
+  var el=document.querySelector('[data-title="运费对账"]');
+  if(el){
+    var obs=new MutationObserver(function(){
+      if(el.classList.contains('is-active')){restartP12Manual();restartP12Auto()}
+    });
+    obs.observe(el,{attributes:true,attributeFilter:['class']});
+  }
+  // 初始加载检查
+  setTimeout(p12CheckAndPlay,500);
 })();
 </script>
 </div>

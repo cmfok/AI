@@ -6,7 +6,7 @@
 <meta http-equiv="Pragma" content="no-cache">
 <meta http-equiv="Expires" content="0">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<title>控制台 · 从AI不行到AI真香</title>
+<title>控制台 · 从会用AI，到用好AI</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif;padding:0;overflow-x:hidden}
@@ -17,7 +17,7 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
 .top-bar .info strong{color:#111;font-size:20px}
 .top-bar .right{display:flex;align-items:center;gap:6px;font-size:13px;color:#777}
 .top-bar .right .dot{width:8px;height:8px;border-radius:50%;background:#238636;display:inline-block}
-.page-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:4px;margin-bottom:8px}
+	.page-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:8px}
 .page-dot{padding:8px 0;border-radius:8px;border:1px solid rgba(0,0,0,.08);background:rgba(0,0,0,.02);font-size:13px;color:#777;text-align:center;cursor:pointer}
 .page-dot.active{background:#1f6feb;border-color:#1f6feb;color:#fff}
 .actions{display:flex;gap:5px;margin-bottom:8px;flex-wrap:wrap;min-height:36px}
@@ -75,6 +75,43 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
 .q-hint{display:none;padding:10px 14px;margin-bottom:8px;background:rgba(0,113,227,.08);border:1px solid rgba(0,113,227,.2);border-radius:10px;font-size:13px;color:#1f6feb;cursor:pointer;text-align:center}
 .q-hint:active{background:rgba(0,113,227,.15)}
 .q-hint .badge{display:inline-block;background:#1f6feb;color:#fff;font-size:11px;padding:1px 8px;border-radius:10px;margin:0 4px;font-weight:600}
+
+/* ── 多设备适配 ── */
+@media(max-width:768px){
+  .tab-bar{gap:3px}
+  .tab-btn{font-size:11px!important;padding:6px 2px}
+  .scroll{padding:0 8px 80px;max-height:calc(100vh - 160px)}
+  .actions .btn{min-width:90px;font-size:11px;padding:6px 10px}
+	  .page-grid{grid-template-columns:repeat(7,1fr);gap:3px}
+  .page-dot{padding:6px 0;font-size:11px}
+  .move-grid{grid-template-columns:repeat(5,1fr);gap:4px}
+  .move-dot{padding:8px 0;font-size:11px}
+  .speaker-panel{padding:12px}
+  .speaker-panel .sc{font-size:14px}
+  .bottom-nav .bn{font-size:13px;padding:12px 0}
+  .top-bar{padding:8px 10px;flex-wrap:wrap;gap:4px}
+  .top-bar .info{font-size:12px}
+  #lockRow{gap:3px}
+  #lockRow .tab-btn{font-size:11px!important;padding:5px 4px}
+}
+@media(max-width:480px){
+  .tab-bar{flex-wrap:wrap}
+  .tab-btn{flex:1 1 auto;min-width:45px;font-size:10px!important;padding:5px 2px}
+	  .page-grid{grid-template-columns:repeat(7,1fr);gap:2px}
+  .page-dot{padding:5px 0;font-size:10px}
+  .actions .btn{min-width:70px;font-size:10px;padding:5px 8px}
+  .scroll{padding:0 6px 70px;max-height:calc(100vh - 150px)}
+  .bottom-nav{left:6px;right:6px;gap:4px}
+  .bottom-nav .bn{font-size:12px;padding:10px 0}
+  .move-card{padding:14px;max-width:300px}
+  .move-grid{grid-template-columns:repeat(5,1fr);gap:3px}
+  .move-dot{padding:6px 0;font-size:10px}
+  .speaker-panel .sc{font-size:13px}
+  .next-prev{padding:8px}
+  .next-prev .nc{font-size:11px}
+  .top-bar{gap:2px}
+  .top-bar .center{gap:2px}
+}
 </style>
 </head>
 <body>
@@ -105,6 +142,7 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
         <div class="sl" id="sl" style="margin-bottom:0">P1 · 封面</div>
         <div style="display:flex;gap:4px" id="editBtns">
           <button class="btn small" onclick="startEditSpeech()">✏️ 编辑</button>
+          <button class="btn small" id="syncSpeechBtn" onclick="syncSpeechFromServer()" style="font-size:10px">⬇ 同步服务端</button>
         </div>
         <div style="display:none;gap:4px" id="saveBtns">
           <button class="btn small on" onclick="saveSpeech()">💾 保存</button>
@@ -848,42 +886,75 @@ var CC=0;
 var _p4open=0;
 var _speechData = {};  // 从 speech.md 动态加载
 
+// 演讲稿服务器地址（本地不存在时从服务器下载）
+var SPEECH_SERVER_URL = 'https://8008.cmfok.online/speech.md';
+
 function loadSpeech(){
   fetch('speech.md',{cache:'no-store'}).then(function(r){
     if(r.status >= 400) throw new Error('HTTP '+r.status);  // 304 是正常响应，不是错误
     return r.text();
   }).then(function(md){
-    var lines = md.split(/\r?\n/);
-    var curSlide = null, curTitle = '', curContent = [];
-    for(var i=0;i<lines.length;i++){
-      var line = lines[i];
-      var m = line.match(/^## Slide (\d+)\s*[—\-—]\s*(.*)/);
-      if(m){
-        // Save previous slide
-        if(curSlide && curContent.length){
-          var txt = curContent.join('\n').trim();
-          txt = txt.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>");
-          _speechData[curSlide] = {t: curTitle, c: txt};
-        }
-        curSlide = parseInt(m[1]);
-        curTitle = m[2].trim();
-        curContent = [];
-      } else if(curSlide && line.trim() !== '---'){
-        curContent.push(line);
-      }
-    }
-    // Last slide
-    if(curSlide && curContent.length){
-      var txt = curContent.join('\n').trim();
-      txt = txt.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>");
-      _speechData[curSlide] = {t: curTitle, c: txt};
-    }
-    upd(cur);
+    parseSpeech(md, 'local');
   }).catch(function(e){
-    console.warn("speech.md load failed, using fallback");
-    _speechData = S_FALLBACK;
-    upd(cur);
+    console.warn("speech.md 本地加载失败，尝试从服务器下载...");
+    fetch(SPEECH_SERVER_URL,{cache:'no-store'}).then(function(r){
+      if(r.status >= 400) throw new Error('HTTP '+r.status);
+      return r.text();
+    }).then(function(md){
+      console.log("✅ 已从服务器加载演讲稿");
+      parseSpeech(md, 'server');
+    }).catch(function(e2){
+      console.warn("服务器演讲稿也加载失败，使用备用内容");
+      _speechData = S_FALLBACK;
+      upd(cur);
+    });
   });
+}
+
+// 从服务器手动同步演讲稿
+function syncSpeechFromServer(){
+  var btn = document.getElementById('syncSpeechBtn');
+  if(btn){ btn.textContent = '⏳ 同步中...'; btn.disabled = true; }
+  fetch(SPEECH_SERVER_URL,{cache:'no-store'}).then(function(r){
+    if(r.status >= 400) throw new Error('HTTP '+r.status);
+    return r.text();
+  }).then(function(md){
+    console.log("✅ 已从服务器同步演讲稿");
+    parseSpeech(md, 'server');
+    if(btn){ btn.textContent = '✅ 已同步'; setTimeout(function(){ btn.textContent = '⬇ 同步服务端'; btn.disabled = false; }, 2000); }
+  }).catch(function(e){
+    console.warn("从服务器同步演讲稿失败");
+    if(btn){ btn.textContent = '❌ 同步失败'; btn.disabled = false; }
+  });
+}
+
+function parseSpeech(md, source){
+  var lines = md.split(/\r?\n/);
+  var curSlide = null, curTitle = '', curContent = [];
+  for(var i=0;i<lines.length;i++){
+    var line = lines[i];
+    var m = line.match(/^## Slide (\d+)\s*[—\-—]\s*(.*)/);
+    if(m){
+      // Save previous slide
+      if(curSlide && curContent.length){
+        var txt = curContent.join('\n').trim();
+        txt = txt.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>");
+        _speechData[curSlide] = {t: curTitle, c: txt};
+      }
+      curSlide = parseInt(m[1]);
+      curTitle = m[2].trim();
+      curContent = [];
+    } else if(curSlide && line.trim() !== '---'){
+      curContent.push(line);
+    }
+  }
+  // Last slide
+  if(curSlide && curContent.length){
+    var txt = curContent.join('\n').trim();
+    txt = txt.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/\n/g, "<br>");
+    _speechData[curSlide] = {t: curTitle, c: txt};
+  }
+  upd(cur);
 }
 
 var S_FALLBACK={

@@ -267,17 +267,41 @@ document.getElementById('questionForm').onsubmit=async function(e){
       body:JSON.stringify({name,question:q})
     });
     const d=await r.json();
-	    if(d.ok){
-	      currentQid=d.id;
-	      document.getElementById('formCard').querySelector('form').style.display='none';
-	      document.getElementById('successMsg').style.display='block';
-	      loadCount();
-	      // 获取反问
-	      await loadFollowup(q, d.id, d.page);
-	    }else showError(d.error||'提交失败');
+    if(d.ok){
+      currentQid=d.id;
+      document.getElementById('formCard').querySelector('form').style.display='none';
+      document.getElementById('successMsg').style.display='block';
+      document.getElementById('followupSpinner').style.display='block';
+      loadCount();
+      // 轮询等待 LLM 分类完成
+      await waitForClassify(d.id, q);
+    }else showError(d.error||'提交失败');
   }catch(e){showError('网络错误，请重试')}
   btn.disabled=false;btn.textContent='提交问题';
 };
+
+async function waitForClassify(qid, question){
+  for(let i=0;i<15;i++){  // 最多等 30 秒
+    await new Promise(r=>setTimeout(r,2000));
+    try{
+      const r=await fetch('/api/questions/status?id='+qid);
+      const d=await r.json();
+      if(d.ok && d.classified){
+        document.getElementById('followupSpinner').style.display='none';
+        if(d.needs_followup){
+          document.getElementById('successMsg').querySelector('h2').textContent='请稍候，AI 正在分析你的问题...';
+          await loadFollowup(question, qid, d.page);
+        }else{
+          doneSubmit(d.page);
+        }
+        return;
+      }
+    }catch(e){}
+  }
+  // 超时：直接提交
+  document.getElementById('followupSpinner').style.display='none';
+  doneSubmit();
+}
 
 // ── 反问 ──
 async function loadFollowup(question, qid, page){

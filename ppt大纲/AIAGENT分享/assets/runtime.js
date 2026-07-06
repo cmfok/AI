@@ -224,12 +224,13 @@
 
 	    /* ===== navigation ===== */
 	    function go(n, fromRemote){
-      n = Math.max(0, Math.min(total-1, n));
-      slides.forEach((s,i) => {
-        s.classList.toggle('is-active', i===n);
-        s.classList.toggle('is-prev', i<n);
-      });
-      idx = n;
+	      n = Math.max(0, Math.min(total-1, n));
+	      slides.forEach((s,i) => {
+	        s.classList.toggle('is-active', i===n);
+	        s.classList.toggle('is-prev', i<n);
+	      });
+	      slides[n].scrollTop = 0;  // 手机端翻页后置顶
+	      idx = n;
       barFill.style.width = ((n+1)/total*100)+'%';
       const numEl = document.querySelector('.slide-number');
       if (numEl) { numEl.setAttribute('data-current', n+1); numEl.setAttribute('data-total', total); }
