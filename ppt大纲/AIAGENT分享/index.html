@@ -860,9 +860,9 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .p8-cards{display:grid;grid-template-columns:1fr 1fr;gap:clamp(8px,1vw,14px)}
 .p8-card{background:#fff;border:1px solid var(--border);border-radius:12px;padding:clamp(12px,1.4vh,20px) clamp(14px,1.2vw,22px);transition:all .3s ease;box-shadow:0 2px 8px rgba(0,0,0,.06);cursor:default}
 .p8-card:hover{border-color:#e53e3e;box-shadow:0 4px 16px rgba(229,62,62,.15);transform:translateY(-2px)}
-.p8-card .num{font-size:clamp(9px,.7vw,11px);color:var(--text-3);letter-spacing:1px;font-weight:600;margin-bottom:clamp(2px,.2vh,4px)}
-.p8-card h5{font-size:clamp(16px,1.4vw,26px);font-weight:600;margin:0 0 clamp(2px,.2vh,4px);color:var(--text-1)}
-.p8-card p{font-size:clamp(13px,.95vw,18px);color:var(--text-2);line-height:1.5;margin:0}
+.p8-card .num{font-size:clamp(11px,.9vw,13px);color:var(--text-3);letter-spacing:1px;font-weight:600;margin-bottom:clamp(2px,.2vh,4px)}
+.p8-card h5{font-size:clamp(18px,1.6vw,30px);font-weight:600;margin:0 0 clamp(2px,.2vh,4px);color:var(--text-1)}
+.p8-card p{font-size:clamp(14px,1.05vw,20px);color:var(--text-2);line-height:1.6;margin:0}
 @media(max-width:768px){.p8-body{grid-template-columns:1fr!important}.p8-cards{gap:1.5vw}}
 </style>
 <div class="p8-body">
@@ -1070,24 +1070,24 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       💡 <strong>精准地将上下文窗口填充上恰到好处的信息，让模型能准确地迈出下一步</strong>
     </div>
     <div style="display:flex;flex-direction:column;gap:12px">
-    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:clamp(2px,0.2vh,4px)">
-      <div style="font-size:clamp(20px,2vw,28px);font-weight:700">📁 可迁移</div>
-      <div style="font-size:clamp(14px,1.3vw,18px);color:var(--text-2);line-height:1.5">写好一份 prompt.md，换哪个模型都能直接用。<br>ChatGPT、豆包、DeepSeek… 通吃所有主流 AI。</div>
+    <div class="p13-card" style="display:flex;flex-direction:column;gap:clamp(2px,0.2vh,4px)">
+      <h4>📁 可迁移</h4>
+      <p>写好一份 prompt.md，换哪个模型都能直接用。<br>ChatGPT、豆包、DeepSeek… 通吃所有主流 AI。</p>
       <div style="display:flex;gap:clamp(4px,0.4vw,8px);margin-top:clamp(4px,0.3vh,6px);flex-wrap:wrap">
         <span style="padding:clamp(2px,0.15vw,4px) clamp(6px,0.5vw,10px);border-radius:12px;background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);font-size:clamp(11px,0.9vw,13px);font-weight:600">ChatGPT</span>
         <span style="padding:clamp(2px,0.15vw,4px) clamp(6px,0.5vw,10px);border-radius:12px;background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);font-size:clamp(11px,0.9vw,13px);font-weight:600">豆包</span>
         <span style="padding:clamp(2px,0.15vw,4px) clamp(6px,0.5vw,10px);border-radius:12px;background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);font-size:clamp(11px,0.9vw,13px);font-weight:600">DeepSeek</span>
       </div>
     </div>
-    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:clamp(2px,0.2vh,4px)">
-      <div style="font-size:clamp(20px,2vw,28px);font-weight:700">📋 可生长</div>
-      <div style="font-size:clamp(14px,1.3vw,18px);color:var(--text-2);line-height:1.5">今天加产品清单、明天加客户纪要，知识资产越积越厚。<br>AI 越来越懂你的业务，输出质量持续提升。</div>
-      <div style="font-size:clamp(12px,1vw,15px);color:var(--good);font-weight:600;margin-top:clamp(4px,0.3vh,6px)">📈 积累 → 懂你 → 更准的答案</div>
+    <div class="p13-card" style="display:flex;flex-direction:column;gap:clamp(2px,0.2vh,4px)">
+      <h4>📋 可生长</h4>
+      <p>今天加产品清单、明天加客户纪要，知识资产越积越厚。<br>AI 越来越懂你的业务，输出质量持续提升。</p>
+      <div style="font-size:clamp(11px,0.9vw,13px);color:var(--good);font-weight:600;margin-top:clamp(4px,0.3vh,6px)">📈 积累 → 懂你 → 更准的答案</div>
     </div>
-    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:clamp(2px,0.2vh,4px)">
-      <div style="font-size:clamp(20px,2vw,28px);font-weight:700">📚 有记忆</div>
-      <div style="font-size:clamp(14px,1.3vw,18px);color:var(--text-2);line-height:1.5">项目背景、写作风格、交付标准 — 写一次永久复用。<br>每次对话 AI 自动加载上下文，不用再重复交代。</div>
-      <div style="font-size:clamp(12px,1vw,15px);color:var(--text-3);margin-top:clamp(4px,0.3vh,6px)">🔥 把"历史"变成 AI 的"默认配置"</div>
+    <div class="p13-card" style="display:flex;flex-direction:column;gap:clamp(2px,0.2vh,4px)">
+      <h4>📚 有记忆</h4>
+      <p>项目背景、写作风格、交付标准 — 写一次永久复用。<br>每次对话 AI 自动加载上下文，不用再重复交代。</p>
+      <div style="font-size:clamp(11px,0.9vw,13px);color:var(--text-3);margin-top:clamp(4px,0.3vh,6px)">🔥 把"历史"变成 AI 的"默认配置"</div>
     </div>
   </div>
   </div>
@@ -1434,10 +1434,11 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <p class="kicker">Harness · Case Study</p>
 <h2 class="h2">案例对比 · 运费对账</h2>
 <!-- Apple 风格分段控件（手机端显示） -->
-<div class="p12-segmented">
-  <div class="p12-seg active" data-p12="manual">❌ Excel 手工对账</div>
-  <div class="p12-seg" data-p12="auto">✅ AI 脚本对账</div>
-</div>
+	<div class="p12-segmented">
+	  <div class="p12-seg active" data-p12="manual">❌ Excel 手工对账</div>
+	  <div class="p12-seg" data-p12="auto">✅ AI 脚本对账</div>
+	  <div style="flex:0;min-width:auto"><span class="p12-seg" onclick="window.open('/demo_hr.html','_blank','width=1200,height=800')" style="display:inline-block;padding:8px 12px;border-radius:7px;font-weight:600;font-size:clamp(13px,3vw,16px);cursor:pointer;background:rgba(46,160,67,.1);border:1px solid rgba(46,160,67,.3);color:#2ea043;white-space:nowrap">👤 HR 简历演示</span></div>
+	</div>
 <div class="p12-body mt-l" style="display:flex;gap:8px;flex:1;min-height:0;position:relative">
   <!-- 手动对账卡片 -->
   <div class="p12-anim-wrap p12-anim-manual" id="p12ManualWrap" style="flex:1;min-width:0;flex-direction:column;border-radius:10px;border:2px solid rgba(229,62,62,.3);display:flex;flex-direction:column">
