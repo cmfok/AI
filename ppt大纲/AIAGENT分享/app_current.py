@@ -2339,6 +2339,90 @@ def qa_ask():
             'slide': best_match['slide']
         },
         'score': round(best_score, 1)
+
+@ -2332,7 +2342,82 @@
+    })
+
+
+# ── 手动重匹配问题到正确页面 ──
+
+@app.route('/api/questions/re-match', methods=['POST'])
+def re_match_question():
+    """重新 AI 分类问题所属页面 + 重新生成回答"""
+    data = request.get_json(silent=True) or {}
+    qid = data.get('id')
+    if qid is None:
+        return jsonify({'ok': False, 'error': '缺少参数'}), 400
+
+    questions = load_questions()
+    target = None
+    for q in questions:
+        if q['id'] == qid:
+            target = q
+            break
+    if not target:
+        return jsonify({'ok': False, 'error': '未找到该问题'}), 404
+
+    question_text = target.get('refined', '') or target.get('question', '')
+    if not question_text:
+        return jsonify({'ok': False, 'error': '问题文本为空'}), 400
+
+    # 1. 重新分类
+    old_page = target.get('page')
+    new_page, score = classifier.classify(question_text)
+    target['page'] = new_page
+    target['score'] = round(score, 3)
+    target['classified_at'] = datetime.now().isoformat()
+
+    # 2. 用新页面重新生成 AI 回答
+    answer = None
+    page_desc = ''
+    for s in SLIDE_DESCRIPTIONS:
+        if s['page'] == new_page:
+            page_desc = f"第{new_page}页「{s['title']}」：{s['desc']}"
+            break
+    if DEEPSEEK_API_KEY:
+        try:
+            prompt = f"""你是一个AI分享会的答疑助手，负责回答听众提出的问题。
+
+听众的问题被归类到{page_desc}
+
+回答原则：
+1. 直接回答问题本身，不用提及它被分配到了哪一页
+2. 如果问题和该页面内容相关，可结合页面中的案例来回答
+3. 如果问题和该页面无关，直接根据你自己的知识回答
+4. 控制在200字以内，直击要点
+5. 使用通俗易懂的语言"""
+            payload = {
+                "model": "deepseek-chat",
+                "messages": [
+                    {"role": "system", "content": prompt},
+                    {"role": "user", "content": question_text}
+                ],
+                "temperature": 0.3,
+                "max_tokens": 512
+            }
+            with httpx.Client(timeout=60) as client:
+                resp = client.post(
+                    f'{DEEPSEEK_BASE_URL}/chat/completions',
+                    headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {DEEPSEEK_API_KEY}'},
+                    json=payload
+                )
+                if resp.status_code == 200:
+                    answer = resp.json()['choices'][0]['message']['content']
+                    target['answer'] = answer
+        except Exception as e:
+            print(f'[重匹配] DeepSeek 调用失败: {e}')
+
+    save_questions(questions)
+    print(f'[重匹配] 问题#{qid} {old_page}→{new_page} (置信度:{score:.2f}) 回答:{bool(answer)}')
+    return jsonify({
+        'ok': True,
+        'page': new_page,
+        'score': round(score, 3),
+        'page_desc': page_desc,
+        'answer': answer or '',
+        'has_answer': bool(answer)
     })
 
 @app.route('/api/questions/ai-answer', methods=['POST'])
@@ -2362,17 +2446,17 @@ def ai_answer_question():
             if page and page_title:
                 # 针对性回答：带页面内容
                 summary = page_content[:300] if page_content else ''
-                system_prompt = f"""你是一个AI分享会的答疑助手，负责回答听众在分享会中提出的问题。
+                system_prompt = f"""你是一个AI分享会的答疑助手，负责回答听众提出的问题。
 
 听众的问题被归类到第{page}页「{page_title}」。
 该页面的核心主题是：{summary}
 
-请遵循以下原则回答：
-1. 如果问题和该页面内容相关，结合页面中的实际案例来回答
-2. 如果问题和该页面无关，直接根据你自己的知识回答，不要指出页面不匹配
-3. 控制在200字以内，直击要点
-4. 使用通俗易懂的语言
-5. 始终给出有实际价值的回答，不要建议用户参考其他页面"""
+回答原则：
+1. 直接回答问题本身，不用提及它被分配到了哪一页
+2. 如果问题和该页面内容相关，可结合页面中的案例来回答
+3. 如果问题和该页面无关，直接根据你自己的知识回答
+4. 控制在200字以内，直击要点
+5. 使用通俗易懂的语言"""
             else:
                 # 无页面信息时使用通用提示
                 system_prompt = "你是一个AI分享会的答疑助手，请用中文简要回答听众的问题，控制在200字以内，直击要点。"

@@ -122,7 +122,7 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
       <button class="btn" id="lockBtn" style="font-size:11px;padding:5px 8px;white-space:nowrap">🔓 解锁</button>
       <button class="btn" onclick="showOverview()" style="font-size:11px;padding:5px 8px;white-space:nowrap">📋 总览</button>
       <button class="btn" onclick="cycleTheme()" style="font-size:11px;padding:5px 8px;white-space:nowrap">🎨 换肤</button>
-      <!-- P22 已改为被动提问页（互动答疑），不再需要专用控制按钮 -->
+      <button class="btn" onclick="goToQA()" style="font-size:11px;padding:5px 8px;white-space:nowrap">💬 问答·P22</button>
     </div>
     <div class="right"><span class="dot"></span>已连接</div>
   </div>
@@ -281,6 +281,36 @@ function aiAnswer(id){
     qi.error = '网络错误';
     qi.loading = false;
     renderQuestions();
+  });
+}
+
+// ── 重新匹配问题到正确页面 + 重新生成回答 ──
+function reMatchQuestion(id){
+  var btn = document.getElementById('rematch_' + id);
+  if(btn){ btn.textContent = '⏳ 匹配中...'; btn.disabled = true; }
+  fetch('/api/questions/re-match', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({id:id})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(!d.ok){
+      if(btn){ btn.textContent = '❌ 失败'; setTimeout(function(){ btn.textContent = '🔄 重匹配'; btn.disabled = false; }, 1500); }
+      return;
+    }
+    var qi = _qdata[String(id)];
+    if(qi){
+      qi.p = d.page;
+      qi.answer = d.answer || qi.answer;
+    }
+    renderQuestions();
+    // 有新回答就同步到 PPT
+    if(d.answer){
+      fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:d.page, answer:d.answer, answer_question:(qi?qi.q:''), answer_slide:d.page, answer_mode:'bottom-popup'})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
+      try{ new BroadcastChannel('ppt-ctrl').postMessage({type:'voice-answer',question:(qi?qi.q:''),answer:d.answer,slide:d.page,mode:'bottom-popup'}); }catch(e){}
+      try{ new BroadcastChannel('ai3-control').postMessage({type:'voice-answer',question:(qi?qi.q:''),answer:d.answer,slide:d.page,mode:'bottom-popup'}); }catch(e){}
+    }
+  }).catch(function(){
+    if(btn){ btn.textContent = '❌ 网络错误'; setTimeout(function(){ btn.textContent = '🔄 重匹配'; btn.disabled = false; }, 2000); }
   });
 }
 
@@ -580,12 +610,13 @@ function renderQuestions(){
     } else if(qi.error){
       h += '<div style="font-size:12px;color:#e53e3e;padding:8px">❌ ' + qi.error + '</div>';
     }
-    // 按钮行：跳转 | 回答 | 移动 | 删除
+    // 按钮行：跳转 | 回答 | 重匹配 | 移动 | 删除
     h += '<div class="q-actions">';
     h += '<button class="btn small" onclick="goToSlide(' + (qi.p||1) + ')">🔙 跳转</button>';
     if(!qi.answer && !qi.loading){
       h += '<button class="btn small on" onclick="aiAnswer(' + id + ')">🤖 回答</button>';
     }
+    h += '<button class="btn small" onclick="reMatchQuestion(' + id + ')" id="rematch_' + id + '">🔄 重匹配</button>';
     h += '<button class="btn small" onclick="showMovePicker(' + id + ')">📌 移动</button>';
     h += '<button class="btn small danger" onclick="deleteQuestion(' + id + ')">🗑 删除</button>';
     h += '</div>';
@@ -666,8 +697,11 @@ function togglePollOverlay(){
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,pollOverlay:_pollOverlayOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 
-// P22 已改为互动答疑页（被动展示），不再需要投屏 Q&A 控制按钮
-// 提问管理通过顶栏「💬 提问」Tab 页操作
+// ── P22 互动答疑页快捷导航（从中场休息/结束时快速切换）──
+function goToQA(){
+  // P22 从网格移到了顶部按钮，走标准 go() 导航
+  go(22);
+}
 
 // ── 手机左右滑动翻页 ──
 (function(){
@@ -998,6 +1032,8 @@ function buildPageGrid(){
   var g=document.getElementById('pg');
   g.innerHTML='';
   for(var i=1;i<=TOTAL;i++){
+    // P22 不在网格显示，通过顶部「问答·P22」按钮访问
+    if(i===22) continue;
     var d=document.createElement('div');
     d.className='page-dot'+(i===cur?' active':'');
     d.textContent='P'+i;
