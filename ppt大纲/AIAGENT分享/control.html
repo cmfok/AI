@@ -122,7 +122,7 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
       <button class="btn" id="lockBtn" style="font-size:11px;padding:5px 8px;white-space:nowrap">🔓 解锁</button>
       <button class="btn" onclick="showOverview()" style="font-size:11px;padding:5px 8px;white-space:nowrap">📋 总览</button>
       <button class="btn" onclick="cycleTheme()" style="font-size:11px;padding:5px 8px;white-space:nowrap">🎨 换肤</button>
-      <button class="btn" onclick="goToQA()" style="font-size:11px;padding:5px 8px;white-space:nowrap">💬 问答·P22</button>
+      <button class="btn" onclick="goToQA()" style="font-size:11px;padding:5px 8px;white-space:nowrap">💬 问答·P21</button>
     </div>
     <div class="right"><span class="dot"></span>已连接</div>
   </div>
@@ -697,10 +697,10 @@ function togglePollOverlay(){
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,pollOverlay:_pollOverlayOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 
-// ── P22 互动答疑页快捷导航（从中场休息/结束时快速切换）──
+// ── P21 互动答疑页快捷导航（从中场休息/结束时快速切换）──
 function goToQA(){
-  // P22 从网格移到了顶部按钮，走标准 go() 导航
-  go(22);
+  // P21 从网格移到了顶部按钮，走标准 go() 导航
+  go(21);
 }
 
 // ── 手机左右滑动翻页 ──
@@ -836,7 +836,7 @@ document.addEventListener('DOMContentLoaded', function(){
 </div>
 
 <script>
-var TOTAL=22,cur=1;
+var TOTAL=21,cur=1;
 // BroadcastChannel 单例（用于同设备控制台 ↔ 大屏同步）
 var _bc = null;
 try{ _bc = new BroadcastChannel('ppt-ctrl'); }catch(e){}
@@ -1032,8 +1032,8 @@ function buildPageGrid(){
   var g=document.getElementById('pg');
   g.innerHTML='';
   for(var i=1;i<=TOTAL;i++){
-    // P22 不在网格显示，通过顶部「问答·P22」按钮访问
-    if(i===22) continue;
+    // P21 不在网格显示，通过顶部「问答·P21」按钮访问
+    if(i===21) continue;
     var d=document.createElement('div');
     d.className='page-dot'+(i===cur?' active':'');
     d.textContent='P'+i;
