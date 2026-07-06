@@ -518,7 +518,7 @@ function toggleFilter(){
   var btn = document.getElementById('filterBtn');
   if(_filterPage){
     btn.className = 'btn small on';
-    btn.textContent = '📌 仅 P' + (cur>22?'附':(cur===6?'转':(cur>6?cur-1:cur)));
+      btn.textContent = '📌 仅 P' + cur;
   } else {
     btn.className = 'btn small';
     btn.textContent = '📄 当前页';
@@ -1182,7 +1182,7 @@ function upd(n){
   document.getElementById('sc').innerHTML = s.c;
   var nx=_speechData[n+1];
   if(nx){
-    document.getElementById('nc').innerHTML='<strong>'+(n+1>22?'附':(n+1===6?'转':'P'+(n+1>6?n:n+1)))+' · '+nx.t+'</strong><br>'+nx.c.substring(0,100).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'…';
+    document.getElementById('nc').innerHTML='<strong>P'+(n+1)+' · '+nx.t+'</strong><br>'+nx.c.substring(0,100).replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>')+'…';
   }else{
     document.getElementById('nc').innerHTML='— 结束 —';
   }
