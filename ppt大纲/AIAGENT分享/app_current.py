@@ -21,7 +21,9 @@ PORT = 8008
 
 # ── 数据库配置 ──────────────────────────────────────────
 DB_USER = 'lobster'
-DB_PASSWORD = os.environ.get('DB_PASSWORD', 'Lobster@2026')  # 可从环境变量覆盖
+DB_PASSWORD = os.environ.get('DB_PASSWORD')
+if not DB_PASSWORD:
+    raise RuntimeError("DB_PASSWORD 环境变量未设置，请设置后重试")
 DB_NAME = 'ecommerce_db'
 
 # ── 幻灯片主题定义（用于 AI 分类）────────────────────
@@ -418,30 +420,27 @@ def send_to_hr_agent():
     except Exception as e:
         return jsonify({'ok': False, 'error': str(e)}), 500
 
-# ── 读取服务器文件为 base64 ───────────────────────────
+# ── 读取服务器文件为 base64（仅限 /tmp/hr_media/ 目录）──
+ALLOWED_MEDIA_DIR = '/tmp/hr_media'
+
 @app.route('/api/read-file')
 def read_file_base64():
-    """读取服务器上的文件，返回 base64"""
+    """读取服务器文件，返回 base64（仅限 /tmp/hr_media/ 目录）"""
     fpath = request.args.get('path', '')
     if not fpath:
         return jsonify({'ok': False, 'error': '路径为空'}), 400
-    if not os.path.isfile(fpath):
-        # 尝试 /tmp/hr_media/ 路径
-        alt = '/tmp/hr_media/' + os.path.basename(fpath)
-        if os.path.isfile(alt):
-            fpath = alt
-        else:
-            return jsonify({'ok': False, 'error': '文件不存在'}), 404
+    fname = os.path.basename(fpath)
+    safe_path = os.path.normpath(os.path.join(ALLOWED_MEDIA_DIR, fname))
+    if not safe_path.startswith(ALLOWED_MEDIA_DIR):
+        return jsonify({'ok': False, 'error': '禁止访问'}), 403
+    if not os.path.isfile(safe_path):
+        return jsonify({'ok': False, 'error': '文件不存在'}), 404
     try:
         import base64
-        if fpath.startswith('/root/'):
-            import subprocess as _sp
-            raw = _sp.check_output(['sudo', 'cat', fpath], timeout=10)
-        else:
-            with open(fpath, 'rb') as f:
-                raw = f.read()
+        with open(safe_path, 'rb') as f:
+            raw = f.read()
         b64 = base64.b64encode(raw).decode()
-        return jsonify({'ok': True, 'base64': b64, 'filename': os.path.basename(fpath), 'size': len(b64)})
+        return jsonify({'ok': True, 'base64': b64, 'filename': fname, 'size': len(b64)})
     except Exception as e:
         return jsonify({'ok': False, 'error': str(e)}), 500
 
@@ -470,10 +469,13 @@ def demo_page():
 @app.route('/images/<path:fname>')
 def serve_image(fname):
     from flask import send_file
-    fpath = os.path.join(os.path.dirname(__file__), 'images', fname.split('?')[0])
-    if not os.path.isfile(fpath):
+    img_dir = os.path.join(os.path.dirname(__file__), 'images')
+    safe = os.path.realpath(os.path.join(img_dir, fname.split('?')[0]))
+    if not safe.startswith(os.path.realpath(img_dir) + os.sep):
+        return '', 403
+    if not os.path.isfile(safe):
         return '', 404
-    return send_file(fpath)
+    return send_file(safe)
 
 @app.route('/ai/<path:subpath>')
 def serve_ai_static(subpath):
@@ -521,23 +523,24 @@ def submit_question():
     if len(question) > 500:
         return jsonify({'ok': False, 'error': '内容不能超过500字'}), 400
 
-    questions = load_questions()
-    qid = len(questions) + 1
-    entry = {
-        'id': qid,
-        'name': name,
-        'question': question,
-        'type': None,       # 'share'（分享场景）| 'question'（提问）
-        'refined': '',
-        'deeper': '',
-        'page': None,
-        'score': None,
-        'created_at': datetime.now().isoformat(),
-        'classified_at': None,
-        'refined_at': None,
-    }
-    questions.append(entry)
-    save_questions(questions)
+    with _questions_lock:
+        questions = load_questions()
+        qid = len(questions) + 1
+        entry = {
+            'id': qid,
+            'name': name,
+            'question': question,
+            'type': None,       # 'share'（分享场景）| 'question'（提问）
+            'refined': '',
+            'deeper': '',
+            'page': None,
+            'score': None,
+            'created_at': datetime.now().isoformat(),
+            'classified_at': None,
+            'refined_at': None,
+        }
+        questions.append(entry)
+        save_questions(questions)
 
     # 立即尝试分类（同步，简单场景）
     try:
@@ -1937,6 +1940,7 @@ setInterval(load,30000);
 </html>'''
 # ── 控制页状态 ─────────────────────────────────────
 CONTROL_STATE = {"slide": 1, "lock": False, "coverQ": False, "coverP1": False, "expand": False, "card": 0, "pollOverlay": False, "themeKey": 0, "overviewKey": 0, "filePopup": 0, "popupScroll": 0, "autoScroll": 0, "sfRules": 0, "sfScroll": 0, "p4open": 0}
+CONTROL_STATE_LOCK = threading.Lock()
 
 QA_OVERLAY = {}
 
@@ -2066,13 +2070,13 @@ def tech_control():
 @app.route("/api/control/go", methods=["POST"])
 def control_go():
     data = request.get_json(silent=True) or {}
-    slide = int(data.get("slide", 1))
-    CONTROL_STATE["slide"] = max(1, min(slide, 99))
-    # 保存动效状态字段（排除内部字段）
-    for key, value in data.items():
-        if key in ("slide", "_speech"):
-            continue
-        CONTROL_STATE[key] = value
+    with CONTROL_STATE_LOCK:
+        slide = int(data.get("slide", 1))
+        CONTROL_STATE["slide"] = max(1, min(slide, 99))
+        for key, value in data.items():
+            if key in ("slide", "_speech"):
+                continue
+            CONTROL_STATE[key] = value
 
     # ── 演讲稿保存（嵌入此端点，避免在 Cloudflare 代理层被 405）──
     speech_info = data.get("_speech")
@@ -2123,7 +2127,8 @@ def control_go():
 
 @app.route("/api/control/current")
 def control_current():
-    return jsonify(CONTROL_STATE)
+    with CONTROL_STATE_LOCK:
+        return jsonify(dict(CONTROL_STATE))
 
 
 # ── 幻灯片总数 ─────────────────────────────────────────
@@ -2138,8 +2143,6 @@ def slides_total():
         return jsonify({"total": max(count, 1)})
     except Exception:
         return jsonify({"total": 21})  # 降级默认值
-
-SLIDES_COUNT = len([s for s in SLIDES if s.get('page')])
 
 # ── 演讲稿保存 ─────────────────────────────────────────
 SPEECH_FILE = os.path.join(PPT_DIR, 'speech.md')

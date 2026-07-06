@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
@@ -210,7 +210,7 @@ try {
 
 // ── 翻页 ──
 function goToSlide(n){
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:n})}).catch(function(){});
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:n})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 
 // ── AI 回答（发送问题给 LLM，答案展示在 PPT 上，下弹出方式）──
@@ -231,7 +231,7 @@ function aiAnswer(id){
       qi.loading = false;
       renderQuestions();
       // 发送给 PPT 展示页：下弹出方式显示答案
-      fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:qi.p, answer:d.answer, answer_question:qi.q, answer_slide:qi.p, answer_mode:'bottom-popup'})}).catch(function(){});
+      fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:qi.p, answer:d.answer, answer_question:qi.q, answer_slide:qi.p, answer_mode:'bottom-popup'})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
       try{ new BroadcastChannel('ppt-ctrl').postMessage({type:'voice-answer',question:qi.q,answer:d.answer,slide:qi.p,mode:'bottom-popup'}); }catch(e){}
       try{ new BroadcastChannel('ai3-control').postMessage({type:'voice-answer',question:qi.q,answer:d.answer,slide:qi.p,mode:'bottom-popup'}); }catch(e){}
     } else {
@@ -590,7 +590,7 @@ function togglePollOverlay(){
     btn.className = 'btn small';
     btn.textContent = '📺 投屏显示';
   }
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,pollOverlay:_pollOverlayOn})}).catch(function(){});
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,pollOverlay:_pollOverlayOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 
 // ── 手机左右滑动翻页 ──
@@ -628,7 +628,7 @@ function toggleModelPopup(){
     if(m.role === 'assistant' && !lastA) lastA = m.content;
     if(m.role === 'user' && !lastQ) lastQ = m.content;
   }
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,modelPopup:{show:_modelPopupOn,question:lastQ,answer:lastA}})}).catch(function(){});
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,modelPopup:{show:_modelPopupOn,question:lastQ,answer:lastA}})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 
 // ── 生图模块 ──
@@ -693,7 +693,7 @@ function toggleImagePopup(){
       method:'POST',
       headers:{'Content-Type':'application/json'},
       body:JSON.stringify({show:false})
-    }).catch(function(){});
+    }).catch(function(e){console.warn('[控制] 指令失败:',e);});
   }
 }
 
@@ -702,7 +702,7 @@ function syncImageToProjector(url, prompt){
     method:'POST',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({show:true, url:url, prompt:prompt})
-  }).catch(function(){});
+  }).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 
 function initModelKey(){
@@ -766,7 +766,7 @@ function sendModelMsg(){
       _modelSending = false;
       renderModelChat();
       if(_modelPopupOn){
-        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,modelPopup:{show:true,question:q,answer:answer}})}).catch(function(){});
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,modelPopup:{show:true,question:q,answer:answer}})}).catch(function(e){console.warn('[控制] 模型投屏失败:',e);});
       }
     } else {
       _modelMsgs.push({role:'assistant', content: '❌ ' + (d.error||'回答失败')});
@@ -801,6 +801,13 @@ document.addEventListener('DOMContentLoaded', function(){
 
 <script>
 var TOTAL=21,cur=1;
+// BroadcastChannel 单例（用于同设备控制台 ↔ 大屏同步）
+var _bc = null;
+try{ _bc = new BroadcastChannel('ppt-ctrl'); }catch(e){}
+// 控制指令通用发送函数（带错误日志，slide 自动使用当前页码）
+function ctrlGo(data){
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)}).catch(function(e){console.warn('[控制] 指令失败:',e);});
+}
 // 立即构建页码网格，不等待网络请求
 buildPageGrid();
 // 动态获取 PPT 实际页数
@@ -817,12 +824,12 @@ fetch('/api/control/current',{cache:'no-cache'}).then(function(r){if(!r.ok)throw
   // 必须在 syncState 之后执行，确保按钮恢复正常
   if(st && st.coverP1){
     st.coverP1 = false;  // 先修正传入数据，下次轮询自动同步服务器
-    fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverP1:false})}).catch(function(){});
+    fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverP1:false})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
     var aBtn = document.getElementById('aBtn');
     if(aBtn){ aBtn.classList.remove('on'); aBtn.textContent='\u25B6 '+ACT[1].l; }
   }
   // 动态获取 PPT 实际页数
-  fetch('/api/slides/total',{cache:'no-cache'}).then(function(r2){return r2.json();}).then(function(d){TOTAL = d.total||21;document.getElementById('tp').textContent=TOTAL;}).catch(function(){});
+  fetch('/api/slides/total',{cache:'no-cache'}).then(function(r2){return r2.json();}).then(function(d){TOTAL = d.total||21;document.getElementById('tp').textContent=TOTAL;buildPageGrid();}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }).catch(function(){
   go(1);
 });
@@ -977,7 +984,7 @@ function go(n){
   CC=0;
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:n})}).catch(function(e){console.error("go error:",e)});
   // 同时广播到本地 PPT
-  try{new BroadcastChannel('ppt-ctrl').postMessage({type:'goto',slide:n})}catch(e){}
+  if(_bc) _bc.postMessage({type:'goto',slide:n});
   // ── 动效按钮栏（统一管理：在 ACTIONS 里加 {page: N, html: '...'} 即可）──
   var ab=document.getElementById('actBox');
   // 获取当前页的按钮配置
@@ -1002,7 +1009,7 @@ function go(n){
         var isOn = b.classList.contains('on');
         if(isOn){ b.classList.remove('on'); b.textContent='▶ '+ACT[1].l; }
         else { b.classList.add('on'); b.textContent=ACT[1].h; }
-        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverP1:!isOn})}).catch(function(){});
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:1,coverP1:!isOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
       };
     }
     if(n===2){  // P2：展开答案
@@ -1011,7 +1018,7 @@ function go(n){
         var isOn = b.classList.contains('on');
         if(isOn){ b.classList.remove('on'); b.textContent='▶ '+ACT[2].l; }
         else { b.classList.add('on'); b.textContent=ACT[2].h; }
-        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:!isOn})}).catch(function(){});
+        fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:2,expand:!isOn})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
       };
     }
     if(n===4){  // P4：四张卡片互斥展开
@@ -1021,7 +1028,7 @@ function go(n){
           var b = document.getElementById('p4b'+st.p4open);
           if(b) b.classList.add('on');
         }
-      }).catch(function(){});
+      }).catch(function(e){console.warn('[控制] 指令失败:',e);});
       for(var _pi=1;_pi<=4;_pi++){
         (function(idx){
           var b = document.getElementById('p4b'+idx);
@@ -1031,9 +1038,9 @@ function go(n){
             document.querySelectorAll('#actBox .act-btn').forEach(function(bb){bb.classList.remove('on');});
             if(!nowOn){
               b.classList.add('on');
-              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,p4open:idx})}).catch(function(){});
+              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,p4open:idx})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
             } else {
-              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,p4open:0})}).catch(function(){});
+              fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:4,p4open:0})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
             }
           };
         })(_pi);
@@ -1088,39 +1095,37 @@ document.getElementById('lockBtn').onclick=function(){
 
 // ── 总览（触发投屏 O 键）──
 function showOverview(){
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,overviewKey:Date.now()})}).catch(function(){});
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,overviewKey:Date.now()})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 
 // ── 换肤（触发投屏 T 键）──
 function cycleTheme(){
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,themeKey:Date.now()})}).catch(function(){});
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,themeKey:Date.now()})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 // ── 投屏大纲 ──
 var _filePopupOn = false;
 function toggleFilePopup(){
   _filePopupOn = !_filePopupOn;
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,filePopup:_filePopupOn?Date.now():0})}).catch(function(){});
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,filePopup:_filePopupOn?Date.now():0})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 function scrollPopup(dir){
   // dir: 1=下翻, -1=上翻。用大数区分方向
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,popupScroll:dir>0?Date.now():-Date.now()})}).catch(function(){});
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,popupScroll:dir>0?Date.now():-Date.now()})}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }
 
 
 var _scrollTimer = null, _sfOn = false;
 function startScroll(){
-  // popupScroll + autoScroll 合并为一次请求，立即生效
-  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur, popupScroll:Date.now(), autoScroll:1})}).catch(function(){});
-  if(_scrollTimer) return;
-  _scrollTimer = setInterval(function(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:1})}).catch(function(){}); }, 200);
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur, popupScroll:Date.now(), autoScroll:1})}).catch(function(e){console.warn('[控制] 自动滚动启动失败:',e);});
 }
-function stopScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:0})}).catch(function(){});
+function stopScroll(){
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,autoScroll:0})}).catch(function(e){console.warn('[控制] 自动滚动停止失败:',e);});
   if(_scrollTimer){ clearInterval(_scrollTimer); _scrollTimer = null; }
 }
 
-function showSfRulesPopup(){ _sfOn = !_sfOn; fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfRules:_sfOn?Date.now():0})}).catch(function(){}); }
-function startSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:1})}).catch(function(){}); }
-function stopSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:0})}).catch(function(){}); }
+function showSfRulesPopup(){ _sfOn = !_sfOn; fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfRules:_sfOn?Date.now():0})}).catch(function(e){console.warn('[控制] 指令失败:',e);}); }
+function startSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:1})}).catch(function(e){console.warn('[控制] 指令失败:',e);}); }
+function stopSfScroll(){ fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:cur,sfScroll:0})}).catch(function(e){console.warn('[控制] 指令失败:',e);}); }
 
 // ── 多控制台同步 ──
 function syncState(st){
@@ -1169,7 +1174,7 @@ function syncState(st){
 }
 // 每1.5秒轮询服务器，多控制台/多标签页状态一致
 setInterval(function(){
-  fetch('/api/control/current').then(function(r){return r.json();}).then(function(st){if(st)syncState(st);}).catch(function(){});
+  fetch('/api/control/current').then(function(r){return r.json();}).then(function(st){if(st)syncState(st);}).catch(function(e){console.warn('[控制] 指令失败:',e);});
 }, 1500);
 
 </script>

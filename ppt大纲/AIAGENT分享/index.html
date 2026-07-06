@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 
 <html data-themes="minimal-white,editorial-serif,swiss-grid,japanese-minimal,pitch-deck-vc" lang="zh-CN">
 <head>
@@ -12,7 +12,7 @@
 :root{--font-display:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif;--anim-dur:.7s;--font-sans:'PingFang SC','Microsoft YaHei','Noto Sans SC',sans-serif}
 body{line-height:1.35!important}
 .slide p{margin-bottom:6px}
-.slide{flex-direction:column;justify-content:flex-start;padding:clamp(32px,3vw,56px) clamp(48px,5vw,100px)}
+.slide{flex-direction:column;justify-content:flex-start;padding:clamp(32px,3vw,56px) clamp(48px,5vw,100px) clamp(90px,9vw,120px)}
 .slide.v-center{flex-direction:column;justify-content:center}
 body .h1{font-size:clamp(80px,12vw,200px)!important}
 body .h2{font-size:clamp(56px,8vw,130px)!important}
@@ -120,7 +120,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .big-num .unit{font-size:.3em;color:var(--text-3);font-weight:400}
 
 /* eco bar */
-.eco-bar{position:absolute;bottom:32px;left:clamp(48px,5vw,100px);right:clamp(38px,4vw,80px);display:flex;flex-direction:column;gap:6px;z-index:1}
+.eco-bar{position:fixed;bottom:0;left:0;right:0;display:flex;flex-direction:column;gap:6px;z-index:5;background:var(--bg);padding:clamp(6px,0.6vw,12px) clamp(48px,5vw,100px) clamp(12px,1.2vw,20px);border-top:1px solid var(--border);box-shadow:0 -2px 8px rgba(0,0,0,.04)}
 .eco-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
 .eco-row .layer-tag{font-size:8px;color:var(--text-3);opacity:.5;margin-right:4px;white-space:nowrap}
 .eco-bar .pill{font-size:clamp(11px,1.28vw,18px);opacity:.85;padding:3px 10px;border-radius:6px;border:2px solid var(--border);white-space:nowrap;display:inline-flex;align-items:center;gap:3px}
@@ -156,8 +156,9 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .cp1-sub.show{opacity:1}
 
 	@media(max-width:768px){
+	  .deck{height:auto;overflow:visible}
 	  .deck-header{top:12px!important;left:20px!important;right:20px!important;font-size:11px!important}
-	  .slide{overflow-y:auto;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px)}
+	  .slide{overflow-y:auto;min-height:100vh;padding:clamp(20px,3vw,32px) clamp(18px,4vw,32px) clamp(90px,10vw,120px)}
 	  .g2,.g3,.g4,.comp-grid,.six-pack,.rules-grid{grid-template-columns:1fr}
 	  .mt-l{margin-top:14px!important}.mt-m{margin-top:8px!important}
 	  .file-reader{min-height:200px}
@@ -177,7 +178,6 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  .comp-card{padding:14px 16px;font-size:16px}
 	  .eco-bar .pill{font-size:11px;padding:3px 8px}
 	  .brand-cards-wrap{transform:scale(.85);transform-origin:top left}
-	  .eco-bar{position:static;margin-top:12px}
 	  .callout-block{font-size:clamp(14px,3.5vw,18px)!important;padding:12px 16px}
 	  .step-box,.ladder-step,.check-item,.tool-layer{font-size:15px;padding:12px 16px}
 	  .ca-card .ch{font-size:18px}
@@ -195,7 +195,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	@media(max-width:480px){
 	  /* ── 基础间距 ── */
 	  .deck-header{top:8px!important;left:14px!important;right:14px!important;font-size:10px!important}
-	  .slide{padding:clamp(22px,4vw,32px) clamp(12px,4vw,20px)}
+	  .slide{padding:clamp(22px,4vw,32px) clamp(12px,4vw,20px) clamp(90px,12vw,100px);min-height:100vh;overflow-x:hidden}
 	  .mt-l{margin-top:12px!important}.mt-m{margin-top:6px!important}
 	  /* ── 标题字号 ── */
 	  body .h1{font-size:clamp(40px,11vw,64px)!important}
@@ -203,10 +203,12 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  body .lede{font-size:clamp(20px,5.5vw,28px)!important}
 	  .dim{font-size:clamp(16px,4.5vw,20px)}
 	  .cp1-char{font-size:clamp(32px,10vw,56px)!important}
+	  .cp1-stage{min-width:auto!important;width:100%!important}
 	  .kicker{font-size:clamp(12px,3.5vw,15px)}
 	  /* ── 覆盖内联大字（!important 穿透 inline style）── */
 	  .slide [style*="font-size:56px"]{font-size:36px!important}
 	  .slide [style*="font-size:34px"]{font-size:22px!important}
+	  .slide [style*="font-size:30px"]{font-size:18px!important}
 	  .slide [style*="font-size:28px"]{font-size:18px!important}
 	  .slide [style*="font-size:26px"]{font-size:18px!important}
 	  .slide [style*="font-size:20px"]{font-size:16px!important}
@@ -221,6 +223,9 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  [data-title*="运费"] [style*="display:flex"],
 	  [data-title*="驾驭工程"] [style*="display:flex"][style*="gap:clamp(14px"]{flex-direction:column!important;gap:10px!important}
 	  [data-title*="运费"] [style*="flex:1"]{flex:auto!important;width:100%!important}
+	  /* ── P4 grid 双列 → 单列 ── */
+	  [data-title="模型"] > div[style*="display:grid"][style*="grid-template-columns:auto"]{grid-template-columns:1fr!important;gap:12px!important}
+	  [data-title="模型"] > div[style*="display:grid"] > div[style*="width:fit-content"]{width:100%!important}
 	  /* ── 组件字号 ── */
 	  .rule-item h5{font-size:20px!important}
 	  .rule-item .body-sm{font-size:15px!important}
@@ -252,12 +257,10 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  .lim-card{font-size:16px;padding:14px 16px}
 	  .big-num{font-size:clamp(36px,10vw,60px)}
 	  .tool-layer h4{font-size:16px!important}
-	  /* ── 生态栏 ── */
-	  .eco-bar{position:static!important;margin-top:12px}
-	  .eco-bar .pill{font-size:12px;padding:3px 8px}
-	  .eco-bar .pill .ic{width:14px;height:14px}
-	  .eco-bar .pill img{width:12px;height:12px}
-	  .eco-row{gap:5px}
+	  /* ── 生态栏（手机仅显示图标）── */
+	  .eco-bar .pill{font-size:0!important;padding:3px!important;border:none!important;background:none!important;gap:0!important}
+	  .eco-bar .pill img,.eco-bar .pill .ic{font-size:12px!important;width:14px!important;height:14px!important}
+	  .eco-row{gap:4px}
 	  /* ── 绝对定位元素防重叠 ── */
 	  [data-title*="运费"] [style*="position:absolute"]{position:static!important;transform:none!important;margin:6px auto;text-align:center;display:block}
 	}
@@ -611,7 +614,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div class="rule-item"><div class="num">RULE 03</div><h5>📝 给参考</h5><div class="body-sm">给一个模板，照这个格式写</div></div>
 <div class="rule-item"><div class="num">RULE 04</div><h5>🚧 设标准</h5><div class="body-sm">告诉AI什么能做、什么不能做</div></div>
 </div>
-<div class="eco-bar"><div class="eco-row">
+<div class="eco-data" style="display:none"><div class="eco-row">
 <span class="pill" style="border-color:#685DF9;background:rgba(104,93,249,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/doubao-color.svg"/><span class="dot" style="background:#685DF9"></span>豆包</span>
 <span class="pill" style="border-color:#6F69F7;background:rgba(111,105,247,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/qwen-color.svg"/><span class="dot" style="background:#6F69F7"></span>千问</span>
 <span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
@@ -767,8 +770,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
     <div class="callout-block" style="margin-bottom:0">
       💡 <strong>精准地将上下文窗口填充上恰到好处的信息，让模型能准确地迈出下一步</strong>
     </div>
-    <div style="flex:1;display:flex;flex-direction:column;gap:clamp(6px,0.6vh,10px);justify-content:center">
-    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(2px,0.2vh,4px)">
+    <div style="display:flex;flex-direction:column;gap:12px">
+    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:clamp(2px,0.2vh,4px)">
       <div style="font-size:clamp(20px,2vw,28px);font-weight:700">📁 可迁移</div>
       <div style="font-size:clamp(14px,1.3vw,18px);color:var(--text-2);line-height:1.5">写好一份 prompt.md，换哪个模型都能直接用。<br>ChatGPT、豆包、DeepSeek… 通吃所有主流 AI。</div>
       <div style="display:flex;gap:clamp(4px,0.4vw,8px);margin-top:clamp(4px,0.3vh,6px);flex-wrap:wrap">
@@ -777,12 +780,12 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
         <span style="padding:clamp(2px,0.15vw,4px) clamp(6px,0.5vw,10px);border-radius:12px;background:color-mix(in srgb,var(--accent) 10%,transparent);color:var(--accent);font-size:clamp(11px,0.9vw,13px);font-weight:600">DeepSeek</span>
       </div>
     </div>
-    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(2px,0.2vh,4px)">
+    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:clamp(2px,0.2vh,4px)">
       <div style="font-size:clamp(20px,2vw,28px);font-weight:700">📋 可生长</div>
       <div style="font-size:clamp(14px,1.3vw,18px);color:var(--text-2);line-height:1.5">今天加产品清单、明天加客户纪要，知识资产越积越厚。<br>AI 越来越懂你的业务，输出质量持续提升。</div>
       <div style="font-size:clamp(12px,1vw,15px);color:var(--good);font-weight:600;margin-top:clamp(4px,0.3vh,6px)">📈 积累 → 懂你 → 更准的答案</div>
     </div>
-    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);flex:1;display:flex;flex-direction:column;justify-content:center;gap:clamp(2px,0.2vh,4px)">
+    <div style="padding:clamp(10px,0.9vw,18px);border:1px solid var(--border);border-radius:12px;background:var(--bg);box-shadow:0 1px 4px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:clamp(2px,0.2vh,4px)">
       <div style="font-size:clamp(20px,2vw,28px);font-weight:700">📚 有记忆</div>
       <div style="font-size:clamp(14px,1.3vw,18px);color:var(--text-2);line-height:1.5">项目背景、写作风格、交付标准 — 写一次永久复用。<br>每次对话 AI 自动加载上下文，不用再重复交代。</div>
       <div style="font-size:clamp(12px,1vw,15px);color:var(--text-3);margin-top:clamp(4px,0.3vh,6px)">🔥 把"历史"变成 AI 的"默认配置"</div>
@@ -791,10 +794,6 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   </div>
   <!-- 右列：聊天窗口 -->
   <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:clamp(4px,0.4vh,8px)">
-    <div style="display:flex;align-items:center;gap:6px;flex-shrink:0">
-      <span style="width:clamp(20px,1.8vw,24px);height:clamp(20px,1.8vw,24px);border-radius:50%;background:var(--accent);color:#fff;display:flex;align-items:center;justify-content:center;font-size:clamp(11px,1vw,13px);flex-shrink:0">📨</span>
-      <span style="font-size:clamp(16px,1.5vw,22px);font-weight:600">把所有相关资料全部发给AI</span>
-    </div>
     <div style="flex:1;border:1px solid var(--border);border-radius:14px;overflow:hidden;background:var(--bg-soft);display:flex;flex-direction:column;box-shadow:0 2px 8px rgba(0,0,0,.06)">
       <!-- 标题栏 -->
       <div style="background:var(--bg);padding:clamp(4px,0.4vw,7px) clamp(10px,0.8vw,14px);border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px;flex-shrink:0">
@@ -852,10 +851,16 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
           </div>
         </div>
       </div>
+      <!-- 输入框 -->
+      <div style="border-top:1px solid var(--border);padding:clamp(6px,0.5vw,10px) clamp(10px,0.8vw,14px);background:var(--bg);display:flex;align-items:center;gap:clamp(6px,0.5vw,10px);flex-shrink:0">
+        <span style="font-size:clamp(14px,1.3vw,18px);flex-shrink:0;cursor:default">📎</span>
+        <div style="flex:1;border:1px solid var(--border);border-radius:20px;padding:clamp(5px,0.4vw,8px) clamp(12px,1vw,16px);background:var(--bg-soft);font-size:clamp(12px,1vw,15px);color:var(--text-3)">输入消息...</div>
+        <span style="font-size:clamp(14px,1.3vw,18px);flex-shrink:0;cursor:default">➤</span>
+      </div>
     </div>
   </div>
 </div>
-<div class="eco-bar">
+<div class="eco-data" style="display:none">
 <div class="eco-row">
 <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
 <span class="pill" style="border-color:#777777;background:rgba(119,119,119,.12)"><img onerror="this.classList.add('err')" src="/ai/icon/brand/kimi-color.svg" style="background:#000;border-radius:3px;padding:1px"/><span class="dot" style="background:#777777"></span>Kimi</span>
@@ -912,7 +917,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
         <span>→</span>
         <span style="font-weight:600;color:var(--accent)">AI只看这个文件</span>
       </div>
-      <div style="font-size:clamp(15px,1.4vw,22px);color:var(--text-2);padding:clamp(4px,0.4vw,8px);background:color-mix(in srgb,var(--accent) 4%,transparent);border-radius:6px">
+      <div style="font-size:clamp(11px,1.0vw,16px);color:var(--text-2);padding:clamp(4px,0.4vw,8px);background:color-mix(in srgb,var(--accent) 4%,transparent);border-radius:6px">
          💡 同做"写PPT"：AI只看你给的.md → 输出对应prompt
       </div>
     </div>
@@ -964,7 +969,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
         <span>→</span>
         <span style="font-weight:600;color:var(--accent)">AI关联整个文件夹</span>
       </div>
-      <div style="font-size:clamp(15px,1.4vw,22px);color:var(--text-2);padding:clamp(4px,0.4vw,8px);background:color-mix(in srgb,var(--accent) 4%,transparent);border-radius:6px">
+      <div style="font-size:clamp(11px,1.0vw,16px);color:var(--text-2);padding:clamp(4px,0.4vw,8px);background:color-mix(in srgb,var(--accent) 4%,transparent);border-radius:6px">
          💡 同做"写PPT"：AI把客户/A公司/下所有资料融会贯通
       </div>
     </div>
@@ -1027,7 +1032,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
         <span>→</span>
         <span style="font-weight:600;color:var(--accent)">AI全局关联搜索</span>
       </div>
-      <div style="font-size:clamp(15px,1.4vw,22px);color:var(--text-2);padding:clamp(4px,0.4vw,8px);background:color-mix(in srgb,var(--accent) 4%,transparent);border-radius:6px">
+      <div style="font-size:clamp(11px,1.0vw,16px);color:var(--text-2);padding:clamp(4px,0.4vw,8px);background:color-mix(in srgb,var(--accent) 4%,transparent);border-radius:6px">
          💡 同做"写PPT"：AI通过双向链接找到【大纲】【背景】【演讲稿】自动综合
       </div>
     </div>
@@ -1124,7 +1129,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div class="item"><span class="in">⑥ 可观测性</span><br/>每一步可追踪可回溯</div>
 </div>
 </div>
-<div class="eco-bar">
+<div class="eco-data" style="display:none">
 <div class="eco-row">
 <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
 <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
@@ -1219,7 +1224,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;border-left:3px solid var(--bad)"><h4>⚠️ 现在痛点</h4><p style="font-size:30px;color:var(--text-2)">AI 没有眼睛——看不到运行结果，不知道对错</p></div>
 <div style="border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;text-align:center;border-left:3px solid var(--accent)"><h4>🚀 未来方向</h4><p style="font-size:30px;color:var(--text-2)">多 Agent 并行——写代码、Review、测试同时</p></div>
 </div>
-<div class="eco-bar">
+<div class="eco-data" style="display:none">
 <div class="eco-row">
 <span class="pill" style="border-color:#10A37F;background:rgba(16,163,127,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/openai.svg"/><span class="dot" style="background:#10A37F"></span>ChatGPT</span>
 <span class="pill" style="border-color:#4D6BFE;background:rgba(77,107,254,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/deepseek.svg"/><span class="dot" style="background:#4D6BFE"></span>DeepSeek</span>
@@ -1312,12 +1317,16 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <p class="kicker">Q&amp;A</p>
 <h2 class="h2" style="font-size:clamp(250px, 75vw, 500px)!important;font-weight:800;color:#3B82F6;text-align:center;margin:0;border:none;padding:0;line-height:1">?</h2>
 <div style="margin-top:36px;padding:clamp(28px,5vh,48px) clamp(24px,4vw,40px);background:color-mix(in srgb,var(--accent) 5%,transparent);border:1px solid color-mix(in srgb,var(--accent) 12%,transparent);border-radius:var(--radius);max-width:700px;margin-left:auto;margin-right:auto">
-<p class="dim mt-m">厉害的不是 AI，是<b>人类的脑子</b>。</p>
+<div class="dim mt-m" style="font-size:clamp(22px,2.8vw,36px);text-align:center;line-height:1.5;color:var(--text-1)">
+<div>从"会用"到"用好"，今天只是第一步</div>
+<div style="font-size:clamp(16px,1.8vw,24px);margin-top:clamp(8px,1vh,16px);letter-spacing:2px;color:var(--text-3)">TO BE CONTINUED</div>
 </div>
 </div>
-<div class="notes"><b>AI——当你不会用它的时候，它真的是垃圾。当你学会用它的时候，就能变废为宝。厉害的不是 AI，是人类的脑子。</b>预留十分钟自由提问。谢谢大家。</div>
+</div>
+<div class="notes">从"会用"到"用好"，今天只是第一步。TO BE CONTINUED。预留十分钟自由提问。谢谢大家。</div>
 </section>
-</div>
+</div><!-- /deck -->
+<div class="eco-bar" id="ecoBarContainer"></div>
 <div class="slide-number ctrl-hint" data-current="1" data-total="21"></div>
 <!-- 投票浮层（投影优化版） -->
 <div id="pollOverlay" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:#0a0a0a;z-index:9999;flex-direction:column;justify-content:center;align-items:center;padding:clamp(16px,3vh,40px) clamp(12px,3vw,60px);overflow-y:auto;-webkit-overflow-scrolling:touch">
@@ -1393,10 +1402,24 @@ function toggleP4(el){
 	        lastCard=0;
 	      }
 	      _origDeckGo(n);
+	      // 更新生态栏（runtime.js 翻页后）
+	      setTimeout(updateEcoBar, 50);
 	    };
 	  }
 
 	  // ── 本地翻页（直接操作 DOM，不依赖 runtime.js）──
+	  function updateEcoBar(){
+	    var active=document.querySelector('.slide.is-active');
+	    var ecoData=active&&active.querySelector('.eco-data');
+	    var container=document.getElementById('ecoBarContainer');
+	    if(!container) return;
+	    if(ecoData){
+	      container.innerHTML=ecoData.innerHTML;
+	      container.style.display='';
+	    }else{
+	      container.style.display='none';
+	    }
+	  }
 	  function localGoSlide(n){
 	    if(!n||n<1||n>total) return;
 	    var cur = document.querySelector('.slide.is-active');
@@ -1407,6 +1430,8 @@ function toggleP4(el){
 	    lastSlide = n;
 	    // 同时通知 runtime.js（如果存在）
 	    if(window.__deckGo) window.__deckGo(n-1);
+	    // 更新生态栏
+	    updateEcoBar();
 	    // ========== 翻页重置动效 ==========
 	    // P2：答案卡片折叠隐藏 + 同步服务器
 	    if(n===2){
@@ -1447,7 +1472,7 @@ function toggleP4(el){
     var changed=false;
 		    // 锁定状态同步；未锁定时仅读 lock，不跟页码
 		    if(d.lock!==undefined){ _locked=d.lock; window.__deckLocked = _locked; }
-		    if(d.lock && d.slide && d.slide !== lastSlide && Date.now() - _lastRemoteNav >= 2000){
+		    if(d.lock && d.slide && d.slide !== lastSlide && Date.now() - _lastRemoteNav >= 1200){
 		      _lastRemoteNav = Date.now();
 		      localGoSlide(d.slide);
 		    }
@@ -1510,12 +1535,12 @@ function toggleP4(el){
       }
     }
     // 生图投屏
-    if(d.imageOverlay!==undefined){
-      if(d.imageOverlay.show && d.imageOverlay.url){
+    if(d.imageOverlay && d.imageOverlay.show === true){
+      if(d.imageOverlay.url){
         showImageOverlay(d.imageOverlay.url, d.imageOverlay.prompt||'');
-      } else if(d.imageOverlay!==undefined && !d.imageOverlay.show){
-        hideImageOverlay();
       }
+    } else if(d.imageOverlay && d.imageOverlay.show === false){
+      hideImageOverlay();
     }
     // 换肤：直接切主题 CSS
     if(d.themeKey && d.themeKey!==_lkT){
@@ -1594,8 +1619,10 @@ function toggleP4(el){
   }
 
   // 每1秒轮询
-  setInterval(poll, 500);
+  setInterval(poll, 1500);
   poll();
+  // 初始加载时更新生态栏
+  updateEcoBar();
 
   // ── 投票浮层 ──
   var _pollTimer = null;
@@ -1603,6 +1630,7 @@ function toggleP4(el){
     var el = document.getElementById('pollOverlay');
     if(el) el.style.display = 'flex';
     refreshPollOverlay();
+    if(_pollTimer) clearInterval(_pollTimer);
     _pollTimer = setInterval(refreshPollOverlay, 15000);
   }
   function hidePollOverlay(){

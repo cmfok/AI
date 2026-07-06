@@ -6,7 +6,7 @@
 <title>人工对账 · Excel 模拟</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#1a1a2e;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;font-family:"Segoe UI","Helvetica Neue",sans-serif;overflow:hidden;padding:20px;gap:14px}
+body{background:#1a1a2e;display:flex;flex-direction:column;justify-content:center;align-items:center;min-height:100vh;font-family:"Segoe UI","Helvetica Neue",sans-serif;padding:20px;gap:14px}
 .wrap{position:relative;display:inline-block}
 .pain-tags{position:absolute;top:0;left:0;right:0;bottom:0;pointer-events:none;z-index:30}
 .pain{
@@ -67,7 +67,6 @@ body{background:#1a1a2e;display:flex;flex-direction:column;justify-content:cente
 .timer-result .result-text{text-align:left}
 .timer-result .result-text .big{font-size:20px;font-weight:700;color:#ff6b35}
 .timer-result .result-text .sub{font-size:12px;color:rgba(255,255,255,.25);transition:color .4s}
-body { transform: scale(0.95); transform-origin: top center; }
 </style>
 </head>
 <body>
@@ -202,10 +201,10 @@ function clearHighlight() {
 function moveCursorTo(row, col, cb) {
   const pos = getCellPos(row, col);
   if (!cursorEl) cursorEl = createCursor();
-  cursorEl.style.left = (pos.x+2) + 'px';
-  cursorEl.style.top = (pos.y+3) + 'px';
-  cursorEl.style.width = (pos.w-4) + 'px';
-  cursorEl.style.height = (pos.h-4) + 'px';
+  cursorEl.style.left = (pos.x) + 'px';
+  cursorEl.style.top = (pos.y) + 'px';
+  cursorEl.style.width = (pos.w) + 'px';
+  cursorEl.style.height = (pos.h) + 'px';
   clearHighlight();
   const el = document.getElementById(`cell_${row}_${col}`);
   if (el) el.classList.add('highlight');
