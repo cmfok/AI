@@ -3378,18 +3378,25 @@ function p12hrShowScoring(e){
     ''
   ];
   // Total: 408 lines
-  var total = lines.length;
-  lines = lines.concat(lines.slice());
-  el.innerHTML = '<div id="qnaCodeInner" style="position:absolute;top:0;left:0;right:0">' + lines.map(function(l){ return '<div style="white-space:nowrap;line-height:22px">'+l+'&nbsp;</div>'; }).join('') + '</div>';
+  var lineCount = lines.length;
+  // 将内容重复多遍，确保滚动时永远有内容
+  var repeat = 5;
+  var allLines = [];
+  for(var r = 0; r < repeat; r++){
+    allLines = allLines.concat(lines);
+  }
+  el.innerHTML = '<div id="qnaCodeInner" style="position:absolute;top:0;left:0;right:0">' + allLines.map(function(l){ return '<div style="white-space:nowrap;line-height:22px">'+l+'&nbsp;</div>'; }).join('') + '</div>';
   var inner = document.getElementById('qnaCodeInner');
   var pos = 0, lh = 22, step = 0;
+  var maxPos = lineCount * lh;
   function scroll(){
     step++;
     if(step >= 12){ step = 0; pos += lh; }
-    if(pos >= lh * total) pos = 0;
-    inner.style.transform = 'translateY(' + (-pos) + 'px)';
+    // 到达第一份内容的末尾时，把整个容器往上拉回开头，实现无缝循环
+    if(pos >= maxPos) { pos = 0; inner.style.transform = 'translateY(0px)'; }
+    else { inner.style.transform = 'translateY(' + (-pos) + 'px)'; }
     timer = requestAnimationFrame(scroll);
-	  }
+  }
 	  var s = document.querySelector('[data-title="互动答疑"]');
   if(s){
     var obs = new MutationObserver(function(){
