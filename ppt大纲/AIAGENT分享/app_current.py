@@ -39,7 +39,7 @@ SLIDES = [
     {"page": 9,  "title": "提示词工程",                   "tags": "提示词 工程 Prompt 角色 要求 参考 标准 派活"},
     {"page": 10, "title": "案例·约会翻车",               "tags": "案例 约会 知识库 背景 信息 适配度"},
     {"page": 11, "title": "上下文工程",                   "tags": "上下文 知识库 RAG 历史数据 参考模板 业务规则"},
-    {"page": 12, "title": "知识库搭建",                   "tags": "知识库 搭建 企业 着手 起步 从零 Trae Obsidian 向量 语义搜索 入门 进阶 构建 文档管理"},
+    {"page": 12, "title": "知识库搭建",                   "tags": "知识库 搭建 Trae Obsidian 向量 语义搜索 入门 进阶"},
     {"page": 13, "title": "案例·运费+招聘",              "tags": "案例 运费 对账 招聘 简历 约束 脚本 工作流 校验 工具"},
     {"page": 14, "title": "约束工程",                     "tags": "约束 工具调用 约束 验证 状态 错误处理 可观测 缰绳 MCP"},
     {"page": 15, "title": "案例·生日营销",               "tags": "案例 生日 营销 循环 自动 扫描 通知 回写"},
@@ -69,6 +69,20 @@ SLIDE_DESCRIPTIONS = [
     {"page": 17, "title": "数据隐私",               "desc": "AI时代的数据隐私保护：加密/私有化部署/本地化方案/防泄露措施"},
     {"page": 18, "title": "落地Checklist",         "desc": "AI落地的完整检查清单：场景识别→模型选择→提示词设计→约束构建→监控运维"},
 ]
+
+# ── 页面提示词持久化（可在控制台编辑，重启后保持）───────
+PROMPTS_FILE = os.path.join(PPT_DIR, 'slide_prompts.json')
+if os.path.exists(PROMPTS_FILE):
+    try:
+        with open(PROMPTS_FILE, 'r', encoding='utf-8') as f:
+            _saved = json.load(f)
+        _saved_map = {p['page']: p for p in _saved}
+        for _sd in SLIDE_DESCRIPTIONS:
+            if _sd['page'] in _saved_map:
+                _sd['desc'] = _saved_map[_sd['page']].get('desc', _sd['desc'])
+                _sd['title'] = _saved_map[_sd['page']].get('title', _sd['title'])
+    except Exception:
+        pass
 
 # 不展示问题的封面/过渡页（不参与 AI 分类，已有问题强制迁移）
 COVER_PAGES = {2, 4, 7}
@@ -2597,6 +2611,40 @@ def slides_total():
         return jsonify({"total": max(count, 1)})
     except Exception:
         return jsonify({"total": 22})  # 降级默认值
+
+
+# ── 页面提示词 API ──────────────────────────────────────
+@app.route('/api/slides/prompts', methods=['GET'])
+def get_slide_prompts():
+    """获取所有页面的提示词"""
+    return jsonify({'ok': True, 'prompts': [{'page': s['page'], 'title': s['title'], 'desc': s['desc']} for s in SLIDE_DESCRIPTIONS]})
+
+
+@app.route('/api/slides/prompts/save', methods=['POST'])
+def save_slide_prompt():
+    """保存某一页的提示词（desc + title）"""
+    data = request.get_json(silent=True) or {}
+    page = data.get('page')
+    desc = data.get('desc', '')
+    title = data.get('title')
+    if not page:
+        return jsonify({'ok': False, 'error': '缺少 page 参数'}), 400
+
+    # 更新 SLIDE_DESCRIPTIONS 内存（_build_semantic_system_prompt 实时生效）
+    for sd in SLIDE_DESCRIPTIONS:
+        if sd['page'] == page:
+            sd['desc'] = desc
+            if title:
+                sd['title'] = title
+            break
+
+    # 持久化到 JSON 文件
+    _all = [{'page': s['page'], 'title': s['title'], 'desc': s['desc']} for s in SLIDE_DESCRIPTIONS]
+    with open(PROMPTS_FILE, 'w', encoding='utf-8') as f:
+        json.dump(_all, f, ensure_ascii=False, indent=2)
+
+    return jsonify({'ok': True})
+
 
 # ── 演讲稿保存 ─────────────────────────────────────────
 SPEECH_FILE = os.path.join(PPT_DIR, 'speech.md')

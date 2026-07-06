@@ -142,6 +142,7 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
         <div class="sl" id="sl" style="margin-bottom:0">P1 · 封面</div>
         <div style="display:flex;gap:4px" id="editBtns">
           <button class="btn small" onclick="startEditSpeech()">✏️ 编辑</button>
+          <button class="btn small" onclick="togglePrompt()">📝 提示词</button>
           <button class="btn small" id="syncSpeechBtn" onclick="syncSpeechFromServer()" style="font-size:10px">⬇ 同步服务端</button>
         </div>
         <div style="display:none;gap:4px" id="saveBtns">
@@ -151,6 +152,15 @@ body{background:#f5f5f5;color:#222;font-family:'Inter','Noto Sans SC',sans-serif
       </div>
       <div class="sc" id="sc">加载中...</div>
       <textarea id="scEdit" style="display:none;width:100%;min-height:200px;background:#fff;color:#222;border:1px solid #ddd;border-radius:8px;padding:12px;font-size:15px;line-height:1.8;font-family:inherit;resize:vertical"></textarea>
+      <div id="promptArea" style="display:none;margin-top:10px;padding-top:10px;border-top:1px dashed rgba(0,0,0,.1)">
+        <div style="font-size:11px;color:#777;margin-bottom:6px">📝 页面提示词（AI 理解本页内容的依据）</div>
+        <div style="font-size:11px;color:#999;margin-bottom:4px" id="promptTitle"></div>
+        <textarea id="promptEdit" style="width:100%;min-height:80px;background:#fff;color:#222;border:1px solid #ddd;border-radius:8px;padding:10px;font-size:13px;line-height:1.6;font-family:inherit;resize:vertical"></textarea>
+        <div style="display:flex;gap:4px;margin-top:6px">
+          <button class="btn small on" onclick="savePrompt()">💾 保存提示词</button>
+          <button class="btn small" onclick="togglePrompt()">关闭</button>
+        </div>
+      </div>
     </div>
     <div class="q-hint" id="qHint" onclick="switchToQuestions()"></div>
     <div class="next-prev">
@@ -1027,6 +1037,55 @@ function saveSpeech(){
 }
 
 
+// ── 页面提示词编辑 ──
+var _promptOpen = false;
+function togglePrompt(){
+  if(_promptOpen){
+    document.getElementById('promptArea').style.display = 'none';
+    _promptOpen = false;
+    return;
+  }
+  // 加载当前页的提示词
+  fetch('/api/slides/prompts', {cache:'no-cache'}).then(function(r){return r.json();}).then(function(d){
+    if(d.ok && d.prompts){
+      var found = null;
+      for(var i=0;i<d.prompts.length;i++){
+        if(d.prompts[i].page === cur){ found = d.prompts[i]; break; }
+      }
+      if(found){
+        document.getElementById('promptEdit').value = found.desc || '';
+        document.getElementById('promptTitle').textContent = 'P' + found.page + ' · ' + found.title;
+      } else {
+        document.getElementById('promptEdit').value = '';
+        document.getElementById('promptTitle').textContent = 'P' + cur;
+      }
+    }
+    document.getElementById('promptArea').style.display = 'block';
+    _promptOpen = true;
+  }).catch(function(e){
+    console.warn('[prompt] 加载失败', e);
+  });
+}
+
+function savePrompt(){
+  var desc = document.getElementById('promptEdit').value.trim();
+  fetch('/api/slides/prompts/save', {
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({page: cur, desc: desc})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.ok){
+      document.getElementById('promptArea').style.display = 'none';
+      _promptOpen = false;
+    } else {
+      alert('保存失败: ' + (d.error||'未知错误'));
+    }
+  }).catch(function(e){
+    alert('网络错误');
+  });
+}
+
+
 // 构建页码网格
 function buildPageGrid(){
   var g=document.getElementById('pg');
@@ -1051,6 +1110,11 @@ function go(n){
   cur=n;
   document.querySelectorAll('.page-dot').forEach(function(d,i){d.className='page-dot'+(i+1===n?' active':'');});
   document.getElementById('cp').textContent='P'+n;
+  // 翻页时关闭提示词编辑器
+  if(_promptOpen){
+    document.getElementById('promptArea').style.display = 'none';
+    _promptOpen = false;
+  }
   upd(n);
   CC=0;
   fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:n})}).catch(function(e){console.error("go error:",e)});
