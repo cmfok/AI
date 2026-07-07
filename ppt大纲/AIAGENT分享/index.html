@@ -332,10 +332,6 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 			  [data-title="知识库搭建"],
 			  [data-title="驾驭工程"],
 			  [data-title="循环工程揭晓"]{scroll-padding-bottom:180px}
-			  /* 三页对话框底部用::after撑出空间避让生态栏 */
-			  [data-title="上下文工程揭晓"]::after,
-			  [data-title="驾驭工程"]::after,
-			  [data-title="循环工程揭晓"]::after{content:"";display:block;height:clamp(90px,12vh,120px);flex-shrink:0}
 	  .mt-l{margin-top:12px!important}.mt-m{margin-top:6px!important}
 	  /* ── 标题字号 ── */
 	  body .h1{font-size:clamp(40px,11vw,64px)!important}
@@ -568,7 +564,27 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	 	  [data-title="招聘简历"] .p12hr-upload-bar{flex-wrap:wrap!important;gap:4px!important}
 	 	  /* ── 脚本vs工作流：三卡片竖排 ── */
 	 	  [data-title="脚本vs工作流"] > div[style*="display:flex"]{flex-direction:column!important;gap:8px!important}
-	 	  [data-title="脚本vs工作流"] .g3{grid-template-columns:1fr!important;gap:6px!important}
+	 	  [data-title="脚本vs工作流"] .g3{grid-template-columns:1fr 1fr 1fr!important;gap:4px!important}
+	 	  [data-title="脚本vs工作流"] .g3 > div{padding:clamp(4px,0.8vh,8px)!important}
+	 	  [data-title="脚本vs工作流"] .g3 h4{font-size:clamp(11px,2.8vw,14px)!important;gap:2px!important}
+	 	  [data-title="脚本vs工作流"] .g3 h4 svg{width:clamp(14px,3vw,18px)!important;height:clamp(14px,3vw,18px)!important}
+	 	  [data-title="脚本vs工作流"] .g3 p{font-size:clamp(8px,2vw,10px)!important}
+	 	  [data-title="脚本vs工作流"] .g3 [style*="padding:2px 12px"]{font-size:clamp(7px,1.8vw,9px)!important;padding:1px 6px!important}
+	 	  /* P15 手机：决策矩阵场景卡片竖排 */
+	 	  [data-title="脚本vs工作流"] [style*="display:flex"][style*="align-items:flex-start"]{flex-wrap:wrap!important;flex-direction:row!important}
+	 	  [data-title="脚本vs工作流"] [style*="display:flex"][style*="align-items:flex-start"] > div:first-child{width:auto!important;flex-shrink:0!important;margin-right:6px!important}
+	 	  [data-title="脚本vs工作流"] [style*="display:flex"][style*="align-items:flex-start"] > div[style*="position:relative"]{flex:1!important;min-width:120px!important;margin:0!important;width:auto!important}
+	 	  [data-title="脚本vs工作流"] [style*="display:flex"][style*="align-items:flex-start"] > div:last-child{width:auto!important;flex-shrink:0!important;margin-left:4px!important;text-align:left!important}
+	 	  [data-title="脚本vs工作流"] [style*="display:flex"][style*="align-items:flex-start"] > div[style*="position:relative"]{height:auto!important;min-height:auto!important;margin:0!important;width:100%!important}
+	 	  [data-title="脚本vs工作流"] [style*="position:absolute"][style*="top:clamp"]{position:static!important;transform:none!important;display:inline-flex!important;margin:2px 0!important}
+	 	  [data-title="脚本vs工作流"] [style*="position:absolute"][style*="top:clamp"] [style*="display:flex"][style*="flex-direction:column"]{flex-direction:row!important;align-items:center!important;gap:4px!important}
+	 	  [data-title="脚本vs工作流"] [style*="position:absolute"][style*="top:clamp"] [style*="width:1px"][style*="height"]{display:none!important}
+	 	  [data-title="脚本vs工作流"] [style*="position:absolute"][style*="top:clamp"] [style*="border-radius:8px"]{padding:3px 8px!important;font-size:clamp(10px,2.5vw,12px)!important;white-space:normal!important}
+	 	  [data-title="脚本vs工作流"] [style*="position:relative"][style*="height:clamp(100px"]{height:auto!important;min-height:auto!important}
+	 	  /* 每个纬度只保留前2个场景卡片，其余隐藏 */
+	 	  [data-title="脚本vs工作流"] [style*="position:relative"][style*="height:clamp(100px"] > div[style*="position:absolute"]:nth-of-type(n+3){display:none!important}
+	 	  [data-title="脚本vs工作流"] [style*="min-width:clamp(72px"]{min-width:auto!important;font-size:clamp(10px,2.5vw,12px)!important;padding:2px 6px!important}
+	 	  [data-title="脚本vs工作流"] [style*="flex-direction:column"][style*="gap:clamp(28px"]{gap:10px!important}
 	 	  /* ── 生日营销：三栏变单列 ── */
 		 	  [data-title="生日营销"] .case-grid{flex-direction:column!important;gap:8px!important}
 		 	  [data-title="生日营销"] .case-col-left{flex:1!important;width:100%!important;order:-1!important}
@@ -598,9 +614,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	 	  [data-title="个人vs企业AI"] [style*="height:clamp(28px"]{height:clamp(18px,3vh,24px)!important;font-size:clamp(10px,2.5vw,12px)!important}
 	 	  [data-title="个人vs企业AI"] [style*="border-radius:8px"][style*="gap:8px"]{gap:4px!important}
 	 	  [data-title="个人vs企业AI"] [style*="border-radius:8px"][style*="display:flex"]{font-size:clamp(11px,2.8vw,14px)!important;padding:clamp(4px,0.6vh,8px) clamp(6px,1.5vw,10px)!important}
-	 	  /* 底部一句话总结正常排列 */
-	 	  [data-title="个人vs企业AI"] > div[style*="margin-top"][style*="linear-gradient"]{position:relative!important;width:100%!important;clear:both!important}
-
+	
 	 	}
 
 /* P1 cover terminal */
@@ -682,44 +696,15 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   </div>
 </div>
 <div class="notes">从会用AI，到用好AI</div>
-<div class="eco-spacer" style="height:clamp(60px,8vh,80px);flex-shrink:0"></div>
-<div class="eco-spacer" style="height:clamp(60px,8vh,80px);flex-shrink:0"></div>
-<div class="eco-spacer" style="height:clamp(60px,8vh,80px);flex-shrink:0"></div>
 </section>
 
 <!-- ====== 2. COVER ANIMATED ====== -->
 <section class="slide center tc v-center" data-title="封面-动画">
-<div data-anim="rise-in">
-<p class="kicker" style="letter-spacing:.2em;margin-bottom:28px">CM · 2026-07-07</p>
-<div class="cp1-stage" id="cp1Wrap">
-  <div class="cp1-sentence" id="cp1S1">
-    <span class="cp1-char" data-group="1">你</span>
-    <span class="cp1-char" data-group="1">真</span>
-    <span class="cp1-char" data-group="1">的</span>
-    <span class="cp1-char">会</span>
-    <span class="cp1-char">用</span>
-    <span class="cp1-char">A</span>
-    <span class="cp1-char">I</span>
-    <span class="cp1-char" data-group="1">吗</span>
-    <span class="cp1-char" data-group="1">？</span>
-  </div>
-  <div class="cp1-sentence" id="cp1S2" style="opacity:0;pointer-events:none">
-    <span class="cp1-char" data-group="2" style="opacity:0">从</span>
-    <span class="cp1-char">会</span>
-    <span class="cp1-char">用</span>
-    <span class="cp1-char">A</span>
-    <span class="cp1-char">I</span>
-    <span class="cp1-char" data-group="2" style="opacity:0">，</span>
-    <span class="cp1-char" data-group="2" style="opacity:0">到</span>
-    <span class="cp1-char" data-group="2" style="opacity:0">用</span>
-    <span class="cp1-char" data-group="2" style="opacity:0">好</span>
-    <span class="cp1-char" data-group="2" style="opacity:0">A</span>
-    <span class="cp1-char" data-group="2" style="opacity:0">I</span>
-  </div>
+<div style="display:flex;flex-direction:column;align-items:center;flex:1;width:100%;justify-content:flex-start;padding-top:10vh">
+  <h1 class="h1" id="p2s1" style="margin:0;transition:opacity .6s ease">你真的会用 AI 吗？</h1>
+  <h1 class="h1" id="p2s2" style="margin:0;opacity:0;transition:opacity .6s ease;position:absolute">从会用 AI，到用好 AI</h1>
 </div>
-</div>
-<p class="lede cp1-sub" id="cp1Sub1">重塑 AI 认知，教你落地用好 AI</p>
-<p style="margin-top:36px;color:var(--text-2);font-size:18px">重塑 AI 认知，教你落地用好 AI</p>
+<h2 class="h2" id="p2s3" style="margin-top:auto;padding-bottom:30vh;opacity:0;transition:opacity .8s ease;font-size:clamp(28px,4vw,65px)!important">重塑 AI 认知，教你落地用好 AI</h2>
 <div class="notes"><b>"你真的会用AI吗？" → "从会用AI，到用好AI"</b></div>
 </section>
 <!-- ====== 3. ALIEN LANGUAGE ====== -->
@@ -1365,6 +1350,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
 </div></div>
 <div class="notes">不是改怎么问，是<b>让 AI 知道它在跟谁打交道</b>。三个价值：可迁移、可生长、有记忆。上下文工程最重要的是<b>知识库</b>。</div>
+
+<div style="height:clamp(80px,10vh,100px);flex-shrink:0"></div>
 </section>
 <!-- ====== 11. KNOWLEDGE BASE ====== -->
 <section class="slide" data-title="知识库搭建">
@@ -1596,7 +1583,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 [data-title="招聘简历"] .p12hr-ent-tbl{width:100%;border-collapse:collapse;margin-top:2px}
 [data-title="招聘简历"] .p12hr-ent-tbl td{padding:2px 6px;font-size:max(9px,0.5vw);border-bottom:1px solid var(--border)}
 [data-title="招聘简历"] .p12hr-ent-tbl tr:last-child td{border-bottom:none}
-[data-title="招聘简历"] .p12hr-cards-wrap{flex-shrink:0;flex-basis:70%;display:flex;flex-direction:column;justify-content:center;min-height:0;margin-top:6px}
+[data-title="招聘简历"] .p12hr-cards-wrap{flex-shrink:0;flex-basis:auto;display:flex;flex-direction:column;justify-content:center;min-height:0;margin-top:6px}
 [data-title="招聘简历"] .p12hr-cards-wrap .comp-grid{margin-top:0!important}
 @media(max-width:768px){
   [data-title="招聘简历"] .p12hr-body{grid-template-columns:1fr;grid-template-rows:1fr 1fr}
@@ -1610,8 +1597,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 
 <!-- upload bar -->
 <div class="p12hr-upload-bar">
-  <span class="p12hr-file-status" id="p12hrFileStatus">选择一份 PDF 简历体验 AI 分析</span>
-  <label class="p12hr-file-btn">📎 选择简历文件<input type="file" id="p12hrResumeFile" accept=".pdf"></label>
+  <span class="p12hr-file-status" id="p12hrFileStatus">点击「开始分析」体验 AI 简历评估</span>
+  <button class="p12hr-file-btn" id="p12hrStartBtn" onclick="p12hrStartAnalysis()">🚀 开始分析</button>
 </div>
 
 <!-- dual panels (上) -->
@@ -1619,7 +1606,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
   <div class="p12hr-panel">
     <div class="p12hr-ptitle">🤖 MiMo 多模态（通用AI）</div>
     <div class="p12hr-chat" id="p12hrChatLeft">
-      <div class="msg-box msg-ai" style="border-left-color:var(--border);color:var(--text-3)">上传 PDF 简历后自动分析</div>
+      <div class="msg-box msg-ai" style="border-left-color:var(--border);color:var(--text-3)">点击「开始分析」加载简历</div>
     </div>
     <div class="p12hr-status" id="p12hrStatusLeft"></div>
   </div>
@@ -1629,17 +1616,17 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
       <a href="#" onclick="p12hrShowScoring(event)">📋 评分标准</a>
     </div>
     <div class="p12hr-chat" id="p12hrChatRight">
-      <div class="msg-box msg-ai" style="border-left-color:var(--border);color:var(--text-3)">上传 PDF 简历后自动分析</div>
+      <div class="msg-box msg-ai" style="border-left-color:var(--border);color:var(--text-3)">点击「开始分析」加载简历</div>
     </div>
     <div class="p12hr-status" id="p12hrStatusRight"></div>
   </div>
 </div>
 
-<!-- 卡片 (下) 70% -->
+<!-- 卡片 (下) 精简为标题行 -->
 <div class="p12hr-cards-wrap">
-<div class="comp-grid">
-<div class="comp-card comp-bad"><div class="ct">❌ 只用模型 + 提示词</div><p>通用分析，不精准。AI 能聊，但分析维度单一，缺少结构化评估。</p></div>
-<div class="comp-card comp-good"><div class="ct">✅ 套上驾驭工程六件套</div><p>多维度评分 + JD 匹配 + 预警推荐。AI 不仅分析，还能给出量化评分和录用建议。</p></div>
+<div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
+  <span style="background:rgba(229,62,62,.08);color:#e53e3e;padding:3px 12px;border-radius:6px;font-size:clamp(11px,1vw,15px);font-weight:600;white-space:nowrap">❌ 只用模型 + 提示词</span>
+  <span style="background:rgba(46,160,67,.08);color:#2ea043;padding:3px 12px;border-radius:6px;font-size:clamp(11px,1vw,15px);font-weight:600;white-space:nowrap">✅ 套上驾驭工程六件套</span>
 </div>
 </div>
 
@@ -1653,24 +1640,32 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 // ── P12 HR 简历分析逻辑（内联自 demo_hr.html，所有函数/变量加 p12hr 前缀避免冲突）──
 let p12hr_resumeB64='', p12hr_resumeName='', p12hr_resumeBlobUrl='', p12hr_lastScoring=null, p12hr_pollTimer=null, p12hr_taskId=null;
 
-document.getElementById('p12hrResumeFile').addEventListener('change',async function(e){
-  const file=e.target.files[0];if(!file)return;
-  if(p12hr_resumeBlobUrl)URL.revokeObjectURL(p12hr_resumeBlobUrl);
-  p12hr_resumeBlobUrl=URL.createObjectURL(file);
-  document.getElementById('p12hrFileStatus').innerHTML='📄 <a href="'+p12hr_resumeBlobUrl+'" target="_blank" style="color:var(--accent);text-decoration:underline">'+file.name+'</a>';
+// 点击"开始分析"→ 从服务端加载内置简历
+async function p12hrStartAnalysis(){
+  var btn=document.getElementById('p12hrStartBtn');
+  if(btn){ btn.textContent='⏳ 分析中...'; btn.disabled=true; }
+  document.getElementById('p12hrFileStatus').innerHTML='📄 刘芯淼-简历(1).pdf';
   try{
-    const b64=await new Promise((resolve,reject)=>{
-      const r=new FileReader();
-      r.onload=()=>resolve(r.result.split(',')[1]);
-      r.onerror=()=>reject(new Error('读取失败'));
-      r.readAsDataURL(file);
+    var resp=await fetch('/resume.pdf');
+    var blob=await resp.blob();
+    if(p12hr_resumeBlobUrl)URL.revokeObjectURL(p12hr_resumeBlobUrl);
+    p12hr_resumeBlobUrl=URL.createObjectURL(blob);
+    // 读 base64
+    var b64=await new Promise(function(resolve,reject){
+      var r=new FileReader();
+      r.onload=function(){resolve(r.result.split(',')[1]);};
+      r.onerror=function(){reject(new Error('读取失败'));};
+      r.readAsDataURL(blob);
     });
-    p12hr_resumeB64=b64;p12hr_resumeName=file.name;
+    p12hr_resumeB64=b64; p12hr_resumeName='刘芯淼-简历(1).pdf';
     p12hrAnalyzeBoth();
-  }catch(err){alert('文件读取失败: '+err.message);}
-});
+  }catch(err){
+    alert('加载简历失败: '+err.message);
+    if(btn){ btn.textContent='🚀 开始分析'; btn.disabled=false; }
+  }
+	}
 
-function p12hrRenderMD(md){
+	function p12hrRenderMD(md){
   if(!md)return'';
   return md
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -2140,6 +2135,8 @@ function p12hrShowScoring(e){
 <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
 </div></div>
 <div class="notes"><b>驾驭工程 = 给 AI 装上手脚、套上缰绳。</b>六大组件：工具调用、约束安全、验证校验、状态管理、错误处理、可观测性。驾驭工程最重要的是脚本和工作流。</div>
+
+<div style="height:clamp(80px,10vh,100px);flex-shrink:0"></div>
 </section>
 <!-- ====== 15. SCRIPT VS WORKFLOW ====== -->
 <section class="slide" data-title="脚本vs工作流">
@@ -2928,6 +2925,8 @@ function p12hrShowScoring(e){
 <span class="pill" style="border-color:#8E75B2;background:rgba(142,117,178,.08)"><img onerror="this.classList.add('err')" src="/ai/icon/googlegemini.svg"/><span class="dot" style="background:#8E75B2"></span>Gemini</span>
 </div></div>
 <div class="notes">循环工程让 AI 从「一次性工具」变成「持续收敛引擎」。左列四步（执行→验证→修正→收敛）是核心闭环，右列展示运费对账的真实循环过程——<b>AI 自己发现问题（广州仓字段不匹配）、自己修正、重新核对通过。</b>企业进阶：L1自查→L2复盘→L3会诊→L4绩效。</div>
+
+<div style="height:clamp(80px,10vh,100px);flex-shrink:0"></div>
 </section>
 <!-- ====== 18. PERSONAL VS ENTERPRISE ====== -->
 <section class="slide" data-title="个人vs企业AI">
@@ -4112,31 +4111,31 @@ function toggleP4(el){
 })();
 
 // ═══ P1 封面动效：你真的会用AI吗？ → 从会用AI，到用好AI ═══
-(function(){
-  var s1 = document.getElementById('cp1S1');
-  var s2 = document.getElementById('cp1S2');
-  if(!s1 || !s2) return;
-  var _activated = false;
-  window.showMorph = function(force){
-    var target = (force !== undefined) ? !!force : !_activated;
-    if(target === _activated) return;
-    if(target){
-      _activated = true;
-      s1.querySelectorAll('[data-group="1"]').forEach(function(el){el.style.color='transparent'});
-      s1.style.opacity = '0';
-      s2.style.opacity = '1';
-      s2.querySelectorAll('[data-group="2"]').forEach(function(el){el.style.opacity='1'});
-      setTimeout(function(){var sub=document.getElementById('cp1Sub1');if(sub)sub.classList.add('show')},800);
-    } else {
-      _activated = false;
-      s1.style.opacity = '1';
-      s1.querySelectorAll('[data-group="1"]').forEach(function(el){el.style.color=''});
-      s2.style.opacity = '0';
-      s2.querySelectorAll('[data-group="2"]').forEach(function(el){el.style.opacity='0'});
-      var sub=document.getElementById('cp1Sub1');if(sub)sub.classList.remove('show');
-    }
-  };
-})();
+	(function(){
+	  var s1 = document.getElementById('p2s1');
+	  var s2 = document.getElementById('p2s2');
+	  var s3 = document.getElementById('p2s3');
+	  if(!s1 || !s2 || !s3) return;
+	  var _activated = false;
+	  window.showMorph = function(force){
+	    var target = (force !== undefined) ? !!force : !_activated;
+	    if(target === _activated) return;
+	    if(target){
+	      _activated = true;
+	      // Step 1: 第一句淡出
+	      s1.style.opacity = '0';
+	      // Step 2: 第二句淡入
+	      setTimeout(function(){ s2.style.opacity = '1'; }, 600);
+	      // Step 3: 2秒后第三句淡入
+	      setTimeout(function(){ s3.style.opacity = '1'; }, 2600);
+	    } else {
+	      _activated = false;
+	      s1.style.opacity = '1';
+	      s2.style.opacity = '0';
+	      s3.style.opacity = '0';
+	    }
+	  };
+	})();
 </script>
 <div id="mdPopup" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.92);z-index:99999;padding:20px">
 <div style="max-width:860px;margin:clamp(30px,5vh,60px) auto;background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 20px 60px rgba(0,0,0,.5)">
@@ -4530,27 +4529,35 @@ async function runTerminal(){
   await out(el,g('>>> ')+w('purpose')+'\n',300);
   await out(el,'  '+w('通过本次分享，希望能让大家对AI多一分了解，')+'\n',500);
   await out(el,'  '+b('<b>让AI可以更好地赋能大家生活或工作提效。</b>')+'\n\n',500);
-  await out(el,g('>>> ')+w('join')+'\n',300);
-		  if(window.innerWidth<768){
-		    q='<div style="background:#fff;display:inline-block;padding:6px;border-radius:6px;margin:2px 0 4px"><img src="/qrcode.png" alt="QR" style="display:block;width:clamp(120px,30vw,200px);height:auto"></div>';
-			  }else{
-			    q='<div class="qr-wrap"><pre>';
-			    for(var qi=0;qi<QR.length;qi++){q+=QR[qi].replace(/./g,function(x){return x+x})+'\n';}
-			    q+='</pre></div>';
-			  }
-		  q+='<div style="margin:2px 0">'+b('\uD83D\uDCCC \u73B0\u573A\u63D0\u95EE / \u6295\u7968\uFF1A')+link('http://106.53.168.220:8008/ask','http://106.53.168.220:8008/ask')+'</div>\n';
-	  el.innerHTML+=q;
+	  await out(el,g('>>> ')+w('join')+'\n',300);
+		  var _qrCode = '<div style="background:#fff;display:inline-block;padding:6px;border-radius:6px;margin:2px 0 4px"><img src="/qrcode.png" alt="QR" style="display:block;width:clamp(120px,30vw,200px);height:auto"></div>';
+		  _qrCode+='<div style="margin:2px 0">'+b('\uD83D\uDCCC \u73B0\u573A\u63D0\u95EE / \u6295\u7968\uFF1A')+link('http://106.53.168.220:8008/ask','http://106.53.168.220:8008/ask')+'</div>\n';
+	  el.innerHTML+=_qrCode;
 	  el.innerHTML+='>>> <span class="cursor"></span>';
 }
 function initQuestions(){
   var el=document.getElementById('termRight');
   if(!el)return;
   (function f(){fetch('/api/questions').then(function(x){return x.json()}).then(function(d){
-    if(!d||!d.length){el.innerHTML='<span style="color:#8b949e">暂无提问，扫二维码提问...</span>';return;}
-    var h='';var n=Math.min(d.length,20);
+    // 兼容两种格式：旧版数组 or 新版 {by_page, total}
+    var list = Array.isArray(d) ? d : [];
+    if(!Array.isArray(d)){
+      var bp = d.by_page || {};
+      for(var k in bp){ list = list.concat(bp[k]); }
+    }
+    if(!list.length){el.innerHTML='<span style="color:#8b949e">暂无提问，扫二维码提问...</span>';return;}
+    var h='';var n=Math.min(list.length,20);
     for(var i=0;i<n;i++){
-      var qq=d[i];var p=qq.page?'P'+qq.page:'';var t=qq.time||'';
-      h+='<div style="padding:6px 0;border-bottom:1px solid #21262d"><div style="font-size:clamp(11px,1.1vw,14px);color:#e6edf3">'+esc(qq.question||qq.q||'')+'</div><div style="font-size:clamp(9px,0.8vw,11px);color:#8b949e;margin-top:2px">'+p+(p&&t?' · ':'')+t+'</div></div>';
+	      var qq=list[i];
+	      var text = qq.refined || qq.question || qq.q || '';
+	      // 关键词高亮
+	      var hl = esc(text)
+	        .replace(/(AI|人工智能)/g, '<span style="color:#58a6ff">$1</span>')
+	        .replace(/(提示词|Prompt|上下文)/g, '<span style="color:#7ee787">$1</span>')
+	        .replace(/(模型|LLM|大模型)/g, '<span style="color:#d2a8ff">$1</span>')
+	        .replace(/(数据|隐私|安全)/g, '<span style="color:#f78166">$1</span>')
+	        .replace(/(工程|驾驭|循环)/g, '<span style="color:#ffa657">$1</span>');
+	      h+='<div style="padding:clamp(4px,.4vh,8px) 0;border-bottom:1px solid #21262d;font-size:clamp(15px,1.8vw,22px);line-height:1.5;color:#e6edf3">'+hl+'</div>';
     }
     el.innerHTML=h;
   }).catch(function(){})})();setInterval(f,3000);
