@@ -897,7 +897,7 @@ var _p4open=0;
 var _speechData = {};  // 从 speech.md 动态加载
 
 // 演讲稿服务器地址（本地不存在时从服务器下载）
-var SPEECH_SERVER_URL = 'https://8008.cmfok.online/speech.md';
+var SPEECH_SERVER_URL = 'http://106.53.168.220:8008/speech.md';
 
 function loadSpeech(){
   fetch('speech.md',{cache:'no-store'}).then(function(r){
