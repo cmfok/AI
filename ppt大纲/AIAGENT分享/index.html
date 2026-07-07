@@ -3483,6 +3483,8 @@ function toggleP4(el){
 	  var lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, lastCoverP1=false;
 	  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0, _lkP4=0, _lkO=false, _lkT=false, _lkF=false, _lkCt=false, _lkRa=false;
 	  var _locked=false, _firstPoll=true, _lastRemoteNav=0, _lastAnswerText='';
+	  // 从 localStorage 恢复已读答案，避免刷新后重复弹出
+	  try{ var saved = localStorage.getItem('_lastAnswerText'); if(saved) _lastAnswerText = saved; }catch(e){}
 
 	  var lastSlide=1;  // 当前页码（1-based），用于 touch 和 sync
 
@@ -3733,17 +3735,19 @@ function toggleP4(el){
       else { stopSmoothScroll(); }
     }
 
-    // AI 回答：检测到新答案 → 翻到对应页 + 展示
-    if(d.answer && d.answer !== _lastAnswerText && d.answer_slide){
-      _lastAnswerText = d.answer;
-      // 翻到答案所在页
-      var targetSlide = parseInt(d.answer_slide) || 1;
-      if(targetSlide >= 1 && targetSlide <= total){
-        localGoSlide(targetSlide);
-      }
-      // 展示答案弹出
-      window.showAnswerPopup(d.answer_question || '', d.answer, targetSlide);
-    }
+	    // AI 回答：检测到新答案 → 翻到对应页 + 展示
+	    if(d.answer && d.answer !== _lastAnswerText && d.answer_slide){
+	      _lastAnswerText = d.answer;
+	      // 持久化已读答案，刷新后不再重复弹出
+	      try{ localStorage.setItem('_lastAnswerText', _lastAnswerText); }catch(e){}
+	      // 翻到答案所在页
+	      var targetSlide = parseInt(d.answer_slide) || 1;
+	      if(targetSlide >= 1 && targetSlide <= total){
+	        localGoSlide(targetSlide);
+	      }
+	      // 展示答案弹出
+	      window.showAnswerPopup(d.answer_question || '', d.answer, targetSlide);
+	    }
 
 
   }
@@ -3909,6 +3913,9 @@ function toggleP4(el){
 	      el.style.transform = 'translateY(100%)';
 	      setTimeout(function(){ el.style.display = 'none'; }, 300);
 	    }
+	    // 用户手动关闭后清除已读记录，下次新答案可重新弹出
+	    try{ localStorage.removeItem('_lastAnswerText'); }catch(e){}
+	    _lastAnswerText = '';
 	    if(_hideAnswerTimer){ clearTimeout(_hideAnswerTimer); _hideAnswerTimer = null; }
 	  };
   // 点击空白区域不会误关——只有点 ✕ 才关
