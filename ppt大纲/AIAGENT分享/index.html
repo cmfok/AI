@@ -321,7 +321,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  html,body{overflow-x:hidden;width:100%}
 	  /* ── 基础间距 ── */
 	  .deck-header{position:fixed!important;top:0!important;left:0!important;right:0!important;font-size:10px!important;background:#fff;padding:8px 16px;box-shadow:0 1px 6px rgba(0,0,0,.1);z-index:100;border-radius:0!important}
-		  .slide{padding:clamp(30px,3.5vw,44px) clamp(12px,4vw,20px) clamp(160px,20vw,180px);min-height:100vh;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+		  .slide{padding:clamp(30px,3.5vw,44px) clamp(12px,4vw,20px) clamp(160px,20vw,180px)!important;min-height:100vh;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 	  .mt-l{margin-top:12px!important}.mt-m{margin-top:6px!important}
 	  /* ── 标题字号 ── */
 	  body .h1{font-size:clamp(40px,11vw,64px)!important}
@@ -480,16 +480,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
  	  [data-title="模型"] .p4-step3,
  	  [data-title="模型"] .p4-step3-eq{grid-template-columns:1fr!important;gap:10px!important}
  	  [data-title="模型"] .p4-brand-block-body{grid-template-columns:1fr!important}
- 	   	  /* ── P14：驾驭工程手机适配 ── */
- 	  [data-title="驾驭工程"] .p13-body{grid-template-columns:1fr!important;gap:12px!important}
- 	  [data-title="驾驭工程"] .p13-cards{gap:6px!important}
- 	  [data-title="驾驭工程"] .p13-card{padding:10px 12px!important}
- 	  [data-title="驾驭工程"] .p13-card h4{font-size:16px!important;margin-bottom:2px!important}
- 	  [data-title="驾驭工程"] .p13-card p{font-size:12px!important}
- 	  [data-title="驾驭工程"] .p13-dialog{flex:0 1 auto!important}
- 	  [data-title="驾驭工程"] .p13-ftree{width:100%!important;max-height:80px!important}
- 	  [data-title="驾驭工程"] .p13-ftbody{max-height:60px!important;overflow-y:auto!important}
- 	  /* ── P13 Apple分段控件 + P19表格padding ── */
+ 	 	  /* ── P13 Apple分段控件 + P19表格padding ── */
  	  .compare-table th,.compare-table td{padding:10px 8px!important;font-size:13px!important}
  	  /* ── P7 手机端标签切换 ── */
  	  [data-title="提示词工程 · 案例"] .p6-tabs{display:flex!important;gap:0;margin-bottom:8px;background:var(--bg-soft,#f2f2f4);border-radius:10px;padding:3px}
@@ -506,6 +497,21 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
  	  [data-title="知识库搭建"] .p10-tab[data-p10="silver"].active{color:#666;background:rgba(150,150,150,.12)}
  	  [data-title="知识库搭建"] .p10-tab[data-p10="gold"].active{color:#b8860b;background:rgba(255,215,0,.15)}
 	 	  [data-title="知识库搭建"] [data-p10-side]:not(.active){display:none!important}
+	 	  /* ── P14 手机：驾驭工程压缩适配 ── */
+	 	  [data-title="驾驭工程"] .p13-cards{grid-template-columns:1fr 1fr!important;gap:4px!important}
+	 	  [data-title="驾驭工程"] .p13-card{padding:8px 10px!important}
+	 	  [data-title="驾驭工程"] .p13-card h4{font-size:clamp(13px,3.5vw,16px)!important;margin:0!important}
+	 	  [data-title="驾驭工程"] .p13-card p{font-size:clamp(10px,2.8vw,12px)!important}
+	 	  [data-title="驾驭工程"] .callout-block{font-size:clamp(12px,3.5vw,14px)!important;padding:8px 12px!important;margin-bottom:4px!important}
+	 	  [data-title="驾驭工程"] .p13-dialog{flex:0 1 auto!important;max-height:200px!important}
+	 	  [data-title="驾驭工程"] .p13-dbody{flex-direction:row!important}
+	 	  [data-title="驾驭工程"] .p13-ftree{width:clamp(80px,22vw,120px)!important;max-height:150px!important}
+	 	  [data-title="驾驭工程"] .p13-ftbody{max-height:130px!important;overflow-y:auto!important}
+	 	  [data-title="驾驭工程"] .p13-chat{flex:1!important;min-width:0!important}
+	 	  [data-title="驾驭工程"] .p13-ububble{font-size:clamp(11px,2.8vw,13px)!important;padding:clamp(4px,1vw,8px) clamp(6px,1.5vw,10px)!important}
+	 	  [data-title="驾驭工程"] .p13-abubble{font-size:clamp(11px,2.8vw,13px)!important;padding:clamp(4px,1vw,8px) clamp(6px,1.5vw,10px)!important}
+	 	  [data-title="驾驭工程"] .p13-ftfile{font-size:clamp(9px,2.2vw,11px)!important}
+	 	  [data-title="驾驭工程"] .p13-ftlabel{font-size:clamp(10px,2.5vw,12px)!important}
 	 	  /* ── 封面-动画：标题防溢出 ── */
 	 	  [data-title="封面-动画"] .cp1-stage{width:100%!important;overflow:hidden!important}
 	 	  [data-title="封面-动画"] .cp1-sentence{white-space:normal!important;font-size:clamp(36px,9vw,64px)!important;text-align:center!important;word-break:break-word!important}
