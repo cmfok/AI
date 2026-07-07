@@ -3908,16 +3908,14 @@ function toggleP4(el){
 	    _hideAnswerTimer = setTimeout(hideAnswerPopup, 30000);
 	  };
 	  window.hideAnswerPopup = function(){
-	    var el = document.getElementById('answerPopup');
-	    if(el){
-	      el.style.transform = 'translateY(100%)';
-	      setTimeout(function(){ el.style.display = 'none'; }, 300);
-	    }
-	    // 用户手动关闭后清除已读记录，下次新答案可重新弹出
-	    try{ localStorage.removeItem('_lastAnswerText'); }catch(e){}
-	    _lastAnswerText = '';
-	    if(_hideAnswerTimer){ clearTimeout(_hideAnswerTimer); _hideAnswerTimer = null; }
-	  };
+		    var el = document.getElementById('answerPopup');
+		    if(el){
+		      el.style.transform = 'translateY(100%)';
+		      setTimeout(function(){ el.style.display = 'none'; }, 300);
+		    }
+		    // 只关掉本机的弹窗，不清已读记录，避免下次轮询又弹出来
+		    if(_hideAnswerTimer){ clearTimeout(_hideAnswerTimer); _hideAnswerTimer = null; }
+		  };
   // 点击空白区域不会误关——只有点 ✕ 才关
 
 
