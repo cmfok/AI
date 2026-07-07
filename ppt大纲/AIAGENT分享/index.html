@@ -496,7 +496,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 .qr-wrap{background:#fff;display:inline-block;padding:4px;margin:2px 0 4px;border-radius:4px}
 .qr-wrap pre{margin:0;font-size:clamp(7px,0.8vw,11px);line-height:1;color:#000;font-family:'Courier New','Courier','Noto Sans Mono',monospace;letter-spacing:0;word-spacing:0;font-kerning:none;white-space:pre;width:fit-content}
 [data-title="封面"]{background:#0d1117!important}
-@media(max-width:768px){.terminal{font-size:clamp(13px,3.2vw,16px)!important;border:none!important}.qr-wrap pre{font-size:clamp(6px,1.5vw,9px)!important}[data-title="封面"] [style*="display:flex"][style*="gap:clamp(8px"]{flex-direction:column!important}[data-title="封面"] [style*="display:flex"][style*="gap:clamp(8px"]>div:last-child{display:none!important}[data-title="封面"] [style*="display:flex"][style*="gap:6px"]{display:none!important}}
+@media(max-width:768px){.terminal{font-size:clamp(13px,3.2vw,16px)!important;border:none!important}.qr-wrap pre{font-size:clamp(6px,1.5vw,9px)!important}[data-title="封面"]{padding:clamp(10px,2vw,16px)!important}[data-title="封面"] [style*="display:flex"][style*="gap:clamp(8px"]{flex-direction:column!important;gap:6px!important}[data-title="封面"] [style*="display:flex"][style*="gap:clamp(8px"]>div:last-child{display:none!important}[data-title="封面"] [style*="display:flex"][style*="gap:6px"]{display:none!important}}
 </style>
 <script defer="" src="assets/runtime.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
@@ -4319,7 +4319,17 @@ C.yel=function(s){return '<span style="color:#d29922">'+s+'</span>'};
 function esc(s){return s.replace(/</g,'&lt;').replace(/>/g,'&gt;')}
 function bar(f,t,l){var p=t>0?Math.min(Math.round(f/t*100),100):0,s='',L=l||20;for(var i=0;i<L;i++)s+=i<Math.round(p/100*L)?'█':'░';return s+' '+p+'%'}
 function link(u,t){return '<a href="'+esc(u)+'" target="_blank">'+esc(t)+'</a>'}
-function out(el,html,delay){el.innerHTML+=html;return new Promise(function(r){setTimeout(r,delay||0)})}
+function out(el,html,delay){
+  el.innerHTML+=html;
+  // 终端内容超出可见区域时，移除顶部行实现无限滚动
+  if(el.id==='termLeft' || el.id==='termRight'){
+    while(el.scrollHeight > el.clientHeight && el.children.length > 3){
+      el.removeChild(el.firstChild);
+    }
+    el.scrollTop = el.scrollHeight;
+  }
+  return new Promise(function(r){setTimeout(r,delay||0)})
+}
 var QR=["                               "," ███████ ██  █     ███ ███████ "," █     █  ███    █████ █     █ "," █ ███ █  ██  █ ████ █ █ ███ █ "," █ ███ █ █ ██  ███ █ █ █ ███ █ "," █ ███ █ █ █ ███ █ █ █ █ ███ █ "," █     █ ████ ███  █ █ █     █ "," ███████ █ █ █ █ █ █ █ ███████ ","         █   █ █  ███          "," █   █ ████ ███████ ███████  █ "," █ █    █  ██        ██  █████ "," ██ ██ █ █ ██ ███     ██ █   █ ","  █  █  █████ █ ████  ████  ██ "," ██   ██ ████ █   █ ███  ██ █  "," █  ██   █   ███ █████ █  ████ ","   ██████   █    █   █ █ █   █ ","  ██ ██ █ █  █ █  ██ ██ █  ███ ","     ███  ████████ █ ██ █   █  "," █ ██   █ ████    ██ █ █    ██ ","   █ █ █ █   ████  █   █ ███ █ ","   ██ █ ██ █  █ ██   █████████ "," ██    ███    █      ██████  █ ","         ██  ███ █ ███   █ █ █ "," ███████ █ ██    ██ ██ █ ███ █ "," █     █  ██ █ █  ██ █   █████ "," █ ███ █ ██ █ ████ ███████  █  "," █ ███ █   ██     █ ██ █████   "," █ ███ █  █████ █  █  ███  ███ "," █     █   ███  ██   ████   ██ "," ███████ ████ ██       █ ████  ","                               "];
 async function runTerminal(){
   var el=document.getElementById('termLeft');
