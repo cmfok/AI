@@ -411,24 +411,26 @@ document.getElementById('moveOverlay').addEventListener('click', function(e){
 // ── 加载问题列表 ──
 function applyQuestionsData(d){
   var bp = d.by_page || {};
+  var newKeys = {};
   for(var k in bp){
     var qs = bp[k];
     for(var i=0;i<qs.length;i++){
       var q = qs[i];
       var sid = String(q.id);
       if(_deletedIds[sid]) continue;
+      newKeys[sid] = true;
       var refined = q.refined || q.question;
       if(!_qdata[sid]){
         _qdata[sid] = {
-          q: refined,           // 显示用：LLM 改写后的问题
-          o: q.original || q.question,  // 原始问题（用于对比显示）
+          q: refined,
+          o: q.original || q.question,
           p: q.page||1,
           answer: '', loading: false, error: '',
           n: q.name||'匿名',
-          t: q.type,             // 'share' | 'question' | null
-          s: q.source || 'manual',  // 来源
-          cp: q.candidate_pages || [],  // 候选页
-          mp: q.multi_page || false    // 多页面标记
+          t: q.type,
+          s: q.source || 'manual',
+          cp: q.candidate_pages || [],
+          mp: q.multi_page || false
         };
       }
       else {
@@ -441,6 +443,13 @@ function applyQuestionsData(d){
         _qdata[sid].cp = q.candidate_pages || [];
         _qdata[sid].mp = q.multi_page || false;
       }
+    }
+  }
+  // 清理服务器已不存在的旧数据
+  var allKeys = Object.keys(_qdata);
+  for(var i=0;i<allKeys.length;i++){
+    if(!newKeys[allKeys[i]] && !_deletedIds[allKeys[i]]){
+      delete _qdata[allKeys[i]];
     }
   }
   renderQuestions();
