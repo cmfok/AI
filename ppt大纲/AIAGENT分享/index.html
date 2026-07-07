@@ -3735,8 +3735,8 @@ function toggleP4(el){
       else { stopSmoothScroll(); }
     }
 
-	    // AI 回答：检测到新答案 → 翻到对应页 + 展示（锁定状态下忽略）
-	    if(d.answer && d.answer !== _lastAnswerText && d.answer_slide && !_locked){
+	    // AI 回答：检测到新答案 → 翻到对应页 + 展示（锁定状态下仍然执行，因为是控制台主动触发的）
+	    if(d.answer && d.answer !== _lastAnswerText && d.answer_slide){
 	      _lastAnswerText = d.answer;
 	      // 持久化已读答案，刷新后不再重复弹出
 	      try{ localStorage.setItem('_lastAnswerText', _lastAnswerText); }catch(e){}
