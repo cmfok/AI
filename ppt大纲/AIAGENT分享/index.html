@@ -3564,7 +3564,7 @@ function toggleP4(el){
 		  var container=document.getElementById('ecoBarContainer');
 		  if(!container) return;
 		  var active=document.querySelector('.slide.is-active');
-		  if(!active){ container.style.display='none'; adjustSlidePadding(0); return; }
+		  if(!active){ container.style.display='none'; return; }
 
 		  // 先清掉之前隐藏的内联 .eco-bar（恢复可见）
 		  document.querySelectorAll('.slide .eco-bar[style*="display:none"]').forEach(function(el){
@@ -3576,7 +3576,6 @@ function toggleP4(el){
 		  if(ecoData){
 		    container.innerHTML=ecoData.innerHTML;
 		    container.style.display='';
-		    adjustSlidePadding(container.offsetHeight);
 		    return;
 		  }
 
@@ -3586,29 +3585,12 @@ function toggleP4(el){
 		    container.innerHTML=ecoBar.innerHTML;
 		    container.style.display='';
 		    ecoBar.style.display='none';
-		    adjustSlidePadding(container.offsetHeight);
 		    return;
 		  }
 
 		  // ③ 都没有：隐藏生态栏
 		  container.style.display='none';
-		  adjustSlidePadding(0);
-			}
-
-			function adjustSlidePadding(ecoBarHeight){
-			  if(window.innerWidth > 768) return;
-			  if(ecoBarHeight > 0){
-			    document.querySelectorAll('.slide').forEach(function(s){
-			      var cur = parseInt(s.style.paddingBottom) || 0;
-			      var needed = ecoBarHeight + 20;
-			      s.style.paddingBottom = needed + 'px';
-			    });
-			  } else {
-			    document.querySelectorAll('.slide').forEach(function(s){
-			      s.style.paddingBottom = '';
-			    });
-			  }
-			}
+		}
 			  function localGoSlide(n){
 		    if(!n||n<1||n>total) return;
 		    var cur = document.querySelector('.slide.is-active');
