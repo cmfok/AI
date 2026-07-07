@@ -87,10 +87,26 @@ async function autoSend(text){
   try{
     const r=await fetch('/api/listener/classify',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({text})});
     const d=await r.json();
-    if(d.ok){addMsg('system','✅ 问题已发送到控制台');addMsg('system','📝 '+d.summary)}
-    else if(d.not_question){addMsg('system','ℹ️ 未检测到问题，已忽略')}
-    else addMsg('system','❌ '+d.error)
-  }catch(e){}
+    if(d.ok && d.type==='question'){
+      if(d.entered_queue){
+        addMsg('system','✅ 已自动提交到控制台 · '+(d.page?'P'+d.page+'页':'')+'');
+        addMsg('system','📝 '+d.refined);
+        finalTranscript='';document.getElementById('btn-send').disabled=true;
+      } else if(d.not_relevant){
+        addMsg('system','⏭ '+d.summary);
+        finalTranscript='';document.getElementById('btn-send').disabled=true;
+      } else {
+        addMsg('system','ℹ️ '+d.summary);
+      }
+    } else if(d.not_question){
+      addMsg('system','ℹ️ '+d.summary);
+      finalTranscript='';document.getElementById('btn-send').disabled=true;
+    } else {
+      addMsg('system','❌ '+(d.error||'处理失败'))
+    }
+  }catch(e){
+    addMsg('system','❌ 网络错误');
+  }
 }
 document.getElementById('btn-send').onclick=async()=>{
   if(!finalTranscript)return;

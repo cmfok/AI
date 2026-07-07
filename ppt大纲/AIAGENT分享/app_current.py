@@ -924,13 +924,13 @@ def api_voice_process():
 
 @app.route('/api/listener/classify', methods=['POST'])
 def listener_classify():
-    """监听页：语音文字分类（分享/提问）+ 精炼"""
+    """监听页：语音文字→分类→主题相关性判断→自动入队列"""
     data = request.get_json(silent=True) or {}
     text = data.get('text', '').strip()
     if not text:
         return jsonify({'ok': False, 'error': '内容为空'}), 400
     
-    # 复用语义理解管道
+    # 1. 语义理解（类型识别 + 问题改写 + 页码匹配）
     result = semantic_understand(text, 'voice')
     
     if result['type'] == 'share':
@@ -940,14 +940,92 @@ def listener_classify():
             'summary': f"📌 分享场景：{result['refined']}",
             'not_question': True
         })
+    
+    # 2. 用 DeepSeek 判断是否与分享会主题相关
+    is_relevant = False
+    relevance_reason = ''
+    if DEEPSEEK_API_KEY:
+        try:
+            relevance_prompt = f"""你是一个AI分享会的助手。判断以下听众提问是否与本次分享会的主题相关。
+
+分享会主题：AI在企业场景下的真实落地实践
+核心内容：提示词工程、上下文工程、驾驭工程、循环工程四大体系
+涵盖案例：PPT智能生成、知识库搭建、运费对账、简历筛选、生日营销自动化
+
+听众提问：{text}
+
+请判断这个问题是否与分享会主题相关。
+- 如果相关（关于AI使用、AI工具、AI工程、企业AI落地等），返回 {{"relevant": true, "reason": "简要说明为什么相关"}}
+- 如果不相关（闲聊、非AI话题、政治、广告等），返回 {{"relevant": false, "reason": "简要说明为什么不相关"}}
+
+只返回JSON，不要多余内容。"""
+            payload = {
+                "model": "deepseek-chat",
+                "messages": [{"role": "user", "content": relevance_prompt}],
+                "temperature": 0.1,
+                "max_tokens": 512
+            }
+            with httpx.Client(timeout=10) as client:
+                resp = client.post(
+                    f'{DEEPSEEK_BASE_URL}/chat/completions',
+                    headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {DEEPSEEK_API_KEY}'},
+                    json=payload
+                )
+                if resp.status_code == 200:
+                    content = resp.json()['choices'][0]['message']['content']
+                    match = re.search(r'\{[^{}]*\}', content, re.DOTALL)
+                    if match:
+                        rj = json.loads(match.group())
+                        is_relevant = rj.get('relevant', False)
+                        relevance_reason = rj.get('reason', '')
+        except:
+            is_relevant = True  # 降级：视为相关
     else:
+        is_relevant = True  # 无API Key时降级：视为相关
+    
+    if not is_relevant:
         return jsonify({
             'ok': True,
             'type': 'question',
-            'summary': f"📝 问题已记录：{result['refined']}",
-            'page': result['page'],
-            'candidate_pages': result.get('candidate_pages', [])
+            'not_relevant': True,
+            'summary': f"⏭ 已跳过（与主题无关）：{relevance_reason}",
+            'refined': result['refined']
         })
+    
+    # 3. 与主题相关 → 自动入队列
+    from datetime import datetime
+    with _questions_lock:
+        questions = load_questions()
+        qid = len(questions) + 1
+        entry = {
+            'id': qid,
+            'name': '语音',
+            'question': text,
+            'original': text,
+            'type': 'question',
+            'refined': result['refined'],
+            'deeper': result.get('reason', ''),
+            'page': result['page'],
+            'candidate_pages': result.get('candidate_pages', []),
+            'multi_page': len(result.get('candidate_pages', [])) > 1,
+            'source': 'voice',
+            'created_at': datetime.now().isoformat(),
+            'classified_at': datetime.now().isoformat(),
+        }
+        questions.append(entry)
+        save_questions(questions)
+    
+    return jsonify({
+        'ok': True,
+        'type': 'question',
+        'entered_queue': True,
+        'qid': qid,
+        'page': result['page'],
+        'candidate_pages': result.get('candidate_pages', []),
+        'summary': f"✅ 已自动进入控制台（P{result['page'] if result['page'] else '?'}）",
+        'refined': result['refined'],
+        'reason': relevance_reason
+    })
 
 
 @app.route('/api/listener/send', methods=['POST'])
