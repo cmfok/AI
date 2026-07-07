@@ -466,23 +466,65 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	 	  [data-title="提示词工程 · 四规则"] .callout-block{margin-bottom:4px!important;padding:8px 12px!important;font-size:clamp(12px,3.5vw,14px)!important}
 	 	  [data-title="提示词工程 · 四规则"] .p8-right .file-reader{font-size:clamp(12px,3vw,16px)!important}
 	 	  [data-title="提示词工程 · 四规则"] .p8-right .fr-ln{font-size:clamp(11px,2.8vw,14px)!important}
-	 	  /* ── P10 手机：右侧浏览器保持左右结构，压缩尺寸适配 ── */
-	 	  [data-title="上下文工程揭晓"] .p13-dialog{flex:0 1 auto!important;max-height:none!important}
-	 	  [data-title="上下文工程揭晓"] .p13-dbody{flex-direction:row!important}
-	 	  [data-title="上下文工程揭晓"] .p13-ftree{width:clamp(90px,25vw,130px)!important;max-height:160px!important;border-right:1px solid var(--border)!important}
-	 	  [data-title="上下文工程揭晓"] .p13-ftbody{max-height:140px!important;overflow-y:auto!important}
-	 	  [data-title="上下文工程揭晓"] .p13-chat{flex:1!important;min-width:0!important}
-	 	  [data-title="上下文工程揭晓"] .p13-chatbody{gap:4px!important;padding:clamp(4px,1vw,8px)!important}
-	 	  [data-title="上下文工程揭晓"] .p13-uchip{width:auto!important;max-width:65%!important}
-	 	  [data-title="上下文工程揭晓"] .p13-uchip [style*="font-size:clamp(14px"]{font-size:clamp(11px,2.8vw,13px)!important}
-	 	  [data-title="上下文工程揭晓"] .p13-uchip [style*="font-size:clamp(12px"]{font-size:clamp(9px,2.2vw,11px)!important}
-	 	  [data-title="上下文工程揭晓"] .p13-ububble{max-width:92%!important;font-size:clamp(11px,2.8vw,14px)!important;padding:clamp(4px,1vw,8px) clamp(6px,1.5vw,12px)!important}
-	 	  [data-title="上下文工程揭晓"] .p13-abubble{max-width:95%!important;font-size:clamp(11px,2.8vw,14px)!important;padding:clamp(4px,1vw,8px) clamp(6px,1.5vw,12px)!important}
-	 	  [data-title="上下文工程揭晓"] .p13-ftfile{font-size:clamp(10px,2.5vw,12px)!important;padding:clamp(1px,0.2vh,3px) clamp(4px,1vw,8px)!important}
-	 	  [data-title="上下文工程揭晓"] .p13-ftlabel{font-size:clamp(11px,2.8vw,14px)!important;padding:clamp(2px,0.3vh,4px) clamp(6px,1.5vw,10px)!important}
-	 	  [data-title="上下文工程揭晓"] .p13-subleft{width:clamp(70px,20vw,110px)!important;font-size:clamp(10px,2.5vw,12px)!important}
-	 	  [data-title="上下文工程揭晓"] .p13-subright{font-size:clamp(10px,2.5vw,12px)!important}
- 	  /* ── P5：三栏网格转单列 ── */
+		  /* ── P10/P14/P17 对话框统一手机适配 ── */
+	 	  [data-title="上下文工程揭晓"] .p13-dialog,
+	 	  [data-title="驾驭工程"] .p13-dialog,
+	 	  [data-title="循环工程揭晓"] .p13-dialog{flex:0 1 auto!important;max-width:75vw!important;max-height:none!important;min-height:120px!important}
+	 	  [data-title="上下文工程揭晓"] .p13-dbody,
+	 	  [data-title="驾驭工程"] .p13-dbody,
+	 	  [data-title="循环工程揭晓"] .p13-dbody{flex-direction:row!important}
+	 	  /* 文件树宽度 = 分区标题左栏宽度，确保分隔线对齐 */
+	 	  [data-title="上下文工程揭晓"] .p13-ftree,
+	 	  [data-title="驾驭工程"] .p13-ftree,
+	 	  [data-title="循环工程揭晓"] .p13-ftree{width:clamp(70px,20vw,100px)!important;max-height:180px!important;border-right:1px solid var(--border)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-subleft,
+	 	  [data-title="驾驭工程"] .p13-subleft,
+	 	  [data-title="循环工程揭晓"] .p13-subleft{width:clamp(70px,20vw,100px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-ftfile,
+	 	  [data-title="驾驭工程"] .p13-ftfile,
+	 	  [data-title="循环工程揭晓"] .p13-ftfile{font-size:clamp(8px,2vw,10px)!important;padding:clamp(1px,0.2vh,3px) clamp(3px,0.6vw,6px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-ftlabel,
+	 	  [data-title="驾驭工程"] .p13-ftlabel,
+	 	  [data-title="循环工程揭晓"] .p13-ftlabel{font-size:clamp(9px,2.2vw,11px)!important;padding:clamp(2px,0.3vh,4px) clamp(4px,0.8vw,8px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-chat,
+	 	  [data-title="驾驭工程"] .p13-chat,
+	 	  [data-title="循环工程揭晓"] .p13-chat{flex:1!important;min-width:0!important;min-height:120px!important}
+	 	  [data-title="上下文工程揭晓"] .p13-chatbody,
+	 	  [data-title="驾驭工程"] .p13-chatbody,
+	 	  [data-title="循环工程揭晓"] .p13-chatbody{gap:2px!important;padding:clamp(2px,0.5vw,4px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-ububble,
+	 	  [data-title="驾驭工程"] .p13-ububble,
+	 	  [data-title="循环工程揭晓"] .p13-ububble{max-width:98%!important;font-size:clamp(9px,2.2vw,11px)!important;padding:clamp(2px,0.5vw,4px) clamp(4px,1vw,6px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-abubble,
+	 	  [data-title="驾驭工程"] .p13-abubble,
+	 	  [data-title="循环工程揭晓"] .p13-abubble{max-width:98%!important;font-size:clamp(9px,2.2vw,11px)!important;padding:clamp(2px,0.5vw,4px) clamp(4px,1vw,6px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-uchip,
+	 	  [data-title="驾驭工程"] .p13-uchip,
+	 	  [data-title="循环工程揭晓"] .p13-uchip{width:auto!important;max-width:55%!important}
+	 	  [data-title="上下文工程揭晓"] .p13-uchip [style*="font-size:clamp(14px"],
+	 	  [data-title="驾驭工程"] .p13-uchip [style*="font-size:clamp(14px"],
+	 	  [data-title="循环工程揭晓"] .p13-uchip [style*="font-size:clamp(14px"]{font-size:clamp(8px,2vw,10px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-uchip [style*="font-size:clamp(12px"],
+	 	  [data-title="驾驭工程"] .p13-uchip [style*="font-size:clamp(12px"],
+	 	  [data-title="循环工程揭晓"] .p13-uchip [style*="font-size:clamp(12px"]{font-size:clamp(7px,1.5vw,8px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-dname,
+	 	  [data-title="驾驭工程"] .p13-dname,
+	 	  [data-title="循环工程揭晓"] .p13-dname{font-size:clamp(9px,2.2vw,11px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-dstatus,
+	 	  [data-title="驾驭工程"] .p13-dstatus,
+	 	  [data-title="循环工程揭晓"] .p13-dstatus{font-size:clamp(8px,2vw,10px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-subleft,
+	 	  [data-title="驾驭工程"] .p13-subleft,
+	 	  [data-title="循环工程揭晓"] .p13-subleft{font-size:clamp(8px,2vw,10px)!important;padding-left:clamp(4px,0.8vw,8px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-subright,
+	 	  [data-title="驾驭工程"] .p13-subright,
+	 	  [data-title="循环工程揭晓"] .p13-subright{font-size:clamp(8px,2vw,10px)!important;padding-left:clamp(4px,0.8vw,8px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-dtopbar,
+	 	  [data-title="驾驭工程"] .p13-dtopbar,
+	 	  [data-title="循环工程揭晓"] .p13-dtopbar{padding:clamp(2px,0.3vh,4px) clamp(4px,0.5vw,8px)!important}
+	 	  [data-title="上下文工程揭晓"] .p13-ftbody,
+	 	  [data-title="驾驭工程"] .p13-ftbody,
+	 	  [data-title="循环工程揭晓"] .p13-ftbody{max-height:160px!important;overflow-y:auto!important}
  	  [data-title="模型"] .p4-step3,
  	  [data-title="模型"] .p4-step3-eq{grid-template-columns:1fr!important;gap:10px!important}
  	  [data-title="模型"] .p4-brand-block-body{grid-template-columns:1fr!important}
@@ -508,32 +550,8 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	 	  [data-title="驾驭工程"] .p13-card{padding:8px 10px!important}
 	 	  [data-title="驾驭工程"] .p13-card h4{font-size:clamp(13px,3.5vw,16px)!important;margin:0!important}
 	 	  [data-title="驾驭工程"] .p13-card p{font-size:clamp(10px,2.8vw,12px)!important}
-	 	  [data-title="驾驭工程"] .callout-block{font-size:clamp(12px,3.5vw,14px)!important;padding:8px 12px!important;margin-bottom:4px!important}
-	 	  [data-title="驾驭工程"] .p13-dialog{flex:0 1 auto!important;max-height:none!important;min-height:140px!important}
-	 	  [data-title="驾驭工程"] .p13-dbody{flex-direction:row!important}
-	 	  [data-title="驾驭工程"] .p13-ftree{width:clamp(65px,18vw,90px)!important;max-height:200px!important;border-right:1px solid var(--border)!important}
-	 	  [data-title="驾驭工程"] .p13-ftbody{max-height:180px!important;overflow-y:auto!important}
-	 	  [data-title="驾驭工程"] .p13-ftfile{font-size:clamp(7px,1.8vw,9px)!important;padding:clamp(1px,0.15vh,2px) clamp(2px,0.5vw,4px)!important}
-	 	  [data-title="驾驭工程"] .p13-ftlabel{font-size:clamp(8px,2vw,10px)!important;padding:clamp(1px,0.2vh,3px) clamp(3px,0.6vw,6px)!important}
-	 	  [data-title="驾驭工程"] .p13-chat{flex:1!important;min-width:0!important;min-height:140px!important}
-	 	  [data-title="驾驭工程"] .p13-chatbody{gap:2px!important;padding:clamp(2px,0.5vw,4px)!important}
-	 	  [data-title="驾驭工程"] .p13-ububble{max-width:98%!important;font-size:clamp(9px,2.2vw,11px)!important;padding:clamp(2px,0.5vw,4px) clamp(4px,1vw,6px)!important;border-radius:8px 8px 0 8px!important}
-	 	  [data-title="驾驭工程"] .p13-abubble{max-width:98%!important;font-size:clamp(9px,2.2vw,11px)!important;padding:clamp(2px,0.5vw,4px) clamp(4px,1vw,6px)!important;border-radius:8px 8px 8px 0!important}
-	 	  [data-title="驾驭工程"] .p13-dtopbar{padding:clamp(2px,0.3vh,4px) clamp(4px,0.5vw,8px)!important}
-	 	  [data-title="驾驭工程"] .p13-dname{font-size:clamp(9px,2.2vw,11px)!important}
-	 	  [data-title="驾驭工程"] .p13-dstatus{font-size:clamp(8px,2vw,10px)!important}
-	 	  [data-title="驾驭工程"] .p13-davatar{width:clamp(12px,2.5vw,16px)!important;height:clamp(12px,2.5vw,16px)!important;font-size:clamp(6px,1.5vw,8px)!important}
-	 	  [data-title="驾驭工程"] .p13-subleft{width:clamp(50px,14vw,80px)!important;font-size:clamp(7px,1.8vw,9px)!important;padding-left:clamp(4px,0.8vw,8px)!important}
-	 	  [data-title="驾驭工程"] .p13-subright{font-size:clamp(7px,1.8vw,9px)!important;padding-left:clamp(4px,0.8vw,8px)!important}
-	 	  [data-title="驾驭工程"] .p13-uchip{width:auto!important;max-width:55%!important;padding:clamp(2px,0.5vw,4px) clamp(4px,0.8vw,6px)!important;gap:clamp(2px,0.4vw,4px)!important}
-	 	  [data-title="驾驭工程"] .p13-uchip [style*="font-size:clamp(14px"]{font-size:clamp(8px,2vw,10px)!important}
-	 	  [data-title="驾驭工程"] .p13-uchip [style*="font-size:clamp(12px"]{font-size:clamp(7px,1.5vw,8px)!important}
-	 	  [data-title="驾驭工程"] .p13-uwrap{gap:2px!important;margin-bottom:0!important}
-	 	  [data-title="驾驭工程"] .p13-awrap{gap:2px!important;max-width:100%!important;margin-bottom:0!important}
-	 	  [data-title="驾驭工程"] .p13-aavatar{width:clamp(14px,3vw,18px)!important;height:clamp(14px,3vw,18px)!important;font-size:clamp(7px,1.5vw,9px)!important}
-	 	  [data-title="驾驭工程"] .p13-uavatar{width:clamp(14px,3vw,18px)!important;height:clamp(14px,3vw,18px)!important}
-	 	  [data-title="驾驭工程"] .p13-uchip img{width:clamp(10px,2vw,14px)!important;height:clamp(10px,2vw,14px)!important}
-	 	  [data-title="封面-动画"] .cp1-stage{width:100%!important;overflow:hidden!important}
+		 	  [data-title="驾驭工程"] .callout-block{font-size:clamp(12px,3.5vw,14px)!important;padding:8px 12px!important;margin-bottom:4px!important}
+		 	  [data-title="封面-动画"] .cp1-stage{width:100%!important;overflow:hidden!important}
 	 	  [data-title="封面-动画"] .cp1-sentence{white-space:normal!important;font-size:clamp(36px,9vw,64px)!important;text-align:center!important;word-break:break-word!important}
 	 	  /* ── 招聘简历：双栏变单列 ── */
 	 	  [data-title="招聘简历"] .p12hr-body{grid-template-columns:1fr!important;gap:8px!important}
