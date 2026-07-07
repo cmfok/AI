@@ -332,6 +332,10 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 			  [data-title="知识库搭建"],
 			  [data-title="驾驭工程"],
 			  [data-title="循环工程揭晓"]{scroll-padding-bottom:180px}
+			  /* 三页对话框底部用::after撑出空间避让生态栏 */
+			  [data-title="上下文工程揭晓"]::after,
+			  [data-title="驾驭工程"]::after,
+			  [data-title="循环工程揭晓"]::after{content:"";display:block;height:clamp(90px,12vh,120px);flex-shrink:0}
 	  .mt-l{margin-top:12px!important}.mt-m{margin-top:6px!important}
 	  /* ── 标题字号 ── */
 	  body .h1{font-size:clamp(40px,11vw,64px)!important}
@@ -3028,12 +3032,7 @@ function p12hrShowScoring(e){
 
 </div>
 
-<!-- 底部一句话总结 -->
-<div style="margin-top:clamp(6px,0.7vh,8px);padding:clamp(6px,0.7vh,10px) clamp(14px,1.4vw,22px);background:linear-gradient(90deg,rgba(59,108,255,.06),rgba(59,108,255,.02));border-left:3px solid var(--accent);border-radius:0 8px 8px 0">
-  <span style="font-size:clamp(20px,1.3vw,22px);color:var(--text-2);font-family:var(--font-sans)">💡 <b style="color:var(--accent)">一句话：</b>个人 AI 帮你省时间，企业 AI 帮你赚钱。差的那两个工程（<b style="color:var(--text-1)">驾驭 + 循环</b>），就是「玩玩」和「投产」的分界线。</span>
-</div>
-
-<div class="notes">差的不是模型，是<b>工程深度</b>。个人：提示词+上下文就够了，错了Ctrl+Z。企业：<b>四大工程全得上</b>，驾驭保证不出错，循环保证持续跑。核心是可控+变现。底部金句：个人AI帮你省时间，企业AI帮你赚钱，驾驭+循环就是玩玩和投产的分界线。</div>
+<div class="notes">差的不是模型，是<b>工程深度</b>。个人：提示词+上下文就够了，错了Ctrl+Z。企业：<b>四大工程全得上</b>，驾驭保证不出错，循环保证持续跑。核心是可控+变现。</div>
 </section>
 <!-- ====== 19. DATA PRIVACY ====== -->
 <section class="slide" data-title="数据隐私">
