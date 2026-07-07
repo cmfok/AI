@@ -3511,7 +3511,7 @@ function toggleP4(el){
 	  var total=slides.length;
 	  var lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, lastCoverP1=false;
 	  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0, _lkP4=0, _lkO=false, _lkT=false, _lkF=false, _lkCt=false, _lkRa=false;
-	  var _locked=false, _firstPoll=true, _lastRemoteNav=0, _lastAnswerText='';
+	  var _locked=false, _firstPoll=true, _lastRemoteNav=0, _lastAnswerText='', _answerShownOnce=false;
 	  // 从 localStorage 恢复已读答案，避免刷新后重复弹出
 	  try{ var saved = localStorage.getItem('_lastAnswerText'); if(saved) _lastAnswerText = saved; }catch(e){}
 
@@ -3764,9 +3764,10 @@ function toggleP4(el){
       else { stopSmoothScroll(); }
     }
 
-	    // AI 回答：检测到新答案 → 翻到对应页 + 展示（锁定状态下仍然执行，因为是控制台主动触发的）
+	    // AI 回答：检测到新答案 → 翻到对应页 + 展示（每答案仅弹一次）
 	    if(d.answer && d.answer !== _lastAnswerText && d.answer_slide){
 	      _lastAnswerText = d.answer;
+	      _answerShownOnce = false;
 	      // 持久化已读答案，刷新后不再重复弹出
 	      try{ localStorage.setItem('_lastAnswerText', _lastAnswerText); }catch(e){}
 	      // 翻到答案所在页
@@ -3923,6 +3924,8 @@ function toggleP4(el){
   // ── AI 答案底部弹出 ──
   var _hideAnswerTimer = null;
 	  window.showAnswerPopup = function(q, a, slideNum){
+	    // 同一答案已在手机端弹过一次就不再弹
+	    if(window.innerWidth < 768 && _answerShownOnce) return;
 	    var el = document.getElementById('answerPopup');
 	    var qEl = document.getElementById('answerPopupQ');
 	    var aEl = document.getElementById('answerPopupA');
@@ -3932,6 +3935,7 @@ function toggleP4(el){
 	      el.style.display = 'block';
 	      setTimeout(function(){ el.style.transform = 'translateY(0)'; }, 10);
 	    }
+	    if(window.innerWidth < 768) _answerShownOnce = true;
 	    // 自动隐藏
 	    if(_hideAnswerTimer) clearTimeout(_hideAnswerTimer);
 	    _hideAnswerTimer = setTimeout(hideAnswerPopup, 30000);
