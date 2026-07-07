@@ -4187,11 +4187,11 @@ async function runTerminal(){
   await out(el,g('>>> ')+w('purpose')+'\n',300);
   await out(el,'  '+w('通过本次分享，希望能让大家对AI多一分了解，')+'\n',500);
   await out(el,'  '+b('<b>让AI可以更好地赋能大家生活或工作提效。</b>')+'\n\n',500);
-	  await out(el,g('>>> ')+w('join')+'\n',300);
-		  var _qrCode = '<div style="background:#fff;display:inline-block;padding:6px;border-radius:6px;margin:2px 0 4px"><img src="/qrcode.png" alt="QR" style="display:block;width:clamp(120px,30vw,200px);height:auto"></div>';
-		  _qrCode+='<div style="margin:2px 0">'+b('\uD83D\uDCCC \u73B0\u573A\u63D0\u95EE / \u6295\u7968\uFF1A')+link('http://106.53.168.220:8008/ask','http://106.53.168.220:8008/ask')+'</div>\n';
-	  el.innerHTML+=_qrCode;
-	  el.innerHTML+='>>> <span class="cursor"></span>';
+	  await out(el,g('>>> ')+w('study')+'\n',300);
+  await out(el,w('\u2501\u2501\u2501 \u5174\u8DA3\u5C0F\u7EC4\u7684\u5B66\u4E60\u8D44\u6599 \u2501\u2501\u2501')+'\n',500);
+  await out(el,'  '+link('https://www.trae.com.cn','\uD83D\uDD17 TRAE\u5B98\u65B9\u7F51\u5740')+'\n',400);
+  await out(el,'  '+link('https://8008.cmfok.online/api','\uD83D\uDD17 \u5404\u6A21\u578B\u9690\u79C1\u653F\u7B56')+'\n',400);
+  el.innerHTML+='>>> <span class="cursor"></span>';
 }
 
 setTimeout(runTerminal,500);
