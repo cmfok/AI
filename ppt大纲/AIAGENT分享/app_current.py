@@ -2466,6 +2466,37 @@ QA_FILE = os.path.join(PPT_DIR, 'qa_knowledge.json')
 with open(QA_FILE, 'r', encoding='utf-8') as f:
     QA_DATA = json.load(f)
 
+@app.route('/api/deepseek/ask', methods=['POST'])
+def deepseek_ask():
+    """控制台模型测试：直调 DeepSeek API"""
+    data = request.get_json(silent=True) or {}
+    question = (data.get('question', '') or '').strip()
+    if not question:
+        return jsonify({'ok': False, 'error': '问题不能为空'}), 400
+    if not DEEPSEEK_API_KEY:
+        return jsonify({'ok': False, 'error': 'DeepSeek API Key 未配置'}), 500
+    try:
+        import httpx
+        payload = {
+            "model": "deepseek-chat",
+            "messages": [{"role": "user", "content": question}],
+            "temperature": 0.7,
+            "max_tokens": 2048
+        }
+        with httpx.Client(timeout=60) as client:
+            resp = client.post(
+                f'{DEEPSEEK_BASE_URL}/chat/completions',
+                headers={'Content-Type': 'application/json', 'Authorization': f'Bearer {DEEPSEEK_API_KEY}'},
+                json=payload
+            )
+            if resp.status_code == 200:
+                content = resp.json()['choices'][0]['message']['content']
+                return jsonify({'ok': True, 'answer': content})
+            else:
+                return jsonify({'ok': False, 'error': f'API 错误: {resp.status_code}'}), 502
+    except Exception as e:
+        return jsonify({'ok': False, 'error': f'请求失败: {str(e)}'}), 500
+
 @app.route('/api/qa/ask', methods=['POST'])
 def qa_ask():
     data = request.get_json(silent=True) or {}
@@ -2701,6 +2732,19 @@ def control_go():
             if key in ("slide", "_speech"):
                 continue
             CONTROL_STATE[key] = value
+    
+    # 如果设置了答案，30秒后自动清除（新设备刷新不会看到旧答案）
+    if data.get('answer'):
+        import threading
+        def _clear_answer():
+            import time
+            time.sleep(30)
+            with CONTROL_STATE_LOCK:
+                CONTROL_STATE.pop('answer', None)
+                CONTROL_STATE.pop('answer_question', None)
+                CONTROL_STATE.pop('answer_slide', None)
+                CONTROL_STATE.pop('answer_mode', None)
+        threading.Thread(target=_clear_answer, daemon=True).start()
 
     # ── 演讲稿保存（嵌入此端点，避免在 Cloudflare 代理层被 405）──
     speech_info = data.get("_speech")

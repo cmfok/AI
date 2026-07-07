@@ -1644,9 +1644,9 @@ let p12hr_resumeB64='', p12hr_resumeName='', p12hr_resumeBlobUrl='', p12hr_lastS
 async function p12hrStartAnalysis(){
   var btn=document.getElementById('p12hrStartBtn');
   if(btn){ btn.textContent='⏳ 分析中...'; btn.disabled=true; }
-  document.getElementById('p12hrFileStatus').innerHTML='📄 刘芯淼-简历(1).pdf';
+  document.getElementById('p12hrFileStatus').innerHTML='📄 张建盛的简历分析';
   try{
-    var resp=await fetch('/resume.pdf');
+    var resp=await fetch('/resume.pdf?_t='+Date.now());
     var blob=await resp.blob();
     if(p12hr_resumeBlobUrl)URL.revokeObjectURL(p12hr_resumeBlobUrl);
     p12hr_resumeBlobUrl=URL.createObjectURL(blob);
@@ -1657,7 +1657,7 @@ async function p12hrStartAnalysis(){
       r.onerror=function(){reject(new Error('读取失败'));};
       r.readAsDataURL(blob);
     });
-    p12hr_resumeB64=b64; p12hr_resumeName='刘芯淼-简历(1).pdf';
+    p12hr_resumeB64=b64; p12hr_resumeName='张建盛的简历分析';
     p12hrAnalyzeBoth();
   }catch(err){
     alert('加载简历失败: '+err.message);
@@ -3520,11 +3520,11 @@ function p12hrShowScoring(e){
   }
   el.innerHTML = '<div id="qnaCodeInner" style="position:absolute;top:0;left:0;right:0">' + allLines.map(function(l){ return '<div style="white-space:nowrap;line-height:22px">'+l+'&nbsp;</div>'; }).join('') + '</div>';
   var inner = document.getElementById('qnaCodeInner');
-  var pos = 0, lh = 22, step = 0;
-  var maxPos = lineCount * lh;
-  function scroll(){
-    step++;
-    if(step >= 12){ step = 0; pos += lh; }
+	  var pos = 0, lh = 22, step = 0, stepThreshold = window.innerWidth >= 768 ? 30 : 12;
+	  var maxPos = lineCount * lh;
+	  function scroll(){
+	    step++;
+	    if(step >= stepThreshold){ step = 0; pos += lh; }
     // 到达第一份内容的末尾时，把整个容器往上拉回开头，实现无缝循环
     if(pos >= maxPos) { pos = 0; inner.style.transform = 'translateY(0px)'; }
     else { inner.style.transform = 'translateY(' + (-pos) + 'px)'; }
@@ -3603,10 +3603,14 @@ function toggleCard(el){el.classList.toggle('open')}
 // ── P4 四卡片互斥展开 ──
 function toggleP4(el){
   var cards=el.parentElement.querySelectorAll('.ca-card');
+  var idx = -1;
   for(var i=0;i<cards.length;i++){
     if(cards[i]!==el) cards[i].classList.remove('open');
+    else idx = i + 1;
   }
-  el.classList.toggle('open');
+  var nowOpen = el.classList.toggle('open');
+  // 同步到服务端，防止轮询覆盖
+  fetch('/api/control/go',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({slide:5,p4open:nowOpen?idx:0})}).catch(function(){});
 }
 
 // ── 服务器轮询（跨设备翻页+动效同步）──
@@ -3615,7 +3619,7 @@ function toggleP4(el){
 	  var total=slides.length;
 	  var lastExpand=null, lastCard=null, lastCoverQ=null, lastPollOverlay=null, lastCoverP1=false;
 	  var _lkScr=0, _lkSfR=0, _lkSfS=0, _lkAuto=0, _lkP4=0, _lkO=false, _lkT=false, _lkF=false, _lkCt=false, _lkRa=false;
-	  var _locked=false, _firstPoll=true, _lastRemoteNav=0, _lastAnswerText='', _answerShownOnce=false;
+	  var _locked=false, _firstPoll=true, _lastRemoteNav=0, _lastAnswerText='', _lastAnswerSlide=0, _answerShownOnce=false;
 	  // 从 localStorage 恢复已读答案，避免刷新后重复弹出
 	  try{ var saved = localStorage.getItem('_lastAnswerText'); if(saved) _lastAnswerText = saved; }catch(e){}
 
@@ -3868,12 +3872,16 @@ function toggleP4(el){
       else { stopSmoothScroll(); }
     }
 
-	    // AI 回答：检测到新答案 → 翻到对应页 + 展示（每答案仅弹一次）
-	    if(d.answer && d.answer !== _lastAnswerText && d.answer_slide){
-	      _lastAnswerText = d.answer;
-	      _answerShownOnce = false;
-	      // 持久化已读答案，刷新后不再重复弹出
-	      try{ localStorage.setItem('_lastAnswerText', _lastAnswerText); }catch(e){}
+		    // AI 回答：检测到新答案 → 翻到对应页 + 展示（每答案仅弹一次）
+		    if(d.answer && d.answer_slide && (
+		      d.answer !== _lastAnswerText || d.answer_slide !== _lastAnswerSlide
+		    )){
+		      _lastAnswerText = d.answer;
+		      _lastAnswerSlide = d.answer_slide;
+		      _answerShownOnce = false;
+		      // 持久化已读答案，刷新后不再重复弹出
+		      try{ localStorage.setItem('_lastAnswerText', _lastAnswerText); }catch(e){}
+		      try{ localStorage.setItem('_lastAnswerSlide', String(_lastAnswerSlide)); }catch(e){}
 	      // 翻到答案所在页
 	      var targetSlide = parseInt(d.answer_slide) || 1;
 	      if(targetSlide >= 1 && targetSlide <= total){
