@@ -567,8 +567,8 @@ function renderQuestions(){
   var list = document.getElementById('qlist');
   if(!list) return;
   var ids = Object.keys(_qdata);
-  // 按页码排序
-  ids.sort(function(a,b){ return (_qdata[a].p||0) - (_qdata[b].p||0); });
+	  // 按时间倒序（最新提问放最上面）
+	  ids.sort(function(a,b){ return parseInt(b) - parseInt(a); });
   // 筛选
   if(_filterPage){
     ids = ids.filter(function(id){ return _qdata[id].p === cur; });
