@@ -321,7 +321,7 @@ body .lede{font-size:clamp(32px,5vw,52px)!important}
 	  html,body{overflow-x:hidden;width:100%}
 	  /* ── 基础间距 ── */
 	  .deck-header{position:fixed!important;top:0!important;left:0!important;right:0!important;font-size:10px!important;background:#fff;padding:8px 16px;box-shadow:0 1px 6px rgba(0,0,0,.1);z-index:100;border-radius:0!important}
-		  .slide{padding:clamp(30px,3.5vw,44px) clamp(12px,4vw,20px) clamp(130px,16vw,150px);min-height:100vh;overflow-x:hidden;-webkit-overflow-scrolling:touch}
+		  .slide{padding:clamp(30px,3.5vw,44px) clamp(12px,4vw,20px) clamp(160px,20vw,180px);min-height:100vh;overflow-x:hidden;-webkit-overflow-scrolling:touch}
 	  .mt-l{margin-top:12px!important}.mt-m{margin-top:6px!important}
 	  /* ── 标题字号 ── */
 	  body .h1{font-size:clamp(40px,11vw,64px)!important}
@@ -3559,39 +3559,57 @@ function toggleP4(el){
 	    };
 	  }
 
-	  // ── 生态栏：优先读 .eco-data，降级到内联 .eco-bar ──
-	  function updateEcoBar(){
-	    var container=document.getElementById('ecoBarContainer');
-	    if(!container) return;
-	    var active=document.querySelector('.slide.is-active');
-	    if(!active){ container.style.display='none'; return; }
+		// ── 生态栏：优先读 .eco-data，降级到内联 .eco-bar ──
+		function updateEcoBar(){
+		  var container=document.getElementById('ecoBarContainer');
+		  if(!container) return;
+		  var active=document.querySelector('.slide.is-active');
+		  if(!active){ container.style.display='none'; adjustSlidePadding(0); return; }
 
-	    // 先清掉之前隐藏的内联 .eco-bar（恢复可见）
-	    document.querySelectorAll('.slide .eco-bar[style*="display:none"]').forEach(function(el){
-	      el.style.display='';
-	    });
+		  // 先清掉之前隐藏的内联 .eco-bar（恢复可见）
+		  document.querySelectorAll('.slide .eco-bar[style*="display:none"]').forEach(function(el){
+		    el.style.display='';
+		  });
 
-	    // ① 新格式：.eco-data
-	    var ecoData=active.querySelector('.eco-data');
-	    if(ecoData){
-	      container.innerHTML=ecoData.innerHTML;
-	      container.style.display='';
-	      return;
-	    }
+		  // ① 新格式：.eco-data
+		  var ecoData=active.querySelector('.eco-data');
+		  if(ecoData){
+		    container.innerHTML=ecoData.innerHTML;
+		    container.style.display='';
+		    adjustSlidePadding(container.offsetHeight);
+		    return;
+		  }
 
-	    // ② 旧格式：内联 .eco-bar（position:fixed 会重叠，需隐藏原内联）
-	    var ecoBar=active.querySelector(':scope > .eco-bar');
-	    if(ecoBar){
-	      container.innerHTML=ecoBar.innerHTML;
-	      container.style.display='';
-	      ecoBar.style.display='none'; // 避免与 container 重叠
-	      return;
-	    }
+		  // ② 旧格式：内联 .eco-bar（position:fixed 会重叠，需隐藏原内联）
+		  var ecoBar=active.querySelector(':scope > .eco-bar');
+		  if(ecoBar){
+		    container.innerHTML=ecoBar.innerHTML;
+		    container.style.display='';
+		    ecoBar.style.display='none';
+		    adjustSlidePadding(container.offsetHeight);
+		    return;
+		  }
 
-	    // ③ 都没有：隐藏生态栏
-	    container.style.display='none';
-	  }
-		  function localGoSlide(n){
+		  // ③ 都没有：隐藏生态栏
+		  container.style.display='none';
+		  adjustSlidePadding(0);
+			}
+
+			function adjustSlidePadding(ecoBarHeight){
+			  if(window.innerWidth > 768) return;
+			  if(ecoBarHeight > 0){
+			    document.querySelectorAll('.slide').forEach(function(s){
+			      var cur = parseInt(s.style.paddingBottom) || 0;
+			      var needed = ecoBarHeight + 20;
+			      s.style.paddingBottom = needed + 'px';
+			    });
+			  } else {
+			    document.querySelectorAll('.slide').forEach(function(s){
+			      s.style.paddingBottom = '';
+			    });
+			  }
+			}
+			  function localGoSlide(n){
 		    if(!n||n<1||n>total) return;
 		    var cur = document.querySelector('.slide.is-active');
 		    if(cur) cur.classList.remove('is-active');
